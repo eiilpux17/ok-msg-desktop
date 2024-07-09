@@ -10,6 +10,11 @@
  * See the Mulan PubL v2 for more details.
  */
 
+ .Widget
+{
+    background-color: black;
+}
+
 QToolTip
 {
     /* explicit border width is required https://bugreports.qt.io/browse/QTBUG-41313 */
@@ -23,6 +28,7 @@ QDialog
     background: @groundBase;
 }
 
+AboutFriendForm,
 QWidget#contentWidget
 {
     background: @groundBase;
@@ -45,6 +51,32 @@ QTabBar::tab:!selected
 {
     background: #444242;
     color: #8e8e8e;
+}
+
+QTabWidget#mainTab,
+QTabWidget#mainTab::pane,
+QTabWidget#mainTab>QTabBar
+{
+    border: 0px solid;
+    background: black;
+}
+
+QTabWidget#mainTab>QTabBar::tab
+{
+    border: 0px solid;
+    padding: 10px 20px 5px 20px;
+    background: black;
+    color: #6f6f6f;
+}
+
+QTabWidget#mainTab>QTabBar::tab:hover 
+{
+    color: #999999;
+}
+
+QTabWidget#mainTab>QTabBar::tab:selected 
+{
+    color: #dddddd;
 }
 
 QLabel

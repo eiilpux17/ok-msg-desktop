@@ -116,6 +116,8 @@ ChatWidget::ChatWidget(QWidget *parent)
 
   retranslateUi();
 
+  // todo: delete from ui
+  ui->searchContactFilterBox->setVisible(false);
 }
 
 ChatWidget::~ChatWidget() {
@@ -560,6 +562,9 @@ void ChatWidget::reloadTheme() {
   //  }
 
   sessionListWidget->reloadTheme();
+
+  ui->friendList->setAutoFillBackground(false);
+  ui->friendList->viewport()->setAutoFillBackground(false);
 }
 void ChatWidget::setupSearch() {
 
