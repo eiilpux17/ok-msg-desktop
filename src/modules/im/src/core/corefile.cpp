@@ -15,9 +15,9 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
+#include <QMutexLocker>
 #include <QRegularExpression>
 #include <QThread>
-#include <QMutexLocker>
 
 #include <cassert>
 #include <memory>
@@ -25,12 +25,12 @@
 #include "base/uuid.h"
 #include "core.h"
 
+#include "lib/messenger/messenger.h"
 #include "src/model/status.h"
 #include "src/model/toxclientstandards.h"
 #include "src/persistence/settings.h"
 #include "toxfile.h"
 #include "toxstring.h"
-#include "lib/messenger/messenger.h"
 
 /**
  * @class CoreFile
@@ -48,10 +48,8 @@ CoreFilePtr CoreFile::makeCoreFile(Core* core, CompatibleRecursiveMutex& coreLoo
     return result;
 }
 
-CoreFile::~CoreFile()
-{
-    if (messengerFile)
-        delete messengerFile;
+CoreFile::~CoreFile() {
+    if (messengerFile) delete messengerFile;
     messengerFile = nullptr;
 }
 
@@ -59,8 +57,12 @@ CoreFile::CoreFile(Core* core, CompatibleRecursiveMutex& coreLoopLock) : core(co
     qDebug() << __func__;
 
     this->coreLoopLock = &coreLoopLock;
-    messengerFile = new lib::messenger::MessengerFile(core->getMessenger());
-    messengerFile->addFileHandler(this);
+    connect(core, &Core::started, this, [core, this]() {
+                messengerFile = new lib::messenger::MessengerFile(core->getMessenger());
+                messengerFile->addFileHandler(this);
+            },
+            Qt::QueuedConnection);
+
     //  lib::messenger::IMFile *imFile = core->messenger()->imFile();
     //  imFile->addFileHandler(this);
 }
@@ -89,8 +91,8 @@ unsigned CoreFile::corefileIterationInterval() {
     return idleInterval;
 }
 
-void CoreFile::sendFile(
-        QString friendId, QString filename, QString filePath, quint64 filesize, quint64 sent) {
+void CoreFile::sendFile(QString friendId, QString filename, QString filePath, quint64 filesize,
+                        quint64 sent) {
     qDebug() << __func__ << friendId << filename;
 
     QMutexLocker{coreLoopLock};
@@ -367,11 +369,11 @@ void CoreFile::handleAvatarOffer(QString friendId, QString fileId, bool accept) 
 void CoreFile::onFileRequest(const QString& from, const lib::messenger::File& file) {
     qDebug() << __func__ << file.name << "from" << from;
 
-//    auto receiver = messenger->getSelfId().toFriendId();
-//    ToxFile toxFile(from, receiver, file);
-//    addFile(toxFile);
-//    qDebug() << "file:" << toxFile.toString();
-//    emit fileReceiveRequested(toxFile);
+    //    auto receiver = messenger->getSelfId().toFriendId();
+    //    ToxFile toxFile(from, receiver, file);
+    //    addFile(toxFile);
+    //    qDebug() << "file:" << toxFile.toString();
+    //    emit fileReceiveRequested(toxFile);
 }
 
 void CoreFile::onFileControlCallback(lib::messenger::Messenger* tox, QString friendId,

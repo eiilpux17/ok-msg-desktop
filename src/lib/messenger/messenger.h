@@ -220,7 +220,7 @@ private:
 
     IM* _im;
     IMJingle* jingle;
-    IMFile* _imFile;
+    IMFile* _imFile = nullptr;;
     IMCall* _imCall;
 
     // key: sId value:Jingle
@@ -461,10 +461,7 @@ public:
 //     * @param file
 //     */
 //    void doStopFileSendTask(const Jingle::Session* session, const File& file);
-
-private:
-    IMFile *fileSender;
-
+    Messenger* messenger = nullptr;
 };
 
 

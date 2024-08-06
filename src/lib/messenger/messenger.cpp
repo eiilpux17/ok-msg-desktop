@@ -79,11 +79,11 @@ Messenger::~Messenger() { qDebug() << __func__; }
 
 void Messenger::start() {
     qDebug() << __func__;
-    _im->start();
     connect(_im, &IM::started, [&]() {
         _imFile = new IMFile(_im, this);
         emit started();
     });
+    _im->start();
 }
 
 void Messenger::sendChatState(const QString& friendId, int state) {
@@ -495,30 +495,31 @@ void MessengerCall::setRemoteMute(bool mute) {
 //File
 
 MessengerFile::MessengerFile(Messenger* messenger, QObject* parent) : QObject(parent){
-    fileSender = messenger->imFile();
+
+    this->messenger = messenger;
 }
 
 void MessengerFile::addFileHandler(FileHandler*h) {
-    fileSender->addFileHandler(h);
+    this->messenger->imFile()->addFileHandler(h);
 }
 
 void MessengerFile::fileRejectRequest(QString friendId, const File& file) {
-    fileSender->fileRejectRequest(friendId, file);
+    this->messenger->imFile()->fileRejectRequest(friendId, file);
 }
 void MessengerFile::fileAcceptRequest(QString friendId, const File& file) {
-    fileSender->fileAcceptRequest(friendId, file);
+    this->messenger->imFile()->fileAcceptRequest(friendId, file);
 }
 void MessengerFile::fileFinishRequest(QString friendId, const QString& sId) {
-    fileSender->fileFinishRequest(friendId, sId);
+    this->messenger->imFile()->fileFinishRequest(friendId, sId);
 }
 void MessengerFile::fileFinishTransfer(QString friendId, const QString& sId) {
-    fileSender->fileFinishTransfer(friendId, sId);
+    this->messenger->imFile()->fileFinishTransfer(friendId, sId);
 }
 void MessengerFile::fileCancel(QString fileId) {
-    fileSender->fileCancel(fileId);
+    this->messenger->imFile()->fileCancel(fileId);
 }
 bool MessengerFile::fileSendToFriend(const QString& f, const File& file) {
-    return fileSender->fileSendToFriend(f, file);
+    return this->messenger->imFile()->fileSendToFriend(f, file);
 }
 
 }  // namespace messenger
