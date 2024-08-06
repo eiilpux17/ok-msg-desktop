@@ -13,14 +13,39 @@ void SimpleText::setText(const QString& txt) {
     }
 }
 
-QRectF SimpleText::boundingRect() const { return QRectF(QPointF(0, 0), boundSize); }
+void SimpleText::setAlignment(Qt::Alignment align)
+{
+    if (alignment != align)
+    {
+        alignment = align;
+        update();
+    }
+}
+
+QSizeF SimpleText::sizeHint() const
+{
+    QFontMetricsF fm(defFont);
+    if (_sh.isEmpty())
+    {
+        if (!text.isEmpty())
+            _sh = fm.boundingRect(text).size();
+        else
+            _sh = QSizeF(fm.height(), fm.height());
+    }
+    return _sh;
+}
+
+QRectF SimpleText::boundingRect() const
+{
+    return QRectF(QPointF(0, 0), boundSize);
+}
 
 void SimpleText::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) {
     if (!text.isEmpty()) {
         painter->setFont(defFont);
         painter->setPen(QPen(color));
         int y_offset = QFontMetricsF(defFont).leading() / 2.0;
-        painter->drawText(QRectF(QPointF(0, y_offset), boundSize), Qt::AlignCenter, text);
+        painter->drawText(QRectF(QPointF(0, y_offset), boundSize), alignment, text);
     }
 }
 
@@ -45,13 +70,26 @@ void SimpleText::setColor(const QColor& color) {
     this->color = color;
 }
 
+void SimpleText::setFont(const QFont &font)
+{
+    if (defFont != font)
+    {
+        prepareGeometryChange();
+        defFont = font;
+        if (forceWidth < 0)
+            updateBoundingRect();
+    }
+}
+
 void SimpleText::updateBoundingRect() {
     QFontMetricsF fm(defFont);
     if (!text.isEmpty())
         boundSize = fm.boundingRect(text).size();
     else
         boundSize = QSizeF(fm.height(), fm.height());
-    if (forceWidth > 0) boundSize.rwidth() = forceWidth;
+    _sh = boundSize;
+    if (forceWidth > 0)
+        boundSize.rwidth() = forceWidth;
 }
 
 void SimpleText::reloadTheme() {

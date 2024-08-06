@@ -28,6 +28,7 @@ public:
     int getRow() const;
 
     virtual void setWidth(qreal width) = 0;
+    virtual void layoutChildren() {}
     virtual int type() const final;
 
     virtual void selectionMouseMove(QPointF scenePos);

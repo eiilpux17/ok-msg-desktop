@@ -40,7 +40,7 @@ class CoreFile : public QObject, public lib::messenger::FileHandler {
 
 public:
     static CoreFilePtr makeCoreFile(Core* core, CompatibleRecursiveMutex& coreLoopLock);
-
+    ~CoreFile();
     void handleAvatarOffer(QString friendId, QString fileId, bool accept);
 
     void sendFile(QString friendId,
@@ -90,7 +90,7 @@ signals:
     void fileSendFailed(QString friendId, const QString& fname);
 
 private:
-    CoreFile(Core*);
+    CoreFile(Core*, CompatibleRecursiveMutex & coreLoopLock);
 
     ToxFile* findFile(QString fileId);
     const QString& addFile(ToxFile& file);
@@ -121,8 +121,8 @@ private slots:
 
 private:
     QHash<QString, ToxFile> fileMap;
-    lib::messenger::Messenger* messenger;
-    lib::messenger::MessengerFile* messengerFile;
+    Core* core = nullptr;
+    lib::messenger::MessengerFile* messengerFile = nullptr;
     CompatibleRecursiveMutex* coreLoopLock = nullptr;
 };
 

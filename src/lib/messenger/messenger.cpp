@@ -498,6 +498,10 @@ MessengerFile::MessengerFile(Messenger* messenger, QObject* parent) : QObject(pa
     fileSender = messenger->imFile();
 }
 
+void MessengerFile::addFileHandler(FileHandler*h) {
+    fileSender->addFileHandler(h);
+}
+
 void MessengerFile::fileRejectRequest(QString friendId, const File& file) {
     fileSender->fileRejectRequest(friendId, file);
 }

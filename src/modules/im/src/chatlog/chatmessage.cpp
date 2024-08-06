@@ -82,10 +82,15 @@ IChatItem::Ptr ChatMessage::createFileTransferMessage(const ChatLogItem& item, T
         avatar = Nexus::getProfile()->loadAvatar(item.getSender());
     }
 
+#if 0
     auto ftw = new FileTransferWidget(nullptr, file);
-    ChatLineContent* fileContent = new ChatLineContentProxy(ftw, 320, 0.6f);
+    ChatLineContent *fileContent = new ChatLineContentProxy(ftw, 320, 0.6f);
 
-    ChatMessageBox* msg = new ChatMessageBox(avatar, item.getDisplayName(), fileContent, isMe);
+    ChatMessageBox *msg = new ChatMessageBox(avatar, item.getDisplayName(), fileContent, isMe);
+#else
+    auto ftw = new FileTransferItem(file);
+    ChatMessageBox* msg = new ChatMessageBox(avatar, item.getDisplayName(), ftw, isMe);
+#endif
 
     msg->setTime(date);
     return IChatItem::Ptr(msg);

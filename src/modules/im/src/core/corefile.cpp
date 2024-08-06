@@ -30,6 +30,7 @@
 #include "src/persistence/settings.h"
 #include "toxfile.h"
 #include "toxstring.h"
+#include "lib/messenger/messenger.h"
 
 /**
  * @class CoreFile
@@ -39,7 +40,7 @@
 CoreFilePtr CoreFile::makeCoreFile(Core* core, CompatibleRecursiveMutex& coreLoopLock) {
     assert(core != nullptr);
 
-    CoreFilePtr result = CoreFilePtr{new CoreFile{core}};
+    CoreFilePtr result = CoreFilePtr{new CoreFile{core, coreLoopLock}};
 
     //  connect(core, &Core::friendStatusChanged, result.get(),
     //          &CoreFile::onConnectionStatusChanged);
@@ -47,8 +48,19 @@ CoreFilePtr CoreFile::makeCoreFile(Core* core, CompatibleRecursiveMutex& coreLoo
     return result;
 }
 
-CoreFile::CoreFile(Core* core) {
+CoreFile::~CoreFile()
+{
+    if (messengerFile)
+        delete messengerFile;
+    messengerFile = nullptr;
+}
+
+CoreFile::CoreFile(Core* core, CompatibleRecursiveMutex& coreLoopLock) : core(core) {
     qDebug() << __func__;
+
+    this->coreLoopLock = &coreLoopLock;
+    messengerFile = new lib::messenger::MessengerFile(core->getMessenger());
+    messengerFile->addFileHandler(this);
     //  lib::messenger::IMFile *imFile = core->messenger()->imFile();
     //  imFile->addFileHandler(this);
 }
@@ -83,7 +95,7 @@ void CoreFile::sendFile(
 
     QMutexLocker{coreLoopLock};
 
-    auto sender = messenger->getSelfId().toFriendId();
+    auto sender = core->getSelfId().getId();
 
     auto fileId = base::UUID::make();
     auto sId = base::UUID::make();
