@@ -202,6 +202,16 @@ void renderFile(const ChatLogItem& item, ToxFile file, bool isSelf, QDateTime ti
                 IChatItem::Ptr& chatMessage) {
     qDebug() << __func__ << "file" << file.fileName;
 
+#if 1
+    if (!chatMessage) {
+        chatMessage = ChatMessage::createFileTransferMessage(item, file, isSelf, timestamp);
+    } else {
+        if (auto item = dynamic_cast<FileTransferItem*>(chatMessage->centerContent())) {
+            item->onFileTransferUpdate(file);
+            qDebug() << "update file" << file.fileName;
+        }
+    }
+#else
     if (!chatMessage) {
         chatMessage = ChatMessage::createFileTransferMessage(item, file, isSelf, timestamp);
     } else {
@@ -212,6 +222,7 @@ void renderFile(const ChatLogItem& item, ToxFile file, bool isSelf, QDateTime ti
             qDebug() << "update file" << file.fileName;
         }
     }
+#endif
 }
 
 void renderItem(const ChatLogItem& item,
