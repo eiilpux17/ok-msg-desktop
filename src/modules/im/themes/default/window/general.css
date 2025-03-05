@@ -50,6 +50,7 @@ QTabBar[update-available=true]::tab:last:!selected
     background-color: #80c580;
 }
 
+/*#subTab 一级菜单*/
 QTabWidget#mainTab,
 QTabWidget#mainTab::pane,
 QTabWidget#mainTab>QTabBar
@@ -82,6 +83,20 @@ QTabWidget#mainTab>QTabBar::tab:hover
 QTabWidget#mainTab>QTabBar::tab:selected 
 {
     color: #19171b;
+}
+
+/*#subTab 二级菜单*/
+QTabWidget#subTab>QTabBar::tab{
+  background: white;
+	padding:5px 10px;
+}
+
+QTabWidget#subTab>QTabBar::tab:selected
+{
+    color: #19171b;
+		background: @groundBase;
+		border-top-left-radius: 10px;
+		border-top-right-radius: 10px;
 }
 
 QLabel

@@ -10,8 +10,7 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#ifndef ABOUT_USER_FORM_H
-#define ABOUT_USER_FORM_H
+#pragma once
 
 #include "src/model/aboutfriend.h"
 
@@ -23,7 +22,9 @@
 namespace Ui {
 class AboutFriendForm;
 }
+
 namespace module::im {
+
 class Widget;
 class Profile;
 class Friend;
@@ -58,4 +59,4 @@ private slots:
     void onRemoveHistoryClicked();
 };
 }  // namespace module::im
-#endif  // ABOUT_USER_FORM_H
+

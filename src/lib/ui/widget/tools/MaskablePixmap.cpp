@@ -56,7 +56,9 @@ QPixmap MaskablePixmapWidget::getPixmap() const {
 
 void MaskablePixmapWidget::setSize(QSize size) {
     setFixedSize(size);
-    delete renderTarget;
+    if(renderTarget){
+        delete renderTarget;
+    }
 
     QSize targetSize = size * devicePixelRatioF();
     renderTarget = new QPixmap(targetSize);

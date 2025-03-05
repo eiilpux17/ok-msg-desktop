@@ -43,8 +43,8 @@
 #endif
 namespace module::im {
 
-AVForm::AVForm()
-        : GenericForm(QPixmap(":/img/settings/av.png"))
+AVForm::AVForm( QWidget* parent)
+        : GenericForm(QPixmap(":/img/settings/av.png"), parent)
         , audioSettings(nullptr)
         , videoSettings(nullptr)
         , camVideoSurface(nullptr) {

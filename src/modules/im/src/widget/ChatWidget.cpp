@@ -97,18 +97,20 @@ ChatWidget::ChatWidget(QWidget* parent)
     layout()->setSpacing(0);
 
     // 右侧容器
-    contentWidget = new QWidget(this);
-    contentWidget->setObjectName("ChatContentWidget");
-    contentLayout = new ContentLayout(contentWidget);
-    contentWidget->setLayout(contentLayout);
+    contentContainer = new QWidget(this);
+    contentContainer->setObjectName("ChatContentWidget");
+    contentLayout = new ContentLayout(contentContainer);
+    contentContainer->setLayout(contentLayout);
 
     // 左侧列表
     sessionListWidget = new MessageSessionListWidget(this, contentLayout, false);
     sessionListWidget->layout()->setAlignment(Qt::AlignTop | Qt::AlignVCenter);
+    sessionListWidget->setMaximumWidth(240);
+    sessionListWidget->setMinimumWidth(240);
     ui->sessionList->setWidget(sessionListWidget);
 
-    ui->mainSplitter->addWidget(contentWidget);
-    ui->mainSplitter->setSizes(QList<int>() << 240 << 500);
+    ui->mainSplitter->addWidget(contentContainer);
+    ui->mainSplitter->setSizes(QList<int>() << 270);
     ui->mainSplitter->setStretchFactor(1, 1);
     ui->mainSplitter->setChildrenCollapsible(false);
 

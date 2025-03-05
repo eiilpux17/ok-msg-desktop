@@ -58,7 +58,6 @@ private:
 
 private:
     Ui::GeneralSettings* bodyUI;
-    SettingsWidget* parent;
     QList<QLabel*> smileLabels;
     QList<std::shared_ptr<QIcon>> emoticonsIcons;
     const int MAX_FORMAT_LENGTH = 128;

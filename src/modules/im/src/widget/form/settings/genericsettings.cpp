@@ -28,7 +28,8 @@ namespace module::im {
  * It provides correct behaviour of controls for settings forms.
  */
 
-GenericForm::GenericForm(const QPixmap& icon, QWidget* parent) : QWidget(parent), formIcon(icon) {}
+GenericForm::GenericForm(const QPixmap& icon, QWidget* parent) :
+        QWidget(parent), formIcon(icon) {}
 
 QPixmap GenericForm::getFormIcon() {
     return formIcon;

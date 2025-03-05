@@ -11,6 +11,7 @@
  */
 
 #include "aboutfriendform.h"
+#include "lib/ui/widget/tools/MaskablePixmap.h"
 #include "ui_aboutfriendform.h"
 
 #include <QFileDialog>
@@ -34,6 +35,7 @@
 
 
 namespace module::im {
+
 AboutFriendForm::AboutFriendForm(const Friend* fw, QWidget* parent)
         : QWidget(parent)
         , ui(new Ui::AboutFriendForm)
@@ -47,14 +49,23 @@ AboutFriendForm::AboutFriendForm(const Friend* fw, QWidget* parent)
     const auto af = new AboutFriend(m_friend, profile->getSettings());
     about = std::unique_ptr<IAboutFriend>(af);
 
-    reloadTheme();
+    connect(ui->sendMessage, &QPushButton::clicked, this,
+            &AboutFriendForm::onSendMessageClicked);
 
-    connect(ui->sendMessage, &QPushButton::clicked, this, &AboutFriendForm::onSendMessageClicked);
     connect(ui->removeHistory, &QPushButton::clicked, this,
             &AboutFriendForm::onRemoveHistoryClicked);
+
     ui->id->setText(about->getPublicKey().toString());
     ui->statusMessage->setText(about->getStatusMessage());
+
+    // auto avatar = new lib::ui::MaskablePixmapWidget(this, QSize(100, 100));
+    // avatar->setPixmap(about->getAvatar());
+    // avatar->setSize(QSize(100,100));
+    // avatar->autopickBackground();
+
+
     ui->avatar->setPixmap(about->getAvatar());
+    // ui->avatar->setSizeIncrement(QSize(100,100));
 
     auto f = about->getFriend();
     connect(f, &Friend::avatarChanged, this,
@@ -75,6 +86,8 @@ AboutFriendForm::AboutFriendForm(const Friend* fw, QWidget* parent)
 
     connect(&lib::ui::GUI::getInstance(), &lib::ui::GUI::themeApplyRequest, this,
             &AboutFriendForm::reloadTheme);
+
+    reloadTheme();
 }
 
 /**

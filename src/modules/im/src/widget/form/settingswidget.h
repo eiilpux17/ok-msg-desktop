@@ -17,17 +17,17 @@
 #include <QPushButton>
 #include <QStyleFactory>
 
-#include <array>
-#include <memory>
+
 class QLabel;
 class QTabWidget;
-class Camera;
+
 
 namespace module::im {
 class GenericForm;
 class GeneralForm;
 class IAudioControl;
 class AVForm;
+class StorageSettingsForm;
 
 class ContentLayout;
 class Widget;
@@ -57,9 +57,14 @@ private:
     void retranslateUi();
 
 private:
-    std::unique_ptr<QVBoxLayout> bodyLayout;
-    std::unique_ptr<QTabWidget> settingsWidgets;
-    std::vector<std::unique_ptr<GenericForm>> cfgForms;
+    QVBoxLayout* bodyLayout;
+    QTabWidget* tab;
+
+    GeneralForm* gfrm;
+    AVForm* rawAvfrm;
+    StorageSettingsForm* uifrm;
+
+    std::vector<GenericForm*> cfgForms;
     int currentIndex;
 };
 }  // namespace module::im

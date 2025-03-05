@@ -64,7 +64,7 @@ protected:
 
 private:
     Ui::ChatWidget* ui;
-    QWidget* contentWidget;
+    QWidget* contentContainer;
     ContentLayout* contentLayout;
     MessageSessionListWidget* sessionListWidget;
 

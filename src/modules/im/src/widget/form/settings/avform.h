@@ -45,7 +45,7 @@ class VideoSurface;
 class AVForm : public GenericForm, private Ui::AVForm {
     Q_OBJECT
 public:
-    AVForm();
+    AVForm(QWidget* parent = nullptr);
     ~AVForm() override;
     QString getFormName() final override {
         return tr("Audio/Video");

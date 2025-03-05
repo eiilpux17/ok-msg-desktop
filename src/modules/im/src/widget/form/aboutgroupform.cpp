@@ -13,13 +13,14 @@
 #include "aboutgroupform.h"
 
 #include <QDebug>
-#include "src/lib/session/profile.h"
 #include "src/model/group.h"
 #include "src/model/grouplist.h"
 #include "src/nexus.h"
 #include "src/widget/widget.h"
 #include "ui_aboutgroupform.h"
+
 namespace module::im {
+
 AboutGroupForm::AboutGroupForm(const Group* group_, QWidget* parent)
         : QWidget(parent), ui(new Ui::AboutGroupForm), group{group_} {
     ui->setupUi(this);

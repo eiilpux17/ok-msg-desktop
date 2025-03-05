@@ -27,7 +27,7 @@ public:
     void setSize(QSize size);
 
 protected:
-    void mousePressEvent(QMouseEvent*) final override;
+    void mousePressEvent(QMouseEvent*) override;
 
 private:
     void updatePixmap();

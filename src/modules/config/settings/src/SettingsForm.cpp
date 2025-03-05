@@ -35,23 +35,23 @@ SettingsWidget::SettingsWidget(QWidget* parent)
     setLayout(bodyLayout.get());
 
     //  std::unique_ptr<GeneralForm> gfrm(new GeneralForm(this));
-    //    connect(gfrm.get(), &GeneralForm::updateIcons, parent, &Widget::updateIcons);
+    //  connect(gfrm.get(), &GeneralForm::updateIcons, parent, &Widget::updateIcons);
 
     // std::unique_ptr<StorageSettingsForm> uifrm(new StorageSettingsForm(this));
-    //  std::unique_ptr<PrivacyForm> pfrm(new PrivacyForm());
-    //    connect(pfrm.get(), &PrivacyForm::clearAllReceipts, parent, &Widget::clearAllReceipts);
+    // std::unique_ptr<PrivacyForm> pfrm(new PrivacyForm());
+    // connect(pfrm.get(), &PrivacyForm::clearAllReceipts, parent, &Widget::clearAllReceipts);
 
     //  std::unique_ptr<AdvancedForm> expfrm(new AdvancedForm());
     //  std::unique_ptr<AboutForm> abtfrm(new AboutForm());
 
-#if UPDATE_CHECK_ENABLED
-    if (updateCheck != nullptr) {
-        connect(updateCheck, &UpdateCheck::updateAvailable, this,
-                &SettingsWidget::onUpdateAvailable);
-    } else {
-        qWarning() << "SettingsWidget passed null UpdateCheck!";
-    }
-#endif
+// #if UPDATE_CHECK_ENABLED
+//     if (updateCheck != nullptr) {
+//         connect(updateCheck, &UpdateCheck::updateAvailable, this,
+//                 &SettingsWidget::onUpdateAvailable);
+//     } else {
+//         qWarning() << "SettingsWidget passed null UpdateCheck!";
+//     }
+// #endif
 
     cfgForms = {{
             new GeneralForm(this),
@@ -62,13 +62,13 @@ SettingsWidget::SettingsWidget(QWidget* parent)
     }};
 
     for (auto& cfgForm : cfgForms)
-        settingsWidgets->addTab(cfgForm, cfgForm->getFormIcon(), cfgForm->getFormName());
+        settingsWidgets->addTab(cfgForm, cfgForm->getFormName());
 
     connect(settingsWidgets.get(), &QTabWidget::currentChanged, this,
             &SettingsWidget::onTabChanged);
 
-
     retranslateUi();
+
     auto a = ok::Application::Instance();
     connect(a->bus(), &ok::Bus::languageChanged,this,
             [&](const QString& locale0) {

@@ -53,7 +53,6 @@ ContactWidget::ContactWidget(QWidget* parent)
     // 左侧朋友列表
     contactListWidget = new ContactListWidget(this, false);
     contactListWidget->setObjectName("contactListWidget");
-
     contactListWidget->layout()->setAlignment(Qt::AlignTop | Qt::AlignVCenter);
     ui->friendList->setWidget(contactListWidget);
 

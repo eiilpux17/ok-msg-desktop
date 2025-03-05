@@ -31,46 +31,51 @@
 #include "lib/storage/settings/translator.h"
 
 namespace module::im {
+
 SettingsWidget::SettingsWidget(QWidget* parent) : QWidget(parent, Qt::Window) {
-    //    IAudioSettings* audioSettings = Nexus::getProfile()->getSettings();
-    //    IVideoSettings* videoSettings = Nexus::getProfile()->getSettings();
 
-    settingsWidgets = std::unique_ptr<QTabWidget>(new QTabWidget(this));
-    settingsWidgets->setTabPosition(QTabWidget::North);
-
-    bodyLayout = std::unique_ptr<QVBoxLayout>(new QVBoxLayout(this));
+    bodyLayout = new QVBoxLayout(this);
     bodyLayout->setContentsMargins(0, 0, 0, 0);
-    bodyLayout->addWidget(settingsWidgets.get());
-    setLayout(bodyLayout.get());
 
-    std::unique_ptr<GeneralForm> gfrm(new GeneralForm(this));
-    //    connect(gfrm.get(), &GeneralForm::updateIcons, parent, &Widget::updateIcons);
-
-    std::unique_ptr<StorageSettingsForm> uifrm(new StorageSettingsForm(this));
-    //    std::unique_ptr<PrivacyForm> pfrm(new PrivacyForm());
-    //    connect(pfrm.get(), &PrivacyForm::clearAllReceipts, parent, &Widget::clearAllReceipts);
-
-    AVForm* rawAvfrm = new AVForm();
-    std::unique_ptr<AVForm> avfrm(rawAvfrm);
-
-#if UPDATE_CHECK_ENABLED
-    if (updateCheck != nullptr) {
-        connect(updateCheck, &UpdateCheck::updateAvailable, this,
-                &SettingsWidget::onUpdateAvailable);
-    } else {
-        qWarning() << "SettingsWidget passed null UpdateCheck!";
-    }
-#endif
-
-    cfgForms.push_back(std::move(gfrm));
-    cfgForms.push_back(std::move(uifrm));
-    cfgForms.push_back(std::move(avfrm));
-
-    for (auto& cfgForm : cfgForms)
-        settingsWidgets->addTab(cfgForm.get(), cfgForm->getFormIcon(), cfgForm->getFormName());
-
-    connect(settingsWidgets.get(), &QTabWidget::currentChanged, this,
+    tab =  new QTabWidget(this);
+    tab->setObjectName("subTab");
+    tab->setTabPosition(QTabWidget::North);
+    connect(tab, &QTabWidget::currentChanged, this,
             &SettingsWidget::onTabChanged);
+
+    // General settings
+    gfrm = new GeneralForm(this);
+    // connect(gfrm.get(), &GeneralForm::updateIcons, parent, &Widget::updateIcons);
+
+    // Storage settings
+    uifrm = new StorageSettingsForm(this);
+    // AV settings
+    rawAvfrm = new AVForm(this);
+
+
+// #if UPDATE_CHECK_ENABLED
+//     if (updateCheck != nullptr) {
+//         connect(updateCheck, &UpdateCheck::updateAvailable, this,
+//                 &SettingsWidget::onUpdateAvailable);
+//     } else {
+//         qWarning() << "SettingsWidget passed null UpdateCheck!";
+//     }
+// #endif
+
+    cfgForms.push_back(gfrm);
+    cfgForms.push_back(uifrm);
+    cfgForms.push_back(rawAvfrm);
+
+    for (auto& f : cfgForms){
+        f->setStyleSheet("padding: 0 10px;");
+        tab->addTab(f,
+                    // cfgForm->getFormIcon(),
+                    f->getFormName());
+    }
+
+    bodyLayout->addWidget(tab);
+    setLayout(bodyLayout);
+
 
     auto a = ok::Application::Instance();
     connect(a->bus(), &ok::Bus::languageChanged,this,
@@ -84,16 +89,16 @@ SettingsWidget::~SettingsWidget() {
 }
 
 void SettingsWidget::setBodyHeadStyle(QString style) {
-    settingsWidgets->setStyle(QStyleFactory::create(style));
+    tab->setStyle(QStyleFactory::create(style));
 }
 
 void SettingsWidget::showAbout() {
-    onTabChanged(settingsWidgets->count() - 1);
+    onTabChanged(tab->count() - 1);
 }
 
 bool SettingsWidget::isShown() const {
-    if (settingsWidgets->isVisible()) {
-        settingsWidgets->window()->windowHandle()->alert(0);
+    if (tab->isVisible()) {
+        tab->window()->windowHandle()->alert(0);
         return true;
     }
 
@@ -102,18 +107,18 @@ bool SettingsWidget::isShown() const {
 
 void SettingsWidget::show(ContentLayout* contentLayout) {
     //    contentLayout->mainContent->layout()->addWidget(settingsWidgets.get());
-    settingsWidgets->show();
-    onTabChanged(settingsWidgets->currentIndex());
+    tab->show();
+    onTabChanged(tab->currentIndex());
 }
 
 void SettingsWidget::onTabChanged(int index) {
-    settingsWidgets->setCurrentIndex(index);
+    tab->setCurrentIndex(index);
 }
 
 void SettingsWidget::onUpdateAvailable() {
-    settingsWidgets->tabBar()->setProperty("update-available", true);
-    settingsWidgets->tabBar()->style()->unpolish(settingsWidgets->tabBar());
-    settingsWidgets->tabBar()->style()->polish(settingsWidgets->tabBar());
+    tab->tabBar()->setProperty("update-available", true);
+    tab->tabBar()->style()->unpolish(tab->tabBar());
+    tab->tabBar()->style()->polish(tab->tabBar());
 }
 
 void SettingsWidget::retranslateUi() {
@@ -123,7 +128,7 @@ void SettingsWidget::retranslateUi() {
 
     for (size_t i = 0; i < cfgForms.size(); ++i){
         auto n = cfgForms[i]->getFormName();
-        settingsWidgets->setTabText(i, n);
+        tab->setTabText(i, n);
     }
 }
 }  // namespace module::im

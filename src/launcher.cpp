@@ -58,7 +58,9 @@ int Launcher::executeApplication() {
     return retval;
 }
 
-int Launcher::startup() { return executeApplication(); }
+int Launcher::startup() {
+    return executeApplication();
+}
 
 void Launcher::shutdown() {
     app->closeAllWindows();

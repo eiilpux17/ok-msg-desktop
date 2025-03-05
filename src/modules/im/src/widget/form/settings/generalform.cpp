@@ -16,21 +16,15 @@
 #include <QDesktopWidget>
 #include <QFileDialog>
 
-#include "lib/storage/settings/OkSettings.h"
-#include "lib/storage/settings/translator.h"
-#include "src/base/RecursiveSignalBlocker.h"
 #include "src/core/core.h"
-#include "src/core/coreav.h"
-#include "src/lib/session/profile.h"
 #include "src/lib/storage/settings/style.h"
 #include "src/persistence/settings.h"
-#include "src/persistence/smileypack.h"
 #include "src/widget/form/settingswidget.h"
-
 #include "src/Bus.h"
 #include "src/application.h"
 #include "src/nexus.h"
 #include "src/widget/widget.h"
+
 namespace module::im {
 
 /**
@@ -38,16 +32,20 @@ namespace module::im {
  *
  * This form contains all settings that are not suited to other forms
  */
-GeneralForm::GeneralForm(SettingsWidget* myParent)
-        : GenericForm(QPixmap(":/img/settings/general.png")), bodyUI(new Ui::GeneralSettings) {
-    parent = myParent;
+GeneralForm::GeneralForm(SettingsWidget* parent)
+        : GenericForm(QPixmap(":/img/settings/general.png"), parent)
+        , bodyUI(new Ui::GeneralSettings) {
+
+    setContentsMargins(0, 0, 0, 0);
 
     bodyUI->setupUi(this);
 
     // block all child signals during initialization
-    const ok::base::RecursiveSignalBlocker signalBlocker(this);
+    // const ok::base::RecursiveSignalBlocker signalBlocker(this);
 
-    eventsInit();
+    // eventsInit();
+
+    retranslateUi();
 
     auto bus = ok::Application::Instance()->bus();
     connect(bus, &ok::Bus::languageChanged,
@@ -55,6 +53,12 @@ GeneralForm::GeneralForm(SettingsWidget* myParent)
                 retranslateUi();
             });
     connect(bus, &ok::Bus::profileChanged, this, &GeneralForm::onProfileChanged);
+
+
+    auto css = lib::settings::Style::getStylesheet("settings/mainHead.css");
+    setStyleSheet(css);
+    bodyUI->scrollArea->setStyleSheet(css);
+
 }
 
 GeneralForm::~GeneralForm() {
