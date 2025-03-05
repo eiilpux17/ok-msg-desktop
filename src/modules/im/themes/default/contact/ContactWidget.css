@@ -10,10 +10,21 @@
  * See the Mulan PubL v2 for more details.
  */
 
-module--im--ContactWidget,
-module--im--AddFriendForm
+module--im--NotificationScrollArea,
+module--im--AdjustingScrollArea
 {
-    background-color: @groundBase;
+    background: @groundBase;
+		border: 0px solid;
+}
+
+module--im--ContactWidget{
+  background:red;
+}
+
+module--im--ContactListWidget
+/*module--im--AddFriendForm*/
+{
+    background: @groundBase;
     border: 0px solid;
 }
 
@@ -31,7 +42,7 @@ lib--ui--RoundedMaskContainer#statusPanel
     border: 0px solid;
 }
 
-#searchText{
+#searchContact{
     color: #19171b;
     border: 1px solid @themeMedium;
     background-color: @themeMedium;

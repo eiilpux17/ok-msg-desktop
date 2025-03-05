@@ -261,6 +261,12 @@ void IMMeet::onStarted() {}
 
 void IMMeet::onStopped() {}
 
+
+void IMMeet::onError(const std::string& msgId, const std::string &msg)
+{
+
+}
+
 void IMMeet::onSelfIdChanged(const std::string& id) {}
 
 void IMMeet::onSelfNameChanged(const std::string& name) {}

@@ -27,8 +27,8 @@ QWidget#ContentSeperator{
     background: white;
 }
 
-QLineEdit#searchContactText{
-    color: #525a72;
+QLineEdit#searchContact{
+    color: #19171b;
     border: 1px solid @themeMedium;
     background-color: @themeMedium;
     border-radius: 5px;

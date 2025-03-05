@@ -181,8 +181,14 @@ void Core::onStopped() {
     qDebug() << __func__;
 }
 
+void Core::onError(const std::string& msgId, const std::string &msg)
+{
+    qDebug() << __func__ << msgId.c_str() << msg.c_str();
+    emit errorOccurred(qstring(msgId), qstring(msg));
+}
+
 void Core::onDisconnected(int err) {
-    qDebug() << __func__;
+    qDebug() << __func__ <<" error:"<< err;
     mutex.unlock();
     emit disconnected(err);
 }

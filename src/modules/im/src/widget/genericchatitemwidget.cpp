@@ -78,7 +78,7 @@ GenericChatItemWidget::GenericChatItemWidget(ChatType type,
 }
 
 GenericChatItemWidget::~GenericChatItemWidget() {
-    qDebug() << __func__;
+    // qDebug() << __func__;
 }
 
 QString GenericChatItemWidget::getName() const {

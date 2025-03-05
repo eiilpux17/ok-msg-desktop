@@ -508,8 +508,13 @@ void IM::handleMessage(const gloox::Message& msg, gloox::MessageSession* session
     auto peerId = from.full();
     auto friendId = from.bare();
     auto body = msg.body();
+    auto msgId = msg.id();
 
-    qDebug() << __func__ << "from:" << peerId.c_str() << "subtype:" << (int)msg.subtype();
+    qDebug() << __func__
+             << "from:" << peerId.c_str()
+             << "subtype:" << (int)msg.subtype()
+             << "body:" << body.c_str()
+             << "id:" << msgId.c_str();
 
     gloox::Message::MessageType msgType = msg.subtype();
     switch (msgType) {
@@ -528,9 +533,15 @@ void IM::handleMessage(const gloox::Message& msg, gloox::MessageSession* session
         case gloox::Message::Groupchat:
             // ignore
             break;
-        case gloox::Message::Error:
+        case gloox::Message::Error:{
+            qWarning() <<"error:" << msg.error()->text().c_str();
+            for(auto *h : imHandlers){
+                h->onError(msgId, msg.error()->text());
+            }
+            break;
+        }
         case gloox::Message::Invalid: {
-            // error
+            qWarning() <<"invalid!";
             break;
         }
     }
@@ -596,7 +607,7 @@ void IM::doMessageChat(const gloox::Message& msg, std::string& friendId, const s
     qDebug() << __func__ << "from:" << friendId.c_str() << body.c_str();
     if (!body.empty()) {
         if (!msg.encrypted()) {
-            for (auto handler : friendHandlers) {
+            for (auto* handler : friendHandlers) {
                 handler->onFriendMessage(friendId, fromXMsg(MsgType::Chat, msg));
             }
         } else {

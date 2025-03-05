@@ -111,6 +111,7 @@ public slots:
     void onConnecting();
     void onDisconnected(int err);
     void onConnected();
+    void onError(QString msgId, QString error);
 
     void onStatusSet(Status status);
     void onNicknameSet(const QString& nickname);

@@ -13,6 +13,7 @@
 #ifndef FRIENDLISTWIDGET_H
 #define FRIENDLISTWIDGET_H
 
+#include <QFrame>
 #include <QWidget>
 #include "src/core/core.h"
 #include "src/model/message.h"
@@ -35,7 +36,7 @@ class Friend;
 class ContentLayout;
 class MainLayout;
 
-class ContactListWidget : public QWidget {
+class ContactListWidget : public QFrame {
     Q_OBJECT
 public:
     using SortingMode = Settings::FriendListSortingMode;
@@ -70,7 +71,7 @@ public:
     void cycleContacts(GenericChatroomWidget* activeChatroomWidget, bool forward);
 
     void updateActivityTime(const QDateTime& date);
-    void reDraw();
+    // void reDraw();
 
     void setRecvGroupMessage(const GroupMessage& msg);
 

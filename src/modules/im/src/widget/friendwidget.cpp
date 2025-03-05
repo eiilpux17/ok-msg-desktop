@@ -101,7 +101,7 @@ FriendWidget::FriendWidget(Friend* f, QWidget* parent)
 }
 
 FriendWidget::~FriendWidget() {
-    qDebug() << __func__;
+    // qDebug() << __func__;
 }
 
 void FriendWidget::do_widgetClicked(GenericChatroomWidget* w) {

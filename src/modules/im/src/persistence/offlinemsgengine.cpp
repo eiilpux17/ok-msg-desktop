@@ -27,9 +27,8 @@ OfflineMsgEngine::OfflineMsgEngine(const FriendId* frnd, ICoreFriendMessageSende
  *
  */
 void OfflineMsgEngine::onReceiptReceived(MsgId receipt) {
-    // qDebug() << __func__ << receipt;
+    qDebug() << __func__ << receipt;
 
-    QMutexLocker ml(&mutex);
     if(receipt.isEmpty()){
         return;
     }

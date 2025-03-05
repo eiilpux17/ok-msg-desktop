@@ -46,9 +46,9 @@ inline QDateTime getActiveTimeFriend(const Friend* contact) {
 }
 
 ContactListWidget::ContactListWidget(QWidget* parent, bool groupsOnTop)
-        : QWidget(parent), groupsOnTop(groupsOnTop) {
+        : QFrame(parent), groupsOnTop(groupsOnTop) {
     setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
-
+    setAttribute(Qt::WA_StyledBackground, true);
     //    groupLayout.getLayout()->setSpacing(0);
     //    groupLayout.getLayout()->setMargin(0);
 
@@ -64,6 +64,9 @@ ContactListWidget::ContactListWidget(QWidget* parent, bool groupsOnTop)
 
     new QShortcut(QKeySequence(Qt::Key_Up), this, [this]() { cycleContacts(true); });
     new QShortcut(QKeySequence(Qt::Key_Down), this, [this]() { cycleContacts(false); });
+
+
+
 }
 
 ContactListWidget::~ContactListWidget() {
@@ -358,11 +361,11 @@ void ContactListWidget::updateActivityTime(const QDateTime& time) {
 }
 
 // update widget after add/delete/hide/show
-void ContactListWidget::reDraw() {
-    hide();
-    show();
-    resize(QSize());  // lifehack
-}
+// void ContactListWidget::reDraw() {
+//     hide();
+//     show();
+//     resize(QSize());  // lifehack
+// }
 
 GroupWidget* ContactListWidget::getGroup(const GroupId& id) {
     return groupWidgets.value(id.toString());

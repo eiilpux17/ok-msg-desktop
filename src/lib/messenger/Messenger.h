@@ -57,6 +57,7 @@ public:
     virtual void onDisconnected(int)= 0;
     virtual void onStarted()= 0;
     virtual void onStopped()= 0;
+    virtual void onError(const std::string& msgId, const std::string& msg) = 0;
 };
 
 class SelfHandler {

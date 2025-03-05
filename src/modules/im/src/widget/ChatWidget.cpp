@@ -43,6 +43,7 @@
 
 #include "src/Bus.h"
 #include "src/core/coreav.h"
+#include <lib/ui/gui.h>
 
 namespace module::im {
 
@@ -172,6 +173,9 @@ void ChatWidget::connectToCore(Core* core) {
     connect(core, &Core::connecting, this, &ChatWidget::onConnecting);
     connect(core, &Core::connected, this, &ChatWidget::onConnected);
     connect(core, &Core::disconnected, this, &ChatWidget::onDisconnected);
+    connect(core, &Core::errorOccurred, this, &ChatWidget::onError);
+
+
     connect(core, &Core::usernameSet, this, &ChatWidget::onNicknameSet);
     connect(core, &Core::statusSet, this, &ChatWidget::onStatusSet);
     connect(core, &Core::statusMessageSet, this, &ChatWidget::onStatusMessageSet);
@@ -490,6 +494,12 @@ void ChatWidget::onDisconnected(int err) {
 void ChatWidget::onConnected() {
     // TODO IM模块，"在线"
     qDebug() << __func__;
+}
+
+void ChatWidget::onError(QString msgId, QString error)
+{
+    qDebug() << __func__ << "msgId:" << msgId << "msg:" << error;
+    lib::ui::GUI::showError(tr("Error"), error);
 }
 
 void ChatWidget::onGroupClicked() {}

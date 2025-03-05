@@ -392,6 +392,11 @@ void IMFile::onStopped()
 
 }
 
+void IMFile::onError(const std::string& msgId, const std::string &msg)
+{
+
+}
+
 bool IMFile::doSessionInitiate(gloox::Jingle::Session* session,
                                const gloox::Jingle::Session::Jingle* jingle,
                                const IMPeerId& peerId) {

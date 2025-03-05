@@ -9,78 +9,48 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PubL v2 for more details.
  */
-
- AdjustingScrollArea
+module--im--NotificationScrollArea,
+module--im--AdjustingScrollArea
 {
     background: @groundBase;
     border: 0px solid;
 }
 
+module--im--NotificationScrollArea:hover {
+  boder: none;
+}
+
 /* it is necessary for the rounded effect*/
-MessageSessionListWidget,
-#scrollAreaWidgetContents
-{
-    border: 0px solid;
+module--im--MessageSessionListWidget{
+    border: 0;
+		background-color: @themeMedium;
 }
-
-QWidget#circleWidgetContainer > QFrame#line
-{
-    color: white;
-}
-
-QWidget#circleWidgetContainer
-{
-    background-color: @themeMedium;
-}
-
-QWidget#circleWidgetContainer:hover
-{
-    background-color: @themeLight;
-}
-
-QWidget#circleWidgetContainer QLineEdit
-{
-    background-color: @themeLight;
-}
-
-QWidget#circleWidgetContainer > QLabel#status
-{
-    font: @small;
-    color: @groundExtra;
-}
-
-QWidget#circleWidgetContainer > QLabel#name
-{
-    font: @big;
-    color: @groundBase;
-}
-
 QLabel {
     color: @mainText;
 }
 
-#friendList QScrollBar:vertical
+module--im--MessageSessionListWidget QScrollBar:vertical
 {
     width: 8px;
     padding: 0px 0px 0px 3px;
 }
-#friendList QScrollBar::handle
+module--im--MessageSessionWidget QScrollBar::handle
 {
     background-color: #f7f7f7; 
 }
 
-#friendList QScrollBar::handle:hover
+module--im--MessageSessionWidget QScrollBar::handle:hover
 {
     background-color: white; 
 }
 
-#friendList QScrollBar::handle:pressed
+module--im--MessageSessionWidget QScrollBar::handle:pressed
 {
     background-color: white; 
 }
 
 module--im--MessageSessionWidget{
-    border: 0px solid;
+    border: 0;
     border-radius: 5px;
 }
 
@@ -101,4 +71,17 @@ module--im--MessageSessionWidget QLabel#lastMessageLabel:!active{
 }
 module--im--MessageSessionWidget QLabel#lastMessageLabel:active{
     color: #b3b1b3;
+}
+
+module--im--ContactListLayout {
+  border: 0;
+}
+
+
+#searchContact{
+    color: #19171b;
+		border: 1px solid @themeMedium;
+		background-color: @themeMedium;
+		border-radius: 5px;
+		padding: 6px;
 }

@@ -781,6 +781,11 @@ void IMCall::onStopped()
     qDebug() << __func__;
 }
 
+void IMCall::onError(const std::string& msgId, const std::string &msg)
+{
+
+}
+
 bool IMCall::doSessionInitiate(gloox::Jingle::Session* session,
                                const gloox::Jingle::Session::Jingle* jingle,
                                const IMPeerId& peerId) {

@@ -33,10 +33,8 @@ OPainterToolBox::OPainterToolBox(QWidget* parent)
     setObjectName("OPainterToolBox");
     setContentsMargins(0,0,0,0);
 
-    setFixedSize(QSize(40, 220));
-
     //工具栏宽尺寸40*220
-    //
+    setFixedSize(QSize(40, 220));
 
     auto* vBox = new QVBoxLayout(this);
     vBox->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
@@ -105,10 +103,9 @@ OPainterToolBox::OPainterToolBox(QWidget* parent)
     connect(m_penColorPanel.get(), &OPainterColorPanel::weightChange, this,
             &OPainterToolBox::onPenWeightChange);
 
-
     setLayout(vBox);
 
-    QString qss = lib::settings::Style::getStylesheet("toolbox.css");
+    auto qss = lib::settings::Style::getStylesheet("toolbox.css");
     setStyleSheet(qss);
 }
 

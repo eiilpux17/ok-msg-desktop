@@ -217,6 +217,7 @@ protected:
     void onDisconnected(int)override;
     void onStarted()override;
     void onStopped()override;
+    void onError(const std::string& msgId, const std::string& msg) override;
 
     IMCallSession* cacheSessionInfo(const IMContactId& from,
                                     const IMPeerId& to,

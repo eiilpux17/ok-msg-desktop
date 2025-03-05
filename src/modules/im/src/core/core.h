@@ -198,6 +198,7 @@ private:
     void onDisconnected(int) override;
     void onStarted() override;
     void onStopped() override;
+    void onError(const std::string& msgId, const std::string& msg) override;
 
     /**
      * FriendHandler
@@ -358,6 +359,9 @@ signals:
     void receiptRecieved(const FriendId& friedId, MsgId receipt);
 
     void failedToRemoveFriend(QString friendId);
+
+    void errorOccurred(QString msgId, QString msg);
+
 private slots:
     void process();
 };

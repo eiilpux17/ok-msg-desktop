@@ -43,7 +43,6 @@ ContactWidget::ContactWidget(QWidget* parent)
     layout()->setMargin(0);
     layout()->setSpacing(0);
 
-    ui->searchContactsContainer->setAutoFillBackground(false);
 
     // 右侧内容容器
     contentWidget = new QWidget(this);
@@ -70,6 +69,7 @@ ContactWidget::ContactWidget(QWidget* parent)
     ui->mainSplitter->setStretchFactor(1, 1);
     ui->mainSplitter->setChildrenCollapsible(false);
 
+    ui->searchContactsContainer->setAutoFillBackground(false);
     ui->searchContact->setPlaceholderText(tr("Search Contacts"));
     connect(ui->searchContact, &QLineEdit::textChanged, this, &ContactWidget::searchContacts);
 
@@ -84,7 +84,7 @@ ContactWidget::ContactWidget(QWidget* parent)
     connect(Widget::getInstance(), &Widget::friendRemoved, this, &ContactWidget::onFriendRemoved);
     connect(Widget::getInstance(), &Widget::addMember, this, &ContactWidget::do_addContactToGroup);
 
-       auto a = ok::Application::Instance();
+    auto a = ok::Application::Instance();
     connect(a->bus(), &ok::Bus::languageChanged,this,
             [&](const QString& locale0) {
                 retranslateUi();
@@ -98,11 +98,13 @@ ContactWidget::~ContactWidget() {
 }
 
 void ContactWidget::reloadTheme() {
-    setStyleSheet(lib::settings::Style::getStylesheet("contact/ContactWidget.css"));
-    ui->friendList->setStyleSheet(lib::settings::Style::getStylesheet("contact/ContactList.css"));
-
+    auto css = lib::settings::Style::getStylesheet("contact/ContactWidget.css");
+    setStyleSheet(css);
+    contactListWidget->setStyleSheet(css);
     contactListWidget->reloadTheme();
     contentLayout->reloadTheme();
+
+    ui->friendList->setStyleSheet(css);
 }
 
 AddFriendForm* ContactWidget::makeAddForm() {

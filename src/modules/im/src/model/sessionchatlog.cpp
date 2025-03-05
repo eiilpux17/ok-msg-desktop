@@ -508,12 +508,12 @@ void SessionChatLog::onFileTransferBrokenUnbroken(const FriendId& sender,
 ChatLogIdx SessionChatLog::getNextIdx(MsgId msgId) {
     assert(!msgId.isEmpty());
 
-    auto idx = id2IdxMap.value(msgId, ChatLogIdx(-1));
-    if (idx.get() == -1) {
+    ChatLogIdx idx(-1);
+    auto f = id2IdxMap.find(msgId);
+    if (f == id2IdxMap.end()) {
         idx = nextIdx++;
         id2IdxMap.insert(msgId, idx);
     }
-
     qDebug() << "make next msgId:" << msgId << " idx:" << idx.get();
     return idx;
 }
