@@ -64,6 +64,8 @@ protected:
     void mouseMoveEvent(QMouseEvent* ev) override;
     void paintEvent(QPaintEvent* e) override;
     void onActiveSet(bool active) override;
+    void enterEvent(QEvent* e) override;
+    void leaveEvent(QEvent* e) override;
 
 private:
     AboutFriendForm* about;

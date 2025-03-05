@@ -19,7 +19,7 @@ module--im--AdjustingScrollArea,
 }
 
 #contactListWidget{
-  background: red;
+  background: @groundBase;
 }
 
 module--im--ContactListWidget
@@ -63,4 +63,18 @@ QPushButton#addBtn
 QPushButton#addBtn:hover
 {
     background-color: #f3f5f7;
+}
+
+module--im--FriendWidget, module--im--GroupWidget {
+    border: 1px solid @groundBase;
+		border-radius: 5px;
+		background: @groundBase;
+}
+
+module--im--FriendWidget:hover, module--im--GroupWidget:hover {
+    background-color:@themeLight;
+}
+
+module--im--FriendWidget:selected, module--im--GroupWidget:selected {
+    background-color:@themeLight;
 }

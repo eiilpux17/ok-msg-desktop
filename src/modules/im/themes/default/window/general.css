@@ -160,13 +160,16 @@ QComboBox QAbstractItemView {
 QLineEdit
 {
     color: @mainText;
-    background-color: white;
+		border: 1px solid @themeMedium;
+		background-color: @themeMedium;
+		border-radius: 5px;
+		padding: 6px;
 }
 
 QLineEdit:disabled
 {
     color: @mainText;
-    background-color: lightGrey;
+		background-color: lightGrey;
 }
 
 QScrollArea

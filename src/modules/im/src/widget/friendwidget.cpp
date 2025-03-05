@@ -18,6 +18,7 @@
 #include <QDebug>
 #include <QDrag>
 #include <QFileDialog>
+#include <QGraphicsOpacityEffect>
 #include <QInputDialog>
 #include <QMenu>
 #include <QMimeData>
@@ -98,6 +99,9 @@ FriendWidget::FriendWidget(Friend* f, QWidget* parent)
     //    sendWorker->onAvatarChanged(friendPk, avatar);
     //    setAvatar(avatar);
     //  }
+
+
+
 }
 
 FriendWidget::~FriendWidget() {
@@ -357,6 +361,20 @@ void FriendWidget::setAsInactiveChatroom() {
 
 void FriendWidget::onActiveSet(bool active) {
     //    setBackgroundRole(QPalette::Window);
+}
+
+void FriendWidget::enterEvent(QEvent *e)
+{
+    // auto shadowEffect = new QGraphicsDropShadowEffect(this);
+    // shadowEffect->setOffset(1, 1);
+    // shadowEffect->setColor(lib::settings::Style::getColor(lib::settings::Style::ColorPalette::ThemeLight));
+    // shadowEffect->setBlurRadius(6);
+    // this->setGraphicsEffect(shadowEffect);
+}
+
+void FriendWidget::leaveEvent(QEvent *e)
+{
+    // setGraphicsEffect(nullptr);
 }
 
 QString FriendWidget::getStatusString() const {
