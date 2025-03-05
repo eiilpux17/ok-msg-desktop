@@ -11,15 +11,11 @@
  */
 
 #include "ContactListWidget.h"
-#include "ChatWidget.h"
 #include "ContactListLayout.h"
 #include "base/times.h"
 
-#include "contentdialogmanager.h"
 #include "friendwidget.h"
 #include "groupwidget.h"
-#include "lib/storage/settings/OkSettings.h"
-#include "src/lib/session/profile.h"
 #include "src/model/chathistory.h"
 #include "src/model/chatroom/friendchatroom.h"
 #include "src/model/friend.h"
@@ -37,8 +33,9 @@
 #include <QTimer>
 
 #include "Bus.h"
-#include "application.h"
 #include "widget.h"
+
+
 namespace module::im {
 
 inline QDateTime getActiveTimeFriend(const Friend* contact) {
@@ -51,10 +48,11 @@ ContactListWidget::ContactListWidget(QWidget* parent, bool groupsOnTop)
     setAttribute(Qt::WA_StyledBackground, true);
     //    groupLayout.getLayout()->setSpacing(0);
     //    groupLayout.getLayout()->setMargin(0);
+    setObjectName("contactListWidget");
 
     // Prevent QLayout's add child warning before setting the mode.
     listLayout = new ContactListLayout(this);
-    setLayout(listLayout);
+
 
     // setAcceptDrops(true);
 
@@ -65,8 +63,12 @@ ContactListWidget::ContactListWidget(QWidget* parent, bool groupsOnTop)
     new QShortcut(QKeySequence(Qt::Key_Up), this, [this]() { cycleContacts(true); });
     new QShortcut(QKeySequence(Qt::Key_Down), this, [this]() { cycleContacts(false); });
 
+    // auto css = lib::settings::Style::getStylesheet("contact/ContactWidget.css");
+    // qDebug() << css;
 
+    // setStyleSheet(css);
 
+    setLayout(listLayout);
 }
 
 ContactListWidget::~ContactListWidget() {
@@ -470,6 +472,18 @@ void ContactListWidget::setFriendTyping(const FriendId& friendId, bool isTyping)
 }
 
 void ContactListWidget::reloadTheme() {
+    auto p = palette();
+    p.setColor(QPalette::Window,
+               lib::settings::Style::getColor(
+                       lib::settings::Style::ColorPalette::ThemeMedium));  // Base background color
+    p.setColor(QPalette::Highlight,
+               lib::settings::Style::getColor(
+                       lib::settings::Style::ColorPalette::ThemeHighlight));  // On mouse over
+    p.setColor(QPalette::Light,
+               lib::settings::Style::getColor(
+                       lib::settings::Style::ColorPalette::ThemeLight));  // When active
+    setPalette(p);
+
     for (auto gw : groupWidgets) {
         gw->reloadTheme();
     }

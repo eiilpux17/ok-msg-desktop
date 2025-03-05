@@ -101,11 +101,12 @@ ContactWidget::~ContactWidget() {
 
 void ContactWidget::reloadTheme() {
     auto css = lib::settings::Style::getStylesheet("contact/ContactWidget.css");
+    // qDebug() << css;
     setStyleSheet(css);
-    contactListWidget->setStyleSheet(css);
-    // contactListWidget->reloadTheme();
-    contentLayout->reloadTheme();
-    ui->friendList->setStyleSheet(css);
+    // contactListWidget->setStyleSheet(css);
+    contactListWidget->reloadTheme();
+    // contentLayout->reloadTheme();
+    // ui->friendList->setStyleSheet(css);
 }
 
 AddFriendForm* ContactWidget::makeAddForm() {
