@@ -11,13 +11,14 @@
  */
 
 module--im--NotificationScrollArea,
-module--im--AdjustingScrollArea
+module--im--AdjustingScrollArea,
+#friendList
 {
     background: @groundBase;
 		border: 0px solid;
 }
 
-module--im--ContactWidget{
+#contactListWidget{
   background:red;
 }
 

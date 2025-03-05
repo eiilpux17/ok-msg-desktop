@@ -52,6 +52,8 @@ ContactWidget::ContactWidget(QWidget* parent)
 
     // 左侧朋友列表
     contactListWidget = new ContactListWidget(this, false);
+    contactListWidget->setObjectName("contactListWidget");
+
     contactListWidget->layout()->setAlignment(Qt::AlignTop | Qt::AlignVCenter);
     ui->friendList->setWidget(contactListWidget);
 
@@ -101,9 +103,8 @@ void ContactWidget::reloadTheme() {
     auto css = lib::settings::Style::getStylesheet("contact/ContactWidget.css");
     setStyleSheet(css);
     contactListWidget->setStyleSheet(css);
-    contactListWidget->reloadTheme();
+    // contactListWidget->reloadTheme();
     contentLayout->reloadTheme();
-
     ui->friendList->setStyleSheet(css);
 }
 
