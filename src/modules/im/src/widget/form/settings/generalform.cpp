@@ -38,6 +38,8 @@ GeneralForm::GeneralForm(SettingsWidget* parent)
 
     setContentsMargins(0, 0, 0, 0);
 
+    setAttribute(Qt::WA_TranslucentBackground, true);
+
     bodyUI->setupUi(this);
 
     // block all child signals during initialization

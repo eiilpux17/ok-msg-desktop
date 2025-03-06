@@ -37,6 +37,7 @@
 #include "src/persistence/profile.h"
 #include "src/persistence/settings.h"
 #include "src/widget/tool/screenshotgrabber.h"
+#include "lib/storage/settings/style.h"
 
 #ifndef ALC_ALL_DEVICES_SPECIFIER
 #define ALC_ALL_DEVICES_SPECIFIER ALC_DEVICE_SPECIFIER
@@ -47,11 +48,13 @@ AVForm::AVForm( QWidget* parent)
         : GenericForm(QPixmap(":/img/settings/av.png"), parent)
         , audioSettings(nullptr)
         , videoSettings(nullptr)
-        , camVideoSurface(nullptr) {
+        , camVideoSurface(nullptr)
+        {
+
     setupUi(this);
 
     // block all child signals during initialization
-    const ok::base::RecursiveSignalBlocker signalBlocker(this);
+    // const ok::base::RecursiveSignalBlocker signalBlocker(this);
 
     eventsInit();
 
@@ -72,8 +75,7 @@ AVForm::AVForm( QWidget* parent)
 
     playbackSlider->setTracking(false);
     playbackSlider->setMaximum(lib::audio::Audio::totalSteps);
-    playbackSlider->setValue(
-            getStepsFromValue(s->getOutVolume(), s->getOutVolumeMin(), s->getOutVolumeMax()));
+    playbackSlider->setValue(getStepsFromValue(s->getOutVolume(), s->getOutVolumeMin(), s->getOutVolumeMax()));
     playbackSlider->installEventFilter(this);
 
     // audio settings
@@ -116,6 +118,15 @@ AVForm::AVForm( QWidget* parent)
                 retranslateUi();
             });
     connect(a->bus(), &ok::Bus::profileChanged, this, &AVForm::onProfileChanged);
+
+    auto css = lib::settings::Style::getStylesheet("settings/mainHead.css");
+    setStyleSheet(css);
+    scrollArea->setStyleSheet(css);
+
+    thread = (new QThread(this));
+    thread->setObjectName("AVThread");
+    moveToThread(thread);
+    thread->start();
 }
 
 AVForm::~AVForm() {
@@ -139,25 +150,7 @@ void AVForm::hideEvent(QHideEvent* event) {
 }
 
 void AVForm::showEvent(QShowEvent* event) {
-
-
-    getAudioOutDevices();
-    getAudioInDevices();
-    if (audioSrc == nullptr) {
-        audioSrc = audio->makeSource();
-        connect(audioSrc.get(), &lib::audio::IAudioSource::volumeAvailable, this,
-                &AVForm::setVolume);
-    }
-
-    if (audioSink == nullptr) {
-        audioSink = audio->makeSink();
-    }
-
-    auto source = initVideoDevices();
-    auto surface = createVideoSurface(source);
-    gridLayout->addWidget(surface, 0, 0, 1, 1);
-
-
+    QMetaObject::invokeMethod(this, "init", Qt::ConnectionType::QueuedConnection);
     GenericForm::showEvent(event);
 }
 
@@ -449,6 +442,31 @@ lib::video::CameraSource* AVForm::initVideoModes(int curIndex) {
     videoModescomboBox->setCurrentIndex(mid);
 
     return camera.get();
+}
+
+void AVForm::init()
+{
+    qDebug() << __func__;
+    getAudioOutDevices();
+    getAudioInDevices();
+    if (audioSrc == nullptr) {
+        audioSrc = audio->makeSource();
+        connect(audioSrc.get(), &lib::audio::IAudioSource::volumeAvailable, this,
+                &AVForm::setVolume);
+    }
+
+    if (audioSink == nullptr) {
+        audioSink = audio->makeSink();
+    }
+
+    auto source = initVideoDevices();
+    auto surface = createVideoSurface(source);
+    gridLayout->addWidget(surface, 0, 0, 1, 1);
+}
+
+void AVForm::deinit()
+{
+
 }
 
 void AVForm::on_videoDevCombobox_currentIndexChanged(int index) {

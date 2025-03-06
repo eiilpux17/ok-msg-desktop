@@ -15,20 +15,20 @@
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="0">
-    <widget class="ok::base::VerticalOnlyScroller" name="scrollArea_2">
+    <widget class="ok::base::VerticalOnlyScroller" name="scrollArea">
      <property name="widgetResizable">
       <bool>true</bool>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
      </property>
-     <widget class="QWidget" name="scrollAreaWidgetContents_2">
+     <widget class="QWidget" name="scrollAreaWidgetContents">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>657</width>
-        <height>790</height>
+        <width>663</width>
+        <height>796</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_2">

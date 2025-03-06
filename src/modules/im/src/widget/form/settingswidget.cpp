@@ -77,6 +77,7 @@ SettingsWidget::SettingsWidget(QWidget* parent) : QWidget(parent, Qt::Window) {
     setLayout(bodyLayout);
 
 
+    retranslateUi();
     auto a = ok::Application::Instance();
     connect(a->bus(), &ok::Bus::languageChanged,this,
             [&](const QString& locale0) {

@@ -88,8 +88,8 @@ protected:
     lib::video::CameraSource* initVideoModes(int curIndex);
 
 private:
-    void hideEvent(QHideEvent* event) final override;
-    void showEvent(QShowEvent* event) final override;
+    void hideEvent(QHideEvent* event) override;
+    void showEvent(QShowEvent* event) override;
     void open(const lib::video::VideoMode& mode);
     int getStepsFromValue(qreal val, qreal valMin, qreal valMax);
     qreal getValueFromSteps(int steps, qreal valMin, qreal valMax);
@@ -109,10 +109,13 @@ private:
     QVector<lib::video::VideoDevice> videoDeviceList;
     QVector<lib::video::VideoMode> videoModes;
     uint alSource;
-    // arbitrary number of steps to give slider a good "feel"
 
-private slots:
+    QThread* thread;
+
+public slots:
     void onProfileChanged(Profile*);
+    void init();
+    void deinit();
 };
 }  // namespace module::im
 #endif

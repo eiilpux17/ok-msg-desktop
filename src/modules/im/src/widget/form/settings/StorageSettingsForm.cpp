@@ -50,9 +50,13 @@ StorageSettingsForm::StorageSettingsForm(SettingsWidget* myParent)
     parent = myParent;
 
     // block all child signals during initialization
-    const ok::base::RecursiveSignalBlocker signalBlocker(this);
+    // const ok::base::RecursiveSignalBlocker signalBlocker(this);
 
     eventsInit();
+
+    auto css = lib::settings::Style::getStylesheet("settings/mainHead.css");
+    setStyleSheet(css);
+    bodyUI->scrollArea->setStyleSheet(css);
 
     auto a = ok::Application::Instance();
     connect(a->bus(), &ok::Bus::languageChanged,this,
