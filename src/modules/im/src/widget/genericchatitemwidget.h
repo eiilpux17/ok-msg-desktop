@@ -23,6 +23,7 @@
 namespace lib::ui {
 class CroppingLabel;
 class MaskablePixmapWidget;
+class RoundedPixmapLabel;
 }  // namespace lib::ui
 
 namespace module::im {
@@ -97,7 +98,7 @@ protected:
     lib::ui::CroppingLabel* nameLabel;
     lib::ui::CroppingLabel* lastMessageLabel;
     // 头像
-    lib::ui::MaskablePixmapWidget* avatar;
+    lib::ui::RoundedPixmapLabel* avatar;
 
     bool compact;
     ChatType chatType;

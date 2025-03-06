@@ -47,6 +47,7 @@ public:
     void setPixmap(const QPixmap & pixmap);
     void setImage(const QByteArray& image);
     const QPixmap& getOutPixmap() const;
+    const QPixmap& getPixmap() const;
 
     // 在图片上进行圆角遮罩还是QWidget
     void setMaskOnPixmap(bool pixmap);
