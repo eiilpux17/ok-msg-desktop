@@ -87,7 +87,7 @@ OMainMenu::OMainMenu(QWidget* parent) : QFrame(parent), ui(new Ui::OMainMenu) {
     for(auto &i : MenuItemList){
         auto item = new OMenuItem(i, this);
         item->setCheckable(true);
-        item->setIconSize(QSize(40, 40));
+        item->setIconSize(QSize(28, 28));
         items.append(item);
         ui->menuLayout->addWidget(item, Qt::AlignHCenter);
         group->addButton(item, static_cast<int>(i.menu));
