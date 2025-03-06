@@ -22,7 +22,6 @@ void OVideoOutputWidget::render(const lib::video::VideoDevice& device) {
 
     lastFrame.reset();
     _camera = lib::video::CameraSource::CreateInstance(device);
-
     connect(_camera.get(), &lib::video::CameraSource::frameAvailable, this, [this](auto frame) {
         // qDebug() << "received frame:" << frame->sourceID;
         // std::lock_guard locker(mutex);

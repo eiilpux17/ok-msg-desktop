@@ -45,7 +45,7 @@ class VideoSurface;
 class AVForm : public GenericForm, private Ui::AVForm {
     Q_OBJECT
 public:
-    AVForm(QWidget* parent = nullptr);
+    explicit AVForm(QWidget* parent = nullptr);
     ~AVForm() override;
     QString getFormName() final override {
         return tr("Audio/Video");
@@ -54,7 +54,7 @@ public:
 private:
     void getAudioInDevices();
     void getAudioOutDevices();
-    lib::video::VideoSource* initVideoDevices();
+    lib::video::CameraSource* initVideoDevices();
 
     static int getModeSize(lib::video::VideoMode mode);
     void selectBestModes(QVector<lib::video::VideoMode>& allVideoModes);
@@ -77,7 +77,7 @@ private slots:
     void on_audioThresholdSlider_valueChanged(int sliderSteps);
     void on_audioQualityComboBox_currentIndexChanged(int index);
 
-            // camera
+    // camera
     void on_videoDevCombobox_currentIndexChanged(int index);
     void on_videoModescomboBox_currentIndexChanged(int index);
 
@@ -109,8 +109,6 @@ private:
     QVector<lib::video::VideoDevice> videoDeviceList;
     QVector<lib::video::VideoMode> videoModes;
     uint alSource;
-
-    QThread* thread;
 
 public slots:
     void onProfileChanged(Profile*);

@@ -29,26 +29,6 @@ QLabel {
     color: @mainText;
 }
 
-module--im--MessageSessionListWidget QScrollBar:vertical
-{
-    width: 8px;
-    padding: 0px 0px 0px 3px;
-}
-module--im--MessageSessionWidget QScrollBar::handle
-{
-    background-color: #f7f7f7; 
-}
-
-module--im--MessageSessionWidget QScrollBar::handle:hover
-{
-    background-color: white; 
-}
-
-module--im--MessageSessionWidget QScrollBar::handle:pressed
-{
-    background-color: white; 
-}
-
 module--im--MessageSessionWidget{
     border: 0;
     border-radius: 5px;
@@ -63,7 +43,7 @@ module--im--MessageSessionWidget:selected{
 }
 
 module--im--MessageSessionWidget QLabel#nameLabel{
-    color: #19171b;
+    color: @mainText;
 }
 
 module--im--MessageSessionWidget QLabel#lastMessageLabel:!active{
@@ -79,7 +59,7 @@ module--im--ContactListLayout {
 
 
 #searchContact{
-    color: #19171b;
+    color: @mainText;
 		border: 1px solid @themeMedium;
 		background-color: @themeMedium;
 		border-radius: 5px;

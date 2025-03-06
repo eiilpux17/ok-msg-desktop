@@ -42,7 +42,7 @@
 #include "src/persistence/smileypack.h"
 namespace module::im {
 
-const QString STYLE_PATH = QStringLiteral("chatForm/buttons.css");
+
 static const short FOOT_BUTTONS_SPACING = 2;
 static const short MESSAGE_EDIT_HEIGHT = 50;
 static const QString FONT_STYLE[]{"normal", "italic", "oblique"};
@@ -67,7 +67,7 @@ QPushButton* createButton(const QString& name, T* self, Fun onClickSlot) {
     btn->setCursor(Qt::PointingHandCursor);
     btn->setObjectName(name);
     // btn->setProperty("state", "green");
-    btn->setStyleSheet(lib::settings::Style::getStylesheet(STYLE_PATH));
+    btn->setStyleSheet(lib::settings::Style::getStylesheet("chatForm/buttons.css"));
     btn->setCheckable(true);
     QObject::connect(btn, &QPushButton::clicked, self, onClickSlot);
     return btn;
@@ -103,10 +103,11 @@ ChatInputForm::ChatInputForm(QWidget* parent, bool isGroup)
     // connect(bodySplitter, &QSplitter::splitterMoved, this, &ChatInputForm::onSplitterMoved);
 
     mainLayout = new QVBoxLayout(this);
-
+    mainLayout->setContentsMargins(0,0,0,0);
     mainLayout->setSpacing(FOOT_BUTTONS_SPACING);
 
-    QHBoxLayout* ctrlLayout = new QHBoxLayout(this);
+    auto* ctrlLayout = new QHBoxLayout(this);
+    ctrlLayout->setContentsMargins(0,4,0,4);
     ctrlLayout->setSpacing(FOOT_BUTTONS_SPACING);
     ctrlLayout->addWidget(emoteButton);
     ctrlLayout->addWidget(fileButton);
@@ -148,10 +149,8 @@ ChatInputForm::ChatInputForm(QWidget* parent, bool isGroup)
 void ChatInputForm::reloadTheme() {
     auto s = Nexus::getProfile()->getSettings();
     msgEdit->setStyleSheet(lib::settings::Style::getStylesheet("msgEdit/msgEdit.css") +
-                           fontToCss(s->getChatMessageFont(), "QTextEdit"));
-
-    auto btnCss = lib::settings::Style::getStylesheet(STYLE_PATH);
-    setStyleSheet(btnCss);
+                           fontToCss(s->getChatMessageFont(),
+                            "QTextEdit"));
 }
 
 void ChatInputForm::retranslateUi() {
@@ -281,10 +280,8 @@ void ChatInputForm::insertReplyText(const QString& id, QString nickname, QString
     reply = new ChatReplyForm(item);
     connect(reply, &ChatReplyForm::removeEvent, this, &ChatInputForm::onReplyRemove);
     mainLayout->insertWidget(0, reply);
-
-    auto btnCss = lib::settings::Style::getStylesheet(STYLE_PATH);
-    reply->setStyleSheet(btnCss);
 }
+
 namespace {
 QRegularExpression QuoteLine("^(>+) (.+)$");
 }

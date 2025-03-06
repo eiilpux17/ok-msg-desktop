@@ -90,10 +90,8 @@ PluginManager* PluginManager::instance() {
  */
 PluginManager::PluginManager()
         : QObject(nullptr)
-        ,  //
-        psi_(nullptr)
-        ,  //
-        m_thread(std::make_unique<QThread>()) {
+        ,  psi_(nullptr)
+        ,  m_thread(std::make_unique<QThread>()) {
     updatePluginsList();
     if (!m_thread) {
         qCritical() << "could not allocate PluginManager thread";

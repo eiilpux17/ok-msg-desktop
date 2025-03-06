@@ -122,35 +122,17 @@ AVForm::AVForm( QWidget* parent)
     auto css = lib::settings::Style::getStylesheet("settings/mainHead.css");
     setStyleSheet(css);
     scrollArea->setStyleSheet(css);
-
-    thread = (new QThread(this));
-    thread->setObjectName("AVThread");
-    moveToThread(thread);
-    thread->start();
 }
 
-AVForm::~AVForm() {
-    
-}
+AVForm::~AVForm() = default;
 
 void AVForm::hideEvent(QHideEvent* event) {
-    audioSink.reset();
-    audioSrc.reset();
-
-    if (camVideoSurface) {
-        camVideoSurface->setSource(nullptr);
-        camVideoSurface.reset();
-        QLayoutItem* child;
-        while ((child = gridLayout->takeAt(0)) != nullptr) delete child;
-    }
-
-    videoDeviceList.clear();
-    camera.reset();
+    deinit();
     GenericForm::hideEvent(event);
 }
 
 void AVForm::showEvent(QShowEvent* event) {
-    QMetaObject::invokeMethod(this, "init", Qt::ConnectionType::QueuedConnection);
+     QMetaObject::invokeMethod(this, "init", Qt::ConnectionType::QueuedConnection);
     GenericForm::showEvent(event);
 }
 
@@ -449,24 +431,36 @@ void AVForm::init()
     qDebug() << __func__;
     getAudioOutDevices();
     getAudioInDevices();
-    if (audioSrc == nullptr) {
+
         audioSrc = audio->makeSource();
         connect(audioSrc.get(), &lib::audio::IAudioSource::volumeAvailable, this,
                 &AVForm::setVolume);
-    }
 
-    if (audioSink == nullptr) {
         audioSink = audio->makeSink();
-    }
+
 
     auto source = initVideoDevices();
     auto surface = createVideoSurface(source);
     gridLayout->addWidget(surface, 0, 0, 1, 1);
+    source->openDevice();
 }
 
 void AVForm::deinit()
 {
+    qDebug() << __func__;
 
+    audioSink.reset();
+    audioSrc.reset();
+
+    if (camVideoSurface) {
+        camVideoSurface->setSource(nullptr);
+        camVideoSurface.reset();
+        QLayoutItem* child;
+        while ((child = gridLayout->takeAt(0)) != nullptr) delete child;
+    }
+
+    videoDeviceList.clear();
+    camera.reset();
 }
 
 void AVForm::on_videoDevCombobox_currentIndexChanged(int index) {
@@ -486,7 +480,6 @@ void AVForm::on_videoDevCombobox_currentIndexChanged(int index) {
         return;
     }
 
-
     camera = lib::video::CameraSource::CreateInstance(videoDeviceList.at(index));
     videoModes = camera->getVideoModes();
     fillCameraModesComboBox( camera->getVideoModes());
@@ -502,7 +495,7 @@ void AVForm::on_audioQualityComboBox_currentIndexChanged(int index) {
     audioSettings->setAudioBitrate(audioQualityComboBox->currentData().toInt());
 }
 
-lib::video::VideoSource* AVForm::initVideoDevices() {
+lib::video::CameraSource* AVForm::initVideoDevices() {
     qDebug() << __func__;
 
     QString settingsInDev = videoSettings->getVideoDev();

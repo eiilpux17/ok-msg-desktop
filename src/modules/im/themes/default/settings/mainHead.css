@@ -9,13 +9,6 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PubL v2 for more details.
  */
-/*
-QWidget .QLabel, QWidget .QLineEdit
-{
-    color: black;
-    background: white;
-}*/
-
 module--im--GeneralForm{
   border: none;
 	background: @groundBase;
