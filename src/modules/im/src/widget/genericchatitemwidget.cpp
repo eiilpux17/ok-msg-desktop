@@ -15,6 +15,7 @@
 #include <QSvgRenderer>
 #include <QVariant>
 #include "lib/ui/widget/tools/CroppingLabel.h"
+#include "lib/ui/widget/tools/RoundedPixmapLabel.h"
 #include "src/core/core.h"
 #include "src/lib/storage/settings/style.h"
 #include "src/lib/ui/widget/tools/MaskablePixmap.h"
@@ -67,7 +68,9 @@ GenericChatItemWidget::GenericChatItemWidget(ChatType type,
         clearStatusLight();
     }
 
-    avatar = new lib::ui::MaskablePixmapWidget(this, QSize(40, 40), ":/img/avatar_mask.svg");
+    avatar = new lib::ui::RoundedPixmapLabel(this);
+    avatar->setContentsSize(QSize(40, 40));
+    avatar->setRoundedType(lib::ui::RoundedPixmapLabel::MinEdgeCircle);
     auto profile = Nexus::getProfile();
     auto avt = profile->loadAvatar(contactId);
     if (!avt.isNull()) {
@@ -167,7 +170,7 @@ void GenericChatItemWidget::setAvatar(const QPixmap& pic) {
 
 void GenericChatItemWidget::clearAvatar() {
     qDebug() << __func__;
-    avatar->clear();
+    avatar->setPixmap(QPixmap());
 }
 
 void GenericChatItemWidget::setDefaultAvatar() {

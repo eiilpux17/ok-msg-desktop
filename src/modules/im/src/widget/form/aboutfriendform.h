@@ -19,6 +19,10 @@
 
 #include <memory>
 
+namespace lib::ui {
+class RoundedPixmapLabel;
+}
+
 namespace Ui {
 class AboutFriendForm;
 }
@@ -49,6 +53,8 @@ private:
     Widget* widget;
     Profile* profile;
     const Friend* m_friend;
+    lib::ui::RoundedPixmapLabel* realAvatar = nullptr;
+    
 
 signals:
     void histroyRemoved();

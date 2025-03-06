@@ -51,6 +51,10 @@ const QPixmap& RoundedPixmapLabel::getOutPixmap() const {
     return _cachePixmap;
 }
 
+const QPixmap& RoundedPixmapLabel::getPixmap() const {
+    return _pixmap;
+}
+
 void RoundedPixmapLabel::setMaskOnPixmap(bool pixmap) {
     if (maskPixmap != pixmap) {
         maskPixmap = pixmap;
@@ -115,7 +119,9 @@ void RoundedPixmapLabel::paintEvent(QPaintEvent*) {
 
 QRect RoundedPixmapLabel::paintRect() {
     QSize wgt_size = _contentsSize;
-    if (_contentsSize.isEmpty()) wgt_size = this->size();
+    if (_contentsSize.isEmpty()) {
+        wgt_size = this->size();
+    }
 
     QSize pix_size;
     if (_pixmap.isNull())

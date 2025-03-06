@@ -26,7 +26,7 @@
 #include "lib/storage/settings/style.h"
 #include "lib/ui/gui.h"
 #include "lib/ui/widget/tools/CroppingLabel.h"
-#include "lib/ui/widget/tools/MaskablePixmap.h"
+#include "lib/ui/widget/tools/RoundedPixmapLabel.h"
 #include "src/model/status.h"
 #include "src/nexus.h"
 #include "src/widget/friendwidget.h"

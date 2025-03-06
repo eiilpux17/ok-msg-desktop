@@ -11,7 +11,7 @@
  */
 
 #include "aboutfriendform.h"
-#include "lib/ui/widget/tools/MaskablePixmap.h"
+#include "lib/ui/widget/tools/RoundedPixmapLabel.h"
 #include "ui_aboutfriendform.h"
 
 #include <QFileDialog>
@@ -58,14 +58,12 @@ AboutFriendForm::AboutFriendForm(const Friend* fw, QWidget* parent)
     ui->id->setText(about->getPublicKey().toString());
     ui->statusMessage->setText(about->getStatusMessage());
 
-    // auto avatar = new lib::ui::MaskablePixmapWidget(this, QSize(100, 100));
-    // avatar->setPixmap(about->getAvatar());
-    // avatar->setSize(QSize(100,100));
-    // avatar->autopickBackground();
-
-
-    ui->avatar->setPixmap(about->getAvatar());
-    // ui->avatar->setSizeIncrement(QSize(100,100));
+    realAvatar = new lib::ui::RoundedPixmapLabel(this);
+    realAvatar->setFixedSize(QSize(60, 60));
+    realAvatar->setPixmap(about->getAvatar());
+    ui->avatarLayout->replaceWidget(ui->avatar, realAvatar);
+    ui->avatar->deleteLater();
+    ui->avatar = nullptr;
 
     auto f = about->getFriend();
     connect(f, &Friend::avatarChanged, this,

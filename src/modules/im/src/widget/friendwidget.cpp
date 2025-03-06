@@ -33,7 +33,7 @@
 #include "lib/ui/widget/tools/CroppingLabel.h"
 #include "src/core/core.h"
 #include "src/lib/storage/settings/style.h"
-#include "src/lib/ui/widget/tools/MaskablePixmap.h"
+#include "src/lib/ui/widget/tools/RoundedPixmapLabel.h"
 #include "src/model/aboutfriend.h"
 #include "src/model/chatroom/friendchatroom.h"
 #include "src/model/friend.h"

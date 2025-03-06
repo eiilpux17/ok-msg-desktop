@@ -15,7 +15,7 @@
 #include <QMouseEvent>
 #include "lib/storage/settings/style.h"
 #include "lib/ui/widget/tools/CroppingLabel.h"
-#include "src/lib/ui/widget/tools/MaskablePixmap.h"
+#include "lib/ui/widget/tools/RoundedPixmapLabel.h"
 namespace module::im {
 
 GenericChatroomWidget::GenericChatroomWidget(ChatType type, const ContactId& cid, QWidget* parent)
@@ -52,7 +52,7 @@ void GenericChatroomWidget::compactChange(bool _compact) {
         mainLayout->setContentsMargins(5, 5, 5, 5);
         mainLayout->setSpacing(5);
         delete textLayout;  // Not needed
-        avatar->setSize(QSize(20, 20));
+        avatar->setContentsSize(QSize(20, 20));
         mainLayout->addWidget(avatar);
         mainLayout->addWidget(nameLabel);
         mainLayout->addWidget(lastMessageLabel);
@@ -64,7 +64,7 @@ void GenericChatroomWidget::compactChange(bool _compact) {
     } else {
         mainLayout->setContentsMargins(8, 8, 8, 8);
         mainLayout->setSpacing(10);
-        avatar->setSize(QSize(40, 40));
+        avatar->setContentsSize(QSize(40, 40));
         textLayout->addStretch();
         textLayout->addWidget(nameLabel);
         textLayout->addWidget(lastMessageLabel);
