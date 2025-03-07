@@ -22,17 +22,16 @@
 #endif
 
 #include "src/base/RecursiveSignalBlocker.h"
-#include "src/widget/form/settingswidget.h"
 #include "src/application.h"
 
 namespace module::im {
 
 PrivacyForm::PrivacyForm()
-        : GenericForm(QPixmap(":/img/settings/privacy.png")), bodyUI(new Ui::PrivacySettings) {
+        : BaseSettingsForm(QPixmap(":/img/settings/privacy.png")), bodyUI(new Ui::PrivacySettings) {
     bodyUI->setupUi(this);
 
     // block all child signals during initialization
-    const ok::base::RecursiveSignalBlocker signalBlocker(this);
+    // const ok::base::RecursiveSignalBlocker signalBlocker(this);
 
     eventsInit();
 

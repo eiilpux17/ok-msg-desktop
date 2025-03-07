@@ -45,22 +45,3 @@ lib--ui--RoundedMaskContainer#statusPanel{
 		qproperty-radius: 10;
 		border: 0px solid;
 }
-/* 
-module--im--ChatWidget {
-    background: @groundBase;
-    border: 0px solid;
-}
-module--im--ChatLog QScrollBar::handle
-{
-    background-color: #f7f7f7; 
-}
-
-module--im--ChatLog QScrollBar::handle:hover
-{
-    background-color: white; 
-}
-
-module--im--ChatLog QScrollBar::handle:pressed
-{
-    background-color: white; 
-} */

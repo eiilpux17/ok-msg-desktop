@@ -13,24 +13,29 @@
 #ifndef GENERALFORM_H
 #define GENERALFORM_H
 
-#include "genericsettings.h"
-#include "src/widget/form/settingswidget.h"
+#include <QLabel>
 
-#include <src/persistence/profile.h>
+#include "BaseSettingsForm.h"
+#include "src/persistence/profile.h"
+
 
 namespace Ui {
-class GeneralSettings;
+class GeneralForm;
 }
+
 namespace module::im {
 
 class SettingsWidget;
 
-class GeneralForm : public GenericForm {
+/**
+ * @brief The GeneralForm class
+ */
+class GeneralForm : public BaseSettingsForm {
     Q_OBJECT
 public:
     explicit GeneralForm(SettingsWidget* parent);
-    ~GeneralForm();
-    QString getFormName() final override {
+    ~GeneralForm() override;
+    QString getFormName() override {
         return tr("General");
     }
 
@@ -57,7 +62,7 @@ private:
     void reloadSmileys();
 
 private:
-    Ui::GeneralSettings* bodyUI;
+    Ui::GeneralForm* bodyUI;
     QList<QLabel*> smileLabels;
     QList<std::shared_ptr<QIcon>> emoticonsIcons;
     const int MAX_FORMAT_LENGTH = 128;

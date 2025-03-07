@@ -16,12 +16,6 @@
     background-color: #ccc;
 }
 
-ProfileForm QScrollArea
-{
-    background: @groundBase;
-    border: 0px solid; 
-}
-
 #scrollAreaWidgetContents
 {
     border: 0px solid;
@@ -30,20 +24,6 @@ ProfileForm QScrollArea
 QFrame#line{
     background: white;
     border:0px solid;
-}
-
-QGroupBox {
-    background: white;
-    margin-top: 1.8em;
-    border-style: solid;
-    border-radius: 5px;
-}
-
-QGroupBox::title {
-    subcontrol-origin: margin;
-    subcontrol-position: top left;
-    left: 5px;
-    top: 2px;
 }
 
 QToolButton#qrcodeButton{
@@ -71,10 +51,10 @@ QPushButton
     color: #ffffff;
 }
 
-QLineEdit
+/*QLineEdit
 {
     color: #19171b;
     border: 1px solid #E0DEDC;
     background-color: white;
     border-radius: 3px;
-}
+}*/

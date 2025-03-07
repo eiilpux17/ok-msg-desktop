@@ -13,14 +13,14 @@
 #ifndef PRIVACYFORM_H
 #define PRIVACYFORM_H
 
-#include "genericsettings.h"
+#include "BaseSettingsForm.h"
 
 namespace Ui {
 class PrivacySettings;
 }
 namespace module::im {
 
-class PrivacyForm : public GenericForm {
+class PrivacyForm : public BaseSettingsForm {
     Q_OBJECT
 public:
     PrivacyForm();

@@ -175,9 +175,8 @@ QSpinBox:disabled, QDoubleSpinBox:disabled
 
 QGroupBox
 {
-    color: black;
-    background-color: white;
-    font: @bigBold;
+  background: transparent;
+	border: none;
 }
 
 QComboBox
@@ -206,110 +205,134 @@ QLineEdit:disabled
 		background-color: lightGrey;
 }
 
-QScrollArea
+
+QRadioButton
 {
-    background-color: white;
+    background: white;
+		color: black;
 }
 
-QScrollArea > QWidget > QWidget
+QPushButton
+{
+    background: #ebebeb;
+		color: @mainText;
+}
+
+QPushButton#updateAvailableButton
+{
+    background-color: #21da21;
+}
+
+QSplitter:handle
+{
+    color: white;
+	background-color: white;
+}
+
+
+
+QScrollArea
 {
     background: transparent;
+	border: none;
+    /* background-color: white; */
 }
 
 QScrollArea::corner
 {
-    background-color: white;
+    background-color: transparent;
     border: none;
+}
+
+QScrollBar::groove:vertical {
+    color: red;
+}
+
+QScrollBar{
+  background:transparent;
 }
 
 QScrollBar:vertical
 {
-    background: transparent;
-		width: 8px;
-    margin: 2px 0px 2px 0px;
+  width: 8px;
 }
+
+QScrollBar:horizontal
+{
+  height: 8px;
+}
+
 
 QScrollBar::handle
 {
   background-color: @themeMedium;
+  border-radius: 4px;
 }
 
 QScrollBar::handle:vertical
 {
-    min-height: 20px;
-	border-radius: 4px;
+  width: 8px;
 }
 
-QScrollBar::handle:vertical:hover
+QScrollBar::handle:horizontal
 {
-
+  height: 8px;
 }
 
-QScrollBar::handle:vertical:pressed
-{
-
-}
-
-QScrollBar::add-line:vertical
+/* QScrollBar::add-line:vertical
 {
     background-color: white;
     height: 0px;
     subcontrol-position: bottom;
     subcontrol-origin: margin;
-}
+} */
 
-QScrollBar::sub-line:vertical
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal
 {
-    background-color: white;
+    background: transparent;
+    /* background-color: white;
     height: 0px;
     subcontrol-position: top;
-    subcontrol-origin: margin;
+    subcontrol-origin: margin; */
 }
 
-QScrollBar:QScrollBar::down-arrow:vertical
+QScrollBar::down-arrow:vertical, QScrollBar::up-arrow:vertical
 {
     width: 0px;
     height: 0px;
-    background-color: white;
+    background-color: transparent;
 }
 
-QScrollBar:QScrollBar::up-arrow:vertical
+QScrollBar::left-arrow:vertical, QScrollBar::right-arrow:vertical
 {
     width: 0px;
-    height: 0px;
-    background-color: white;
+		height: 0px;
+		background-color: transparent;
 }
+
 
 QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
 {
     background: none;
 }
-
-QScrollBar:horizontal
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
 {
-    background-color: white;
-    height: 5px;
-    margin: 0 2px 0 2px;
+    background: none;
 }
 
-QScrollBar::handle:horizontal
-{
-    background-color: #d1d1d1;
-    min-width: 20px;
-		border-radius: 4px;
-}
 
 QScrollBar::handle:horizontal:hover
 {
-    background-color: #e3e3e3;
+    /* background-color: #e3e3e3; */
 }
 
 QScrollBar::handle:horizontal:pressed
 {
-    background-color: #b1b1b1;
+    /* background-color: #b1b1b1; */
 }
 
-QScrollBar::add-line:horizontal
+/*QScrollBar::add-line:horizontal
 {
     background-color: white;
     width: 0px;
@@ -323,46 +346,20 @@ QScrollBar::sub-line:horizontal
     width: 0px;
     subcontrol-position: left;
     subcontrol-origin: margin;
-}
+}*/
 
-QScrollBar:QScrollBar::right-arrow:horizontal
+QScrollBar::right-arrow:horizontal
 {
     width: 0px;
     height: 0px;
-    background-color: white;
+    background-color: transparent;
 }
 
-QScrollBar:QScrollBar::left-arrow:horizontal
+QScrollBar::left-arrow:horizontal
 {
     width: 0px;
     height: 0px;
-    background-color: white;
+    background-color: transparent;
 }
 
-QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
-{
-    background: none;
-}
 
-QRadioButton
-{
-    background: white;
-    color: black;
-}
-
-QPushButton
-{
-    background: #ebebeb;
-    color: @mainText;
-}
-
-QPushButton#updateAvailableButton
-{
-    background-color: #21da21;
-}
-
-QSplitter:handle
-{
-    color: white;
-    background-color: white;
-}

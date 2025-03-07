@@ -10,7 +10,7 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "profileform.h"
+#include "ProfileForm.h"
 #include <QApplication>
 #include <QBuffer>
 #include <QClipboard>
@@ -37,9 +37,9 @@
 #include "src/persistence/settings.h"
 #include "src/widget/contentlayout.h"
 #include "src/widget/form/setpassworddialog.h"
-#include "src/widget/form/settingswidget.h"
+#include "src/widget/form/settings/SettingsWidget.h"
 #include "src/widget/widget.h"
-#include "ui_profileform.h"
+#include "ui_ProfileForm.h"
 #include "src/application.h"
 #include "src/persistence/profile.h"
 
@@ -86,37 +86,37 @@ static const QPair<QString, QString> CAN_NOT_CHANGE_PASSWORD = {
 
 ProfileForm::ProfileForm(IProfileInfo* profileInfo, QWidget* parent)
         : QWidget{parent}, qr{nullptr}, profileInfo{profileInfo} {
-    bodyUI = new Ui::IdentitySettings;
+    bodyUI = new Ui::ProfileForm;
     bodyUI->setupUi(this);
     this->layout()->setContentsMargins(16, 5, 16, 11);
     bodyUI->formLayout->setVerticalSpacing(2);
 
     bodyUI->nickname->setText(profileInfo->getNickname());
-    bodyUI->name->setText(profileInfo->getFullName());
+    bodyUI->name_value->setText(profileInfo->getFullName());
 
     auto& c = profileInfo->getVCard();
     if (!c.emails.isEmpty()) {
-        bodyUI->email->setText(c.emails.at(c.emails.size() - 1).number);
+        bodyUI->email_value->setText(c.emails.at(c.emails.size() - 1).number);
     }
 
     if (!c.tels.isEmpty()) {
         for (auto& t : c.tels) {
             if (t.mobile) {
-                bodyUI->phone->setText(t.number);
+                bodyUI->phone_value->setText(t.number);
             } else {
-                bodyUI->telephone->setText(t.number);
+                bodyUI->telephone_value->setText(t.number);
             }
         }
     }
 
     profileInfo->connectTo_usernameChanged(this, [this](const QString& val) {  //
-        bodyUI->name->setText(val);
+        bodyUI->name_value->setText(val);
     });
     connect(bodyUI->nickname, &QLineEdit::editingFinished, this, &ProfileForm::onNicknameEdited);
     profileInfo->connectTo_vCardChanged(this, [this](const VCard& vCard) {
         bodyUI->nickname->setText(vCard.nickname);
         if (!vCard.emails.isEmpty())
-            bodyUI->email->setText(vCard.emails.at(vCard.emails.size() - 1).number);
+            bodyUI->email_value->setText(vCard.emails.at(vCard.emails.size() - 1).number);
     });
 
     connect(bodyUI->exitButton, &QPushButton::clicked, this, &ProfileForm::onExitClicked);
@@ -146,8 +146,8 @@ ProfileForm::ProfileForm(IProfileInfo* profileInfo, QWidget* parent)
     connect(Nexus::getProfile(), &Profile::selfAvatarChanged, this,
             &ProfileForm::onSelfAvatarLoaded);
 
-    bodyUI->avatarLayout->addWidget(profilePicture);
-    bodyUI->avatarLayout->setAlignment(profilePicture, Qt::AlignLeft);
+    bodyUI->avatarBox->addWidget(profilePicture);
+    bodyUI->avatarBox->setAlignment(profilePicture, Qt::AlignCenter);
     onSelfAvatarLoaded(profileInfo->getAvatar());
 
     // QrCode
@@ -170,6 +170,7 @@ ProfileForm::ProfileForm(IProfileInfo* profileInfo, QWidget* parent)
             });
 
     connect(bodyUI->qrcodeButton, &QToolButton::clicked, this, &ProfileForm::showQRCode);
+
 }
 
 ProfileForm::~ProfileForm() {

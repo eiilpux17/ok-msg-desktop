@@ -68,8 +68,8 @@
 #include "src/widget/form/addfriendform.h"
 #include "src/widget/form/filesform.h"
 #include "src/widget/form/groupinviteform.h"
-#include "src/widget/form/profileform.h"
-#include "src/widget/form/settingswidget.h"
+#include "src/widget/form/ProfileForm.h"
+#include "src/widget/form/settings/SettingsWidget.h"
 #include "ui_mainwindow.h"
 
 namespace module::im {

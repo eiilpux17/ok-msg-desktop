@@ -20,7 +20,6 @@
 #include "lib/storage/settings/translator.h"
 
 #include "about/src/aboutform.h"
-#include "modules/im/src/widget/form/settingswidget.h"
 #include "plugin/src/PluginManagerForm.h"
 #include "settings/src/GeneralForm.h"
 #include "application.h"

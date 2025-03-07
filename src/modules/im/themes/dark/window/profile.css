@@ -15,11 +15,6 @@
     background-color: #ccc;
 }
 
-ProfileForm QScrollArea {
-    background: @groundBase;
-    border: 0px solid;
-}
-
 #scrollAreaWidgetContents {
     border: 0px solid;
 }

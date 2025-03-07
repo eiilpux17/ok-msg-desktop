@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>IdentitySettings</class>
- <widget class="QWidget" name="IdentitySettings">
+ <class>ProfileForm</class>
+ <widget class="QWidget" name="ProfileForm">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>667</width>
-    <height>611</height>
+    <width>574</width>
+    <height>420</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,11 +30,11 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>653</width>
-        <height>597</height>
+        <width>560</width>
+        <height>406</height>
        </rect>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,0,0,0,1,0">
+      <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,0,0">
        <property name="leftMargin">
         <number>0</number>
        </property>
@@ -47,86 +47,26 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item>
-        <layout class="QHBoxLayout" name="header">
-         <property name="spacing">
-          <number>6</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QLabel" name="imgLabel">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>60</width>
-             <height>40</height>
-            </size>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="../../../res.qrc">:/img/settings/identity.png</pixmap>
-           </property>
-           <property name="scaledContents">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="nameLabel">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>My profile</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="Line" name="line">
+       <item alignment="Qt::AlignHCenter">
+        <widget class="QGroupBox" name="publicGroup">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
          <property name="minimumSize">
           <size>
-           <width>0</width>
-           <height>2</height>
+           <width>300</width>
+           <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>16777215</width>
-           <height>2</height>
+           <width>300</width>
+           <height>16777215</height>
           </size>
          </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="publicGroup">
          <property name="title">
           <string>Public Information</string>
          </property>
@@ -137,13 +77,19 @@
           <property name="leftMargin">
            <number>16</number>
           </property>
+          <property name="topMargin">
+           <number>30</number>
+          </property>
           <property name="rightMargin">
            <number>16</number>
           </property>
           <item>
-           <layout class="QVBoxLayout" name="avatarLayout">
-            <property name="spacing">
-             <number>0</number>
+           <layout class="QVBoxLayout" name="avatarBox">
+            <property name="topMargin">
+             <number>6</number>
+            </property>
+            <property name="bottomMargin">
+             <number>6</number>
             </property>
            </layout>
           </item>
@@ -209,29 +155,6 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="locationLabel">
-              <property name="text">
-               <string>Location:</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLabel" name="location">
-              <property name="maximumSize">
-               <size>
-                <width>200</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="1">
              <layout class="QHBoxLayout" name="accountDisplayLayout">
               <item>
@@ -291,27 +214,71 @@
               </item>
              </layout>
             </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="locationLabel">
+              <property name="text">
+               <string>Location:</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="location">
+              <property name="maximumSize">
+               <size>
+                <width>200</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
          </layout>
         </widget>
        </item>
-       <item>
+       <item alignment="Qt::AlignHCenter">
         <widget class="QGroupBox" name="verticalGroupBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>300</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>300</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="title">
           <string>Personal Information</string>
          </property>
-         <layout class="QFormLayout" name="profileGroup">
-          <property name="verticalSpacing">
-           <number>9</number>
-          </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
+         <layout class="QFormLayout" name="formLayout_2">
           <property name="leftMargin">
            <number>16</number>
+          </property>
+          <property name="topMargin">
+           <number>30</number>
           </property>
           <property name="rightMargin">
            <number>16</number>
           </property>
-          <item row="1" column="0">
+          <item row="2" column="0">
            <widget class="QLabel" name="name_label">
             <property name="text">
              <string>My name:</string>
@@ -321,38 +288,7 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="phone_label">
-            <property name="text">
-             <string>My phone:</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLabel" name="name">
-            <property name="text">
-             <string notr="true"/>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QLabel" name="email">
-            <property name="text">
-             <string notr="true"/>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QLabel" name="phone">
-            <property name="text">
-             <string notr="true"/>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
+          <item row="4" column="0">
            <widget class="QLabel" name="email_label">
             <property name="text">
              <string>My E-Mail:</string>
@@ -362,7 +298,17 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
+          <item row="6" column="0">
+           <widget class="QLabel" name="phone_label">
+            <property name="text">
+             <string>My phone:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0">
            <widget class="QLabel" name="telephone_label">
             <property name="text">
              <string>My telephone:</string>
@@ -372,8 +318,29 @@
             </property>
            </widget>
           </item>
+          <item row="2" column="1">
+           <widget class="QLabel" name="name_value">
+            <property name="text">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLabel" name="phone_value">
+            <property name="text">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QLabel" name="telephone_value">
+            <property name="text">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
           <item row="4" column="1">
-           <widget class="QLabel" name="telephone">
+           <widget class="QLabel" name="email_value">
             <property name="text">
              <string notr="true"/>
             </property>
@@ -384,6 +351,12 @@
        </item>
        <item>
         <widget class="QGroupBox" name="profilesGroup">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
           <string>Profile</string>
          </property>
@@ -391,11 +364,20 @@
           <property name="leftMargin">
            <number>16</number>
           </property>
+          <property name="topMargin">
+           <number>30</number>
+          </property>
           <property name="rightMargin">
            <number>16</number>
           </property>
           <item>
            <widget class="QLabel" name="dirPrLink">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="cursor">
              <cursorShape>PointingHandCursor</cursorShape>
             </property>
@@ -423,21 +405,8 @@
         </widget>
        </item>
        <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item alignment="Qt::AlignRight|Qt::AlignTop">
           <widget class="QPushButton" name="exitButton">
            <property name="maximumSize">
             <size>
@@ -453,20 +422,7 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="0">
-          <spacer name="horizontalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="0" column="2">
+         <item alignment="Qt::AlignLeft|Qt::AlignTop">
           <widget class="QPushButton" name="logoutButton">
            <property name="maximumSize">
             <size>
@@ -485,19 +441,6 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="3">
-          <spacer name="horizontalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
         </layout>
        </item>
       </layout>
@@ -510,8 +453,6 @@
   <tabstop>scrollArea</tabstop>
   <tabstop>nickname</tabstop>
  </tabstops>
- <resources>
-  <include location="../../../res.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

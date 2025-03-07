@@ -10,7 +10,7 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "genericsettings.h"
+#include "BaseSettingsForm.h"
 #include "src/nexus.h"
 #include "src/persistence/profile.h"
 #include "src/persistence/settings.h"
@@ -22,16 +22,16 @@
 namespace module::im {
 
 /**
- * @class GenericForm
+ * @class BaseSettingsForm
  *
  * This is abstract class used as superclass for all settings forms.
  * It provides correct behaviour of controls for settings forms.
  */
 
-GenericForm::GenericForm(const QPixmap& icon, QWidget* parent) :
+BaseSettingsForm::BaseSettingsForm(const QPixmap& icon, QWidget* parent) :
         QWidget(parent), formIcon(icon) {}
 
-QPixmap GenericForm::getFormIcon() {
+QPixmap BaseSettingsForm::getFormIcon() {
     return formIcon;
 }
 
@@ -41,9 +41,9 @@ QPixmap GenericForm::getFormIcon() {
  * Scrolling event won't be transmitted to comboboxes or spinboxes.
  * You can scroll through general settings without accidentially changing
  * theme / skin / icons etc.
- * @see GenericForm::eventFilter(QObject *o, QEvent *e) at the bottom of this file for more
+ * @see BaseSettingsForm::eventFilter(QObject *o, QEvent *e) at the bottom of this file for more
  */
-void GenericForm::eventsInit() {
+void BaseSettingsForm::eventsInit() {
     for (QComboBox* cb : findChildren<QComboBox*>()) {
         cb->installEventFilter(this);
         cb->setFocusPolicy(Qt::StrongFocus);
@@ -65,7 +65,7 @@ void GenericForm::eventsInit() {
  * @param e Event object.
  * @return True to stop it being handled further, false otherwise.
  */
-bool GenericForm::eventFilter(QObject* o, QEvent* e) {
+bool BaseSettingsForm::eventFilter(QObject* o, QEvent* e) {
     if ((e->type() == QEvent::Wheel) &&
         (qobject_cast<QComboBox*>(o) || qobject_cast<QAbstractSpinBox*>(o) ||
          qobject_cast<QCheckBox*>(o))) {
@@ -76,11 +76,11 @@ bool GenericForm::eventFilter(QObject* o, QEvent* e) {
     return QWidget::eventFilter(o, e);
 }
 
-void GenericForm::showEvent(QShowEvent* e) {
+void BaseSettingsForm::showEvent(QShowEvent* e) {
     QWidget::showEvent(e);
 }
 
-void GenericForm::hideEvent(QHideEvent* e) {
+void BaseSettingsForm::hideEvent(QHideEvent* e) {
     QWidget::hideEvent(e);
     Nexus::getProfile()->getSettings()->saveGlobal();
 }

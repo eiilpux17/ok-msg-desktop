@@ -1334,7 +1334,7 @@
         </message>
     </context>
     <context>
-        <name>module::im::IdentitySettings</name>
+        <name>Ui::ProfileForm</name>
         <message>
             <source>Public Information</source>
             <translation>معلومات عامة</translation>
@@ -1905,11 +1905,9 @@
             <translation>CAPS-LOCK مُفعل</translation>
         </message>
     </context>
+
     <context>
-        <name>module::im::Profile</name>
-    </context>
-    <context>
-        <name>module::im::ProfileForm</name>
+        <name>Ui::ProfileForm0</name>
         <message>
             <source>Current profile:</source>
             <translation>الملف الحساب الشخصي الحالي:</translation>

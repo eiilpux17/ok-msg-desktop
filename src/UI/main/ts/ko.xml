@@ -43,28 +43,8 @@
     <context>
         <name>UI::OMainMenu</name>
         <message>
-            <source>Message</source>
-            <translation>메시지</translation>
-        </message>
-        <message>
-            <source>Document</source>
-            <translation>문서조사</translation>
-        </message>
-        <message>
             <source>Setting</source>
             <translation>설정</translation>
-        </message>
-        <message>
-            <source>Work platform</source>
-            <translation>작업 플랫폼</translation>
-        </message>
-        <message>
-            <source>Meeting</source>
-            <translation>회의</translation>
-        </message>
-        <message>
-            <source>Classroom</source>
-            <translation>교실</translation>
         </message>
     </context>
 </TS>

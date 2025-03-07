@@ -99,10 +99,6 @@ which may lead to problems with video calls.</source>
             <translation>상태 메시지</translation>
         </message>
         <message>
-            <source>Send message</source>
-            <translation>메시지 보내기</translation>
-        </message>
-        <message>
             <source>Alias:</source>
             <translation>별명:</translation>
         </message>
@@ -117,6 +113,10 @@ which may lead to problems with video calls.</source>
         <message>
             <source>Clear history:</source>
             <translation>기록 지우기:</translation>
+        </message>
+        <message>
+            <source>Send message</source>
+            <translation>메시지 보내기</translation>
         </message>
     </context>
     <context>
@@ -362,7 +362,7 @@ which may lead to problems with video calls.</source>
         </message>
     </context>
     <context>
-        <name>GeneralSettings</name>
+        <name>GeneralForm</name>
         <message>
             <source>Chat</source>
             <translation>잡담</translation>
@@ -494,11 +494,18 @@ which may lead to problems with video calls.</source>
         </message>
     </context>
     <context>
-        <name>IdentitySettings</name>
+        <name>LoadHistoryDialog</name>
         <message>
-            <source>My profile</source>
-            <translation>내 프로필</translation>
+            <source>Load History Dialog</source>
+            <translation>로드 히스토리 대화 상자</translation>
         </message>
+        <message>
+            <source>Load history from:</source>
+            <translation>다음에서 기록 로드:</translation>
+        </message>
+    </context>
+    <context>
+        <name>ProfileForm</name>
         <message>
             <source>Public Information</source>
             <translation>공개 정보</translation>
@@ -532,12 +539,12 @@ which may lead to problems with video calls.</source>
             <translation>내 이름:</translation>
         </message>
         <message>
-            <source>My phone:</source>
-            <translation>내 전화 :</translation>
-        </message>
-        <message>
             <source>My E-Mail:</source>
             <translation>내 이메일:</translation>
+        </message>
+        <message>
+            <source>My phone:</source>
+            <translation>내 전화 :</translation>
         </message>
         <message>
             <source>My telephone:</source>
@@ -548,30 +555,19 @@ which may lead to problems with video calls.</source>
             <translation>프로필</translation>
         </message>
         <message>
-            <source>Go back to the login screen</source>
-            <comment>tooltip for logout button</comment>
-            <translation>로그인 화면으로 돌아가기</translation>
-        </message>
-        <message>
             <source>Exit</source>
             <comment>import profile button</comment>
             <translation>출구</translation>
         </message>
         <message>
+            <source>Go back to the login screen</source>
+            <comment>tooltip for logout button</comment>
+            <translation>로그인 화면으로 돌아가기</translation>
+        </message>
+        <message>
             <source>Logout</source>
             <comment>import profile button</comment>
             <translation>로그아웃</translation>
-        </message>
-    </context>
-    <context>
-        <name>LoadHistoryDialog</name>
-        <message>
-            <source>Load History Dialog</source>
-            <translation>로드 히스토리 대화 상자</translation>
-        </message>
-        <message>
-            <source>Load history from:</source>
-            <translation>다음에서 기록 로드:</translation>
         </message>
     </context>
     <context>
@@ -1108,6 +1104,10 @@ so you can save the file on windows.</source>
             </translation>
         </message>
         <message>
+            <source>Error</source>
+            <translation>오류</translation>
+        </message>
+        <message>
             <source>Search Contacts</source>
             <translation>연락처 검색</translation>
         </message>
@@ -1543,34 +1543,6 @@ so you can save the file on windows.</source>
         <message>
             <source>Can not create profile!</source>
             <translation>프로필을 만들 수 없습니다!</translation>
-        </message>
-        <message>
-            <source>View</source>
-            <comment>OS X Menu bar</comment>
-            <translation>보기</translation>
-        </message>
-        <message>
-            <source>Window</source>
-            <comment>OS X Menu bar</comment>
-            <translation>창</translation>
-        </message>
-        <message>
-            <source>Minimize</source>
-            <comment>OS X Menu bar</comment>
-            <translation>최소화</translation>
-        </message>
-        <message>
-            <source>Bring All to Front</source>
-            <comment>OS X Menu bar</comment>
-            <translation>모든 것을 맨 앞으로 가져오기</translation>
-        </message>
-        <message>
-            <source>Exit Fullscreen</source>
-            <translation>전체 화면 종료</translation>
-        </message>
-        <message>
-            <source>Enter Fullscreen</source>
-            <translation>전체 화면 입력</translation>
         </message>
     </context>
     <context>

@@ -51,16 +51,3 @@ module--im--ChatWidget {
     background: @groundBase;
     border: 0px solid;
 }
-
-module--im--ChatLog QScrollBar::handle
-{
-    background-color: #343232;
-}
-module--im--ChatLog QScrollBar::handle:hover
-{
-    background-color: #3e3c3c;
-}
-module--im--ChatLog QScrollBar::handle:pressed
-{
-    background-color: #474545;
-}

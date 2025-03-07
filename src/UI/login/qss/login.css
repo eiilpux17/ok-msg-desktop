@@ -55,18 +55,6 @@ QComboBox QAbstractItemView {
     selection-background-color: rgba(211, 211, 211, 0.3);
 }
 
-QScrollBar:vertical {
-    width: 10px;
-    color:red;
-    border: none;
-}
-
-QScrollBar::handle:vertical {
-    background: rgb(188, 188, 188);
-    border: none;
-    width: 10px;
-}
-
 QPushButton#loginBtn {
     color: white;
 		background-color: #203864;

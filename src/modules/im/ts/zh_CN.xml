@@ -99,10 +99,6 @@ which may lead to problems with video calls.</source>
             <translation>状态消息</translation>
         </message>
         <message>
-            <source>Send message</source>
-            <translation>发送消息</translation>
-        </message>
-        <message>
             <source>Alias:</source>
             <translation>备注名：</translation>
         </message>
@@ -117,6 +113,10 @@ which may lead to problems with video calls.</source>
         <message>
             <source>Clear history:</source>
             <translation>清空历史记录：</translation>
+        </message>
+        <message>
+            <source>Send message</source>
+            <translation>发送消息</translation>
         </message>
     </context>
     <context>
@@ -362,7 +362,7 @@ which may lead to problems with video calls.</source>
         </message>
     </context>
     <context>
-        <name>GeneralSettings</name>
+        <name>GeneralForm</name>
         <message>
             <source>Chat</source>
             <translation>消息</translation>
@@ -494,11 +494,18 @@ which may lead to problems with video calls.</source>
         </message>
     </context>
     <context>
-        <name>IdentitySettings</name>
+        <name>LoadHistoryDialog</name>
         <message>
-            <source>My profile</source>
-            <translation>个人资料</translation>
+            <source>Load History Dialog</source>
+            <translation>加载历史记录对话框</translation>
         </message>
+        <message>
+            <source>Load history from:</source>
+            <translation>加载历史来自：</translation>
+        </message>
+    </context>
+    <context>
+        <name>ProfileForm</name>
         <message>
             <source>Public Information</source>
             <translation>公开信息</translation>
@@ -532,12 +539,12 @@ which may lead to problems with video calls.</source>
             <translation>姓名：</translation>
         </message>
         <message>
-            <source>My phone:</source>
-            <translation>手机：</translation>
-        </message>
-        <message>
             <source>My E-Mail:</source>
             <translation>邮箱：</translation>
+        </message>
+        <message>
+            <source>My phone:</source>
+            <translation>手机：</translation>
         </message>
         <message>
             <source>My telephone:</source>
@@ -548,30 +555,19 @@ which may lead to problems with video calls.</source>
             <translation>配置文件</translation>
         </message>
         <message>
-            <source>Go back to the login screen</source>
-            <comment>tooltip for logout button</comment>
-            <translation>返回到登录屏幕</translation>
-        </message>
-        <message>
             <source>Exit</source>
             <comment>import profile button</comment>
             <translation>退出</translation>
         </message>
         <message>
+            <source>Go back to the login screen</source>
+            <comment>tooltip for logout button</comment>
+            <translation>返回到登录屏幕</translation>
+        </message>
+        <message>
             <source>Logout</source>
             <comment>import profile button</comment>
             <translation>登出</translation>
-        </message>
-    </context>
-    <context>
-        <name>LoadHistoryDialog</name>
-        <message>
-            <source>Load History Dialog</source>
-            <translation>加载历史记录对话框</translation>
-        </message>
-        <message>
-            <source>Load history from:</source>
-            <translation>加载历史来自：</translation>
         </message>
     </context>
     <context>
@@ -1108,6 +1104,10 @@ so you can save the file on windows.</source>
             </translation>
         </message>
         <message>
+            <source>Error</source>
+            <translation>错误</translation>
+        </message>
+        <message>
             <source>Search Contacts</source>
             <translation>搜索联系人</translation>
         </message>
@@ -1543,34 +1543,6 @@ so you can save the file on windows.</source>
         <message>
             <source>Can not create profile!</source>
             <translation>无法创建配置文件！</translation>
-        </message>
-        <message>
-            <source>View</source>
-            <comment>OS X Menu bar</comment>
-            <translation>查看</translation>
-        </message>
-        <message>
-            <source>Window</source>
-            <comment>OS X Menu bar</comment>
-            <translation>日期</translation>
-        </message>
-        <message>
-            <source>Minimize</source>
-            <comment>OS X Menu bar</comment>
-            <translation>最小化</translation>
-        </message>
-        <message>
-            <source>Bring All to Front</source>
-            <comment>OS X Menu bar</comment>
-            <translation>移动全部到最上层</translation>
-        </message>
-        <message>
-            <source>Exit Fullscreen</source>
-            <translation>退出全屏</translation>
-        </message>
-        <message>
-            <source>Enter Fullscreen</source>
-            <translation>进入全屏模式</translation>
         </message>
     </context>
     <context>

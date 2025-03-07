@@ -1394,7 +1394,7 @@
         </message>
     </context>
     <context>
-        <name>module::im::IdentitySettings</name>
+        <name>Ui::ProfileForm</name>
         <message>
             <source>Public Information</source>
             <translation>Informação pública</translation>
@@ -1968,10 +1968,10 @@
         </message>
     </context>
     <context>
-        <name>module::im::Profile</name>
+        <name>Ui::ProfileForm</name>
     </context>
     <context>
-        <name>module::im::ProfileForm</name>
+        <name>Ui::ProfileForm</name>
         <message>
             <source>Choose a profile picture</source>
             <translation>Escolha uma imagem para o perfil</translation>

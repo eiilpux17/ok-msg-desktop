@@ -23,8 +23,9 @@ class QTabWidget;
 
 
 namespace module::im {
-class GenericForm;
+
 class GeneralForm;
+class BaseSettingsForm;
 class IAudioControl;
 class AVForm;
 class StorageSettingsForm;
@@ -38,8 +39,8 @@ class Widget;
 class SettingsWidget : public QWidget {
     Q_OBJECT
 public:
-    SettingsWidget(QWidget* parent = nullptr);
-    ~SettingsWidget();
+    explicit SettingsWidget(QWidget* parent = nullptr);
+    ~SettingsWidget() override;
 
     bool isShown() const;
     void show(ContentLayout* contentLayout);
@@ -64,7 +65,7 @@ private:
     AVForm* rawAvfrm;
     StorageSettingsForm* uifrm;
 
-    std::vector<GenericForm*> cfgForms;
+    std::vector<BaseSettingsForm*> cfgForms;
     int currentIndex;
 };
 }  // namespace module::im

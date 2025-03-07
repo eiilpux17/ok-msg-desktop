@@ -96,6 +96,10 @@
             <source>Record</source>
             <translation>录制</translation>
         </message>
+        <message>
+            <source>Error</source>
+            <translation type="unfinished"/>
+        </message>
     </context>
     <context>
         <name>module::meet::StartMeetingWidget</name>

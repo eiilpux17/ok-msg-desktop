@@ -10,17 +10,16 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#ifndef GENERICFORM_H
-#define GENERICFORM_H
+#pragma once
 
 #include <QWidget>
 namespace module::im {
 
-class GenericForm : public QWidget {
+class BaseSettingsForm : public QWidget {
     Q_OBJECT
 public:
-    explicit GenericForm(const QPixmap& icon, QWidget* parent = nullptr);
-    virtual ~GenericForm() {}
+    explicit BaseSettingsForm(const QPixmap& icon, QWidget* parent = nullptr);
+    virtual ~BaseSettingsForm() {}
 
     virtual QString getFormName() = 0;
     QPixmap getFormIcon();
@@ -35,4 +34,4 @@ protected:
     QPixmap formIcon;
 };
 }  // namespace module::im
-#endif
+

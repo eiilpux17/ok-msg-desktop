@@ -37,7 +37,7 @@
 #include "src/persistence/profile.h"
 #include "src/widget/form/addfriendform.h"
 #include "src/widget/form/groupinviteform.h"
-#include "src/widget/form/profileform.h"
+#include "src/widget/form/ProfileForm.h"
 #include "ui_ChatWidget.h"
 #include "widget.h"
 

@@ -10,7 +10,7 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "settingswidget.h"
+#include "SettingsWidget.h"
 
 
 #include <QLabel>
@@ -19,19 +19,21 @@
 #include <QTabWidget>
 #include <QWindow>
 
-#include <memory>
-
 #include "src/application.h"
 #include "src/nexus.h"
 #include "src/widget/contentlayout.h"
-#include "src/widget/form/settings/StorageSettingsForm.h"
-#include "src/widget/form/settings/avform.h"
-#include "src/widget/form/settings/generalform.h"
+#include "StorageSettingsForm.h"
+#include "avform.h"
+#include "GeneralForm.h"
 #include "src/widget/widget.h"
 #include "lib/storage/settings/translator.h"
 
 namespace module::im {
 
+/**
+ * @brief IM Settings widget
+ * @param parent
+ */
 SettingsWidget::SettingsWidget(QWidget* parent) : QWidget(parent, Qt::Window) {
 
     bodyLayout = new QVBoxLayout(this);
@@ -45,8 +47,6 @@ SettingsWidget::SettingsWidget(QWidget* parent) : QWidget(parent, Qt::Window) {
 
     // General settings
     gfrm = new GeneralForm(this);
-    // connect(gfrm.get(), &GeneralForm::updateIcons, parent, &Widget::updateIcons);
-
     // Storage settings
     uifrm = new StorageSettingsForm(this);
     // AV settings
@@ -68,14 +68,11 @@ SettingsWidget::SettingsWidget(QWidget* parent) : QWidget(parent, Qt::Window) {
 
     for (auto& f : cfgForms){
         f->setStyleSheet("padding: 0 10px;");
-        tab->addTab(f,
-                    // cfgForm->getFormIcon(),
-                    f->getFormName());
+        tab->addTab(f, f->getFormName());
     }
 
     bodyLayout->addWidget(tab);
     setLayout(bodyLayout);
-
 
     retranslateUi();
     auto a = ok::Application::Instance();

@@ -15,3 +15,11 @@ QWidget .QLabel, QWidget .QLineEdit
     color: @mainText;
     background: @groundBase;
 }
+
+module--im--GeneralForm{
+  border: none;
+}
+
+ok--base--VerticalOnlyScroller {
+  border: none;
+}

@@ -94,7 +94,7 @@ QSpinBox:disabled, QDoubleSpinBox:disabled {
 
 QGroupBox {
     color: black;
-    background-color: white;
+    background-color: transparent;
     font: @bigBold;
 }
 
@@ -165,13 +165,13 @@ QScrollBar::sub-line:vertical {
     subcontrol-origin: margin;
 }
 
-QScrollBar:QScrollBar::down-arrow:vertical {
+QScrollBar::down-arrow:vertical {
     width: 0px;
     height: 0px;
     background-color: white;
 }
 
-QScrollBar:QScrollBar::up-arrow:vertical {
+QScrollBar::up-arrow:vertical {
     width: 0px;
     height: 0px;
     background-color: white;
@@ -215,13 +215,13 @@ QScrollBar::sub-line:horizontal {
     subcontrol-origin: margin;
 }
 
-QScrollBar:QScrollBar::right-arrow:horizontal {
+QScrollBar::right-arrow:horizontal {
     width: 0px;
     height: 0px;
     background-color: white;
 }
 
-QScrollBar:QScrollBar::left-arrow:horizontal {
+QScrollBar::left-arrow:horizontal {
     width: 0px;
     height: 0px;
     background-color: white;

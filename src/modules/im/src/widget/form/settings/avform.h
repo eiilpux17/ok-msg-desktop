@@ -17,7 +17,7 @@
 #include <QObject>
 #include <QString>
 
-#include "genericsettings.h"
+#include "BaseSettingsForm.h"
 #include "ui_avform.h"
 
 #include <memory>
@@ -42,12 +42,12 @@ namespace module::im {
 class CoreAV;
 class VideoSurface;
 
-class AVForm : public GenericForm, private Ui::AVForm {
+class AVForm : public BaseSettingsForm, private Ui::AVForm {
     Q_OBJECT
 public:
     explicit AVForm(QWidget* parent = nullptr);
     ~AVForm() override;
-    QString getFormName() final override {
+    QString getFormName() override {
         return tr("Audio/Video");
     }
 

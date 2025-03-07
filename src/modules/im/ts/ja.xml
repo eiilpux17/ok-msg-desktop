@@ -99,10 +99,6 @@ which may lead to problems with video calls.</source>
             <translation>ステータスメッセージ</translation>
         </message>
         <message>
-            <source>Send message</source>
-            <translation>メッセージを送信</translation>
-        </message>
-        <message>
             <source>Alias:</source>
             <translation>別名：</translation>
         </message>
@@ -117,6 +113,10 @@ which may lead to problems with video calls.</source>
         <message>
             <source>Clear history:</source>
             <translation>履歴のクリア:</translation>
+        </message>
+        <message>
+            <source>Send message</source>
+            <translation>メッセージを送信</translation>
         </message>
     </context>
     <context>
@@ -362,7 +362,7 @@ which may lead to problems with video calls.</source>
         </message>
     </context>
     <context>
-        <name>GeneralSettings</name>
+        <name>GeneralForm</name>
         <message>
             <source>Chat</source>
             <translation>チャット</translation>
@@ -494,11 +494,18 @@ which may lead to problems with video calls.</source>
         </message>
     </context>
     <context>
-        <name>IdentitySettings</name>
+        <name>LoadHistoryDialog</name>
         <message>
-            <source>My profile</source>
-            <translation>プロファイル</translation>
+            <source>Load History Dialog</source>
+            <translation>履歴の読み込みダイアログ</translation>
         </message>
+        <message>
+            <source>Load history from:</source>
+            <translation>ロード履歴:</translation>
+        </message>
+    </context>
+    <context>
+        <name>ProfileForm</name>
         <message>
             <source>Public Information</source>
             <translation>公開情報</translation>
@@ -532,12 +539,12 @@ which may lead to problems with video calls.</source>
             <translation>名前:</translation>
         </message>
         <message>
-            <source>My phone:</source>
-            <translation>私の電話:</translation>
-        </message>
-        <message>
             <source>My E-Mail:</source>
             <translation>私のEメール:</translation>
+        </message>
+        <message>
+            <source>My phone:</source>
+            <translation>私の電話:</translation>
         </message>
         <message>
             <source>My telephone:</source>
@@ -548,30 +555,19 @@ which may lead to problems with video calls.</source>
             <translation>プロファイル</translation>
         </message>
         <message>
-            <source>Go back to the login screen</source>
-            <comment>tooltip for logout button</comment>
-            <translation>ログイン画面に戻る</translation>
-        </message>
-        <message>
             <source>Exit</source>
             <comment>import profile button</comment>
             <translation>終了</translation>
         </message>
         <message>
+            <source>Go back to the login screen</source>
+            <comment>tooltip for logout button</comment>
+            <translation>ログイン画面に戻る</translation>
+        </message>
+        <message>
             <source>Logout</source>
             <comment>import profile button</comment>
             <translation>ログアウト</translation>
-        </message>
-    </context>
-    <context>
-        <name>LoadHistoryDialog</name>
-        <message>
-            <source>Load History Dialog</source>
-            <translation>履歴の読み込みダイアログ</translation>
-        </message>
-        <message>
-            <source>Load history from:</source>
-            <translation>ロード履歴:</translation>
         </message>
     </context>
     <context>
@@ -1108,6 +1104,10 @@ so you can save the file on windows.</source>
             </translation>
         </message>
         <message>
+            <source>Error</source>
+            <translation>エラー</translation>
+        </message>
+        <message>
             <source>Search Contacts</source>
             <translation>連絡先を検索</translation>
         </message>
@@ -1543,34 +1543,6 @@ so you can save the file on windows.</source>
         <message>
             <source>Can not create profile!</source>
             <translation>プロフィールを作成できません!</translation>
-        </message>
-        <message>
-            <source>View</source>
-            <comment>OS X Menu bar</comment>
-            <translation>表示</translation>
-        </message>
-        <message>
-            <source>Window</source>
-            <comment>OS X Menu bar</comment>
-            <translation>ウィンドウ</translation>
-        </message>
-        <message>
-            <source>Minimize</source>
-            <comment>OS X Menu bar</comment>
-            <translation>最小化</translation>
-        </message>
-        <message>
-            <source>Bring All to Front</source>
-            <comment>OS X Menu bar</comment>
-            <translation>すべて最前面に表示</translation>
-        </message>
-        <message>
-            <source>Exit Fullscreen</source>
-            <translation>全画面表示を終了</translation>
-        </message>
-        <message>
-            <source>Enter Fullscreen</source>
-            <translation>全画面表示を開始</translation>
         </message>
     </context>
     <context>

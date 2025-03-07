@@ -1330,7 +1330,7 @@
         </message>
     </context>
     <context>
-        <name>module::im::IdentitySettings</name>
+        <name>Ui::ProfileForm</name>
         <message>
             <source>Public Information</source>
             <translation>Öffentliche Informationen</translation>
@@ -1901,11 +1901,9 @@
             <translation>FESTSTELLTASTE AKTIVIERT</translation>
         </message>
     </context>
+
     <context>
-        <name>module::im::Profile</name>
-    </context>
-    <context>
-        <name>module::im::ProfileForm</name>
+        <name>Ui::ProfileForm0</name>
         <message>
             <source>Choose a profile picture</source>
             <translation>Wähle ein Profilbild</translation>

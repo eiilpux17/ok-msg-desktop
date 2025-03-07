@@ -14,7 +14,6 @@
 #define ABOUTFORM_H
 
 #include "lib/ui/widget/GenericForm.h"
-#include "modules/im/src/widget/form/settings/genericsettings.h"
 #include "ui_aboutsettings.h"
 
 #include <memory>

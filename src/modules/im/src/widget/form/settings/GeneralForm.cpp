@@ -10,8 +10,8 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "generalform.h"
-#include "ui_generalsettings.h"
+#include "GeneralForm.h"
+#include "ui_GeneralForm.h"
 
 #include <QDesktopWidget>
 #include <QFileDialog>
@@ -19,7 +19,7 @@
 #include "src/core/core.h"
 #include "src/lib/storage/settings/style.h"
 #include "src/persistence/settings.h"
-#include "src/widget/form/settingswidget.h"
+#include "SettingsWidget.h"
 #include "src/Bus.h"
 #include "src/application.h"
 #include "src/nexus.h"
@@ -33,8 +33,8 @@ namespace module::im {
  * This form contains all settings that are not suited to other forms
  */
 GeneralForm::GeneralForm(SettingsWidget* parent)
-        : GenericForm(QPixmap(":/img/settings/general.png"), parent)
-        , bodyUI(new Ui::GeneralSettings) {
+        : BaseSettingsForm(QPixmap(":/img/settings/general.png"), parent)
+        , bodyUI(new Ui::GeneralForm) {
 
     setContentsMargins(0, 0, 0, 0);
 

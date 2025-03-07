@@ -26,12 +26,11 @@
 
 #include "src/Bus.h"
 #include "src/application.h"
-#include "src/base/RecursiveSignalBlocker.h"
 #include "src/core/core.h"
 #include "src/lib/storage/settings/style.h"
 #include "src/nexus.h"
 #include "src/persistence/settings.h"
-#include "src/widget/form/settingswidget.h"
+#include "SettingsWidget.h"
 #include "src/widget/widget.h"
 #include "src/application.h"
 
@@ -44,7 +43,7 @@ namespace module::im {
  * Restores all controls from the settings.
  */
 StorageSettingsForm::StorageSettingsForm(SettingsWidget* myParent)
-        : GenericForm(QPixmap(":/img/settings/general.png"), myParent)
+        : BaseSettingsForm(QPixmap(":/img/settings/general.png"), myParent)
         , bodyUI{new Ui::StorageSettingsForm} {
     bodyUI->setupUi(this);
     parent = myParent;
@@ -69,7 +68,7 @@ StorageSettingsForm::StorageSettingsForm(SettingsWidget* myParent)
 }
 
 StorageSettingsForm::~StorageSettingsForm() {
-    
+
     delete bodyUI;
 }
 

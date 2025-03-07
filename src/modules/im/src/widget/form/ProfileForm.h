@@ -10,8 +10,7 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#ifndef IDENTITYFORM_H
-#define IDENTITYFORM_H
+#pragma once
 
 #include <QLabel>
 #include <QLineEdit>
@@ -20,7 +19,7 @@
 
 
 namespace Ui {
-class IdentitySettings;
+class ProfileForm;
 }
 
 namespace lib::ui {
@@ -92,10 +91,9 @@ private:
     static QString getSupportedImageFilter();
 
 private:
-    Ui::IdentitySettings* bodyUI;
+    Ui::ProfileForm* bodyUI;
     lib::ui::MaskablePixmapWidget* profilePicture;
     lib::ui::QRWidget* qr;
     IProfileInfo* profileInfo;
 };
 }  // namespace module::im
-#endif

@@ -13,18 +13,20 @@
 #ifndef USERINTERFACEFORM_H
 #define USERINTERFACEFORM_H
 
-#include "genericsettings.h"
+#include "BaseSettingsForm.h"
 #include "src/persistence/profile.h"
-#include "src/widget/form/settingswidget.h"
+#include "SettingsWidget.h"
 
-#include <memory>
 
 namespace Ui {
 class StorageSettingsForm;
 }
-namespace module::im {
 
-class StorageSettingsForm : public GenericForm {
+namespace module::im {
+/**
+ * @brief The StorageSettingsForm class
+ */
+class StorageSettingsForm : public BaseSettingsForm {
     Q_OBJECT
 public:
     explicit StorageSettingsForm(SettingsWidget* myParent);

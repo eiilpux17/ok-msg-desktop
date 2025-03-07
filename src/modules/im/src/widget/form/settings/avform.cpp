@@ -45,16 +45,16 @@
 namespace module::im {
 
 AVForm::AVForm( QWidget* parent)
-        : GenericForm(QPixmap(":/img/settings/av.png"), parent)
+        : BaseSettingsForm(QPixmap(":/img/settings/av.png"), parent)
         , audioSettings(nullptr)
         , videoSettings(nullptr)
         , camVideoSurface(nullptr)
-        {
+{
 
     setupUi(this);
 
-    // block all child signals during initialization
-    // const ok::base::RecursiveSignalBlocker signalBlocker(this);
+            // block all child signals during initialization
+            // const ok::base::RecursiveSignalBlocker signalBlocker(this);
 
     eventsInit();
 
@@ -78,7 +78,7 @@ AVForm::AVForm( QWidget* parent)
     playbackSlider->setValue(getStepsFromValue(s->getOutVolume(), s->getOutVolumeMin(), s->getOutVolumeMax()));
     playbackSlider->installEventFilter(this);
 
-    // audio settings
+            // audio settings
     microphoneSlider->setToolTip(tr("Use slider to set the gain of your input device ranging"
                                     " from %1dB to %2dB.")
                                          .arg(audio->minInputGain())
@@ -128,12 +128,11 @@ AVForm::~AVForm() = default;
 
 void AVForm::hideEvent(QHideEvent* event) {
     deinit();
-    GenericForm::hideEvent(event);
+
 }
 
 void AVForm::showEvent(QShowEvent* event) {
-     QMetaObject::invokeMethod(this, "init", Qt::ConnectionType::QueuedConnection);
-    GenericForm::showEvent(event);
+    QMetaObject::invokeMethod(this, "init", Qt::ConnectionType::QueuedConnection);
 }
 
 void AVForm::open(const lib::video::VideoMode& mode) {
@@ -195,7 +194,7 @@ void AVForm::on_videoModescomboBox_currentIndexChanged(int index) {
             open(mode);
         };
 
-        // note: grabber is self-managed and will destroy itself when done
+                // note: grabber is self-managed and will destroy itself when done
         ScreenshotGrabber* screenshotGrabber = new ScreenshotGrabber;
 
         connect(screenshotGrabber, &ScreenshotGrabber::regionChosen, this, onGrabbed,
@@ -214,7 +213,7 @@ void AVForm::selectBestModes(QVector<lib::video::VideoMode>& allVideoModes) {
         return;
     }
 
-    // Identify the best resolutions available for the supposed XXXXp resolutions.
+            // Identify the best resolutions available for the supposed XXXXp resolutions.
     std::map<int, lib::video::VideoMode> idealModes;
     idealModes[120] = lib::video::VideoMode(160, 120);
     idealModes[240] = lib::video::VideoMode(430, 240);
@@ -230,7 +229,7 @@ void AVForm::selectBestModes(QVector<lib::video::VideoMode>& allVideoModes) {
     for (int i = 0; i < allVideoModes.size(); ++i) {
         lib::video::VideoMode mode = allVideoModes[i];
 
-        // PS3-Cam protection, everything above 60fps makes no sense
+                // PS3-Cam protection, everything above 60fps makes no sense
         if (mode.FPS > 60) continue;
 
         for (auto iter = idealModes.begin(); iter != idealModes.end(); ++iter) {
@@ -277,7 +276,7 @@ void AVForm::selectBestModes(QVector<lib::video::VideoMode>& allVideoModes) {
             int size = getModeSize(mode);
             auto result =
                     std::find_if(newVideoModes.cbegin(), newVideoModes.cend(),
-                    [size](lib::video::VideoMode mode) { return getModeSize(mode) == size; });
+                                 [size](lib::video::VideoMode mode) { return getModeSize(mode) == size; });
 
             if (result == newVideoModes.end()) newVideoModes.push_back(mode);
         }
@@ -381,20 +380,20 @@ lib::video::CameraSource* AVForm::initVideoModes(int curIndex) {
     }
     auto modes = camera->getVideoModes();
 
-    // bool isScreen = lib::video::CameraDevice::isScreen(devName);
-    // if (isScreen) {
-        // Add extra video mode to region selection
-        // allVideoModes.push_back(lib::video::VideoMode());
-        // videoModes = allVideoModes;
-        // fillScreenModesComboBox(modes);
+            // bool isScreen = lib::video::CameraDevice::isScreen(devName);
+            // if (isScreen) {
+            // Add extra video mode to region selection
+            // allVideoModes.push_back(lib::video::VideoMode());
+            // videoModes = allVideoModes;
+            // fillScreenModesComboBox(modes);
     // } else {
-        // selectBestModes(allVideoModes);
-        // videoModes = allVideoModes;
-        fillCameraModesComboBox(modes);
+    // selectBestModes(allVideoModes);
+    // videoModes = allVideoModes;
+    fillCameraModesComboBox(modes);
     // }
 
 
-    // QVector<lib::video::VideoMode> allVideoModes = camera->getVideoModes();
+            // QVector<lib::video::VideoMode> allVideoModes = camera->getVideoModes();
 
     int preferedIndex = searchPreferredIndex();
     if (preferedIndex != -1) {
@@ -406,20 +405,20 @@ lib::video::CameraSource* AVForm::initVideoModes(int curIndex) {
         return camera.get();
     }
 
-    // if (isScreen) {
-    //     QRect rect = videoSettings->getScreenRegion();
-    //     lib::video::VideoMode mode(rect);
-    //     videoSettings->setScreenGrabbed(true);
-    //     videoModescomboBox->setCurrentIndex(videoModes.size() - 1);
-    //     open(mode);
-    //     return;
-    // }
+            // if (isScreen) {
+            //     QRect rect = videoSettings->getScreenRegion();
+            //     lib::video::VideoMode mode(rect);
+            //     videoSettings->setScreenGrabbed(true);
+            //     videoModescomboBox->setCurrentIndex(videoModes.size() - 1);
+            //     open(mode);
+            //     return;
+            // }
 
-    // If the user hasn't set a preferred resolution yet,
-    // we'll pick the resolution in the middle of the list,
-    // and the best FPS for that resolution.
-    // If we picked the lowest resolution, the quality would be awful
-    // but if we picked the largest, FPS would be bad and thus quality bad too.
+            // If the user hasn't set a preferred resolution yet,
+            // we'll pick the resolution in the middle of the list,
+            // and the best FPS for that resolution.
+            // If we picked the lowest resolution, the quality would be awful
+            // but if we picked the largest, FPS would be bad and thus quality bad too.
     int mid = (videoModes.size() - 1) / 2;
     videoModescomboBox->setCurrentIndex(mid);
 
@@ -432,11 +431,11 @@ void AVForm::init()
     getAudioOutDevices();
     getAudioInDevices();
 
-        audioSrc = audio->makeSource();
-        connect(audioSrc.get(), &lib::audio::IAudioSource::volumeAvailable, this,
-                &AVForm::setVolume);
+    audioSrc = audio->makeSource();
+    connect(audioSrc.get(), &lib::audio::IAudioSource::volumeAvailable, this,
+            &AVForm::setVolume);
 
-        audioSink = audio->makeSink();
+    audioSink = audio->makeSink();
 
 
     auto source = initVideoDevices();
@@ -472,9 +471,9 @@ void AVForm::on_videoDevCombobox_currentIndexChanged(int index) {
 
     videoSettings->setScreenGrabbed(false);
 
-    // bool previouslyBlocked = videoModescomboBox->blockSignals(true);
-    // updateVideoModes(index);
-    // videoModescomboBox->blockSignals(previouslyBlocked);
+            // bool previouslyBlocked = videoModescomboBox->blockSignals(true);
+            // updateVideoModes(index);
+            // videoModescomboBox->blockSignals(previouslyBlocked);
 
     if (videoSettings->getScreenGrabbed()) {
         return;
