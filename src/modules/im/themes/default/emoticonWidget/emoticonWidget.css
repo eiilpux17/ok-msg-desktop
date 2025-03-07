@@ -46,13 +46,14 @@ QRadioButton::indicator:checked
 
 QMenu
 {
-     background-color: @statusActive; /* sets background of the menu */
-     border: 0px solid;
+/* sets background of the menu */
+/*     background-color: @statusActive;
+/*     border: 0px solid;*/
 }
 
 EmoticonsPageView
 {
-     background: transparent;
+/*     background: transparent;*/
 }
 
 EmoticonsPageView #emoticonsItem

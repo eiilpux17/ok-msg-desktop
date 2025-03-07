@@ -159,7 +159,7 @@ QList<QPair<QString, QString>> SmileyPack::listSmileyPacks(const QStringList& pa
  * @return False if cannot open file, true otherwise.
  */
 bool SmileyPack::load(const QString& filename) {
-    qDebug() << "SmileyPack::load" << filename;
+    qDebug() << __func__ << filename;
     loadingMutex.lock();
     QFile xmlFile(filename);
     qDebug() << "exist?" << xmlFile.exists();

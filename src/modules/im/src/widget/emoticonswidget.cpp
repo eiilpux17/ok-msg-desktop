@@ -44,11 +44,11 @@ public:
 namespace module::im {
 
 EmoticonsWidget::EmoticonsWidget(QWidget* parent) : QMenu(parent) {
-    setStyleSheet(lib::settings::Style::getStylesheet("emoticonWidget/emoticonWidget.css"));
+
     setLayout(&layout);
     layout.addWidget(&stack);
 
-    QWidget* pageButtonsContainer = new QWidget;
+    auto* pageButtonsContainer = new QWidget(this);
     pageButtonsContainer->setObjectName("PageIndexContainer");
     QHBoxLayout* buttonLayout = new QHBoxLayout(pageButtonsContainer);
     pageIndexGroup = new QButtonGroup(this);
@@ -64,13 +64,13 @@ EmoticonsWidget::EmoticonsWidget(QWidget* parent) : QMenu(parent) {
     int pageCount = ceil(float(itemCount) / float(itemsPerPage));
 
     // respect configured emoticon size
-    const int px = Nexus::getProfile()->getSettings()->getEmojiFontPointSize();
-    const QSize size(px, px);
+    // const int px = Nexus::getProfile()->getSettings()->getEmojiFontPointSize();
+    // const QSize size(px, px);
 
     // create pages
     buttonLayout->addStretch();
     for (int i = 0; i < pageCount; ++i) {
-        EmoticonsPageView* page = new EmoticonsPageView(this);
+        auto* page = new EmoticonsPageView(this);
         page->setRange(itemsPerPage * i, std::min(itemsPerPage * (i + 1), itemCount) - 1);
         stack.addWidget(page);
         connect(page, &EmoticonsPageView::clicked, this, [this](int index) {
@@ -80,7 +80,7 @@ EmoticonsWidget::EmoticonsWidget(QWidget* parent) : QMenu(parent) {
 
         // page buttons are only needed if there is more than 1 page
         if (pageCount > 1) {
-            QRadioButton* pageButton = new PageDotButton(pageButtonsContainer);
+            auto* pageButton = new PageDotButton(pageButtonsContainer);
             pageButton->setCheckable(true);
             pageButton->setProperty("pageIndex", i);
             pageButton->setCursor(Qt::PointingHandCursor);
@@ -93,6 +93,7 @@ EmoticonsWidget::EmoticonsWidget(QWidget* parent) : QMenu(parent) {
         }
     }
     buttonLayout->addStretch();
+    setStyleSheet(lib::settings::Style::getStylesheet("emoticonWidget/emoticonWidget.css"));
 
     // calculates sizeHint
     layout.activate();
@@ -166,6 +167,7 @@ EmoticonsPageView::EmoticonsPageView(QWidget* parent) : QWidget(parent) {
     invisible_button->setVisible(false);
     invisible_button->setIconSize(QSize(s, s));
     invisible_button->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    invisible_button->setStyleSheet("border: none;");
 }
 
 QSize EmoticonsPageView::sizeHint() const {
@@ -196,9 +198,7 @@ void EmoticonsPageView::mouseMoveEvent(QMouseEvent* event) {
     int index = indexAtPostion(event->pos());
     if (index != hoverIndex) {
         if (hoverIndex >= 0) updateIndex(hoverIndex);
-
         hoverIndex = index;
-
         if (hoverIndex >= 0) updateIndex(hoverIndex);
     }
 }
