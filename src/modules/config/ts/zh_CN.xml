@@ -77,7 +77,7 @@
         </message>
     </context>
     <context>
-        <name>GeneralForm</name>
+        <name>GlobalGeneralForm</name>
         <message>
             <source>Language:</source>
             <translation>语言：</translation>
@@ -190,8 +190,8 @@
             <translation>系统设置</translation>
         </message>
         <message>
-            <source>Management</source>
-            <translation>管理</translation>
+            <source>Plugin management</source>
+            <translation>插件管理</translation>
         </message>
         <message>
             <source>About</source>
@@ -239,7 +239,7 @@
         </message>
     </context>
     <context>
-        <name>module::config::SettingsWidget</name>
+        <name>module::config::SettingsForm</name>
         <message>
             <source>Settings</source>
             <translation>设置</translation>

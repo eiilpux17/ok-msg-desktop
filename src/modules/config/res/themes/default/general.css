@@ -10,31 +10,46 @@
  * See the Mulan PubL v2 for more details.
  */
 
-QTabBar::tab:selected {
+ 
+QTabBar::tab { /* 标签 */
+    cursor: pointer; /* 指针样式 */
+}
+
+QTabBar::tab:selected 
+{
+    background: #2d3136;
     color: #f1f1f1;
 }
 
-QTabBar::tab:!selected {
+QTabBar::tab:!selected 
+{
+    background: #d0d1d1;
     color: #5e5e5e;
 }
 
-QTabBar[update-available=true]::tab:last:!selected {
+QTabBar[update-available=true]::tab:last:!selected
+{
     background-color: #80c580;
 }
 
+/*#mainTab 一级菜单*/
 QTabWidget#mainTab,
 QTabWidget#mainTab::pane,
-QTabWidget#mainTab > QTabBar {
+QTabWidget#mainTab>QTabBar
+{
     border: 0;
 }
 
-QTabWidget#mainTab > QTabBar {
+QTabWidget#mainTab>QTabBar
+{
     font: @bigBold;
 }
 
-QTabWidget#mainTab > QTabBar::tab {
+QTabWidget#mainTab>QTabBar::tab
+{
     border: 0;
     padding: 10px 10px 10px 10px;
+    background: white;
     color: #959595;
 }
 
@@ -42,13 +57,47 @@ QTabWidget#mainTab > QTabBar::tab:first {
     padding-left: 2px;
 }
 
-QTabWidget#mainTab > QTabBar::tab:hover {
+QTabWidget#mainTab>QTabBar::tab:hover 
+{
     color: #5d5d5d;
 }
 
-QTabWidget#mainTab > QTabBar::tab:selected {
+QTabWidget#mainTab>QTabBar::tab:selected 
+{
     color: #19171b;
 }
+
+/*#subTab 二级菜单*/
+QTabWidget#subTab>QTabBar::tab{
+  background: white;
+	border-bottom: none;
+	padding:5px 10px;
+}
+
+QTabWidget#subTab>QTabBar::tab:selected
+{
+  color: #19171b;
+	background: @groundBase;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+}
+
+QTabWidget#subTab>QStackedWidget{
+/*  border: none;
+  background: @groundBase;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;*/
+}
+
+QTabWidget#subTab::pane {
+    border: none;
+		background: @groundBase;
+		border-top-left-radius: 2px;
+		border-top-right-radius: 10px;
+		border-bottom-left-radius: 10px;
+		border-bottom-right-radius: 10px;
+}
+
 
 QLabel {
     color: @mainText;

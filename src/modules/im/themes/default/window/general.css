@@ -50,7 +50,7 @@ QTabBar[update-available=true]::tab:last:!selected
     background-color: #80c580;
 }
 
-/*#subTab 一级菜单*/
+/*#mainTab 一级菜单*/
 QTabWidget#mainTab,
 QTabWidget#mainTab::pane,
 QTabWidget#mainTab>QTabBar
@@ -86,7 +86,6 @@ QTabWidget#mainTab>QTabBar::tab:selected
 }
 
 /*#subTab 二级菜单*/
-
 QTabWidget#subTab>QTabBar::tab{
   background: white;
 	border-bottom: none;
@@ -244,12 +243,9 @@ QScrollArea::corner
     border: none;
 }
 
-QScrollBar::groove:vertical {
-    color: red;
-}
-
 QScrollBar{
   background:transparent;
+	border: 0;
 }
 
 QScrollBar:vertical

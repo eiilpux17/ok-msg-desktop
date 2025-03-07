@@ -17,16 +17,16 @@
 #include <QStyleFactory>
 
 #include <QTabWidget>
-#include <memory>
-#include "GeneralForm.h"
+#include "GlobalGeneralForm.h"
 #include "lib/ui/widget/GenericForm.h"
 
 namespace module::config {
-class SettingsWidget : public lib::ui::GenericForm {
+
+class SettingsForm : public lib::ui::GenericForm {
     Q_OBJECT
 public:
-    SettingsWidget(QWidget* parent = nullptr);
-    ~SettingsWidget();
+    explicit SettingsForm(QWidget* parent = nullptr);
+    ~SettingsForm() override {}
 
     virtual QString getFormName() final override {
         return tr("Settings");
@@ -48,8 +48,8 @@ private slots:
     void onTabChanged(int);
 
 private:
-    std::unique_ptr<QVBoxLayout> bodyLayout;
-    std::unique_ptr<QTabWidget> settingsWidgets;
+    QVBoxLayout* layout;
+    QTabWidget* tab;
     std::vector<GenericForm*> cfgForms;
     int currentIndex = 0;
 };

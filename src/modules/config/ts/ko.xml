@@ -77,7 +77,7 @@
         </message>
     </context>
     <context>
-        <name>GeneralForm</name>
+        <name>GlobalGeneralForm</name>
         <message>
             <source>Language:</source>
             <translation>언어:</translation>
@@ -190,8 +190,8 @@
             <translation>환경 설정</translation>
         </message>
         <message>
-            <source>Management</source>
-            <translation>관리</translation>
+            <source>Plugin management</source>
+            <translation>플러그인 관리</translation>
         </message>
         <message>
             <source>About</source>
@@ -239,7 +239,7 @@
         </message>
     </context>
     <context>
-        <name>module::config::SettingsWidget</name>
+        <name>module::config::SettingsForm</name>
         <message>
             <source>Settings</source>
             <translation>설정</translation>

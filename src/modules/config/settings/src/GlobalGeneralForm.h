@@ -14,11 +14,13 @@
 #define CONFIG_GENERALFORM_H
 
 #include "lib/ui/widget/GenericForm.h"
-#include "ui_GeneralForm.h"
+
+
+namespace Ui{
+class GlobalGeneralForm;
+}
 
 namespace module::config {
-
-class SettingsWidget;
 
 class GeneralForm : public lib::ui::GenericForm {
     Q_OBJECT
@@ -49,7 +51,7 @@ private slots:
     void on_themeColorCBox_currentIndexChanged(int);
 
 private:
-    Ui::GeneralForm* ui;
+    Ui::GlobalGeneralForm* ui;
     const int MAX_FORMAT_LENGTH = 128;
 };
 }  // namespace UI

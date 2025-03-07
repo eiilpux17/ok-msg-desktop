@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  - Copyright (c) 2022 船山信息 chuanshaninfo.com
-  - The project is licensed under Mulan PubL v2.
-  - You can use this software according to the terms and conditions of the Mulan
-  - PubL v2. You may obtain a copy of Mulan PubL v2 at:
-  -          http://license.coscl.org.cn/MulanPubL-2.0
-  - THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
-  - EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
-  - MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
-  - See the Mulan PubL v2 for more details.
-  -->
-
 <ui version="4.0">
- <class>GeneralForm</class>
- <widget class="QWidget" name="module::config::GeneralForm">
+ <class>GlobalGeneralForm</class>
+ <widget class="QWidget" name="GlobalGeneralForm">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -177,23 +165,6 @@
         <property name="bottomMargin">
          <number>9</number>
         </property>
-        <!--        <item row="3" column="0">-->
-        <!--         <widget class="QLabel" name="styleLabel">-->
-        <!--          <property name="text">-->
-        <!--           <string>Style:</string>-->
-        <!--          </property>-->
-        <!--         </widget>-->
-        <!--        </item>-->
-        <!--        <item row="3" column="1">-->
-        <!--         <widget class="QComboBox" name="styleBrowser">-->
-        <!--          <property name="sizePolicy">-->
-        <!--           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">-->
-        <!--            <horstretch>0</horstretch>-->
-        <!--            <verstretch>0</verstretch>-->
-        <!--           </sizepolicy>-->
-        <!--          </property>-->
-        <!--         </widget>-->
-        <!--        </item>-->
         <item row="4" column="0">
          <widget class="QLabel" name="themeColorLabel">
           <property name="text">

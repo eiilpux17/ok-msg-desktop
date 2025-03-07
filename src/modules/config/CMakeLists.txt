@@ -17,9 +17,10 @@ file( GLOB ${PROJECT_NAME}_UIS
     about/src/*.ui
 )
 
-file( GLOB ${PROJECT_NAME}_QSS
-    plugin/qss/*.qss
-    settings/qss/*.qss)
+file(GLOB_RECURSE ${PROJECT_NAME}_QSS
+    plugin/qss/*
+    settings/qss/*
+    )
 
 file( GLOB ${PROJECT_NAME}_ICONS
     icon/*.png
@@ -93,6 +94,7 @@ qt5_add_resources(
     ${PROJECT_NAME}_RESOURCES
     ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.qrc
 		res/${PROJECT_NAME}.qrc
+    res.qrc
 )
 
 add_library(${PROJECT_NAME} STATIC

@@ -14,6 +14,7 @@
 #include "ui_ConfigWindow.h"
 
 #include <QWidget>
+#include <QTabBar>
 
 #include "lib/storage/settings/OkSettings.h"
 #include "lib/storage/settings/style.h"
@@ -21,7 +22,7 @@
 
 #include "about/src/aboutform.h"
 #include "plugin/src/PluginManagerForm.h"
-#include "settings/src/GeneralForm.h"
+#include "settings/src/SettingsForm.h"
 #include "application.h"
 
 
@@ -33,21 +34,22 @@ ConfigWindow::ConfigWindow(QWidget* parent) : lib::ui::OFrame(parent), ui(new Ui
     ui->tabWidget->setObjectName("mainTab");
 
     // 设置
-    auto sw = new GeneralForm(this);
-    connect(sw, &GeneralForm::onLanguageChanged, [](const QString& locale) {
-        settings::Translator::translate(OK_Config_MODULE, locale);
-    });
+    auto sw = new SettingsForm(this);
+    // connect(sw, &SettingsWidget::onLanguageChanged, [](const QString& locale) {
+    //     settings::Translator::translate(OK_Config_MODULE, locale);
+    // });
     ui->tabWidget->addTab(sw, tr("System settings"));
 
 #if OK_PLUGIN
     // 插件管理
-    ui->tabWidget->addTab(new PluginManagerForm(this), tr("Management"));
+    ui->tabWidget->addTab(new PluginManagerForm(this), tr("Plugin management"));
 #endif
 
     // 关于
     ui->tabWidget->addTab(new AboutForm(this), tr("About"));
 
     ui->tabWidget->tabBar()->setCursor(Qt::PointingHandCursor);
+
     reloadTheme();
 
     QString locale = lib::settings::OkSettings().getTranslation();
@@ -67,6 +69,7 @@ ConfigWindow::~ConfigWindow() {
 
 void ConfigWindow::reloadTheme() {
     auto& style = lib::settings::Style::getStylesheet("general.css");
+
     setStyleSheet(style);
 }
 
@@ -75,7 +78,7 @@ void ConfigWindow::retranslateUi() {
 
 #if OK_PLUGIN
     ui->tabWidget->setTabText(0, tr("System settings"));
-    ui->tabWidget->setTabText(1, tr("Management"));
+    ui->tabWidget->setTabText(1, tr("Plugin management"));
     ui->tabWidget->setTabText(2, tr("About"));
 #else
     ui->tabWidget->setTabText(0, tr("System settings"));

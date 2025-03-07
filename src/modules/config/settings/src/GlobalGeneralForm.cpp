@@ -10,10 +10,11 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "GeneralForm.h"
+#include "GlobalGeneralForm.h"
+#include "ui_GlobalGeneralForm.h"
 #include <QFileDialog>
 #include <QStyleFactory>
-#include <cmath>
+
 #include "Bus.h"
 #include "application.h"
 #include "lib/storage/settings/OkSettings.h"
@@ -29,7 +30,7 @@ namespace module::config {
  */
 GeneralForm::GeneralForm(QWidget* parent)
         : lib::ui::GenericForm(QPixmap(":/img/settings/general.png"), parent)
-        , ui(new Ui::GeneralForm) {
+        , ui(new Ui::GlobalGeneralForm) {
     ui->setupUi(this);
 
     // block all child signals during initialization

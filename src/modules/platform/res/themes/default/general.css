@@ -48,3 +48,36 @@ QTabBar::tab:! selected {
 QTabBar::tab:last:! selected[update-available=true] {
     background-color: #80c580;
 }
+
+
+/*#subTab 二级菜单*/
+QTabWidget#subTab>QTabBar::tab{
+    background: white;
+      border-bottom: none;
+      padding:5px 10px;
+  }
+  
+  QTabWidget#subTab>QTabBar::tab:selected
+  {
+    color: #19171b;
+      background: @groundBase;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+  }
+  
+  QTabWidget#subTab>QStackedWidget{
+  /*  border: none;
+    background: @groundBase;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;*/
+  }
+  
+  QTabWidget#subTab::pane {
+      border: none;
+          background: @groundBase;
+          border-top-left-radius: 2px;
+          border-top-right-radius: 10px;
+          border-bottom-left-radius: 10px;
+          border-bottom-right-radius: 10px;
+  }
+  

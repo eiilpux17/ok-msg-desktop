@@ -15,57 +15,39 @@
 #include <QWidget>
 #include <QWindow>
 
-#include <memory>
-
 #include "Bus.h"
 #include "ConnectForm.h"
-#include "GeneralForm.h"
+#include "GlobalGeneralForm.h"
 #include "SettingsForm.h"
 #include "application.h"
+#include "lib/storage/settings/style.h"
 
 namespace module::config {
-SettingsWidget::SettingsWidget(QWidget* parent)
+
+SettingsForm::SettingsForm(QWidget* parent)
         : GenericForm(QPixmap(":/img/settings/general.png"), parent) {
-    settingsWidgets = std::unique_ptr<QTabWidget>(new QTabWidget(this));
-    settingsWidgets->setTabPosition(QTabWidget::North);
+    layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
 
-    bodyLayout = std::unique_ptr<QVBoxLayout>(new QVBoxLayout(this));
-    bodyLayout->setContentsMargins(0, 0, 0, 0);
-    bodyLayout->addWidget(settingsWidgets.get());
-    setLayout(bodyLayout.get());
-
-    //  std::unique_ptr<GeneralForm> gfrm(new GeneralForm(this));
-    //  connect(gfrm.get(), &GeneralForm::updateIcons, parent, &Widget::updateIcons);
-
-    // std::unique_ptr<StorageSettingsForm> uifrm(new StorageSettingsForm(this));
-    // std::unique_ptr<PrivacyForm> pfrm(new PrivacyForm());
-    // connect(pfrm.get(), &PrivacyForm::clearAllReceipts, parent, &Widget::clearAllReceipts);
-
-    //  std::unique_ptr<AdvancedForm> expfrm(new AdvancedForm());
-    //  std::unique_ptr<AboutForm> abtfrm(new AboutForm());
-
-// #if UPDATE_CHECK_ENABLED
-//     if (updateCheck != nullptr) {
-//         connect(updateCheck, &UpdateCheck::updateAvailable, this,
-//                 &SettingsWidget::onUpdateAvailable);
-//     } else {
-//         qWarning() << "SettingsWidget passed null UpdateCheck!";
-//     }
-// #endif
-
-    cfgForms = {{
+    tab = new QTabWidget(this);
+    tab->setTabPosition(QTabWidget::North);
+    tab->setObjectName("subTab");
+    cfgForms = {
             new GeneralForm(this),
-            new ConnectForm(this)  //
-                                   //      std::move(pfrm),   //
-                                   //      std::move(expfrm), //
-                                   //      std::move(abtfrm)  //
-    }};
-
+            new ConnectForm(this)
+    };
     for (auto& cfgForm : cfgForms)
-        settingsWidgets->addTab(cfgForm, cfgForm->getFormName());
+        tab->addTab(cfgForm, cfgForm->getFormName());
 
-    connect(settingsWidgets.get(), &QTabWidget::currentChanged, this,
-            &SettingsWidget::onTabChanged);
+
+    layout->addWidget(tab);
+    setLayout(layout);
+
+    connect(tab, &QTabWidget::currentChanged, this,
+            &SettingsForm::onTabChanged);
+
+    auto& style = lib::settings::Style::getStylesheet("general.css");
+    setStyleSheet(style);
 
     retranslateUi();
 
@@ -76,40 +58,36 @@ SettingsWidget::SettingsWidget(QWidget* parent)
             });
 }
 
-SettingsWidget::~SettingsWidget() {
-
+void SettingsForm::setBodyHeadStyle(QString style) {
+    tab->setStyle(QStyleFactory::create(style));
 }
 
-void SettingsWidget::setBodyHeadStyle(QString style) {
-    settingsWidgets->setStyle(QStyleFactory::create(style));
+void SettingsForm::showAbout() {
+    onTabChanged(tab->count() - 1);
 }
 
-void SettingsWidget::showAbout() {
-    onTabChanged(settingsWidgets->count() - 1);
-}
-
-bool SettingsWidget::isShown() const {
-    if (settingsWidgets->isVisible()) {
-        settingsWidgets->window()->windowHandle()->alert(0);
+bool SettingsForm::isShown() const {
+    if (tab->isVisible()) {
+        tab->window()->windowHandle()->alert(0);
         return true;
     }
 
     return false;
 }
 
-void SettingsWidget::onTabChanged(int index) {
-    settingsWidgets->setCurrentIndex(index);
+void SettingsForm::onTabChanged(int index) {
+    tab->setCurrentIndex(index);
 }
 
-void SettingsWidget::onUpdateAvailable(void) {
+void SettingsForm::onUpdateAvailable(void) {
     //    settingsWidgets->tabBar()->setProperty("update-available", true);
     //    settingsWidgets->tabBar()->style()->unpolish(settingsWidgets->tabBar());
     //    settingsWidgets->tabBar()->style()->polish(settingsWidgets->tabBar());
 }
 
-void SettingsWidget::retranslateUi() {
+void SettingsForm::retranslateUi() {
     for (int i = 0; i < cfgForms.size(); ++i) {
-        settingsWidgets->setTabText(i, cfgForms.at(i)->getFormName());
+        tab->setTabText(i, cfgForms.at(i)->getFormName());
         cfgForms.at(i)->retranslateUi();
     }
 }

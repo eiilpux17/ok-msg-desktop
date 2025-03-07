@@ -67,6 +67,7 @@ static QList<MenuItem> MenuItemList = {
 #endif
         };
 
+constexpr QSize ICON_SIZE(28,28);
 
 
 OMainMenu::OMainMenu(QWidget* parent) : QFrame(parent), ui(new Ui::OMainMenu) {
@@ -76,10 +77,6 @@ OMainMenu::OMainMenu(QWidget* parent) : QFrame(parent), ui(new Ui::OMainMenu) {
 
     ui->setupUi(this);
 
-    // 设置样式
-    QString qss = ok::base::Files::readStringAll(":/qss/menu.css");
-    setStyleSheet(qss);
-
     auto* group = new QButtonGroup(this);
     group->setExclusive(true);
     connect(group, &QButtonGroup::idToggled, this, &OMainMenu::onButtonToggled);
@@ -87,7 +84,7 @@ OMainMenu::OMainMenu(QWidget* parent) : QFrame(parent), ui(new Ui::OMainMenu) {
     for(auto &i : MenuItemList){
         auto item = new OMenuItem(i, this);
         item->setCheckable(true);
-        item->setIconSize(QSize(28, 28));
+        item->setIconSize(ICON_SIZE);
         items.append(item);
         ui->menuLayout->addWidget(item, Qt::AlignHCenter);
         group->addButton(item, static_cast<int>(i.menu));
@@ -95,6 +92,11 @@ OMainMenu::OMainMenu(QWidget* parent) : QFrame(parent), ui(new Ui::OMainMenu) {
     //settings
     group->addButton(ui->settingBtn, static_cast<int>(SystemMenu::setting));
 
+    ui->settingBtn->setFixedSize(ICON_SIZE);
+
+    // 设置样式
+    QString qss = ok::base::Files::readStringAll(":/qss/menu.css");
+    setStyleSheet(qss);
 
     retranslateUi();
 
