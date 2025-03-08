@@ -20,7 +20,6 @@ class GroupId : public ContactId {
 public:
     GroupId();
     GroupId(const GroupId& other);
-    explicit GroupId(const QByteArray& rawId);
     explicit GroupId(const QString& rawId);
     explicit GroupId(const ContactId& contactId);
     int getSize() const;

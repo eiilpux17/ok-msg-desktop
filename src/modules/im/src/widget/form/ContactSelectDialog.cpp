@@ -14,6 +14,7 @@
 
 #include "ui_ContactSelectDialog.h"
 
+#include "src/model/friend.h"
 #include "src/model/friendlist.h"
 #include "src/widget/ContactListWidget.h"
 #include "src/widget/ContactWidget.h"

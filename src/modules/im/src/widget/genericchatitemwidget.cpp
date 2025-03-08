@@ -28,11 +28,10 @@
 
 namespace module::im {
 
-GenericChatItemWidget::GenericChatItemWidget(ChatType type,
+GenericChatItemWidget::GenericChatItemWidget(lib::messenger::ChatType type,
                                              const ContactId& cid,
                                              QWidget* parent)
         : QFrame(parent)
-        , chatType(type)
         , statusPic{nullptr}
         , contactId{cid}
         , contact{nullptr}
@@ -62,7 +61,7 @@ GenericChatItemWidget::GenericChatItemWidget(ChatType type,
 
     statusPic = new QLabel(this);
     statusPic->setContentsMargins(1, 1, 1, 1);
-    if (type == ChatType::Chat) {
+    if (type == lib::messenger::ChatType::Chat) {
         updateStatusLight(Status::Offline, false);
     } else {
         clearStatusLight();
@@ -106,12 +105,13 @@ void GenericChatItemWidget::setLastMessage(const QString& msg) {
 void GenericChatItemWidget::updateLastMessage(const Message& m) {
     QString prefix;
     auto core = Core::getInstance();
-    if (m.isGroup) {
+    if (m.chatType == lib::messenger::ChatType::GroupChat) {
         // 群聊显示前缀，单聊不显示
-        if (ContactId(m.from).username == core->getUsername()) {
+        if (ContactId(m.from, m.chatType).username
+            == core->getUsername()) {
             prefix = tr("I:");
         } else {
-            auto f = Nexus::getCore()->getFriendList().findFriend(ContactId(m.from));
+            auto f = Nexus::getCore()->getFriendList().findFriend(ContactId(m.from, m.chatType));
             if (f) {
                 prefix = f->getDisplayedName() + tr(":");
             } else {
@@ -175,7 +175,7 @@ void GenericChatItemWidget::clearAvatar() {
 
 void GenericChatItemWidget::setDefaultAvatar() {
     qDebug() << __func__;
-    auto name = (chatType == ChatType::Chat) ? "contact" : "group";
+    auto name = (getChatType() == lib::messenger::ChatType::Chat) ? "contact" : "group";
     auto uri = QString(":img/%1_dark.svg").arg(name);
     avatar->setPixmap(QPixmap(uri));
 }

@@ -16,21 +16,18 @@
 #include "base/strongtype.h"
 #include "friendlist.h"
 #include "grouplist.h"
-#include "message.h"
-#include "src/core/core.h"
-#include "src/core/toxfile.h"
-#include "src/model/FriendId.h"
 #include "src/model/chatlogitem.h"
-#include "src/model/friend.h"
-#include "src/model/group.h"
-#include "src/persistence/history.h"
 #include "src/widget/searchtypes.h"
 
 #include <cassert>
 namespace module::im {
 
-using ChatLogIdx = NamedType<size_t, struct ChatLogIdxTag, Orderable, UnderlyingAddable,
-                             UnitlessDifferencable, Incrementable>;
+using ChatLogIdx = NamedType<size_t,
+                             struct ChatLogIdxTag,
+                             Orderable,
+                             UnderlyingAddable,
+                             UnitlessDifferencable,
+                             Incrementable>;
 
 struct SearchPos {
     // Index to the chat log item we want

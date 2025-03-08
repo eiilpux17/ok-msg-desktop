@@ -96,7 +96,7 @@ bool ProfileImporter::importProfile(const QString& path) {
     }
 
     QString settingsPath = Nexus::getProfile()->getSettings()->getSettingsDirPath();
-    QString profilePath = QDir(settingsPath).filePath(profile + Core::TOX_EXT);
+    QString profilePath = QDir(settingsPath).filePath(profile);
 
     if (QFileInfo(profilePath).exists()) {
         QString title = tr("Profile already exists", "import confirm title");

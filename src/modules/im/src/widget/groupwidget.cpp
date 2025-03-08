@@ -36,7 +36,7 @@
 namespace module::im {
 
 GroupWidget::GroupWidget(const GroupId& groupId, const QString& groupName)
-        : GenericChatroomWidget(ChatType::GroupChat, groupId) {
+        : GenericChatroomWidget(lib::messenger::ChatType::GroupChat, groupId) {
     setHidden(true);
     setCursor(Qt::PointingHandCursor);
 

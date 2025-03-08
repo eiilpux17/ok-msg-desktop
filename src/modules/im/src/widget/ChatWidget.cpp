@@ -28,6 +28,7 @@
 #include "lib/storage/settings/style.h"
 #include "lib/storage/settings/translator.h"
 #include "src/core/corefile.h"
+#include "src/model/friend.h"
 #include "src/model/friendlist.h"
 #include "src/model/group.h"
 #include "src/model/groupinvite.h"
@@ -224,7 +225,7 @@ void ChatWidget::connectToCoreAv(CoreAV* coreAv) {
 
 void ChatWidget::onMessageSessionReceived(const ContactId& contactId, const QString& sid) {
     sessionListWidget->createMessageSession(
-            contactId, sid, contactId.isGroup() ? ChatType::GroupChat : ChatType::Chat);
+            contactId, sid, contactId.getChatType());
 }
 
 void ChatWidget::onFriendMessageReceived(const FriendId friendId,
@@ -475,11 +476,18 @@ void ChatWidget::onProfileChanged(Profile* profile) {
 
     QList<MessageSession> mss;
     profile->getHistory()->getMessageSessions(mss);
+    qDebug() << "message sessions:" << mss.size();
 
     for (auto& p : mss) {
-        // TODO ChatType::Chat
-        sessionListWidget->createMessageSession(ContactId(p.peer_jid), p.session_id,
-                                                ChatType::Chat);
+        lib::messenger::ChatType type;
+        if(p.session_type == MessageSessionType::P2P){
+            type = lib::messenger::ChatType::Chat;
+        }else{
+            type = lib::messenger::ChatType::GroupChat;
+        }
+
+        ContactId cid(p.peer_jid, type);
+        sessionListWidget->createMessageSession(cid, p.session_id, type);
     }
 }
 
@@ -589,7 +597,7 @@ void ChatWidget::cancelFile(const QString& friendId, const QString& fileId) {
 void ChatWidget::dispatchFile(ToxFile file) {
     qDebug() << __func__ << "file:" << file.toString();
 
-    const auto& cId = ContactId(file.getFriendId());
+    const auto& cId = ContactId(file.getFriendId(), file.chatType);
 
     if (file.status == FileStatus::INITIALIZING && file.direction == FileDirection::RECEIVING) {
         auto settings = Nexus::getProfile()->getSettings();

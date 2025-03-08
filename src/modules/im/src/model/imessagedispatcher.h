@@ -14,13 +14,12 @@
 #define IMESSAGE_DISPATCHER_H
 
 #include "message.h"
-#include "src/model/friend.h"
+#include "src/core/toxfile.h"
 #include "src/model/message.h"
 
 #include <QObject>
 #include <QString>
 
-#include <cstdint>
 namespace module::im {
 
 using DispatchedMessageId = NamedType<size_t, struct SentMessageIdTag, Orderable, Incrementable>;
@@ -30,7 +29,7 @@ class IMessageDispatcher : public QObject {
 public:
     virtual ~IMessageDispatcher() = default;
 
-    virtual std::pair<DispatchedMessageId, MsgId> sendMessage(bool isAction, const QString& content,
+    virtual std::optional<std::pair<DispatchedMessageId, MsgId>> sendMessage(bool isAction, const QString& content,
                                                               bool encrypt = false) = 0;
 
     virtual void clearOutgoingMessages() = 0;

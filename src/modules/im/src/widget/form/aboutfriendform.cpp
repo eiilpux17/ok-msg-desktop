@@ -134,7 +134,7 @@ void AboutFriendForm::reloadTheme() {
 void AboutFriendForm::onAliasChanged(const QString& text) {
     auto fid = ui->id->text();
 
-    auto f = Nexus::getCore()->getFriendList().findFriend(ContactId(fid));
+    auto f = Nexus::getCore()->getFriendList().findFriend(ContactId(fid, lib::messenger::ChatType::Chat));
     f->setAlias(text);
 
     Core::getInstance()->setFriendAlias(fid, text);

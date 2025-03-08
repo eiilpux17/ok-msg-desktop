@@ -20,9 +20,12 @@
 #include "application.h"
 #include "friendlist.h"
 #include "src/lib/session/profile.h"
+#include "src/model/friend.h"
 #include "src/nexus.h"
 
 #include <lib/ortc/webrtc/Instance.h>
+
+#include <src/persistence/profile.h>
 
 namespace module::im {
 
@@ -102,7 +105,9 @@ std::map<ChatLogIdx, ChatLogItem>::const_iterator firstItemAfterDate(
 }
 
 SessionChatLog::SessionChatLog(const ICoreIdHandler& coreIdHandler)
-        : coreIdHandler(coreIdHandler) {}
+        : coreIdHandler(coreIdHandler), nextIdx(ChatLogIdx(0)) {
+
+}
 
 /**
  * @brief Alternate constructor that allows for an initial index to be set
@@ -433,7 +438,7 @@ void SessionChatLog::onFileUpdated(const FriendId& friendId, const ToxFile& file
 
         QString senderName;
         FriendId senderId{file.sender};
-        auto frnd = Nexus::getCore()->getFriendList().findFriend(senderId);
+        auto* frnd = Nexus::getCore()->getFriendList().findFriend(senderId);
         if (frnd) {
             senderName = frnd->getDisplayedName();
         }
@@ -508,11 +513,13 @@ void SessionChatLog::onFileTransferBrokenUnbroken(const FriendId& sender,
 ChatLogIdx SessionChatLog::getNextIdx(MsgId msgId) {
     assert(!msgId.isEmpty());
 
-    ChatLogIdx idx(-1);
+    ChatLogIdx idx(0);
     auto f = id2IdxMap.find(msgId);
     if (f == id2IdxMap.end()) {
         idx = nextIdx++;
         id2IdxMap.insert(msgId, idx);
+    }else{
+        idx = f.value();
     }
     qDebug() << "make next msgId:" << msgId << " idx:" << idx.get();
     return idx;

@@ -392,13 +392,12 @@ void ContentDialog::dropEvent(QDropEvent* event) {
     GroupWidget* group = qobject_cast<GroupWidget*>(o);
     if (frnd) {
         assert(event->mimeData()->hasFormat("toxPk"));
-        const FriendId toxId(event->mimeData()->data("toxPk"));
-        Friend* contact = Nexus::getCore()->getFriendList().findFriend(toxId);
-        if (!contact) {
-            return;
-        }
-
-        emit addFriendDialog(contact, this);
+        // const FriendId toxId(event->mimeData()->data("toxPk"));
+        // Friend* contact = Nexus::getCore()->getFriendList().findFriend(toxId);
+        // if (!contact) {
+            // return;
+        // }
+        // emit addFriendDialog(contact, this);
         ensureSplitterVisible();
     } else if (group) {
         assert(event->mimeData()->hasFormat("groupId"));

@@ -141,12 +141,12 @@ bool FriendChatroom::possibleToOpenInNewWindow() const {
 bool FriendChatroom::canBeRemovedFromWindow() const {
     const auto friendPk = frnd;
     const auto dialogs = dialogsManager->getFriendDialogs(*friendPk);
-    return dialogs && dialogs->hasContact(ContactId(frnd->toString()));
+    return dialogs && dialogs->hasContact(ContactId(frnd->toString(), lib::messenger::ChatType::Chat));
 }
 
 bool FriendChatroom::friendCanBeRemoved() const {
     const auto dialogs = dialogsManager->getFriendDialogs(*frnd);
-    return !dialogs || !dialogs->hasContact(ContactId(frnd->toString()));
+    return !dialogs || !dialogs->hasContact(ContactId(frnd->toString(), lib::messenger::ChatType::Chat));
 }
 
 void FriendChatroom::removeFriendFromDialogs() {

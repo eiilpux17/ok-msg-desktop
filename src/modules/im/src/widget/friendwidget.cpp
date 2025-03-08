@@ -40,6 +40,7 @@
 #include "src/model/friendlist.h"
 #include "src/model/status.h"
 #include "src/nexus.h"
+#include "src/persistence/profile.h"
 #include "src/persistence/settings.h"
 #include "src/widget/form/GroupCreateForm.h"
 #include "src/widget/form/aboutfriendform.h"
@@ -49,7 +50,9 @@
 namespace module::im {
 
 FriendWidget::FriendWidget(Friend* f, QWidget* parent)
-        : GenericChatroomWidget(ChatType::Chat, f->getId(), parent), about{nullptr}, m_friend{f} {
+        : GenericChatroomWidget(lib::messenger::ChatType::Chat, f->getId(), parent)
+        , about{nullptr}, m_friend{f} {
+
     setHidden(true);
     setCursor(Qt::PointingHandCursor);
     nameLabel->setText(m_friend->getDisplayedName());

@@ -135,6 +135,16 @@ bool Messenger::removeFriend(const std::string& f) {
     return _im->removeFriend(gloox::JID(f));
 }
 
+bool Messenger::isLinked(const std::string &f, ChatType t)
+{
+    if(t == ChatType::GroupChat){
+        return _im->findRoom(f);
+    }else{
+        //TODO 暂时返回true
+        return true;
+    }
+}
+
 size_t Messenger::getFriendCount() {
     return _im->getRosterCount();
 }

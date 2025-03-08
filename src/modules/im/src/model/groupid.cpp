@@ -19,24 +19,14 @@
 namespace module::im {
 
 /**
- * @brief The default constructor. Creates an empty Tox group ID.
+ * @brief The Group id
  */
 GroupId::GroupId() : ContactId() {}
 
-/**
- * @brief The copy constructor.
- * @param other GroupId to copy
- */
-GroupId::GroupId(const GroupId& other) : ContactId(other.toString().toUtf8()) {}
+GroupId::GroupId(const GroupId& other) : ContactId(other.toString(), lib::messenger::ChatType::GroupChat) {}
 
-GroupId::GroupId(const QByteArray& rawId) : ContactId(rawId) {}
+GroupId::GroupId(const QString& rawId) : ContactId(rawId, lib::messenger::ChatType::GroupChat) {}
 
-GroupId::GroupId(const QString& rawId) : ContactId(rawId) {}
-/**
- * @brief Constructs a GroupId from bytes.
- * @param rawId The bytes to construct the GroupId from. The lenght must be exactly
- *              TOX_CONFERENCE_UID_SIZE, else the GroupId will be empty.
- */
 GroupId::GroupId(const ContactId& contactId) : ContactId(contactId) {}
 
 /**

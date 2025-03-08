@@ -171,7 +171,7 @@ public:
     void changePassword(const std::string& password);
     IMContactId getSelfId();
     IMPeerId getSelfPeerId();
-    std::string getSelfUsername();
+    const std::string& getSelfUsername();
 
     // External Service Discovery
     const std::vector<ortc::IceServer>& getExternalServiceDiscovery() const {
@@ -586,7 +586,7 @@ protected:
 
     void doMessageNormal(const gloox::Message& msg, std::string& friendId);
 
-    void joinRoom(gloox::MUCRoom* room);
+
 
     void cacheJoinRoom(const std::string& jid, const std::string& name = "");
 

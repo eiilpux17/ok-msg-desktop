@@ -36,7 +36,6 @@ namespace module::im {
 class Profile;
 class HistoryKeeper;
 
-enum class HistMessageContentType { message, file };
 
 struct Peer {
     int64_t id;
@@ -44,8 +43,20 @@ struct Peer {
     QString alias;
 };
 
+enum class HistMessageContentType { message, file };
+
+/**
+ * Session type
+ * @brief The MessageSessionType enum
+ */
+enum class MessageSessionType {
+    P2P,   //Peer to Peer
+    Group,  //Group Chat
+};
+
 struct MessageSession {
     int64_t id = 0;
+    MessageSessionType session_type;
     QString session_id;
     QString peer_jid;
 };
@@ -168,7 +179,7 @@ public:
     void getPeers(QList<Peer>&);
     Peer getPeer(const QString& friendPk);
 
-    MessageSession getMessageSession(const QString& peer);
+    MessageSession getMessageSession(const QString& peer, const MessageSessionType& type);
     void getMessageSessions(QList<MessageSession>&);
     uint addMessageSession(const MessageSession&);
 

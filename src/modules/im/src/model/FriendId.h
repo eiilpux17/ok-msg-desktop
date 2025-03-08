@@ -32,7 +32,6 @@ class FriendId : public ContactId {
 public:
     FriendId();
     FriendId(const FriendId& other);
-    explicit FriendId(const QByteArray& rawId);
     explicit FriendId(const QString& rawId);
     explicit FriendId(const ContactId& rawId);
     explicit FriendId(const lib::messenger::IMContactId& fId);

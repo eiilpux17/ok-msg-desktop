@@ -14,7 +14,6 @@
 #define ICORE_GROUP_QUERY_H
 
 #include "src/model/FriendId.h"
-#include "src/model/groupid.h"
 
 #include <QString>
 #include <QStringList>
@@ -25,7 +24,7 @@ namespace module::im {
 class ICoreGroupQuery {
 public:
     virtual ~ICoreGroupQuery() = default;
-    virtual GroupId getGroupPersistentId(QString groupId) const = 0;
+    // virtual GroupId getGroupPersistentId(QString groupId) const = 0;
     virtual uint32_t getGroupNumberPeers(QString groupId) const = 0;
     virtual QString getGroupPeerName(QString groupId, QString peerId) const = 0;
     virtual PeerId getGroupPeerPk(QString groupId, QString peerId) const = 0;

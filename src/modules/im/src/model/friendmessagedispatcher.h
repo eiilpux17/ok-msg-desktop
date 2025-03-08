@@ -14,7 +14,6 @@
 #define FRIEND_MESSAGE_DISPATCHER_H
 
 #include "src/core/icorefriendmessagesender.h"
-#include "src/model/friend.h"
 #include "src/model/imessagedispatcher.h"
 #include "src/model/message.h"
 #include "src/persistence/offlinemsgengine.h"
@@ -22,7 +21,7 @@
 #include <QObject>
 #include <QString>
 
-#include <cstdint>
+
 namespace module::im {
 
 class FriendMessageDispatcher : public IMessageDispatcher {
@@ -34,7 +33,7 @@ public:
                             ICoreFriendMessageSender& messageSender);
     ~FriendMessageDispatcher();
 
-    std::pair<DispatchedMessageId, MsgId> sendMessage(bool isAction,
+    std::optional<std::pair<DispatchedMessageId, MsgId>> sendMessage(bool isAction,
                                                       const QString& content,
                                                       bool encrypt = false) override;
 

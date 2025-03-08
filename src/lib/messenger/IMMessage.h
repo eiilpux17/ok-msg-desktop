@@ -12,12 +12,19 @@
 
 #pragma once
 
+#include <string>
+
 namespace gloox {
 class JID;
 class RosterItem;
 }  // namespace gloox
 
 namespace lib::messenger {
+
+enum class ChatType {
+    Chat,      // 单聊
+    GroupChat  // 群聊
+};
 
 enum class MsgType {
     Chat = 1,

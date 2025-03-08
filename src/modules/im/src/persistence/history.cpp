@@ -18,9 +18,9 @@
 
 namespace {
 
-static constexpr int SCHEMA_VERSION = 4;
-
-// 4, 增加消息会话
+//4, 增加消息会话
+//5, 增加消息会话类型
+static constexpr int SCHEMA_VERSION = 5;
 
 bool createCurrentSchema(lib::db::RawDatabase& db) {
     QVector<lib::db::RawDatabase::Query> queries;
@@ -73,6 +73,7 @@ bool createCurrentSchema(lib::db::RawDatabase& db) {
             "CREATE TABLE message_sessions"
             "("
             "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+            "session_type INTEGER DEFAULT 0, "    // 0:
             "session_id TEXT,"
             "peer_id INTEGER"
             ");"
@@ -128,6 +129,16 @@ bool dbSchema3to4(lib::db::RawDatabase& db) {
     QVector<lib::db::RawDatabase::Query> queries;
     queries += lib::db::RawDatabase::Query((sql));
     queries += lib::db::RawDatabase::Query(QStringLiteral("PRAGMA user_version = 4;"));
+    return db.execNow(queries);
+}
+
+bool dbSchema4to5(lib::db::RawDatabase& db) {
+    qDebug() << __func__;
+    // message session
+    auto sql = "ALTER TABLE message_sessions ADD COLUMN session_type INTEGER DEFAULT 0;";
+    QVector<lib::db::RawDatabase::Query> queries;
+    queries += lib::db::RawDatabase::Query((sql));
+    queries += lib::db::RawDatabase::Query(QStringLiteral("PRAGMA user_version = 5;"));
     return db.execNow(queries);
 }
 
@@ -190,6 +201,10 @@ bool dbSchemaUpgrade(std::shared_ptr<lib::db::RawDatabase>& db) {
         }
         case 3: {
             dbSchema3to4(*db.get());
+            break;
+        }
+        case 4: {
+            dbSchema4to5(*db.get());
             break;
         }
         // etc.
@@ -889,33 +904,36 @@ Peer History::getPeer(const QString& friendPk) {
     return data;
 }
 
-MessageSession History::getMessageSession(const QString& peer) {
+auto messageSessionExtraCallback(MessageSession& data, const QVector<QVariant>& row) {
+    data.id = row[0].toLongLong();
+    data.session_type = static_cast<MessageSessionType>(row[1].toUInt(nullptr));
+    data.session_id = row[2].toString();
+    data.peer_jid = row[3].toString();
+};
+
+MessageSession History::getMessageSession(const QString& peer, const MessageSessionType& type) {
     MessageSession data;
-    auto rowCallback = [&data](const QVector<QVariant>& row) {
-        data.id = row[0].toLongLong();
-        data.session_id = row[1].toString();
-        data.peer_jid = row[2].toString();
-    };
-    auto queryString = QString("select ms.id, ms.session_id, p.public_key from message_sessions ms "
+    auto sql = QString("select ms.id, ms.session_type, ms.session_id, p.public_key "
+                               "from message_sessions ms "
                                "left join peers p on ms.peer_id = p.id "
-                               "where p.public_key = '%1';")
-                               .arg(peer);
-    db->execNow({queryString, rowCallback});
+                               "where p.public_key = '%1' and ms.session_type = %2;")
+                       .arg(peer).arg(static_cast<int>(type));
+    db->execNow({sql, [&](const QVector<QVariant>& row){
+                     messageSessionExtraCallback(data, row);
+                 }});
     return data;
 }
 
-void History::getMessageSessions(QList<MessageSession>& peers) {
-    auto rowCallback = [&peers](const QVector<QVariant>& row) {
-        MessageSession data;
-        data.id = row[0].toLongLong();
-        data.session_id = row[1].toString();
-        data.peer_jid = row[2].toString();
-        peers.append(data);
-    };
-    auto queryString =
-            "select ms.id, ms.session_id, p.public_key from message_sessions ms left join peers p "
+void History::getMessageSessions(QList<MessageSession>& mss) {
+    auto sql =
+            "select ms.id, ms.session_type, ms.session_id, p.public_key "
+            "from message_sessions ms left join peers p "
             "on ms.peer_id = p.id;";
-    db->execNow({queryString, rowCallback});
+    db->execNow({sql,  [&](const QVector<QVariant>& row){
+                     MessageSession ms;
+                     messageSessionExtraCallback(ms, row);
+                     mss.push_back(ms);
+                 }});
 }
 
 uint History::addMessageSession(const MessageSession& ms) {
@@ -929,12 +947,15 @@ uint History::addMessageSession(const MessageSession& ms) {
         return 0;
     }
 
-    auto old = getMessageSession(ms.peer_jid);
-    if (old.session_id.isEmpty()) {
-        auto q = QString("INSERT OR IGNORE INTO message_sessions (session_id, peer_id) "
-                         "VALUES ('%1', %2);")
+    auto old = getMessageSession(ms.peer_jid, ms.session_type);
+    if (old.id == 0) {
+        //Is not exist
+        auto q = QString("INSERT OR IGNORE INTO "
+                         "message_sessions (session_id, peer_id, session_type) "
+                         "VALUES ('%1', %2, %3);")
                          .arg(ms.session_id)
-                         .arg(peer.id);
+                         .arg(peer.id)
+                         .arg(static_cast<int>(ms.session_type));
         db->execNow(q);
 
         uint id = 0;
@@ -943,10 +964,26 @@ uint History::addMessageSession(const MessageSession& ms) {
         return id;
     }
 
-    auto q = QString("UPDATE message_sessions set session_id='%1' where peer_id = %2; ")
-                     .arg(ms.session_id)
-                     .arg(peer.id);
-    db->execNow(q);
+    //Is exist
+    if(old.session_id.isEmpty() && !ms.session_id.isEmpty() ){
+        //Set session id if `session_id` is empty.
+        auto q = QString("UPDATE message_sessions set session_id='%1' "
+                         "where peer_id = %2 and session_type = %3; ")
+                         .arg(ms.session_id)
+                         .arg(peer.id)
+                         .arg(static_cast<int>(ms.session_type));
+        db->execNow(q);
+    }
+
+    if(old.session_type != ms.session_type){
+        //Recover session type if `session_type` is incorrect.
+        auto q = QString("UPDATE message_sessions set session_type = %1 "
+                         "where id = %2 ")
+                         .arg(static_cast<int>(ms.session_type))
+                         .arg(old.id);
+        db->execNow(q);
+    }
+
     return old.id;
 }
 

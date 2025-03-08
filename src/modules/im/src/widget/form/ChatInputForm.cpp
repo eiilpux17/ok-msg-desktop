@@ -31,6 +31,7 @@
 #include "src/core/coreav.h"
 #include "src/lib/session/profile.h"
 #include "src/nexus.h"
+#include "src/persistence/profile.h"
 #include "src/widget/emoticonswidget.h"
 #include "src/widget/tool/chattextedit.h"
 #include "src/widget/tool/screenshotgrabber.h"
@@ -214,7 +215,7 @@ void ChatInputForm::onSendTriggered() {
     }
 
     msgEdit->setLastMessage(msg);
-    msgEdit->clear();
+
     qDebug() << "Input text:" << msg;
 
     if (reply) {
@@ -311,6 +312,11 @@ QString ChatInputForm::marshal(const QString& text, const QString& orig) {
     html += text;
 
     return html;
+}
+
+void ChatInputForm::clearContent()
+{
+    msgEdit->clear();
 }
 
 void ChatInputForm::onReplyRemove() {

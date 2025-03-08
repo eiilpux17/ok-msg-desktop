@@ -34,7 +34,7 @@ class Contact;
 class GenericChatroomWidget : public GenericChatItemWidget {
     Q_OBJECT
 public:
-    explicit GenericChatroomWidget(ChatType chatType, const ContactId& cid,
+    explicit GenericChatroomWidget(lib::messenger::ChatType chatType, const ContactId& cid,
                                    QWidget* parent = nullptr);
     ~GenericChatroomWidget() override;
 public slots:

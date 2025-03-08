@@ -13,6 +13,7 @@
 #ifndef CORESTRUCTS_H
 #define CORESTRUCTS_H
 
+#include "lib/messenger/IMMessage.h"
 #include "src/core/toxfilepause.h"
 
 #include <QCryptographicHash>
@@ -125,6 +126,7 @@ struct ToxFile : public FileInfo {
     QString receiver;
     QDateTime timestamp;
     std::shared_ptr<QFile> file;
+    lib::messenger::ChatType chatType;
     //  std::shared_ptr<QCryptographicHash> hashGenerator =
     //  std::make_shared<QCryptographicHash>(QCryptographicHash::Sha256);
 };

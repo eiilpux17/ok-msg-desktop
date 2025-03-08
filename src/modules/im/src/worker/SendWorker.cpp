@@ -23,8 +23,8 @@
 #include <src/widget/chatformheader.h>
 #include <src/widget/contentdialogmanager.h>
 #include <src/widget/form/groupchatform.h>
-#include "src/lib/session/profile.h"
 #include "src/nexus.h"
+#include "src/persistence/profile.h"
 
 namespace module::im {
 SendWorker::SendWorker(const FriendId& friendId) : contactId{friendId} {

@@ -37,6 +37,7 @@
 #include "src/model/friendlist.h"
 #include "src/model/grouplist.h"
 #include "src/nexus.h"
+#include "src/persistence/profile.h"
 #include "src/persistence/settings.h"
 #include "src/persistence/smileypack.h"
 #include "src/widget/contentdialog.h"
@@ -253,7 +254,8 @@ GenericChatForm::GenericChatForm(const ContactId* contact_,
 
     renderMessages(firstChatLogIdx, iChatLog.getNextIdx());
 
-    typingTimer.setSingleShot(true);
+    typingTimer = new QTimer(this);
+    typingTimer->setSingleShot(true);
 
     setLayout(mainLayout);
 
@@ -787,7 +789,7 @@ void GenericChatForm::onTextEditChanged(const QString& text) {
     if (isTyping != isTypingNow) {
         Core::getInstance()->sendTyping(contactId->getId(), isTypingNow);
         if (isTypingNow) {
-            typingTimer.start(TYPING_NOTIFICATION_DURATION);
+            typingTimer->start(TYPING_NOTIFICATION_DURATION);
         }
 
         isTyping = isTypingNow;
@@ -799,8 +801,12 @@ void GenericChatForm::onTextSend(const QString& msg) {
     if (msg.trimmed().isEmpty()) {
         return;
     }
+
     auto sent = messageDispatcher.sendMessage(false, msg, false);
-    qDebug() << &messageDispatcher << "sendMessage=>" << sent.first.get() << sent.second;
+    if(sent.has_value()){
+        qDebug() << &messageDispatcher << "sendMessage=>" << sent.value().first.get() << sent.value().second;
+        inputForm->clearContent();
+    }
 }
 
 void GenericChatForm::onFileSend(const QFile& file) {

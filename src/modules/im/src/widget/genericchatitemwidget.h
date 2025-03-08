@@ -36,7 +36,8 @@ class GenericChatItemWidget : public QFrame {
 public:
     enum ItemType { GroupItem, FriendOfflineItem, FriendOnlineItem };
 
-    explicit GenericChatItemWidget(ChatType chatType, const ContactId& cid,
+    explicit GenericChatItemWidget(lib::messenger::ChatType chatType,
+                                   const ContactId& cid,
                                    QWidget* parent = nullptr);
 
     ~GenericChatItemWidget() override;
@@ -47,23 +48,19 @@ public:
     void setCompact(bool compact_) {
         compact = compact_;
     };
-    Q_PROPERTY(bool compact READ isCompact WRITE setCompact)
 
     QString getName() const;
+
     void setName(const QString& name);
 
     void searchName(const QString& searchString, bool hideAll);
 
-    ChatType getChatType() const {
-        return chatType;
+    inline lib::messenger::ChatType getChatType() const {
+        return contactId.getChatType();
     };
-    void setChatType(ChatType type) {
-        chatType = type;
-    };
-    Q_PROPERTY(ChatType chatType READ getChatType WRITE setChatType)
 
     inline bool isGroup() const {
-        return chatType == ChatType::GroupChat;
+        return contactId.getChatType() == lib::messenger::ChatType::GroupChat;
     };
 
     void setLastMessage(const QString& msg);
@@ -101,7 +98,7 @@ protected:
     lib::ui::RoundedPixmapLabel* avatar;
 
     bool compact;
-    ChatType chatType;
+
     ContactId contactId;
 
     /**

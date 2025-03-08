@@ -15,14 +15,12 @@
 
 #include "src/core/icoregroupmessagesender.h"
 #include "src/core/icoreidhandler.h"
-#include "src/model/group.h"
 #include "src/model/imessagedispatcher.h"
 #include "src/model/message.h"
 
 #include <QObject>
 #include <QString>
 
-#include <cstdint>
 namespace module::im {
 
 class IGroupSettings;
@@ -35,10 +33,12 @@ public:
                            ICoreIdHandler& idHandler,
                            ICoreGroupMessageSender& messageSender,
                            const IGroupSettings& groupSettings);
-    ~GroupMessageDispatcher();
+    ~GroupMessageDispatcher() override;
 
-    std::pair<DispatchedMessageId, MsgId> sendMessage(bool isAction, QString const& content,
-                                                      bool encrypt = false) override;
+    std::optional<std::pair<DispatchedMessageId, MsgId>> sendMessage(
+                                                    bool isAction,
+                                                    QString const& content,
+                                                    bool encrypt = false) override;
 
     void onMessageReceived(GroupMessage& msg);
 

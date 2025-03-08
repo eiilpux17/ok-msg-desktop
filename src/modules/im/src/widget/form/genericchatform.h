@@ -40,6 +40,7 @@ class QSplitter;
 class QToolButton;
 class QVBoxLayout;
 class QHBoxLayout;
+class QTimer;
 
 namespace Ui {
 class MainWindow;
@@ -195,7 +196,7 @@ protected:
     bool colorizeNames = false;
 
     bool isTyping;
-    QTimer typingTimer;
+    QTimer* typingTimer;
 };
 }  // namespace module::im
 #endif  // GENERICCHATFORM_H

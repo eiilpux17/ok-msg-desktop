@@ -468,7 +468,9 @@ void ChatHistory::dispatchUnsentMessages(IMessageDispatcher& messageDispatcher) 
         // We should only send a single message, but in the odd case where we end
         // up having to split more than when we added the message to history we'll
         // just associate the last dispatched id with the history message
-        handleDispatchedMessage(dispatchIds.first, message.id);
+        if(dispatchIds.has_value()){
+            handleDispatchedMessage(dispatchIds.value().first, message.id);
+        }
 
         // We don't add the messages to the underlying chatlog since
         // 1. We don't even know the ChatLogIdx of this message

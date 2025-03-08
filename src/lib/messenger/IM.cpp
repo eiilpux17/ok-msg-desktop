@@ -57,6 +57,14 @@ namespace lib::messenger {
 gloox::ConferenceList mConferenceList;
 gloox::BookmarkList mBookmarkList;
 
+
+void doJoinRoom(gloox::MUCRoom* room, const std::string& nick) {
+    room->setNick(nick);
+    room->join();
+    room->getRoomInfo();
+    // _client->disco()->getDiscoItems(room->jid(), gloox::XMLNS_BOOKMARKS, this, DISCO_CTX_BOOKMARKS);
+}
+
 /**
  * 聊天通讯核心类
  * @param user
@@ -278,6 +286,10 @@ void IM::onConnect() {
     }
 
     isConnected = true;
+    for (auto* h : imHandlers) {
+        h->onConnected();
+    }
+    mutex.unlock();
 
     auto res = _client->resource();
     qDebug() << __func__ << "resource:" << res.c_str();
@@ -288,12 +300,12 @@ void IM::onConnect() {
     requestVCards();
     // emit selfIdChanged(qstring(_client->username()));
 
-    //   enable carbons（多终端支持）
+            //   enable carbons（多终端支持）
     gloox::IQ iq(gloox::IQ::IqType::Set, gloox::JID(), "server");
     iq.addExtension(new gloox::Carbons(gloox::Carbons::Enable));
     _client->send(iq);
 
-    // request ext server disco
+            // request ext server disco
     gloox::IQ iq2(gloox::IQ::Get, gloox::JID(_host));
     auto t = iq2.tag();
     t->addChild(gloox::ExtDisco::newRequest());
@@ -304,12 +316,12 @@ void IM::onConnect() {
         rosterManager = enableRosterManager();
     }
 
-    mutex.unlock();
+    requestBookmarks();
 
-    for (auto h : imHandlers) {
-        h->onConnected();
-        h->onStarted();
+    for (auto* h : imHandlers) {
+         h->onStarted();
     }
+
 }
 
 void IM::send(const std::string& xml) {
@@ -902,7 +914,7 @@ bool IM::handleMUCRoomCreation(gloox::MUCRoom* room) {
     room->requestRoomConfig();
 
     // 添加到缓存
-    auto roomId = (room->jid().bare());
+    auto roomId = room->jid().bare();
     auto roominfo = new IMRoomInfo();
     roominfo->room = room;
     m_roomMap.insert(std::make_pair(roomId, roominfo));
@@ -1088,12 +1100,6 @@ const IMRoomInfo* IM::findRoom(const std::string& groupId) const {
     return it->second;
 }
 
-void IM::joinRoom(gloox::MUCRoom* room) {
-    room->setNick((getNickname()));
-    room->join();
-    room->getRoomInfo();
-    _client->disco()->getDiscoItems(room->jid(), gloox::XMLNS_BOOKMARKS, this, DISCO_CTX_BOOKMARKS);
-}
 
 void IM::cacheJoinRoom(const std::string& jid, const std::string& name) {
     qDebug() << __func__ << jid.c_str() << name.c_str();
@@ -1114,7 +1120,7 @@ void IM::cacheJoinRoom(const std::string& jid, const std::string& name) {
     getClient()->disco()->getDiscoItems(jid, gloox::XMLNS_DISCO_ITEMS, this,
                                         DISCO_CTX_CONF_MEMBERS);
 
-    joinRoom(room);
+    doJoinRoom(room, getNickname());
 }
 
 void IM::joinRoom(const std::string& roomJid) {
@@ -1125,8 +1131,7 @@ void IM::joinRoom(const std::string& roomJid) {
         qWarning() << "Unable find room from cache" << roomJid.c_str();
         return;
     }
-
-    joinRoom(it->second->room);
+    doJoinRoom(it->second->room, getNickname());
 }
 
 bool IM::sendToRoom(const std::string& to, const std::string& msg, const std::string& id) {
@@ -1150,7 +1155,10 @@ bool IM::sendToRoom(const std::string& to, const std::string& msg, const std::st
 
     auto msgId = (id);
     sendIds.insert(msgId);
-    return pRoomInfo->room->send(msg, msgId);
+
+    auto* r = pRoomInfo->room;
+    doJoinRoom(r, getNickname());
+    return r->send(msg, msgId);
 }
 
 void IM::setRoomSubject(const std::string& groupId, const std::string& subject) {
@@ -1788,8 +1796,8 @@ IMPeerId IM::getSelfPeerId() {
     return IMPeerId(_client->jid().full());
 }
 
-std::string IM::getSelfUsername() {
-    std::lock_guard<std::mutex> locker(mutex);
+const std::string& IM::getSelfUsername() {
+    // std::lock_guard<std::mutex> locker(mutex);
     return self().username();
 }
 

@@ -53,7 +53,7 @@ public:
 
     MessageSessionWidget* createMessageSession(const ContactId& cId,
                                                const QString& sid,
-                                               ChatType type);
+                                               lib::messenger::ChatType type);
 
     MessageSessionWidget* getMessageSession(const QString& contactId);
 

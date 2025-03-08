@@ -47,7 +47,7 @@ struct MessageMetadata {
 
 struct Message {
 public:
-    bool isGroup{false};
+    lib::messenger::ChatType chatType;
     bool isAction;
     MsgId id;
     QString from;
@@ -58,9 +58,11 @@ public:
     QString dataId;
     QDateTime timestamp;
     std::vector<MessageMetadata> metadata;
-    QString toString() const {
-        return QString("{id:%1, from:%2, to:%3, "
-                       "time:%4, content:%5, sId:%6}")
+
+    [[nodiscard]] QString toString() const {
+        return QString("{chatType:%1 id:%2, from:%3, to:%4, "
+                       "time:%5, content:%6 sId:%7}")
+                .arg(static_cast<int>(chatType))
                 .arg(id)
                 .arg(from)
                 .arg(to)
@@ -70,15 +72,17 @@ public:
     }
 };
 
-struct FriendMessage : Message {
-    //    ToxPk to;
+struct FriendMessage : public Message {
+    FriendMessage(){
+        chatType = lib::messenger::ChatType::Chat;
+    }
 };
 
 struct GroupMessage : public Message {
-public:
     GroupMessage() {
-        isGroup = true;
+        chatType = lib::messenger::ChatType::Chat;
     }
+
     QString nick;
     QString resource;
 
@@ -144,10 +148,6 @@ struct GroupOccupant {
     QList<int> codes;
 };
 
-enum class ChatType {
-    Chat,      // 单聊
-    GroupChat  // 群聊
-};
 
 enum class ConferenceType { TEXT, AV };
 

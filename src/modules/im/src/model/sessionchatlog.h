@@ -69,7 +69,7 @@ public slots:
 private:
     const ICoreIdHandler& coreIdHandler;
 
-    ChatLogIdx nextIdx = ChatLogIdx(-1);
+    ChatLogIdx nextIdx;
     QMap<MsgId, ChatLogIdx> id2IdxMap;
 
     QMap<DispatchedMessageId, ChatLogIdx> outgoingMessages;

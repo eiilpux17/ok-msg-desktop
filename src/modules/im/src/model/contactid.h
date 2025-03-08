@@ -39,12 +39,12 @@ inline QRegularExpressionMatch JidMatch(const QString& strId) {
 class ContactId {
 public:
     explicit ContactId();
-    explicit ContactId(const ContactId& contactId);
-    explicit ContactId(const QByteArray& rawId);
-    explicit ContactId(const QString& strId);
-    explicit ContactId(const QString& username, const QString& server);
+    explicit ContactId(const ContactId& cId);
+    explicit ContactId(const QString& strId, lib::messenger::ChatType type);
+    explicit ContactId(const QString& username, const QString& server, lib::messenger::ChatType type);
 
     virtual ~ContactId() = default;
+
     ContactId& operator=(const ContactId& other) = default;
     ContactId& operator=(ContactId&& other) = default;
     bool operator==(const ContactId& other) const;
@@ -53,7 +53,10 @@ public:
 
     QByteArray getByteArray() const;
     virtual bool isValid() const;
-    bool isGroup() const;
+
+    lib::messenger::ChatType getChatType() const{
+        return type;
+    };
 
     virtual QString toString() const {
         return getId();
@@ -63,10 +66,22 @@ public:
         return username + "@" + server;
     }
 
+    // inline bool isLinked() const {
+    //     return linked;
+    // }
+
+    // void setLinked(bool linked_) {
+    //     linked = linked_;
+    // }
+
     // 用户名
     QString username;
     // 服务器地址
     QString server;
+    // 是否建立连接（群：是否在群，个人：是否是好友）
+    // bool linked = false;
+    // 联系人类型（群聊、个人）
+    lib::messenger::ChatType type;
 
     friend QDebug& operator<<(QDebug& debug, const ContactId& f);
 };

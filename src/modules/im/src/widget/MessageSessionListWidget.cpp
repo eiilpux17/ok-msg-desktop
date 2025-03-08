@@ -28,6 +28,7 @@
 #include "friendwidget.h"
 #include "groupwidget.h"
 
+#include "src/model/friend.h"
 #include "src/model/status.h"
 #include "src/nexus.h"
 #include "widget.h"
@@ -103,8 +104,8 @@ MessageSessionListWidget::~MessageSessionListWidget() {
 
 MessageSessionWidget* MessageSessionListWidget::createMessageSession(const ContactId& contactId,
                                                                      const QString& sid,
-                                                                     ChatType type) {
-    // qDebug() << __func__ << "contactId:" << contactId.toString();
+                                                                     lib::messenger::ChatType type) {
+    qDebug() << __func__ << "contactId:" << contactId.toString() << " chatType:" << (int)type;
 
     auto sw = getMessageSession(contactId.toString());
     if (sw) {
@@ -120,10 +121,16 @@ MessageSessionWidget* MessageSessionListWidget::createMessageSession(const Conta
 
     sessionWidgets.insert(sw->getContactId().toString(), sw);
 
-    auto his = Nexus::getProfile()->getHistory();
-    MessageSession ms = {.session_id = sid, .peer_jid = contactId.toString()};
-    his->addMessageSession(ms);
 
+
+
+    auto his = Nexus::getProfile()->getHistory();
+
+    MessageSession ms = {.session_type = static_cast<MessageSessionType>(type),
+                         .session_id = sid,
+                         .peer_jid = contactId.toString()
+                        };
+    his->addMessageSession(ms);
     emit sessionAdded(sw);
     return sw;
 }
@@ -405,7 +412,7 @@ void MessageSessionListWidget::setRecvGroupMessage(const GroupId& groupId,
                                                    const GroupMessage& msg) {
     auto ms = getMessageSession(groupId.toString());
     if (!ms) {
-        ms = createMessageSession(groupId, "", ChatType::GroupChat);
+        ms = createMessageSession(groupId, "", lib::messenger::ChatType::GroupChat);
     }
 
     ms->setRecvGroupMessage(msg);
@@ -416,7 +423,7 @@ void MessageSessionListWidget::toSendMessage(const ContactId& pk, bool isGroup) 
     auto w = sessionWidgets.value(pk.toString());
     if (!w) {
         qDebug() << "Create session for" << pk.toString();
-        w = createMessageSession(pk, "", isGroup ? ChatType::GroupChat : ChatType::Chat);
+        w = createMessageSession(pk, "", isGroup ? lib::messenger::ChatType::GroupChat : lib::messenger::ChatType::Chat);
     }
     emit w->chatroomWidgetClicked(w);
 }
@@ -426,9 +433,8 @@ void MessageSessionListWidget::toForwardMessage(const ContactId& pk, const MsgId
     auto w = sessionWidgets.value(pk.toString());
     if (!w) {
         qDebug() << "Create session for" << pk.toString();
-        w = createMessageSession(pk, "", pk.isGroup() ? ChatType::GroupChat : ChatType::Chat);
+        w = createMessageSession(pk, "", pk.type);
     }
-
     w->doForwardMessage(pk, id);
 }
 
@@ -437,7 +443,7 @@ void MessageSessionListWidget::setFriendAvInvite(const PeerId& peerId, bool vide
     auto w = sessionWidgets.value(friendId.toString());
     if (!w) {
         qDebug() << "Create session for friend" << friendId;
-        w = createMessageSession(friendId, "", ChatType::Chat);
+        w = createMessageSession(friendId, "", lib::messenger::ChatType::Chat);
     }
     w->setAvInvite(peerId, video);
 }
@@ -572,7 +578,7 @@ void MessageSessionListWidget::setRecvFriendMessage(FriendId friendnumber,
          */
         qWarning() << "Can not find friend:" << friendnumber.toString()
                    << ", so add it to contact.";
-        fw = createMessageSession(friendnumber, message.id, ChatType::Chat);
+        fw = createMessageSession(friendnumber, message.id, lib::messenger::ChatType::Chat);
     }
 
     fw->setRecvMessage(message, isAction);

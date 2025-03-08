@@ -73,6 +73,7 @@ Core::Core(QThread* coreThread)
 
     qRegisterMetaType<PeerId>("PeerId");
     qRegisterMetaType<FriendMessage>("FriendMessage");
+    qRegisterMetaType<GroupMessage>("GroupMessage");
     qRegisterMetaType<FriendId>("FriendId");
     qRegisterMetaType<FriendInfo>("FriendInfo");
     qRegisterMetaType<VCard>("VCard");
@@ -170,8 +171,7 @@ ToxCorePtr Core::makeToxCore(lib::messenger::Messenger* messenger,
 void Core::onStarted() {
     qDebug() << __func__;
     //  emit avReady();
-
-    messenger->requestBookmarks();
+    // messenger->requestBookmarks();
 
     emit ok::Application::Instance() -> bus()->profileChanged(Nexus::getProfile());
     emit started();
@@ -289,7 +289,7 @@ void Core::onMessageSession(const std::string& contactId, const std::string& sid
     auto cId = qstring(contactId);
     auto sid = qstring(sid_);
     qDebug() << __func__ << "contact:" << cId << "sid:" << sid;
-    emit messageSessionReceived(ContactId(cId), sid);
+    // emit messageSessionReceived(ContactId(cId), sid);
 }
 
 void Core::onFriendMessage(const std::string& friendId_, const lib::messenger::IMMessage& message) {
@@ -917,10 +917,10 @@ void Core::loadFriendList(std::list<FriendInfo>& friends) const {
     }
 }
 
-GroupId Core::getGroupPersistentId(QString groupId) const {
-    QMutexLocker ml{&mutex};
-    return GroupId{groupId.toUtf8()};
-}
+// GroupId Core::getGroupPersistentId(QString groupId) const {
+//     QMutexLocker ml{&mutex};
+//     return GroupId{groupId.toUtf8()};
+// }
 
 /**
  * @brief Get number of peers in the conference.
@@ -1269,6 +1269,11 @@ QString Core::getPeerName(const FriendId& id) const {
 
 void Core::logout() {
     messenger->stop();
+}
+
+bool Core::isLinked(const QString &cid, lib::messenger::ChatType ct)
+{
+    return messenger->isLinked(cid.toStdString(), ct);
 }
 
 void Core::onSelfNameChanged(const std::string& name) {

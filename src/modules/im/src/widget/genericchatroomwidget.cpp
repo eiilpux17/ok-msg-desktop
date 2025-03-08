@@ -18,7 +18,7 @@
 #include "lib/ui/widget/tools/RoundedPixmapLabel.h"
 namespace module::im {
 
-GenericChatroomWidget::GenericChatroomWidget(ChatType type, const ContactId& cid, QWidget* parent)
+GenericChatroomWidget::GenericChatroomWidget(lib::messenger::ChatType type, const ContactId& cid, QWidget* parent)
         : GenericChatItemWidget(type, cid, parent), contactId(cid) {
     setAutoFillBackground(true);
     reloadTheme();

@@ -32,18 +32,21 @@ GroupMessageDispatcher::~GroupMessageDispatcher() {
     qDebug() << __func__;
 }
 
-std::pair<DispatchedMessageId, MsgId> GroupMessageDispatcher::sendMessage(bool isAction,
+std::optional<std::pair<DispatchedMessageId, MsgId>> GroupMessageDispatcher::sendMessage(bool isAction,
                                                                           QString const& content,
                                                                           bool encrypt) {
     Q_UNUSED(encrypt);
 
-    //  const auto firstMessageId = nextMessageId;
-    //  auto lastMessageId = firstMessageId;
+    qDebug() << __func__ << content << "=>" << groupId.toString();
+
+    if(!messageSender.isLinked(groupId.getId(), lib::messenger::ChatType::GroupChat)){
+        qWarning() << "The contact is not linked!";
+        return std::nullopt;
+    }
 
     for (auto& message : processor.processOutgoingMessage(isAction, content)) {
-        qDebug() << "Preparing to send a message:" << message.id;
+
         auto dispatchedId = nextMessageId++;
-        //    lastMessageId = dispatchedId;
 
         emit messageSent(dispatchedId, message);
         emit messageComplete(dispatchedId);
@@ -54,22 +57,18 @@ std::pair<DispatchedMessageId, MsgId> GroupMessageDispatcher::sendMessage(bool i
         } else {
             sent = messageSender.sendGroupMessage(groupId.getId(), message.content, message.id);
         }
-        qDebug() << "sendMessage=>" << sent
-                 << QString("{msgId:%1, dispatcherId:%2}").arg(message.id).arg(dispatchedId.get());
+
+        qDebug() << "sendMessage=>" << sent << QString("{msgId:%1, dispatcherId:%2}").arg(message.id).arg(dispatchedId.get());
 
         sentMsgIdMap.insert(message.id, dispatchedId);
-
         return std::make_pair(dispatchedId, message.id);
     }
-
-    return {};
+    return std::nullopt;
 }
 
 /**
  * @brief Processes and dispatches received message
- * @param[in] sender
- * @param[in] isAction True if is action
- * @param[in] content Message content
+ * @param msg
  */
 void GroupMessageDispatcher::onMessageReceived(GroupMessage& msg) {
     qDebug() << __func__ << "id:" << msg.id << "nick:" << msg.nick << "msg:" << msg.content;

@@ -92,7 +92,7 @@ RawDatabase::RawDatabase(const QString& path, const QString& password, const QBy
 
     // first try with the new salt
     if (open(path, currentHexKey)) {
-        qWarning() << "Opened the db path" << path;
+        qWarning() << "Can not open the db" << path;
         return;
     }
 

@@ -130,7 +130,7 @@ void Group::addPeer(const GroupOccupant& occ) {
     // 判断成员是否为自己
     auto core = Core::getInstance();
     auto selfId = core->getSelfId();
-    if (selfId.toString() == ContactId(occ.jid).toString()) {
+    if (selfId.toString() == ContactId(occ.jid, lib::messenger::ChatType::GroupChat).toString()) {
         role = parseRole(occ.role);
         affiliation = parseAffiliation(occ.affiliation);
         statusCodes = occ.codes;

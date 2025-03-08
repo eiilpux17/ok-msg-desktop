@@ -16,9 +16,9 @@
 #include <QHash>
 #include <QRegularExpression>
 #include <QString>
-#include <cstdint>
-#include "base/StringUtils.h"
 #include "lib/messenger/IMMessage.h"
+
+
 namespace module::im {
 
 /**
@@ -26,9 +26,7 @@ namespace module::im {
  */
 ContactId::ContactId() {}
 
-ContactId::ContactId(const QByteArray& rawId) : ContactId(QString::fromUtf8(rawId)) {}
-
-ContactId::ContactId(const QString& strId) {
+ContactId::ContactId(const QString& strId, lib::messenger::ChatType type): type(type) {
     // 检查是否匹配成功
     auto match = JidMatch(strId);
     if (!match.hasMatch()) {
@@ -41,7 +39,7 @@ ContactId::ContactId(const QString& strId) {
 }
 
 ContactId::ContactId(const ContactId& contactId)
-        : username{contactId.username}, server{contactId.server} {}
+        : username{contactId.username}, server{contactId.server}, type(contactId.type) {}
 
 /**
  * @brief Compares the equality of the ContactId.
@@ -85,10 +83,6 @@ QByteArray ContactId::getByteArray() const {
  */
 bool ContactId::isValid() const {
     return !username.isEmpty() && !server.isEmpty();
-}
-
-bool ContactId::isGroup() const {
-    return server.startsWith("conference.") || server.startsWith("room.");
 }
 
 QDebug& operator<<(QDebug& debug, const ContactId& f) {

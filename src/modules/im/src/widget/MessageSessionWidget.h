@@ -41,7 +41,7 @@ class MessageSessionWidget : public GenericChatroomWidget {
     Q_OBJECT
 
 public:
-    MessageSessionWidget(ContentLayout* layout, const ContactId& cid, ChatType);
+    MessageSessionWidget(ContentLayout* layout, const ContactId& cid, lib::messenger::ChatType);
 
     ~MessageSessionWidget();
 

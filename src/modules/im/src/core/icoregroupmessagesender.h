@@ -16,11 +16,14 @@
 #include <QString>
 
 #include "../model/MsgId.h"
+#include "lib/messenger/IMMessage.h"
+
 namespace module::im {
 
 class ICoreGroupMessageSender {
 public:
     virtual ~ICoreGroupMessageSender() = default;
+    virtual bool isLinked(const QString& cid, lib::messenger::ChatType ct) = 0;
     virtual bool sendGroupAction(QString groupId, const QString& message, const MsgId& id) = 0;
     virtual bool sendGroupMessage(QString groupId, const QString& message, const MsgId& id) = 0;
 };

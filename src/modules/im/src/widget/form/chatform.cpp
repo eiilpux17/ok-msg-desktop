@@ -37,6 +37,7 @@
 #include "src/nexus.h"
 #include "src/persistence/history.h"
 #include "src/persistence/settings.h"
+#include "src/persistence/profile.h"
 #include "src/widget/chatformheader.h"
 #include "src/widget/form/loadhistorydialog.h"
 #include "src/widget/tool/callconfirmwidget.h"
@@ -112,7 +113,7 @@ ChatForm::ChatForm(const FriendId* chatFriend,
                 }
             });
 
-    connect(&typingTimer, &QTimer::timeout, this, [this] {
+    connect(typingTimer, &QTimer::timeout, this, [this] {
         Core::getInstance()->sendTyping(f->toString(), false);
         isTyping = false;
     });

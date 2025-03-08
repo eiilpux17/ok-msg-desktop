@@ -182,6 +182,7 @@ public:
                       bool encrypt = false);
     bool removeFriend(const std::string& f);
 
+    bool isLinked(const std::string& f, ChatType t);
     /**
      * Group
      */

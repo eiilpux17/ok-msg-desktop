@@ -32,14 +32,7 @@ FriendId::FriendId() : ContactId() {}
  */
 FriendId::FriendId(const FriendId& other) : ContactId(other) {}
 
-/**
- * @brief Constructs a ToxPk from bytes.
- * @param rawId The bytes to construct the ToxPk from. The lenght must be exactly
- *              TOX_PUBLIC_KEY_SIZE, else the ToxPk will be empty.
- */
-FriendId::FriendId(const QByteArray& rawId) : ContactId(rawId) {}
-
-FriendId::FriendId(const QString& strId) : ContactId(strId) {
+FriendId::FriendId(const QString& strId) : ContactId(strId, lib::messenger::ChatType::Chat) {
     // 正则表达式模式，这里假设username不包含@，server不包含/
     //      QRegularExpression re("([^@]+)@([^/]+)(/[^/]+)?");
     //      // 匹配输入字符串
@@ -50,10 +43,10 @@ FriendId::FriendId(const QString& strId) : ContactId(strId) {
     //          return;
     //      }
 
-    //      resource = match.captured(3);
-    //        if(resource.startsWith("/")){
-    //            resource = resource.replace("/", "");
-    //        }
+            //      resource = match.captured(3);
+            //        if(resource.startsWith("/")){
+            //            resource = resource.replace("/", "");
+            //        }
 }
 
 /**
@@ -63,7 +56,9 @@ FriendId::FriendId(const QString& strId) : ContactId(strId) {
  */
 FriendId::FriendId(const ContactId& rawId) : ContactId(rawId) {}
 
-FriendId::FriendId(const lib::messenger::IMContactId& fId) : ContactId(qstring(fId.toString())) {}
+FriendId::FriendId(const lib::messenger::IMContactId& fId)
+        : ContactId(qstring(fId.toString())
+                    , lib::messenger::ChatType::Chat) {}
 
 bool FriendId::operator==(const FriendId& other) const {
     return toString() == other.toString();

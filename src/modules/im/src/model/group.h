@@ -25,6 +25,7 @@
 #include "src/core/icoreidhandler.h"
 #include "src/model/message.h"
 #include "src/persistence/profile.h"
+
 namespace module::im {
 
 class Group : public Contact {
@@ -36,7 +37,6 @@ public:
         Visitor,
         Participant,
         Moderator,
-
     };
 
     enum class Affiliation {
@@ -122,6 +122,7 @@ private:
     Role role{Role::None};
     Affiliation affiliation{Affiliation::None};
     QList<int> statusCodes;
+    bool isDeleted;
 };
 }  // namespace module::im
 #endif  // GROUP_H

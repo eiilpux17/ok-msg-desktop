@@ -82,7 +82,7 @@ public:
     lib::messenger::Messenger* getMessenger() {
         return messenger;
     }
-    static const QString TOX_EXT;
+
     static QStringList splitMessage(const QString& message);
     QString getPeerName(const FriendId& id) const;
     void loadFriendList(std::list<FriendInfo>&) const;
@@ -90,7 +90,7 @@ public:
         return friendList;
     }
     void loadGroupList() const;
-    GroupId getGroupPersistentId(QString groupId) const override;
+    // GroupId getGroupPersistentId(QString groupId) const override;
     uint32_t getGroupNumberPeers(QString groupId) const override;
     QString getGroupPeerName(QString groupId, QString peerId) const override;
     PeerId getGroupPeerPk(QString groupId, QString peerId) const override;
@@ -132,11 +132,7 @@ public:
     bool removeFriend(QString friendId);
     void requestFriendship(const FriendId& friendAddress, const QString& nick,
                            const QString& message);
-    // FriendSender
-    bool sendMessage(QString friendId, const QString& message, const MsgId& msgId,
-                     bool encrypt = false) override;
-    bool sendAction(QString friendId, const QString& action, const MsgId& msgId,
-                    bool encrypt = false) override;
+
     void sendTyping(QString friendId, bool typing);
 
     GroupId createGroup(const QString& name = "");
@@ -149,17 +145,26 @@ public:
     void setPassword(const QString& password);
     void setStatusMessage(const QString& message);
     void setAvatar(const QByteArray& avatar);
-
-    // GroupSender
-    bool sendGroupMessage(QString groupId, const QString& message, const MsgId& id) override;
-    bool sendGroupAction(QString groupId, const QString& message, const MsgId& id) override;
-
     void setGroupName(const QString& groupId, const QString& name);
     void setGroupSubject(const QString& groupId, const QString& subject);
     void setGroupDesc(const QString& groupId, const QString& desc);
     void setGroupAlias(const QString& groupId, const QString& alias);
 
     void logout();
+
+
+protected:
+    // FriendSender
+    bool sendMessage(QString friendId, const QString& message, const MsgId& msgId,
+                     bool encrypt = false) override;
+    bool sendAction(QString friendId, const QString& action, const MsgId& msgId,
+                    bool encrypt = false) override;
+
+    // GroupSender
+    bool sendGroupMessage(QString groupId, const QString& message, const MsgId& id) override;
+    bool sendGroupAction(QString groupId, const QString& message, const MsgId& id) override;
+
+    bool isLinked(const QString& cid, lib::messenger::ChatType ct) override;
 
 private:
     Core(QThread* coreThread);

@@ -13,7 +13,7 @@
 #include "friendmessagedispatcher.h"
 #include "src/model/message.h"
 #include "src/model/status.h"
-#include "src/persistence/settings.h"
+
 
 namespace module::im {
 
@@ -56,7 +56,7 @@ FriendMessageDispatcher::~FriendMessageDispatcher() {
 /**
  * @see IMessageSender::sendMessage
  */
-std::pair<DispatchedMessageId, MsgId> FriendMessageDispatcher::sendMessage(bool isAction,
+std::optional<std::pair<DispatchedMessageId, MsgId>> FriendMessageDispatcher::sendMessage(bool isAction,
                                                                            const QString& content,
                                                                            bool encrypt) {
     qDebug() << __func__ << content;

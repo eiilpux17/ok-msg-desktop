@@ -66,7 +66,7 @@ namespace module::im {
  * When you click should open the chat with friend. Widget has a context menu.
  */
 MessageSessionWidget::MessageSessionWidget(ContentLayout* layout, const ContactId& cId,
-                                           ChatType chatType)
+                                           lib::messenger::ChatType chatType)
         : GenericChatroomWidget(chatType, cId)
         , contentLayout(layout)
         , sendWorker{nullptr}
@@ -79,7 +79,7 @@ MessageSessionWidget::MessageSessionWidget(ContentLayout* layout, const ContactI
     auto profile = Nexus::getProfile();
     auto core = Core::getInstance();
 
-    if (chatType == ChatType::Chat) {
+    if (chatType == lib::messenger::ChatType::Chat) {
         friendId = FriendId(contactId);
 
         sendWorker = std::move(SendWorker::forFriend(friendId));
@@ -99,7 +99,7 @@ MessageSessionWidget::MessageSessionWidget(ContentLayout* layout, const ContactI
         connect(sendWorker.get(), &SendWorker::muteSpeaker, this,
                 &MessageSessionWidget::doSilenceSpeaker);
 
-    } else if (chatType == ChatType::GroupChat) {
+    } else if (chatType == lib::messenger::ChatType::GroupChat) {
         auto nick = core->getNick();
         groupId = GroupId(contactId);
         groupId.nick = nick;
@@ -768,7 +768,7 @@ void MessageSessionWidget::mouseMoveEvent(QMouseEvent* ev) {
 
 void MessageSessionWidget::setRecvMessage(const FriendMessage& msg, bool isAction) {
     FriendMessage m = msg;
-    m.from = ContactId(m.from).toString();
+    m.from = ContactId(m.from, lib::messenger::ChatType::Chat).toString();
 
     auto frd = Nexus::getCore()->getFriendList().findFriend(contactId);
     if (frd) {
@@ -798,8 +798,7 @@ void MessageSessionWidget::setMessageReceipt(const MsgId& msgId) {
 
 void MessageSessionWidget::setRecvGroupMessage(const GroupMessage& msg) {
     GroupMessage m = msg;
-    m.from = ContactId(m.from).toString();
-
+    m.from = ContactId(m.from, lib::messenger::ChatType::GroupChat).toString();
     auto frd = Nexus::getCore()->getFriendList().findFriend(contactId);
     if (frd) {
         m.displayName = frd->getDisplayedName();
