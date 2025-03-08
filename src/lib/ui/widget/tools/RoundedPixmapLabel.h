@@ -70,7 +70,7 @@ private:
     QPixmap _cachePixmap;
     QSize _contentsSize;
     Qt::Alignment _align = Qt::AlignCenter;
-    PixmapScaleMode _scaleMode = KeepAspectRatio;
+    PixmapScaleMode _scaleMode = KeepAspectRatioByExpanding;
     RoundedType _roundType = MinEdgeCircle;
     bool maskPixmap = true;
     QPoint roundRadius= {0, 0};

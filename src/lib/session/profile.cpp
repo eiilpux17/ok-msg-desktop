@@ -105,11 +105,6 @@ const SignInInfo& Profile::getSignIn() const {
     return authSession->getSignInInfo();
 }
 
-/**
- * @brief Get a contact's avatar from cache.
- * @param owner IMFriend PK to load avatar.
- * @return Avatar as QByteArray.
- */
 QByteArray Profile::loadAvatarData(const ok::base::Jid& owner) {
     auto cm = storageManager->getCacheManager();
     return cm->loadAvatarData(owner);

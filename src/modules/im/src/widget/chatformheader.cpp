@@ -107,12 +107,23 @@ ChatFormHeader::ChatFormHeader(const ContactId& contactId, QWidget* parent)
         , callState{CallButtonState::Disabled}
         , videoState{CallButtonState::Disabled}
         , mProfile{nullptr} {
-    QHBoxLayout* headLayout = new QHBoxLayout(this);
+    auto* headLayout = new QHBoxLayout(this);
     headLayout->setContentsMargins(0, 0, 0, 0);
     // 头像
-    avatar = new lib::ui::MaskablePixmapWidget(this, base::Styles::AVATAR_SIZE,
-                                               ":/img/avatar_mask.svg");
-    avatar->setObjectName("avatar");
+    avatar = new lib::ui::RoundedPixmapLabel(this);
+    avatar->setContentsSize(QSize(40, 40));
+    avatar->setRoundedType(lib::ui::RoundedPixmapLabel::MinEdgeCircle);
+
+    auto profile = Nexus::getProfile();
+    auto avt = profile->loadAvatar(contactId);
+    if (!avt.isNull()) {
+        avatar->setPixmap(avt);
+    }else{
+        auto name = (contactId.getChatType() == lib::messenger::ChatType::Chat) ? "contact" : "group";
+        auto uri = QString(":img/%1_dark.svg").arg(name);
+        avatar->setPixmap(QPixmap(uri));
+    }
+
     headLayout->addWidget(avatar);
 
     // 名称

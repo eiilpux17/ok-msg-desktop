@@ -17,6 +17,7 @@
 
 #include <memory>
 
+#include "lib/ui/widget/tools/RoundedPixmapLabel.h"
 #include "src/model/FriendId.h"
 #include "src/model/contactid.h"
 #include "src/model/status.h"
@@ -120,7 +121,8 @@ private:
 
     QVBoxLayout* headTextLayout;
     Mode mode;
-    lib::ui::MaskablePixmapWidget* avatar;
+    // lib::ui::MaskablePixmapWidget* avatar;
+    lib::ui::RoundedPixmapLabel* avatar;
     lib::ui::CroppingLabel* nameLabel;
     QLabel* statusLabel = nullptr;
     QToolButton* statusIcon = nullptr;

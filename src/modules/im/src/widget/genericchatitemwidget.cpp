@@ -70,6 +70,7 @@ GenericChatItemWidget::GenericChatItemWidget(lib::messenger::ChatType type,
     avatar = new lib::ui::RoundedPixmapLabel(this);
     avatar->setContentsSize(QSize(40, 40));
     avatar->setRoundedType(lib::ui::RoundedPixmapLabel::MinEdgeCircle);
+
     auto profile = Nexus::getProfile();
     auto avt = profile->loadAvatar(contactId);
     if (!avt.isNull()) {
