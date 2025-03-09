@@ -11,11 +11,11 @@
  */
 #pragma once
 
-#include <QTime>
 #include <map>
 
-#include <QtCore/QObject>
-#include <QtCore/QThread>
+#include <QObject>
+#include <QTime>
+#include <QThread>
 
 #include "qbasic_types.h"
 

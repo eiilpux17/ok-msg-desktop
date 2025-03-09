@@ -13,16 +13,18 @@
 #ifndef GROUPLIST_H
 #define GROUPLIST_H
 
-#include "src/model/groupid.h"
 
-template <class A, class B> class QHash;
-template <class T> class QList;
-
-class QString;
+#include "groupid.h"
+#include <QHash>
+#include <QString>
+#include <QList>
 
 namespace module::im {
+
 class Group;
-using GroupMap = ::QHash<::QString, Group*>;
+// template <class A, class B> class QHash;
+// template <class T> class QList;
+using GroupMap = QHash<QString, Group*>;
 
 class GroupList {
 public:

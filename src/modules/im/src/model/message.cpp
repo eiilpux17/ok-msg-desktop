@@ -12,8 +12,7 @@
 
 #include "message.h"
 #include "base/uuid.h"
-#include "src/core/core.h"
-#include "src/model/friend.h"
+
 namespace module::im {
 
 void MessageProcessor::SharedParams::onUserNameSet(const QString& username) {
@@ -62,7 +61,6 @@ std::vector<Message> MessageProcessor::processOutgoingMessage(bool isAction,
                        message.from_resource = peerId.resource;
                        message.content = part;
                        message.timestamp = timestamp;
-                       qDebug() << "Generated a new message:" << message.id;
                        return message;
                    });
     return ret;
@@ -101,9 +99,4 @@ Message MessageProcessor::processIncomingMessage(Message& ret) {
     return ret;
 }
 
-QDebug& operator<<(QDebug& debug, const Friend*& f) {
-    QDebugStateSaver saver(debug);
-    debug.nospace() << f->toString();
-    return debug;
-}
 }  // namespace module::im

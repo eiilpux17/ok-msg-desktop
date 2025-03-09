@@ -13,11 +13,13 @@
 #ifndef GROUP_H
 #define GROUP_H
 
-#include "contact.h"
+
 
 #include <QMap>
 #include <QObject>
 #include <QStringList>
+
+#include "contact.h"
 #include "FriendId.h"
 #include "groupid.h"
 #include "src/model/message.h"

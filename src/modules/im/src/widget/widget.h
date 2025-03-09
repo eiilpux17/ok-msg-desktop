@@ -27,6 +27,8 @@
 #include "src/model/FriendId.h"
 #include "src/model/groupid.h"
 #include "ui_mainwindow.h"
+
+#include <base/timer.h>
 #if DESKTOP_NOTIFICATIONS
 #include "src/platform/desktop_notifications/desktopnotify.h"
 #endif
@@ -277,7 +279,7 @@ private:
 //     QAction* previousConversationAction;
 // #endif
 
-    std::shared_ptr<::base::DelayedCallTimer> delayCaller;
+    std::shared_ptr<base::DelayedCallTimer> delayCaller;
 };
 
 bool toxActivateEventHandler(const QByteArray& data);

@@ -10,16 +10,23 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#ifndef CORE_HPP
-#define CORE_HPP
+#ifndef CORE_H
+#define CORE_H
+
+#include <QMutex>
+#include <QObject>
+#include <QThread>
+#include <QTimer>
+#include <memory>
 
 #include "icorefriendmessagesender.h"
 #include "icoregroupmessagesender.h"
 #include "icoregroupquery.h"
 #include "icoreidhandler.h"
-#include "lib/session/AuthSession.h"
 #include "src/model/FriendId.h"
 #include "src/model/MsgId.h"
+#include "src/model/VCard.h"
+#include "src/model/friendlist.h"
 #include "src/model/groupid.h"
 #include "src/model/grouplist.h"
 #include "toxfile.h"
@@ -28,20 +35,10 @@
 #include "base/compatiblerecursivemutex.h"
 #include "lib/messenger/Messenger.h"
 
-#include "base/strongtype.h"
-#include "src/model/VCard.h"
-#include "src/model/friendlist.h"
 #include "src/model/status.h"
 
-#include <QMutex>
-#include <QObject>
-#include <QThread>
-#include <QTimer>
 
-#include <functional>
-#include <memory>
 
-#include <src/model/message.h>
 
 namespace module::im {
 

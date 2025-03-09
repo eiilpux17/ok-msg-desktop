@@ -23,9 +23,12 @@
 #include "src/core/coreav.h"
 #include "src/core/corefile.h"
 #include "src/core/toxencrypt.h"
+#include "src/model/VCard.h"
 
 #include <QPixmap>
 #include <memory>
+
+#include <src/core/icoresettings.h>
 
 namespace module::im {
 class Settings;

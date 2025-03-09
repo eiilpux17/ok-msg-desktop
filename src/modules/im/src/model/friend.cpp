@@ -13,6 +13,8 @@
 #include "friend.h"
 #include "src/model/status.h"
 
+#include <src/core/core.h>
+
 namespace module::im {
 
 Friend::Friend(const FriendId& friendPk,
@@ -30,9 +32,7 @@ Friend::Friend(const FriendId& friendPk,
     friendStatus = core->getFriendStatus(friendPk.toString());
 }
 
-Friend::~Friend() {
-    qDebug() << __func__;
-}
+Friend::~Friend() = default;
 
 QString Friend::toString() const {
     return getId().toString();

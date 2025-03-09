@@ -18,6 +18,7 @@
 
 #include <QString>
 #include <QStringList>
+
 namespace module::im {
 
 struct VCard {
@@ -27,7 +28,7 @@ struct VCard {
         QString region;
         QString country;
 
-        QString location() const {
+        [[nodiscard]] QString location() const {
             return region + locality;
         }
     };

@@ -13,6 +13,7 @@
 #include "friendlist.h"
 #include <QHash>
 #include <QMenu>
+#include <QDebug>
 #include "src/model/FriendId.h"
 #include "src/model/friend.h"
 

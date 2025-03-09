@@ -15,9 +15,8 @@
 
 #include <QObject>
 #include <QString>
-#include "contactid.h"
-#include "src/core/core.h"
-#include "src/core/toxid.h"
+
+#include "src/model/FriendId.h"
 #include "src/model/contact.h"
 #include "src/model/status.h"
 
