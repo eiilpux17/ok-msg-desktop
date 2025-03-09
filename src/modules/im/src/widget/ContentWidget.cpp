@@ -57,6 +57,8 @@ ContentWidget::ContentWidget(SendWorker* sendWorker, QWidget* parent) : QWidget(
     mainContent->layout()->setContentsMargins(CONTENT_MARIGN, 0, CONTENT_MARIGN, CONTENT_MARIGN);
     mainContent->layout()->addWidget(sendWorker->getChatForm());
     layout()->addWidget(mainContent);
+
+       hide();
 }
 
 ContentWidget::~ContentWidget() {

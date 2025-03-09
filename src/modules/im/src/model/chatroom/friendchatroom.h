@@ -40,7 +40,7 @@ class FriendChatroom : public Chatroom {
     Q_OBJECT
 public:
     FriendChatroom(const FriendId* frnd, IDialogsManager* dialogsManager);
-    ~FriendChatroom();
+    ~FriendChatroom() override;
 
     virtual const ContactId& getContactId() override;
 

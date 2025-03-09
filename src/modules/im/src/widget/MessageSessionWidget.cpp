@@ -121,7 +121,7 @@ MessageSessionWidget::MessageSessionWidget(ContentLayout* layout, const ContactI
 
     contentWidget = std::make_unique<ContentWidget>(sendWorker.get(), this);
 
-    contentLayout->addWidget(contentWidget.get());
+
 
     auto chatForm = sendWorker->getChatForm();
     connect(chatForm->getChatLog(), &ChatLog::readAll, this, [&]() {
@@ -150,6 +150,11 @@ MessageSessionWidget::~MessageSessionWidget() {
 
 void MessageSessionWidget::do_widgetClicked() {
     //    qDebug() << __func__ << "contactId:" << contactId.toString();
+
+    auto w = contentWidget.get();
+    if(!contentLayout->existWidget(w)){
+        contentLayout->addWidget(w);
+    }
     contentWidget->showTo(contentLayout);
 }
 

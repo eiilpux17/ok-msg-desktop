@@ -13,7 +13,9 @@
 #ifndef MODEL_CHATROOM_H
 #define MODEL_CHATROOM_H
 
-#include "src/model/contact.h"
+#include <QObject>
+#include "src/model/contactid.h"
+
 namespace module::im {
 
 class Chatroom : public QObject {

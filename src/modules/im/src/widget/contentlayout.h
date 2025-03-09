@@ -26,6 +26,8 @@ public:
 
     void reloadTheme();
     void clear();
+    bool existWidget(QWidget*);
+
 
     //    QFrame mainHLine;
     //    QHBoxLayout mainHLineLayout;

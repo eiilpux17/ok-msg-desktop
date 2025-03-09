@@ -56,25 +56,25 @@ ContentLayout::~ContentLayout() {
 }
 
 void ContentLayout::reloadTheme() {
-#ifndef Q_OS_MAC
 //    mainHead->setStyleSheet(Style::getStylesheet("settings/mainHead.css"));
 //    mainContent->setStyleSheet(Style::getStylesheet("window/general.css"));
-#endif
 }
 
 void ContentLayout::clear() {
-    //    QLayoutItem* item;
-    //    while ((item = mainHead->layout()->takeAt(0)) != nullptr) {
-    //        item->widget()->hide();
-    //        item->widget()->setParent(nullptr);
-    //        delete item;
-    //    }
-    //
-    //    while ((item = mainContent->layout()->takeAt(0)) != nullptr) {
-    //        item->widget()->hide();
-    //        item->widget()->setParent(nullptr);
-    //        delete item;
-    //    }
+    for(auto i = 0; i < count(); i++){
+        removeWidget(widget(i));
+    }
+}
+
+bool ContentLayout::existWidget(QWidget *w)
+{
+    for(auto i = 0; i < count(); i++){
+        if(widget(i) == w){
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void ContentLayout::init() {}
