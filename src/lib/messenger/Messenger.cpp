@@ -313,6 +313,11 @@ void Messenger::requestBookmarks() {
     // im->enablePubSubManager();
 }
 
+void Messenger::requestRoomInfo(const std::string &jid)
+{
+    _im->requestRoomInfo(jid);
+}
+
 // Call
 MessengerCall::MessengerCall(Messenger* messenger) {
     call = new IMCall(messenger->im());

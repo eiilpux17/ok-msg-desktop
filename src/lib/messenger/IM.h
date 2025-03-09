@@ -250,12 +250,6 @@ public:
     bool leaveGroup(const std::string& groupId);
     bool destroyGroup(const std::string& groupId);
 
-    /**
-     * @brief sendToRoom
-     * @param to
-     * @param msg
-     * @param id 设置消息ID
-     */
     bool sendToRoom(const std::string& to, const std::string& msg, const std::string& id = "");
 
     void joinRoom(const std::string& jid);
@@ -263,6 +257,9 @@ public:
     void createRoom(const gloox::JID& jid, const std::string& password = "");
 
     const IMRoomInfo* findRoom(const std::string& groupId) const;
+
+    void requestRoomInfo(const std::string& jid);
+
 
     void start();
     bool isStarted() const;
@@ -613,7 +610,8 @@ private:
     std::string _nick;
     gloox::JID loginJid;
     std::unique_ptr<gloox::Client> _client;
-    bool isConnected = false;
+    bool is_connected = false;
+    bool is_started = false;
 
     // 发送消息的id
     std::set<std::string> sendIds;

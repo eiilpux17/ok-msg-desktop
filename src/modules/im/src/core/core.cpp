@@ -29,10 +29,13 @@
 #include "src/core/icoresettings.h"
 #include "src/core/toxoptions.h"
 #include "src/model/friend.h"
+#include "src/model/group.h"
 #include "src/model/groupinvite.h"
 #include "src/model/status.h"
 #include "src/nexus.h"
 #include "src/persistence/profile.h"
+
+
 namespace module::im {
 
 VCard::Adr toVCardAdr(const lib::messenger::IMVCard::Adr& item) {
@@ -42,26 +45,38 @@ VCard::Adr toVCardAdr(const lib::messenger::IMVCard::Adr& item) {
                       .country = item.country.c_str()};
 }
 
+Friend* toFriend(const lib::messenger::IMFriend& frnd){
+    return  new Friend(FriendId(frnd.id),
+                      qstring(frnd.name),
+                      qstring(frnd.alias),
+                      frnd.isFriend(),
+                      frnd.online,
+                      ranges::views::all(frnd.groups) |
+                              ranges::views::transform([](auto& e) { return qstring(e); }) |
+                              ranges::to<QStringList>
+                      );
+}
+
 VCard toVCard(const lib::messenger::IMVCard& imvCard) {
     return VCard{
-            .fullName = imvCard.fullName.c_str(),
-            .nickname = imvCard.nickname.c_str(),
-            .title = imvCard.title.c_str(),
-            .adrs = ranges::view::all(imvCard.adrs) | ranges::view::transform(toVCardAdr) |
-                    ranges::to<QList>,
-            .emails = ranges::view::all(imvCard.emails) | ranges::view::transform([](auto& item) {
-                          return VCard::Email{.type = item.type, .number = qstring(item.number)};
-                      }) |
-                      ranges::to<QList>,
-            .tels = ranges::view::all(imvCard.tels) | ranges::view::transform([](auto& item) {
-                        return VCard::Tel{.type = item.type,
-                                          .mobile = item.mobile,
-                                          .number = qstring(item.number)};
-                    }) |
-                    ranges::to<QList>,
-            .photo = {.type = imvCard.photo.type.c_str(),
-                      .bin = imvCard.photo.bin,
-                      .url = imvCard.photo.url.c_str()}};
+                 .fullName = imvCard.fullName.c_str(),
+                 .nickname = imvCard.nickname.c_str(),
+                 .title = imvCard.title.c_str(),
+                 .adrs = ranges::views::all(imvCard.adrs) | ranges::views::transform(toVCardAdr) |
+                         ranges::to<QList>,
+                 .emails = ranges::views::all(imvCard.emails) | ranges::views::transform([](auto& item) {
+                               return VCard::Email{.type = item.type, .number = qstring(item.number)};
+                           }) |
+                           ranges::to<QList>,
+                 .tels = ranges::views::all(imvCard.tels) | ranges::views::transform([](auto& item) {
+                             return VCard::Tel{.type = item.type,
+                                               .mobile = item.mobile,
+                                               .number = qstring(item.number)};
+                         }) |
+                         ranges::to<QList>,
+                 .photo = {.type = imvCard.photo.type.c_str(),
+                           .bin = imvCard.photo.bin,
+                           .url = imvCard.photo.url.c_str()}};
 }
 
 #define ASSERT_CORE_THREAD assert(QThread::currentThread() == coreThread.get())
@@ -72,17 +87,18 @@ Core::Core(QThread* coreThread)
     assert(toxTimer);
 
     qRegisterMetaType<PeerId>("PeerId");
-    qRegisterMetaType<FriendMessage>("FriendMessage");
+    // qRegisterMetaType<Group*>("Group");
     qRegisterMetaType<GroupMessage>("GroupMessage");
+    // qRegisterMetaType<Friend>("Friend");
     qRegisterMetaType<FriendId>("FriendId");
-    qRegisterMetaType<FriendInfo>("FriendInfo");
+    qRegisterMetaType<FriendMessage>("FriendMessage");
     qRegisterMetaType<VCard>("VCard");
 
-    // connect(this, &Core::avatarSet, this, [&](QByteArray buf){
-    //     QPixmap pixmap;
-    //     ok::base::Images::putToPixmap(buf, pixmap);
-    //     ok::Application::Instance()->onAvatar(pixmap);
-    // });
+            // connect(this, &Core::avatarSet, this, [&](QByteArray buf){
+            //     QPixmap pixmap;
+            //     ok::base::Images::putToPixmap(buf, pixmap);
+            //     ok::Application::Instance()->onAvatar(pixmap);
+            // });
 
     toxTimer->setSingleShot(true);
     connect(toxTimer, &QTimer::timeout, this, &Core::process);
@@ -253,16 +269,17 @@ void Core::process() {
 void Core::onFriend(const lib::messenger::IMFriend& frnd) {
     qDebug() << __func__ << frnd.id.getUsername().c_str();
 
-    // 加入到朋友列表
-    auto fi = FriendInfo{.id = FriendId(frnd.id),
-                         .alias = qstring(frnd.alias),
-                         .is_friend = frnd.isFriend(),
-                         .online = frnd.online,
-                         .groups = ranges::view::all(frnd.groups) |
-                                   ranges::view::transform([](auto& e) { return qstring(e); }) |
-                                   ranges::to<QStringList>
+            // 加入到朋友列表
+    auto fi = new Friend(FriendId(frnd.id),
+                         qstring(frnd.name),
+                         qstring(frnd.alias),
+                         frnd.isFriend(),
+                         frnd.online,
+                         ranges::views::all(frnd.groups) |
+                                 ranges::views::transform([](auto& e) { return qstring(e); }) |
+                                 ranges::to<QStringList>
 
-    };
+                         );
 
     friendList.addFriend(fi);
 
@@ -296,7 +313,7 @@ void Core::onFriendMessage(const std::string& friendId_, const lib::messenger::I
     auto friendId = qstring(friendId_);
     qDebug() << __func__ << "friend:" << friendId;
 
-    // 接收标志
+            // 接收标志
     sendReceiptReceived(friendId, qstring(message.id));
 
     auto peerId = PeerId(qstring(message.from));
@@ -347,7 +364,9 @@ void Core::onFriendAliasChanged(const lib::messenger::IMContactId& fId, const st
 void Core::onGroup(const std::string& groupId_, const std::string& name) {
     auto groupId = qstring(groupId_);
     qDebug() << __func__ << "groupId:" << groupId << name.c_str();
-    emit groupAdded(GroupId(groupId), name.c_str());
+    auto* g = new Group(Nexus::getProfile(), GroupId(groupId), qstring(name));
+    groupList.addGroup(g);
+    emit groupAdded(g);
 }
 
 //
@@ -460,7 +479,7 @@ void Core::onGroupOccupantStatus(const std::string& groupId_,  //
                         .affiliation = occ.affiliation.c_str(),
                         .role = occ.role.c_str(),
                         .status = occ.status,
-                        .codes = ranges::view::all(occ.codes) | ranges::to<QList>};
+                        .codes = ranges::views::all(occ.codes) | ranges::to<QList>};
     emit groupPeerStatusChanged(groupId, go);
 }
 
@@ -534,21 +553,21 @@ bool Core::sendMessageWithType(QString friendId, const QString& message, const M
     bool yes = messenger->sendToFriend(friendId.toStdString(), message.toStdString(),
                                        id.toStdString(), encrypt);
 
-    //  int size = message.toUtf8().size();
-    //  auto maxSize = tox_max_message_length();
-    //  if (size > maxSize) {
-    //    qCritical() << "Core::sendMessageWithType called with message of
-    //    size:"
-    //                << size << "when max is:" << maxSize << ". Ignoring.";
-    //    return false;
-    //  }
-    //
-    //  ToxString cMessage(message);
-    //  Tox_Err_Friend_Send_Message error;
-    //  receipt = MsgId{receipts};
-    //  if (parseFriendSendMessageError(error)) {
-    //    return true;
-    //  }
+            //  int size = message.toUtf8().size();
+            //  auto maxSize = tox_max_message_length();
+            //  if (size > maxSize) {
+            //    qCritical() << "Core::sendMessageWithType called with message of
+            //    size:"
+            //                << size << "when max is:" << maxSize << ". Ignoring.";
+            //    return false;
+            //  }
+            //
+            //  ToxString cMessage(message);
+            //  Tox_Err_Friend_Send_Message error;
+            //  receipt = MsgId{receipts};
+            //  if (parseFriendSendMessageError(error)) {
+            //    return true;
+            //  }
     return yes;
 }
 
@@ -632,6 +651,17 @@ void Core::destroyGroup(QString groupId) {
         emit saveRequest();
         //    av->leaveGroupCall(groupId);
     }
+}
+
+const GroupList &Core::loadGroupList()
+{
+    messenger->loadGroupList();
+    return groupList;
+}
+
+void Core::addGroup(Group *g)
+{
+    groupList.addGroup(g);
 }
 
 /**
@@ -736,12 +766,12 @@ void Core::setStatusMessage(const QString& message) {
         return;
     }
 
-    //  ToxString cMessage(message);
-    //  if (!tox_self_set_status_message(tox.get(), cMessage.data(),
-    //  cMessage.size(), nullptr)) {
-    //    emit failedToSetStatusMessage(message);
-    //    return;
-    //  }
+            //  ToxString cMessage(message);
+            //  if (!tox_self_set_status_message(tox.get(), cMessage.data(),
+            //  cMessage.size(), nullptr)) {
+            //    emit failedToSetStatusMessage(message);
+            //    return;
+            //  }
 
     emit saveRequest();
     emit statusMessageSet(message);
@@ -795,16 +825,16 @@ QByteArray Core::getToxSaveData() {
 
 // Declared to avoid code duplication
 #define GET_FRIEND_PROPERTY(property, function, checkSize)                     \
-    const size_t property##Size = function##_size(tox.get(), ids[i], nullptr); \
-    if ((!checkSize || property##Size) && property##Size != SIZE_MAX) {        \
-        uint8_t* prop = new uint8_t[property##Size];                           \
-        if (function(tox.get(), ids[i], prop, nullptr)) {                      \
-            QString propStr = ToxString(prop, property##Size).getQString();    \
-            emit friend##property##Changed(ids[i], propStr);                   \
-        }                                                                      \
+const size_t property##Size = function##_size(tox.get(), ids[i], nullptr); \
+        if ((!checkSize || property##Size) && property##Size != SIZE_MAX) {        \
+            uint8_t* prop = new uint8_t[property##Size];                           \
+            if (function(tox.get(), ids[i], prop, nullptr)) {                      \
+                QString propStr = ToxString(prop, property##Size).getQString();    \
+                emit friend##property##Changed(ids[i], propStr);                   \
+    }                                                                      \
                                                                                \
-        delete[] prop;                                                         \
-    }
+            delete[] prop;                                                         \
+}
 
 void Core::loadFriends() {
     QMutexLocker ml{&mutex};
@@ -814,107 +844,105 @@ void Core::loadFriends() {
         return;
     }
 
-    //  std::list<lib::IM::IMContactId> peers = messenger->loadFriendList();
-    //  for (auto itr : peers) {
-    //    qDebug() << "id=" << qstring(itr.getJid())
-    //             << " name=" << qstring(itr.getUsername());
-    //  }
+            //  std::list<lib::IM::IMContactId> peers = messenger->loadFriendList();
+            //  for (auto itr : peers) {
+            //    qDebug() << "id=" << qstring(itr.getJid())
+            //             << " name=" << qstring(itr.getUsername());
+            //  }
 
-    // uint32_t *ids = new uint32_t[friendCount];
-    // tox_self_get_friend_list(tox.get(), ids);
-    // uint8_t friendPk[TOX_PUBLIC_KEY_SIZE] = {0x00};
-    // for (size_t i = 0; i < friendCount; ++i) {
-    //   if (!tox_friend_get_public_key(tox.get(), ids[i], friendPk, nullptr)) {
-    //     continue;
-    //   }
+            // uint32_t *ids = new uint32_t[friendCount];
+            // tox_self_get_friend_list(tox.get(), ids);
+            // uint8_t friendPk[TOX_PUBLIC_KEY_SIZE] = {0x00};
+            // for (size_t i = 0; i < friendCount; ++i) {
+            //   if (!tox_friend_get_public_key(tox.get(), ids[i], friendPk, nullptr)) {
+            //     continue;
+            //   }
 
-    //   emit friendAdded(ids[i], ToxPk(friendPk));
-    //   GET_FRIEND_PROPERTY(Username, tox_friend_get_name, true);
-    //   GET_FRIEND_PROPERTY(StatusMessage, tox_friend_get_status_message,
-    //   false); checkLastOnline(ids[i]);
-    // }
-    // delete[] ids;
+            //   emit friendAdded(ids[i], ToxPk(friendPk));
+            //   GET_FRIEND_PROPERTY(Username, tox_friend_get_name, true);
+            //   GET_FRIEND_PROPERTY(StatusMessage, tox_friend_get_status_message,
+            //   false); checkLastOnline(ids[i]);
+            // }
+            // delete[] ids;
 }
 
 void Core::loadGroups() {
     QMutexLocker ml{&mutex};
 
-    //  const size_t groupCount = tox_conference_get_chatlist_size(tox.get());
-    //  if (groupCount == 0) {
-    //    return;
-    //  }
-    //
-    //  auto groupNumbers = new uint32_t[groupCount];
-    //  tox_conference_get_chatlist(tox.get(), groupNumbers);
-    //
-    //  for (size_t i = 0; i < groupCount; ++i) {
-    //    TOX_ERR_CONFERENCE_TITLE error;
-    //    QString name;
-    //    const auto groupNumber = groupNumbers[i];
-    //    size_t titleSize =
-    //        tox_conference_get_title_size(tox.get(), groupNumber, &error);
-    //    const GroupId persistentId = getGroupPersistentId(groupNumber);
-    //    const QString defaultName =
-    //        tr("Groupchat %1").arg(persistentId.toString().left(8));
-    //    if (LogConferenceTitleError(error)) {
-    //      name = defaultName;
-    //    } else {
-    //      QByteArray nameByteArray =
-    //          QByteArray(static_cast<int>(titleSize), Qt::Uninitialized);
-    //      tox_conference_get_title(
-    //          tox.get(), groupNumber,
-    //          reinterpret_cast<uint8_t *>(nameByteArray.data()), &error);
-    //      if (LogConferenceTitleError(error)) {
-    //        name = defaultName;
-    //      } else {
-    //        name = ToxString(nameByteArray).getQString();
-    //      }
-    //    }
-    //    if (getGroupAvEnabled(groupNumber)) {
-    //      if (toxav_groupchat_enable_av(tox.get(), groupNumber,
-    //                                    CoreAV::groupCallCallback, this)) {
-    //        qCritical() << "Failed to enable audio on loaded group" <<
-    //        groupNumber;
-    //      }
-    //    }
-    //    emit emptyGroupCreated(groupNumber, persistentId, name);
-    //  }
+            //  const size_t groupCount = tox_conference_get_chatlist_size(tox.get());
+            //  if (groupCount == 0) {
+            //    return;
+            //  }
+            //
+            //  auto groupNumbers = new uint32_t[groupCount];
+            //  tox_conference_get_chatlist(tox.get(), groupNumbers);
+            //
+            //  for (size_t i = 0; i < groupCount; ++i) {
+            //    TOX_ERR_CONFERENCE_TITLE error;
+            //    QString name;
+            //    const auto groupNumber = groupNumbers[i];
+            //    size_t titleSize =
+            //        tox_conference_get_title_size(tox.get(), groupNumber, &error);
+            //    const GroupId persistentId = getGroupPersistentId(groupNumber);
+            //    const QString defaultName =
+            //        tr("Groupchat %1").arg(persistentId.toString().left(8));
+            //    if (LogConferenceTitleError(error)) {
+            //      name = defaultName;
+            //    } else {
+            //      QByteArray nameByteArray =
+            //          QByteArray(static_cast<int>(titleSize), Qt::Uninitialized);
+            //      tox_conference_get_title(
+            //          tox.get(), groupNumber,
+            //          reinterpret_cast<uint8_t *>(nameByteArray.data()), &error);
+            //      if (LogConferenceTitleError(error)) {
+            //        name = defaultName;
+            //      } else {
+            //        name = ToxString(nameByteArray).getQString();
+            //      }
+            //    }
+            //    if (getGroupAvEnabled(groupNumber)) {
+            //      if (toxav_groupchat_enable_av(tox.get(), groupNumber,
+            //                                    CoreAV::groupCallCallback, this)) {
+            //        qCritical() << "Failed to enable audio on loaded group" <<
+            //        groupNumber;
+            //      }
+            //    }
+            //    emit emptyGroupCreated(groupNumber, persistentId, name);
+            //  }
 
-    //  delete[] groupNumbers;
+            //  delete[] groupNumbers;
 }
 
 void Core::checkLastOnline(QString friendId) {
     QMutexLocker ml{&mutex};
 
-    //  const uint64_t lastOnline =
-    //      tox_friend_get_last_online(tox.get(), receiver, nullptr);
-    //  if (lastOnline != std::numeric_limits<uint64_t>::max()) {
-    //    emit friendLastSeenChanged(receiver,
-    //    QDateTime::fromTime_t(lastOnline));
-    //  }
+            //  const uint64_t lastOnline =
+            //      tox_friend_get_last_online(tox.get(), receiver, nullptr);
+            //  if (lastOnline != std::numeric_limits<uint64_t>::max()) {
+            //    emit friendLastSeenChanged(receiver,
+            //    QDateTime::fromTime_t(lastOnline));
+            //  }
 }
 
 /**
  * @brief Returns the list of friendIds in our friendlist, an empty list on
  * error
  */
-void Core::loadFriendList(std::list<FriendInfo>& friends) const {
+const FriendList& Core::loadFriendList() {
     QMutexLocker ml{&mutex};
 
     std::list<lib::messenger::IMFriend> fs;
     messenger->getFriendList(fs);
 
-    for (auto& frnd : fs) {
-        // 加入到朋友列表
-        auto fi = FriendInfo{.id = FriendId(frnd.id),
-                             .alias = frnd.alias.c_str(),
-                             .is_friend = frnd.isFriend(),
-                             .online = frnd.online,
-                             .groups = ranges::view::all(frnd.groups) |
-                                       ranges::view::transform([](auto& e) { return qstring(e); }) |
-                                       ranges::to<QStringList>};
-        friends.push_back(fi);
+    auto ls = ranges::views::all(fs) |
+            ranges::views::transform([](auto& e) { return toFriend(e); }) |
+              ranges::to_vector;
+
+    for (auto& item : ls) {
+        friendList.addFriend(item);
     }
+
+    return friendList;
 }
 
 // GroupId Core::getGroupPersistentId(QString groupId) const {
@@ -930,13 +958,13 @@ uint32_t Core::getGroupNumberPeers(QString groupId) const {
     QMutexLocker ml{&mutex};
     qDebug() << "getGroupNumberPeers:" << groupId;
 
-    //  Tox_Err_Conference_Peer_Query error;
-    //  uint32_t count = tox_conference_peer_count(tox.get(), groupId, &error);
-    //  if (!parsePeerQueryError(error)) {
-    //    return std::numeric_limits<uint32_t>::max();
-    //  }
+            //  Tox_Err_Conference_Peer_Query error;
+            //  uint32_t count = tox_conference_peer_count(tox.get(), groupId, &error);
+            //  if (!parsePeerQueryError(error)) {
+            //    return std::numeric_limits<uint32_t>::max();
+            //  }
 
-    //  return count;
+            //  return count;
     return 0;
 }
 
@@ -946,31 +974,31 @@ uint32_t Core::getGroupNumberPeers(QString groupId) const {
 QString Core::getGroupPeerName(QString groupId, QString peerId) const {
     QMutexLocker ml{&mutex};
 
-    // from tox.h: "If peer_number == UINT32_MAX, then author is unknown (e.g.
-    // initial joining the conference)."
+            // from tox.h: "If peer_number == UINT32_MAX, then author is unknown (e.g.
+            // initial joining the conference)."
     if (peerId == std::numeric_limits<uint32_t>::max()) {
         return {};
     }
 
-    //  Tox_Err_Conference_Peer_Query error;
-    //  size_t length =
-    //      tox_conference_peer_get_name_size(tox.get(), groupId, peerId,
-    //      &error);
-    //  if (!parsePeerQueryError(error)) {
-    //    return QString{};
-    //  }
-    //
-    //  QByteArray name(length, Qt::Uninitialized);
-    //  uint8_t *namePtr = reinterpret_cast<uint8_t *>(name.data());
-    //  bool success =
-    //      tox_conference_peer_get_name(tox.get(), groupId, peerId, namePtr,
-    //      &error);
-    //  if (!parsePeerQueryError(error)) {
-    //    return QString{};
-    //  }
-    //  assert(success);
+            //  Tox_Err_Conference_Peer_Query error;
+            //  size_t length =
+            //      tox_conference_peer_get_name_size(tox.get(), groupId, peerId,
+            //      &error);
+            //  if (!parsePeerQueryError(error)) {
+            //    return QString{};
+            //  }
+            //
+            //  QByteArray name(length, Qt::Uninitialized);
+            //  uint8_t *namePtr = reinterpret_cast<uint8_t *>(name.data());
+            //  bool success =
+            //      tox_conference_peer_get_name(tox.get(), groupId, peerId, namePtr,
+            //      &error);
+            //  if (!parsePeerQueryError(error)) {
+            //    return QString{};
+            //  }
+            //  assert(success);
 
-    //  return ToxString(name).getQString();
+            //  return ToxString(name).getQString();
     return QString{};
 }
 
@@ -980,15 +1008,15 @@ QString Core::getGroupPeerName(QString groupId, QString peerId) const {
 PeerId Core::getGroupPeerPk(QString groupId, QString peerId) const {
     QMutexLocker ml{&mutex};
 
-    //  uint8_t friendPk[TOX_PUBLIC_KEY_SIZE] = {0x00};
-    //  Tox_Err_Conference_Peer_Query error;
-    //  bool success = tox_conference_peer_get_public_key(tox.get(), groupId,
-    //  peerId,
-    //                                                    friendPk, &error);
-    //  if (!parsePeerQueryError(error)) {
-    //    return ToxPk{};
-    //  }
-    //  assert(success);
+            //  uint8_t friendPk[TOX_PUBLIC_KEY_SIZE] = {0x00};
+            //  Tox_Err_Conference_Peer_Query error;
+            //  bool success = tox_conference_peer_get_public_key(tox.get(), groupId,
+            //  peerId,
+            //                                                    friendPk, &error);
+            //  if (!parsePeerQueryError(error)) {
+            //    return ToxPk{};
+            //  }
+            //  assert(success);
 
     auto toxPk = PeerId{peerId};
     return toxPk;
@@ -1030,9 +1058,9 @@ QStringList Core::getGroupPeerNames(QString groupId) const {
     //    }
     //  }
 
-    //  names.append("user1");
-    //  names.append("user2");
-    //  assert(names.size() == nPeers);
+            //  names.append("user1");
+            //  names.append("user2");
+            //  assert(names.size() == nPeers);
     return names;
 }
 
@@ -1057,7 +1085,7 @@ bool Core::getGroupAvEnabled(QString groupId) const {
     //    break;
     //  }
 
-    //  return type == TOX_CONFERENCE_TYPE_AV;
+            //  return type == TOX_CONFERENCE_TYPE_AV;
     return true;
 }
 
@@ -1071,48 +1099,53 @@ QString Core::joinGroupchat(const GroupInvite& inviteInfo) {
     QMutexLocker ml{&mutex};
     messenger->joinGroup(inviteInfo.getGroupId().toStdString());
 
-    //  const QString receiver = inviteInfo.getFriendId();
-    //  const uint8_t confType = inviteInfo.getType();
-    //  const QByteArray invite = inviteInfo.getInvite();
-    //  const uint8_t *const cookie = reinterpret_cast<const uint8_t
-    //  *>(invite.data()); const size_t cookieLength = invite.length(); QString
-    //  groupNum{std::numeric_limits<uint32_t>::max()};
+            //  const QString receiver = inviteInfo.getFriendId();
+            //  const uint8_t confType = inviteInfo.getType();
+            //  const QByteArray invite = inviteInfo.getInvite();
+            //  const uint8_t *const cookie = reinterpret_cast<const uint8_t
+            //  *>(invite.data()); const size_t cookieLength = invite.length(); QString
+            //  groupNum{std::numeric_limits<uint32_t>::max()};
 
-    //  switch (confType) {
-    //  case TOX_CONFERENCE_TYPE_TEXT: {
-    //    qDebug() << QString(
-    //                    "Trying to join text groupchat invite sent by friend
-    //                    %1") .arg(receiver);
-    //    Tox_Err_Conference_Join error;
-    //    groupNum = tox_conference_join(tox.get(), receiver, cookie,
-    //    cookieLength, &error); if (!parseConferenceJoinError(error)) {
-    //      groupNum = std::numeric_limits<uint32_t>::max();
-    //    }
-    //    break;
-    //  }
-    //  case TOX_CONFERENCE_TYPE_AV: {
-    //    qDebug() << QString("Trying to join AV groupchat invite sent by friend
-    //    %1")
-    //                    .arg(receiver);
-    //    groupNum = toxav_join_av_groupchat(tox.get(), receiver, cookie,
-    //                                       cookieLength,
-    //                                       CoreAV::groupCallCallback,
-    //                                       const_cast<Core *>(this));
-    //    break;
-    //  }
-    //  default:
-    //    qWarning() << "joinGroupchat: Unknown groupchat type " << confType;
-    //  }
-    //  if (groupNum != std::numeric_limits<uint32_t>::max()) {
-    //    emit saveRequest();
-    //    emit groupJoined(groupNum, getGroupPersistentId(groupNum));
-    //  }
-    //  return groupNum;
+            //  switch (confType) {
+            //  case TOX_CONFERENCE_TYPE_TEXT: {
+            //    qDebug() << QString(
+            //                    "Trying to join text groupchat invite sent by friend
+            //                    %1") .arg(receiver);
+            //    Tox_Err_Conference_Join error;
+            //    groupNum = tox_conference_join(tox.get(), receiver, cookie,
+            //    cookieLength, &error); if (!parseConferenceJoinError(error)) {
+            //      groupNum = std::numeric_limits<uint32_t>::max();
+            //    }
+            //    break;
+            //  }
+            //  case TOX_CONFERENCE_TYPE_AV: {
+            //    qDebug() << QString("Trying to join AV groupchat invite sent by friend
+            //    %1")
+            //                    .arg(receiver);
+            //    groupNum = toxav_join_av_groupchat(tox.get(), receiver, cookie,
+            //                                       cookieLength,
+            //                                       CoreAV::groupCallCallback,
+            //                                       const_cast<Core *>(this));
+            //    break;
+            //  }
+            //  default:
+            //    qWarning() << "joinGroupchat: Unknown groupchat type " << confType;
+            //  }
+            //  if (groupNum != std::numeric_limits<uint32_t>::max()) {
+            //    emit saveRequest();
+            //    emit groupJoined(groupNum, getGroupPersistentId(groupNum));
+            //  }
+            //  return groupNum;
     return {};
 }
 
 void Core::joinRoom(const QString& groupId) {
     messenger->joinGroup(groupId.toStdString());
+}
+
+void Core::requestRoomInfo(const QString &groupId)
+{
+    messenger->requestRoomInfo(groupId.toStdString());
 }
 
 void Core::inviteToGroup(const ContactId& friendId, const GroupId& groupId) {

@@ -63,6 +63,9 @@ SendWorker::SendWorker(const GroupId& groupId) : contactId{groupId} {
     messageDispatcher = std::make_unique<GroupMessageDispatcher>(groupId, sharedParams, *core,
                                                                  *core, *settings);
 
+    chatHistory = std::make_unique<ChatHistory>(groupId, history, *core, *settings,
+                                                *messageDispatcher.get());
+
     chatLog = std::make_unique<SessionChatLog>(*core);
     connect(messageDispatcher.get(), &IMessageDispatcher::messageSent, chatLog.get(),
             &SessionChatLog::onMessageSent);

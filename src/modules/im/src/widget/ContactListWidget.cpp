@@ -34,6 +34,7 @@
 
 #include "Bus.h"
 #include "widget.h"
+#include "src/application.h"
 
 
 namespace module::im {
@@ -67,6 +68,12 @@ ContactListWidget::ContactListWidget(QWidget* parent, bool groupsOnTop)
     // qDebug() << css;
 
     // setStyleSheet(css);
+
+    ok::Bus* bus = ok::Application::Instance()->bus();
+    connect(bus, &ok::Bus::coreChanged, this, [&](Core* core) {
+        connect(core, &Core::started, this, &ContactListWidget::init);
+    });
+
 
     setLayout(listLayout);
 }
@@ -155,34 +162,42 @@ ContactListWidget::SortingMode ContactListWidget::getMode() const {
 
 GroupWidget* ContactListWidget::addGroup(const GroupId& groupId, const QString& groupName) {
     qDebug() << __func__ << groupId.toString();
+    auto* p = Nexus::getProfile();
+    auto* core = p->getCore();
 
-    Group* g = GroupList::findGroup(groupId);
-    if (g) {
+
+    auto* gw = getGroup(groupId);
+    if (gw) {
         qWarning() << "Group already exist.";
         return groupWidgets.value(groupId.toString());
     }
-    g = GroupList::addGroup(groupId, groupName);
 
-    auto settings = Nexus::getProfile()->getSettings();
+    // g = new Group(p, groupId, groupName);
+    // core->addGroup(g);
+
+
+    auto settings = p->getSettings();
 
     //  const bool enabled = core->getGroupAvEnabled(groupId.toString());
 
-    auto gw = new GroupWidget(groupId, groupName);
+    gw = new GroupWidget(groupId, groupName);
+    connect(gw, &GroupWidget::chatroomWidgetClicked, this, &ContactListWidget::slot_groupClicked);
+    connect(gw, &GroupWidget::removeGroup, this, &ContactListWidget::do_groupDeleted);
+    connect(gw->getGroup(), &Group::displayedNameChanged, gw, [&, gw](){
+        listLayout->sortFriendWidget(gw);
+    });
+
     groupWidgets[groupId.toString()] = gw;
     //    groupLayout.addSortedWidget(gw);
     listLayout->addWidget(gw);
 
+    auto& gl = core->getGroupList();
+    auto* g = gl.findGroup(groupId);
     connect(g, &Group::subjectChanged, [=, this](const QString& author, const QString& name) {
         Q_UNUSED(author);
         renameGroupWidget(gw, name);
     });
 
-    connect(gw, &GroupWidget::chatroomWidgetClicked, this, &ContactListWidget::slot_groupClicked);
-    connect(gw, &GroupWidget::removeGroup, this, &ContactListWidget::do_groupDeleted);
-
-    connect(gw->getGroup(), &Group::displayedNameChanged, gw, [&, gw](){
-        listLayout->sortFriendWidget(gw);
-    });
 
     return gw;
 }
@@ -190,6 +205,17 @@ GroupWidget* ContactListWidget::addGroup(const GroupId& groupId, const QString& 
 void ContactListWidget::do_groupDeleted(const ContactId& cid) {
     qDebug() << __func__ << cid.toString();
     removeGroup(GroupId(cid));
+}
+
+void ContactListWidget::init()
+{
+    auto* p = Nexus::getProfile();
+    auto* core = p->getCore();
+
+    auto& gl = core->getGroupList();
+    for(auto* g: gl.getAllGroups()){
+        addGroup(g->getId(), g->getName());
+    }
 }
 
 void ContactListWidget::cycleContacts(bool forward) {
@@ -252,7 +278,7 @@ void ContactListWidget::removeGroup(const GroupId& cid) {
 void ContactListWidget::setGroupTitle(const GroupId& groupId,
                                       const QString& author,
                                       const QString& title) {
-    auto g = GroupList::findGroup(groupId);
+    auto g = Core::getInstance()->getGroupList().findGroup(groupId);
     if (!g) {
         qWarning() << "group is no existing." << groupId.toString();
         return;
@@ -261,7 +287,7 @@ void ContactListWidget::setGroupTitle(const GroupId& groupId,
 }
 
 void ContactListWidget::setGroupInfo(const GroupId& groupId, const GroupInfo& info) {
-    auto g = GroupList::findGroup(groupId);
+    auto g = Core::getInstance()->getGroupList().findGroup(groupId);
     if (!g) {
         qWarning() << "group is no existing." << groupId.toString();
         return;

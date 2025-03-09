@@ -15,7 +15,7 @@
 #include <QMenu>
 #include "src/model/FriendId.h"
 #include "src/model/friend.h"
-#include "src/persistence/settings.h"
+
 namespace module::im {
 
 FriendList::FriendList(QObject* parent) : QObject(parent) {}
@@ -24,17 +24,17 @@ FriendList::~FriendList() {
     clear();
 }
 
-Friend* FriendList::addFriend(const FriendInfo& friendInfo) {
-    qDebug() << __func__ << "friendInfo:" << friendInfo.toString();
+Friend* FriendList::addFriend(Friend* newfriend) {
+    qDebug() << __func__ << "friendInfo:" << newfriend->toString();
 
-    auto frnd = findFriend(friendInfo.id);
+    auto frnd = findFriend(newfriend->getId());
     if (frnd) {
-        qWarning() << "friend:" << friendInfo.toString() << "is existing";
+        qWarning() << "friend is existing";
         return frnd;
     }
 
-    auto* newfriend = new Friend(friendInfo.id, friendInfo.isFriend(), friendInfo.getAlias(), {});
-    friendMap[((ContactId&)friendInfo).toString()] = newfriend;
+    // auto* newfriend = new Friend(friendInfo.id, friendInfo.isFriend(), friendInfo.getAlias(), {});
+    friendMap[newfriend->getId().toString()] = newfriend;
 
     emit friendAdded(newfriend);
 
@@ -44,12 +44,12 @@ Friend* FriendList::addFriend(const FriendInfo& friendInfo) {
     return newfriend;
 }
 
-Friend* FriendList::findFriend(const ContactId& cId) {
+Friend* FriendList::findFriend(const ContactId& cId) const {
     auto f = friendMap.value(cId.toString());
-    if (!f) {
-        f = new Friend(FriendId(cId));
-        friendMap.insert(cId.toString(), f);
-    }
+    // if (!f) {
+        // f = new Friend(FriendId(cId));
+        // friendMap.insert(cId.toString(), f);
+    // }
     return f;
 }
 
@@ -66,7 +66,7 @@ void FriendList::clear() {
     friendMap.clear();
 }
 
-QList<Friend*> FriendList::getAllFriends() {
+QList<Friend*> FriendList::getAllFriends() const {
     return friendMap.values();
 }
 

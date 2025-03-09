@@ -375,7 +375,7 @@ void ContentDialog::dragEnterEvent(QDragEnterEvent* event) {
     } else if (group) {
         assert(event->mimeData()->hasFormat("groupId"));
         GroupId groupId = GroupId{event->mimeData()->data("groupId")};
-        Group* contact = GroupList::findGroup(groupId);
+        Group* contact = Core::getInstance()->getGroupList().findGroup(groupId);
         if (!contact) {
             return;
         }
@@ -402,7 +402,7 @@ void ContentDialog::dropEvent(QDropEvent* event) {
     } else if (group) {
         assert(event->mimeData()->hasFormat("groupId"));
         const GroupId groupId(event->mimeData()->data("groupId"));
-        Group* contact = GroupList::findGroup(groupId);
+        Group* contact = Core::getInstance()->getGroupList().findGroup(groupId);
         if (!contact) {
             return;
         }

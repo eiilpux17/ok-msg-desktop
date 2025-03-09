@@ -17,11 +17,8 @@
 #include "src/core/coreav.h"
 #include "src/model/FriendId.h"
 #include "src/model/contactid.h"
-#include "src/model/friend.h"
 #include "src/model/groupid.h"
 #include "src/persistence/settings.h"
-#include "src/widget/form/groupchatform.h"
-#include "src/widget/groupwidget.h"
 
 static const int MAX_GROUP_TITLE_LENGTH = 128;
 
@@ -51,18 +48,21 @@ Group::Affiliation parseAffiliation(const QString& affiliation) {
     return Group::Affiliation::None;
 }
 
-Group::Group(const GroupId groupId_, const QString& name, bool isAvGroupchat,
-             const QString& selfName, ICoreGroupQuery& groupQuery, ICoreIdHandler& idHandler,
-             Profile* profile_)
+
+
+Group::Group(Profile* profile,
+             const GroupId groupId_,
+             const QString& name,
+             const QString& selfName,
+              bool is_deleted)
         : Contact(groupId_, name, name, true)
-        , profile{profile_}
+        , profile{profile}
         , groupId{groupId_}
-        , avGroupchat{isAvGroupchat}
-        , groupQuery(groupQuery)
-        , idHandler(idHandler)
+        , isDeleted{is_deleted}
         , role{Role::None}
         , affiliation{Affiliation::None}
         , peerCount{0} {
+
     // in groupchats, we only notify on messages containing your name <-- dumb
     // sound notifications should be on all messages, but system popup
     // notification on naming is appropriate
@@ -128,7 +128,7 @@ void Group::addPeer(const GroupOccupant& occ) {
     peerDisplayNames[PeerId(occ.jid).resource] = occ.nick;
 
     // 判断成员是否为自己
-    auto core = Core::getInstance();
+    auto* core = Core::getInstance();
     auto selfId = core->getSelfId();
     if (selfId.toString() == ContactId(occ.jid, lib::messenger::ChatType::GroupChat).toString()) {
         role = parseRole(occ.role);

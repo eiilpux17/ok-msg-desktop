@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright (c) 2022 船山信息 chuanshaninfo.com
  * The project is licensed under Mulan PubL v2.
  * You can use this software according to the terms and conditions of the Mulan
@@ -26,7 +26,7 @@ class AboutGroupForm : public QWidget {
     Q_OBJECT
 
 public:
-    explicit AboutGroupForm(const Group* gId, QWidget* parent = nullptr);
+    explicit AboutGroupForm(  Group* g, QWidget* parent = nullptr);
     ~AboutGroupForm();
     void init();
     const ContactId& getId();
@@ -35,7 +35,7 @@ public:
 
 private:
     Ui::AboutGroupForm* ui;
-    const Group* group;
+    Group* group;
 
 private slots:
     void onSendMessageClicked();

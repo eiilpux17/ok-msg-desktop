@@ -92,7 +92,8 @@ void FriendChatroom::inviteFriend(const Group* group) {
 
 QVector<GroupToDisplay> FriendChatroom::getGroups() const {
     QVector<GroupToDisplay> groups;
-    for (const auto group : GroupList::getAllGroups()) {
+    auto& gl = Core::getInstance()->getGroupList();
+    for (const auto group : gl.getAllGroups()) {
         const auto name = getShortName(group->getName());
         const GroupToDisplay groupToDisplay = {name, group};
         groups.push_back(groupToDisplay);

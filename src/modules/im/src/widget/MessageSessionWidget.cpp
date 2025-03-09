@@ -99,6 +99,10 @@ MessageSessionWidget::MessageSessionWidget(ContentLayout* layout, const ContactI
         connect(sendWorker.get(), &SendWorker::muteSpeaker, this,
                 &MessageSessionWidget::doSilenceSpeaker);
 
+        auto& fl = core->getFriendList();
+        auto* f = fl.findFriend(friendId);
+        setFriend(f);
+
     } else if (chatType == lib::messenger::ChatType::GroupChat) {
         auto nick = core->getNick();
         groupId = GroupId(contactId);
@@ -108,6 +112,11 @@ MessageSessionWidget::MessageSessionWidget(ContentLayout* layout, const ContactI
 
         connect(sendWorker->dispacher(), &IMessageDispatcher::messageSent, this,
                 &MessageSessionWidget::onMessageSent);
+
+        auto& gl = core->getGroupList();
+        auto* g = gl.findGroup(groupId);
+        setGroup(g);
+        core->requestRoomInfo(contactId.toString());
     }
 
     contentWidget = std::make_unique<ContentWidget>(sendWorker.get(), this);
@@ -145,26 +154,28 @@ void MessageSessionWidget::do_widgetClicked() {
 }
 
 void MessageSessionWidget::showEvent(QShowEvent* e) {
-    GenericChatroomWidget::showEvent(e);
+    auto core = Nexus::getCore();
+
     if (isGroup()) {
-        auto group = GroupList::findGroup(GroupId{contactId.toString()});
+        auto group = Core::getInstance()->getGroupList().findGroup(GroupId{contactId.toString()});
         if (group) {
             setContact(*group);
             sendWorker->getHeader()->setContact(contact);
             sendWorker->getChatForm()->setContact(contact);
+            core->requestRoomInfo(contactId.toString());
         }
     } else {
-        auto f = Nexus::getCore()->getFriendList().findFriend(contactId);
+        auto f = core->getFriendList().findFriend(contactId);
         if (f) {
             setContact(*f);
             sendWorker->getHeader()->setContact(contact);
             sendWorker->getChatForm()->setContact(contact);
         }
 
-        updateStatusLight(Core::getInstance()->getFriendStatus(contactId.toString()), false);
+        updateStatusLight(core->getFriendStatus(contactId.toString()), false);
 
         auto msgs = sendWorker->getLastTextMessage();
-        for (auto m : msgs) {
+        for (auto& m : msgs) {
             updateLastMessage(m);
             break;
         }
@@ -180,6 +191,8 @@ void MessageSessionWidget::showEvent(QShowEvent* e) {
     //    QScrollBar *sb = cl->verticalScrollBar();
     //    auto sbv=   sb->value();
     //    qDebug() << sbv;
+
+       GenericChatroomWidget::showEvent(e);
 }
 
 /**
@@ -518,8 +531,8 @@ void MessageSessionWidget::setGroup(const Group* g) {
         return;
     }
 
-    connect(g, &Friend::displayedNameChanged, this, [&](const QString& name) { setName(name); });
-    connect(g, &Friend::avatarChanged, this, [this](const QPixmap& avatar) { setAvatar(avatar); });
+    connect(g, &Group::displayedNameChanged, this, [&](const QString& name) { setName(name); });
+    connect(g, &Group::avatarChanged, this, [this](const QPixmap& avatar) { setAvatar(avatar); });
 
     setContact(*g);
 
@@ -803,7 +816,7 @@ void MessageSessionWidget::setRecvGroupMessage(const GroupMessage& msg) {
     if (frd) {
         m.displayName = frd->getDisplayedName();
     } else {
-        auto g = GroupList::findGroup(GroupId(msg.from));
+        auto g = Core::getInstance()->getGroupList().findGroup(GroupId(msg.from));
         if (g) m.displayName = g->getPeerDisplayName(PeerId(msg.from).getResource());
     }
 

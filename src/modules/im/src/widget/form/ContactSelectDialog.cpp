@@ -58,8 +58,8 @@ ContactSelectDialog::~ContactSelectDialog() {
 
 void ContactSelectDialog::showEvent(QShowEvent* e) {
     auto& fl = Core::getInstance()->getFriendList();
-    for (auto f : fl.getAllFriends()) {
-        auto fw = contactListWidget->addFriend(f->getId());
+    for (auto* f : fl.getAllFriends()) {
+        auto* fw = contactListWidget->addFriend(f->getId());
         fw->setShowContextMenu(false);
     }
     QDialog::showEvent(e);

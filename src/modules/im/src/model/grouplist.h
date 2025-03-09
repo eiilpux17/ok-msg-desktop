@@ -26,16 +26,15 @@ using GroupMap = ::QHash<::QString, Group*>;
 
 class GroupList {
 public:
-    static Group* addGroup(const GroupId& groupId, const QString& name = "",
-                           bool isAvGroupchat = true, const QString& selfName = "");
-    static Group* findGroup(const GroupId& groupId);
-    static const GroupId& id2Key(QString groupNum);
-    static void removeGroup(const GroupId& groupId, bool fake = false);
-    static QList<Group*> getAllGroups();
-    static void clear();
+    Group* addGroup(Group* g);
+    Group* findGroup(const GroupId& groupId) const ;
+    const GroupId& id2Key(QString groupNum);
+    void removeGroup(const GroupId& groupId, bool fake = false);
+    QList<Group*> getAllGroups() const;
+    void clear();
 
 private:
-    static GroupMap groupMap;
+    GroupMap groupMap;
 };
 }  // namespace module::im
 #endif  // GROUPLIST_H

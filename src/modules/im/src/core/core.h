@@ -21,6 +21,7 @@
 #include "src/model/FriendId.h"
 #include "src/model/MsgId.h"
 #include "src/model/groupid.h"
+#include "src/model/grouplist.h"
 #include "toxfile.h"
 #include "toxid.h"
 
@@ -85,8 +86,8 @@ public:
 
     static QStringList splitMessage(const QString& message);
     QString getPeerName(const FriendId& id) const;
-    void loadFriendList(std::list<FriendInfo>&) const;
-    FriendList& getFriendList() {
+    const FriendList& loadFriendList();
+    const FriendList& getFriendList() const {
         return friendList;
     }
     void loadGroupList() const;
@@ -109,6 +110,8 @@ public:
     QString joinGroupchat(const GroupInvite& inviteInfo);
     void joinRoom(const QString& groupId);
     void quitGroupChat(const QString& groupId) const;
+    void requestRoomInfo(const QString& groupId);
+
 
     QString getUsername() const override;
     QString getNick() const override;
@@ -139,6 +142,12 @@ public:
     void inviteToGroup(const ContactId& friendId, const GroupId& groupId);
     void leaveGroup(QString groupId);
     void destroyGroup(QString groupId);
+
+    const GroupList& loadGroupList();
+    const GroupList& getGroupList() const {
+        return groupList;
+    }
+    void addGroup(Group*);
 
     void setStatus(Status status);
     void setNick(const QString& nick);
@@ -270,6 +279,7 @@ private:
     //    }
     //  };
     FriendList friendList;
+    GroupList groupList;
 
     lib::messenger::Messenger* messenger;
     MsgId m_receipt;
@@ -322,7 +332,7 @@ signals:
                                const FriendMessage message,  //
                                bool isAction);
 
-    void friendAdded(const FriendInfo frnd);
+    void friendAdded(Friend* frnd);
 
     void friendStatusChanged(const FriendId& friendId, Status status);
     void friendStatusMessageChanged(const FriendId& friendId, const QString& message);
@@ -357,7 +367,7 @@ signals:
 
     void groupSentFailed(QString groupId);
 
-    void groupAdded(const GroupId& groupId, const QString& name);
+    void groupAdded(Group* group);
 
     void actionSentResult(QString friendId, const QString& action, int success);
 

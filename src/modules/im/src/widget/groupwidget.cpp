@@ -44,16 +44,16 @@ GroupWidget::GroupWidget(const GroupId& groupId, const QString& groupName)
     connect(this, &GroupWidget::destroyGroup, this, &GroupWidget::do_destroyGroup);
 
     auto core = Core::getInstance();
-    group = GroupList::addGroup(groupId, groupName, true, core->getUsername());
-
-    updateUserCount(group->getPeersCount());
-    connect(group, &Group::subjectChanged, this, &GroupWidget::updateTitle);
-    connect(group, &Group::peerCountChanged, this, &GroupWidget::updateUserCount);
-    connect(group, &Group::descChanged, this, &GroupWidget::updateDesc);
-    connect(group, &Group::privilegesChanged, this, &GroupWidget::do_privilegesChanged);
-    connect(group, &Group::displayedNameChanged, [&](auto& newName) { setName(newName); });
-
-    nameLabel->setText(group->getDisplayedName());
+    group = core->getGroupList().findGroup(groupId);
+    if(group){
+        updateUserCount(group->getPeersCount());
+        connect(group, &Group::subjectChanged, this, &GroupWidget::updateTitle);
+        connect(group, &Group::peerCountChanged, this, &GroupWidget::updateUserCount);
+        connect(group, &Group::descChanged, this, &GroupWidget::updateDesc);
+        connect(group, &Group::privilegesChanged, this, &GroupWidget::do_privilegesChanged);
+        connect(group, &Group::displayedNameChanged, [&](auto& newName) { setName(newName); });
+        nameLabel->setText(group->getDisplayedName());
+    }
 
     connect(this, &GroupWidget::chatroomWidgetClicked, [this]() {
         this->do_widgetClicked(this);

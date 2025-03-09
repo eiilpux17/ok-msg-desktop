@@ -164,7 +164,7 @@ public slots:
 
 signals:
     void friendAdded(const Friend* f);
-    void friendRemoved(const Friend* f);
+    void friendRemoved( Friend* f);
     void friendRequestAccepted(const FriendId& friendPk);
     void friendRequestRejected(const FriendId& friendPk);
     void friendRequested(const ToxId& friendAddress, const QString& nick, const QString& message);

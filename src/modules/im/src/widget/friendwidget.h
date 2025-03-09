@@ -13,15 +13,10 @@
 #ifndef FRIENDWIDGET_H
 #define FRIENDWIDGET_H
 
-#include "ContentWidget.h"
 #include "genericchatroomwidget.h"
 #include "src/model/FriendId.h"
 #include "src/model/chatroom/groupchatroom.h"
-#include "src/model/friendmessagedispatcher.h"
 #include "src/model/message.h"
-#include "src/model/sessionchatlog.h"
-
-#include <memory>
 
 class QPixmap;
 class MaskablePixmapWidget;
@@ -29,7 +24,6 @@ class MaskablePixmapWidget;
 namespace module::im {
 
 class FriendChatroom;
-class CircleWidget;
 class ContentDialog;
 class ContentLayout;
 class Widget;
@@ -52,8 +46,8 @@ public:
     void resetEventFlags() override final;
     QString getStatusString() const override final;
 
-    const Friend* getFriend() const;
-    const Contact* getContact() const;
+    Friend* getFriend() ;
+    Contact* getContact() ;
 
     void search(const QString& searchString, bool hide = false);
     void setRecvMessage(const FriendMessage& message, bool isAction);
@@ -90,7 +84,7 @@ signals:
     void contextMenuCalled(QContextMenuEvent* event);
     void friendHistoryRemoved();
     void friendWidgetRenamed(FriendWidget* friendWidget);
-    void searchCircle(CircleWidget& circleWidget);
+
     void updateFriendActivity(const Friend& frnd);
     //    void setActive(bool active);
 };

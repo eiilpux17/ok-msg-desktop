@@ -13,34 +13,25 @@
 #include "grouplist.h"
 #include <QDebug>
 #include <QHash>
-#include "src/core/core.h"
 #include "src/model/group.h"
-#include "src/nexus.h"
-#include "src/persistence/profile.h"
+
 namespace module::im {
 
-GroupMap GroupList::groupMap;
+Group* GroupList::addGroup(Group* group) {
+    qDebug() << __func__ << "groupId" << group->getId();
 
-Group* GroupList::addGroup(const GroupId& groupId,
-                           const QString& name,
-                           bool isAvGroupchat,
-                           const QString& selfName) {
-    qDebug() << "addGroup" << "groupId" << groupId.toString();
-
-    auto checker = groupMap.value(groupId.toString());
+    auto groupId = group->getId().toString();
+    auto checker = groupMap.value(groupId);
     if (checker) {
         qWarning() << "addGroup: groupId already taken";
         return checker;
     }
 
-    auto profile = Nexus::getProfile();
-    auto core = profile->getCore();
-    Group* newGroup = new Group(groupId, name, isAvGroupchat, selfName, *core, *core, profile);
-    groupMap[groupId.toString()] = newGroup;
-    return newGroup;
+    groupMap[groupId] = group;
+    return group;
 }
 
-Group* GroupList::findGroup(const GroupId& groupId) {
+Group* GroupList::findGroup(const GroupId& groupId) const {
     return groupMap.value(groupId.toString());
 }
 
@@ -52,12 +43,8 @@ void GroupList::removeGroup(const GroupId& groupId, bool /*fake*/) {
     }
 }
 
-QList<Group*> GroupList::getAllGroups() {
-    QList<Group*> res;
-
-    for (auto it : groupMap) res.append(it);
-
-    return res;
+QList<Group*> GroupList::getAllGroups() const {
+    return groupMap.values();
 }
 
 void GroupList::clear() {

@@ -19,10 +19,7 @@
 #include <QObject>
 #include <QStringList>
 #include "FriendId.h"
-#include "contactid.h"
 #include "groupid.h"
-#include "src/core/icoregroupquery.h"
-#include "src/core/icoreidhandler.h"
 #include "src/model/message.h"
 #include "src/persistence/profile.h"
 
@@ -48,13 +45,12 @@ public:
         Member,
     };
 
-    Group(const GroupId persistentGroupId,
-          const QString& name,
-          bool isAvGroupchat,
-          const QString& selfName,
-          ICoreGroupQuery& groupQuery,
-          ICoreIdHandler& idHandler,
-          Profile* profile);
+    explicit Group(Profile* profile,
+                   GroupId groupId,
+                   const QString& name,
+                   const QString& selfName = "",
+                   bool is_deleted = false);
+    ~Group() override = default;
 
     bool isAvGroupchat() const;
 
@@ -109,8 +105,8 @@ signals:
 
 private:
     Profile* profile;
-    ICoreGroupQuery& groupQuery;
-    ICoreIdHandler& idHandler;
+    // ICoreGroupQuery& groupQuery;
+    // ICoreIdHandler& idHandler;
     QString subject;
     QString desc;
     quint64 peerCount;

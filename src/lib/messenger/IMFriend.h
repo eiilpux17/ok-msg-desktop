@@ -104,6 +104,7 @@ public:
     explicit IMFriend(gloox::RosterItem* pItem);
 
     IMContactId id;
+    std::string name;
     std::string alias;
     std::list<std::string> groups;
     int subscription;

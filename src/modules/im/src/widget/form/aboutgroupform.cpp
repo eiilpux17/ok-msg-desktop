@@ -21,8 +21,8 @@
 
 namespace module::im {
 
-AboutGroupForm::AboutGroupForm(const Group* group_, QWidget* parent)
-        : QWidget(parent), ui(new Ui::AboutGroupForm), group{group_} {
+AboutGroupForm::AboutGroupForm(Group* g , QWidget* parent)
+        : QWidget(parent), ui(new Ui::AboutGroupForm), group(g) {
     ui->setupUi(this);
 
     ui->id->setText(group->getIdAsString());
@@ -128,7 +128,8 @@ void AboutGroupForm::doNameChanged(const QString& text) {
 
 void AboutGroupForm::doAliasChanged(const QString& text) {
     qDebug() << __func__ << text;
-    auto profile = Nexus::getProfile();
+    group->setAlias(text);
+    auto* profile = Nexus::getProfile();
     profile->saveContactAlias(getId().toString(), text);
 }
 

@@ -852,7 +852,7 @@ void Widget::titleChangedByUser(const QString& title) {
 
 void Widget::onGroupPeerAudioPlaying(QString groupnumber, FriendId peerPk) {
     const GroupId& groupId = GroupId(groupnumber);
-    Group* g = GroupList::findGroup(groupId);
+    Group* g = Core::getInstance()->getGroupList().findGroup(groupId);
     if (!g) {
         qWarning() << "Can not find the group named:" << groupnumber;
         return;

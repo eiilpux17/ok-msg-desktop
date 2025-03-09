@@ -13,6 +13,7 @@
 #ifndef GROUP_MESSAGE_DISPATCHER_H
 #define GROUP_MESSAGE_DISPATCHER_H
 
+#include "groupid.h"
 #include "src/core/icoregroupmessagesender.h"
 #include "src/core/icoreidhandler.h"
 #include "src/model/imessagedispatcher.h"

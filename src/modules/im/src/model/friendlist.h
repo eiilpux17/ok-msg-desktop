@@ -37,9 +37,9 @@ public:
     explicit FriendList(QObject* parent = nullptr);
     ~FriendList() override;
 
-    Friend* addFriend(const FriendInfo& friendInfo);
-    Friend* findFriend(const ContactId& cId);
-    QList<Friend*> getAllFriends();
+    Friend* addFriend(Friend* f);
+    Friend* findFriend(const ContactId& cId) const;
+    QList<Friend*> getAllFriends() const;
     void removeFriend(const FriendId& friendPk, bool fake = false);
     void clear();
     QString decideNickname(const FriendId& friendPk, const QString& origName);

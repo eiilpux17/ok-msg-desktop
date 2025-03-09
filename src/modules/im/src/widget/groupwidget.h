@@ -45,7 +45,7 @@ public:
     void updateStatusLight(Status status, bool event) final override;
     void resetEventFlags() final override;
     QString getStatusString() const final override;
-    const Group* getGroup() const {
+    Group* getGroup() const {
         return group;
     };
 

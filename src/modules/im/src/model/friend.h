@@ -37,12 +37,14 @@ public:
         both   // 互为朋友
     };
 
-    Friend(const FriendId& friendPk,
+    explicit Friend(const FriendId& friendPk,
+            const QString& name = {},
+           const QString& alias = {},
            bool isFriend = false,
-           const QString& userAlias = {},
-           const QString& userName = {});
+           bool is_online = false,
+           const QStringList& groups = {});
 
-    ~Friend();
+    ~Friend() override;
 
     const FriendId& getId() const {
         return id;
@@ -85,6 +87,10 @@ private:
     bool hasNewEvents{};
     QString statusMessage;
     Status friendStatus;
+    QString alias;
+    bool is_friend;
+    bool is_online;
+    QStringList groups;
 
     /**
      * 朋友关系

@@ -53,8 +53,14 @@ class IMMeet;
 class IMHandler{
 public:
     virtual void onConnecting()= 0;
+    /**
+     * 已经连接
+     */
     virtual void onConnected()= 0;
     virtual void onDisconnected(int)= 0;
+    /**
+     *  已经加载朋友和群聊列表以及书签等
+    */
     virtual void onStarted()= 0;
     virtual void onStopped()= 0;
     virtual void onError(const std::string& msgId, const std::string& msg) = 0;
@@ -201,6 +207,7 @@ public:
     void sendChatState(const std::string& friendId, int state);
 
     void requestBookmarks();
+    void requestRoomInfo(const std::string& jid);
 
 private:
 

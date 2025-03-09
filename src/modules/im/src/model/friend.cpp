@@ -11,16 +11,17 @@
  */
 
 #include "friend.h"
-#include "src/lib/session/profile.h"
 #include "src/model/status.h"
-#include "src/widget/form/chatform.h"
+
 namespace module::im {
 
-Friend::Friend(const FriendId& friendPk,  //
-               bool isFriend,             //
-               const QString& userAlias,  //
-               const QString& userName)   //
-        : Contact(friendPk, userName, userAlias, false)
+Friend::Friend(const FriendId& friendPk,
+               const QString& name,
+               const QString& alias,
+               bool isFriend ,
+               bool is_online,
+               const QStringList& groups)   //
+        : Contact(friendPk, name, alias, false)
         , id{friendPk}
         , hasNewEvents{false}
         , friendStatus{Status::None}

@@ -19,14 +19,12 @@
 
 #include <vector>
 
-#include "src/model/FriendId.h"
-#include "src/model/groupid.h"
-
 #include "lib/messenger/IMMessage.h"
 #include "src/core/icoreidhandler.h"
 
 #include "MsgId.h"
-#include "contact.h"
+
+
 namespace module::im {
 
 // NOTE: This could be extended in the future to handle all text processing (see
@@ -96,39 +94,6 @@ struct GroupMessage : public Message {
                 .arg(nick)
                 .arg(resource);
     }
-};
-
-struct FriendInfo {
-    FriendId id;
-    QString alias;
-    bool is_friend;
-    bool online;
-    QStringList groups;
-    // explicit FriendInfo();
-    // explicit FriendInfo(const lib::messenger::IMFriend& aFriend);
-
-    [[nodiscard]] inline const FriendId& getId() const {
-        return id;
-    }
-
-    [[nodiscard]] inline const QString& getAlias() const {
-        return alias;
-    }
-
-    [[nodiscard]] inline bool isFriend() const {
-        return is_friend;
-    };
-
-    [[nodiscard]] inline QString toString() const {
-        return QString("{id: %1, alias: %2, is_friend:%3, online:%4, groups:[%5]}")  //
-                .arg(id.toString())
-                .arg(alias)
-                .arg(is_friend)
-                .arg(online)
-                .arg(groups.join(","));
-    }
-
-    friend QDebug& operator<<(QDebug& debug, const FriendInfo& f);
 };
 
 struct GroupInfo {

@@ -22,11 +22,8 @@
 #include "MessageSessionListWidget.h"
 #include "application.h"
 #include "base/SvgUtils.h"
-#include "base/utils.h"
-#include "contentdialogmanager.h"
 #include "contentlayout.h"
 #include "lib/storage/settings/style.h"
-#include "lib/storage/settings/translator.h"
 #include "src/core/corefile.h"
 #include "src/model/friend.h"
 #include "src/model/friendlist.h"
@@ -374,14 +371,15 @@ void ChatWidget::onGroupMessageReceived(GroupId groupId, GroupMessage msg) {
 
 void ChatWidget::onGroupPeerListChanged(QString groupnumber) {
     //  const GroupId &groupId = GroupList::id2Key(groupnumber);
-    //  Group *g = GroupList::findGroup(groupId);
+    //  Group *g = Core::getInstance()->getGroupList().findGroup(groupId);
     //  assert(g);
     //  g->regeneratePeerList();
 }
 
 void ChatWidget::onGroupPeerSizeChanged(QString groupnumber, const uint size) {
     const GroupId& groupId = GroupId(groupnumber);
-    Group* g = GroupList::findGroup(groupId);
+
+    Group* g = Core::getInstance()->getGroupList().findGroup(groupId);
     if (!g) {
         qWarning() << "Can not find the group named:" << groupnumber;
         return;
@@ -392,7 +390,7 @@ void ChatWidget::onGroupPeerSizeChanged(QString groupnumber, const uint size) {
 void ChatWidget::onGroupPeerNameChanged(QString groupnumber, const FriendId& peerPk,
                                         const QString& newName) {
     const GroupId& groupId = GroupId(groupnumber);
-    Group* g = GroupList::findGroup(groupId);
+    Group* g = Core::getInstance()->getGroupList().findGroup(groupId);
     if (!g) {
         qWarning() << "Can not find the group named:" << groupnumber;
         return;
@@ -403,7 +401,7 @@ void ChatWidget::onGroupPeerNameChanged(QString groupnumber, const FriendId& pee
 
 void ChatWidget::onGroupPeerStatusChanged(const QString& groupnumber, const GroupOccupant& go) {
     const GroupId& groupId = GroupId(groupnumber);
-    Group* g = GroupList::findGroup(groupId);
+    Group* g = Core::getInstance()->getGroupList().findGroup(groupId);
     if (!g) {
         qWarning() << "Can not find group named:" << groupId.username;
         return;
@@ -416,7 +414,7 @@ void ChatWidget::onGroupTitleChanged(QString groupnumber, const QString& author,
                                      const QString& title) {
     qDebug() << __func__ << "group" << groupnumber << title;
     const GroupId& groupId = GroupId(groupnumber);
-    Group* g = GroupList::findGroup(groupId);
+    Group* g = Core::getInstance()->getGroupList().findGroup(groupId);
     if (!g) {
         qWarning() << "Can not find group" << groupnumber;
         return;

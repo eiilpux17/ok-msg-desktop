@@ -56,11 +56,11 @@ public:
     void reloadTheme();
     void retranslateUi();
 
-    void showFriendDetails(const Friend* f);
-    void removeFriendDetails(const Friend* f);
+    void showFriendDetails(  Friend* f);
+    void removeFriendDetails(  Friend* f);
 
-    void showGroupDetails(const Group* g);
-    void removeGroupDetails(const Group* g);
+    void showGroupDetails(  Group* g);
+    void removeGroupDetails(  Group* g);
     void removeAllDetails();
 
 public slots:
@@ -75,8 +75,8 @@ public slots:
 
     void onCoreChanged(Core* core);
     void onCoreStarted();
-    void onFriendAdded(const FriendInfo& frnd);
-    void onFriendRemoved(const Friend* f);
+    void onFriendAdded(const Friend* frnd);
+    void onFriendRemoved(  Friend* f);
     void onFriendNickChanged(const FriendId& friendPk, const QString& nick);
 
     void onFriendStatusChanged(const FriendId& friendPk, Status status);
@@ -97,7 +97,7 @@ public slots:
     // 朋友请求拒绝
     void do_friendRequestReject(const FriendId& friendPk);
 
-    void onGroupJoined(const GroupId& groupId, const QString& name);
+    void onGroupJoined(Group* g);
     void onGroupInfoReceived(const GroupId& groupId, const GroupInfo& info);
     void onGroupInviteReceived(const GroupInvite& inviteInfo);
 
@@ -124,8 +124,8 @@ private:
     Core* core;
     ContactListWidget* contactListWidget;
 
-    std::unique_ptr<AboutFriendForm> friendAbout;
-    std::unique_ptr<AboutGroupForm> groupAbout;
+    AboutFriendForm* friendAbout;
+    AboutGroupForm* groupAbout;
 
     QWidget* contentWidget;
     ContentLayout* contentLayout;

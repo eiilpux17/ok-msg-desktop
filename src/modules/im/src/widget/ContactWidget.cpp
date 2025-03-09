@@ -16,8 +16,6 @@
 #include "Bus.h"
 #include "ContactListWidget.h"
 #include "application.h"
-#include "lib/storage/settings/translator.h"
-#include "src/lib/session/profile.h"
 #include "src/lib/storage/settings/style.h"
 #include "src/model/aboutfriend.h"
 #include "src/nexus.h"
@@ -35,33 +33,41 @@
 
 #include <QLabel>
 #include <QStyle>
+
+
 namespace module::im {
+
 ContactWidget::ContactWidget(QWidget* parent)
-        : MainLayout(parent), ui(new Ui::ContactWidget), addForm(nullptr) {
+        : MainLayout(parent)
+        , ui(new Ui::ContactWidget)
+        , addForm(nullptr)
+        , friendAbout(nullptr)
+        , groupAbout(nullptr) {
+
     ui->setupUi(this);
 
     layout()->setMargin(0);
     layout()->setSpacing(0);
 
 
-    // 右侧内容容器
+            // 右侧内容容器
     contentWidget = new QWidget(this);
     contentWidget->setObjectName("ContactContentWidget");
     contentWidget->setContentsMargins(8, 8, 8, 8);
     contentLayout = new ContentLayout(contentWidget);
 
-    // 左侧朋友列表
+            // 左侧朋友列表
     contactListWidget = new ContactListWidget(this, false);
     contactListWidget->setObjectName("contactListWidget");
     contactListWidget->layout()->setAlignment(Qt::AlignTop | Qt::AlignVCenter);
     ui->friendList->setWidget(contactListWidget);
 
-    // 点击事件 - 打开联系人详情
-    connect(contactListWidget, &ContactListWidget::friendClicked, [&](const FriendWidget* w) {
+            // 点击事件 - 打开联系人详情
+    connect(contactListWidget, &ContactListWidget::friendClicked, [&](FriendWidget* w) {
         showFriendDetails(w->getFriend());
     });
 
-    connect(contactListWidget, &ContactListWidget::groupClicked, [&](const GroupWidget* w) {
+    connect(contactListWidget, &ContactListWidget::groupClicked, [&](GroupWidget* w) {
         showGroupDetails(w->getGroup());
     });
 
@@ -112,8 +118,8 @@ AddFriendForm* ContactWidget::makeAddForm() {
     if (!addForm) {
         addForm = new AddFriendForm(this);
 
-        //        connect(addForm, &AddFriendForm::friendRequestsSeen, this,
-        //                &ContactWidget::friendRequestsUpdate);
+                //        connect(addForm, &AddFriendForm::friendRequestsSeen, this,
+                //                &ContactWidget::friendRequestsUpdate);
         connect(addForm, &AddFriendForm::friendRequested, this, &ContactWidget::do_friendRequest);
         connect(addForm,
                 &AddFriendForm::friendRequestAccepted,
@@ -147,10 +153,9 @@ void ContactWidget::onCoreChanged(Core* core_) {
 }
 
 void ContactWidget::onCoreStarted() {
-    std::list<FriendInfo> fl;
-    core->loadFriendList(fl);
-    for (auto& friendInfo : fl) {
-        contactListWidget->addFriend(friendInfo.getId());
+    auto& fl = core->loadFriendList();
+    for (auto* friendInfo : fl.getAllFriends()) {
+        contactListWidget->addFriend(friendInfo->getId());
     }
     core->loadGroupList();
 }
@@ -160,7 +165,7 @@ void ContactWidget::connectToCore(Core* core) {
 
     connect(core, &Core::started, this, &ContactWidget::onCoreStarted);
 
-    // 好友请求
+            // 好友请求
     connect(core, &Core::friendRequestReceived, this, &ContactWidget::onFriendRequest);
     connect(core, &Core::friendAdded, this, &ContactWidget::onFriendAdded);
     connect(core, &Core::friendNicknameChanged, this, &ContactWidget::onFriendNickChanged);
@@ -185,16 +190,16 @@ void ContactWidget::connectToCore(Core* core) {
     connect(core, &Core::groupPeerStatusChanged, this, &ContactWidget::onGroupPeerStatusChanged);
 }
 
-void ContactWidget::onFriendAdded(const FriendInfo& frnd) {
-    qDebug() << __func__ << "friend:" << frnd.getId().toString();
-    if (!frnd.getId().isValid()) {
-        qWarning() << "Invalid friend id:" << frnd.getId();
+void ContactWidget::onFriendAdded(const Friend* frnd) {
+    qDebug() << __func__ << "friend:" << frnd->getId().toString();
+    if (!frnd->getId().isValid()) {
+        qWarning() << "Invalid friend id:" << frnd->getId();
         return;
     }
-    contactListWidget->addFriend(frnd.getId());
+    contactListWidget->addFriend(frnd->getId());
 }
 
-void ContactWidget::onFriendRemoved(const Friend* f) {
+void ContactWidget::onFriendRemoved(Friend* f) {
     removeFriendDetails(f);
 }
 
@@ -253,10 +258,9 @@ void ContactWidget::do_friendRequestReject(const FriendId& friendPk) {
     core->rejectFriendRequest(friendPk);
 }
 
-void ContactWidget::onGroupJoined(const GroupId& groupId, const QString& name) {
-    qDebug() << __func__ << groupId.toString() << name;
-    auto group = contactListWidget->addGroup(groupId, name);
-    qDebug() << "Created group:" << group << "=>" << groupId.toString();
+void ContactWidget::onGroupJoined(Group* g) {
+    qDebug() << __func__ << g->getId().toString() << g->getName();
+    contactListWidget->addGroup(g->getId(), g->getName());
 }
 
 void ContactWidget::onGroupInfoReceived(const GroupId& groupId, const GroupInfo& info) {
@@ -268,18 +272,18 @@ void ContactWidget::onGroupInviteReceived(const GroupInvite& inviteInfo) {
     auto confType = inviteInfo.getType();
     if (confType == ConferenceType::TEXT || confType == ConferenceType::AV) {
         if (false
-            // settings.getAutoGroupInvite(f->getPublicKey())
-        ) {
+                   // settings.getAutoGroupInvite(f->getPublicKey())
+            ) {
             onGroupInviteAccepted(inviteInfo);
         } else {
             //      if (!groupInviteForm->addGroupInvite(inviteInfo)) {
             //        return;
             //      }
 
-            //      ++unreadGroupInvites;
-            //      groupInvitesUpdate();
-            //      Widget::getInstance()->newMessageAlert(window(), isActiveWindow(), true,
-            //                                             true);
+        //      ++unreadGroupInvites;
+        //      groupInvitesUpdate();
+        //      Widget::getInstance()->newMessageAlert(window(), isActiveWindow(), true,
+        //                                             true);
 
 #if DESKTOP_NOTIFICATIONS
             if (settings.getNotifyHide()) {
@@ -310,14 +314,14 @@ void ContactWidget::onGroupInviteAccepted(const GroupInvite& inviteInfo) {
 
 void ContactWidget::onGroupPeerListChanged(QString groupnumber) {
     const GroupId& groupId = GroupId(groupnumber);
-    Group* g = GroupList::findGroup(groupId);
+    Group* g = Core::getInstance()->getGroupList().findGroup(groupId);
     assert(g);
     // g->regeneratePeerList();
 }
 
 void ContactWidget::onGroupPeerSizeChanged(QString groupnumber, const uint size) {
     const GroupId& groupId = GroupId(groupnumber);
-    Group* g = GroupList::findGroup(groupId);
+    Group* g = Core::getInstance()->getGroupList().findGroup(groupId);
     if (!g) {
         qWarning() << "Can not find the group named:" << groupnumber;
         return;
@@ -330,7 +334,7 @@ void ContactWidget::onGroupPeerNameChanged(QString groupnumber,
                                            const FriendId& peerPk,
                                            const QString& newName) {
     const GroupId& groupId = GroupId(groupnumber);
-    Group* g = GroupList::findGroup(groupId);
+    Group* g = Core::getInstance()->getGroupList().findGroup(groupId);
     if (!g) {
         qWarning() << "Can not find the group named:" << groupnumber;
         return;
@@ -342,7 +346,7 @@ void ContactWidget::onGroupPeerNameChanged(QString groupnumber,
 void ContactWidget::onGroupPeerStatusChanged(const QString& groupnumber, const GroupOccupant& go) {
     qDebug() << __func__ << "group" << groupnumber << "occupant:" << go.nick;
 
-    Group* g = GroupList::findGroup(GroupId(groupnumber));
+    Group* g = Core::getInstance()->getGroupList().findGroup(GroupId(groupnumber));
     if (!g) {
         qWarning() << "Can not find group named:" << groupnumber;
         return;
@@ -352,7 +356,7 @@ void ContactWidget::onGroupPeerStatusChanged(const QString& groupnumber, const G
 }
 
 void ContactWidget::onGroupSubjectChanged(const GroupId& groupId, const QString& subject) {
-    Group* g = GroupList::findGroup(groupId);
+    Group* g = Core::getInstance()->getGroupList().findGroup(groupId);
     if (!g) {
         qWarning() << "Can not find group" << groupId;
         return;
@@ -391,35 +395,35 @@ void ContactWidget::onGroupClicked() {
     //  if (!groupInviteForm) {
     //    groupInviteForm = new GroupInviteForm;
 
-    //    connect(groupInviteForm, &GroupInviteForm::groupCreate,
-    //            core, &Core::createGroup);
-    //  }
-    //  groupInviteForm->show(contentLayout.get());
-    //    setWindowTitle(fromDialogType(DialogType::GroupDialog));
-    //    setActiveToolMenuButton(ActiveToolMenuButton::GroupButton);
+            //    connect(groupInviteForm, &GroupInviteForm::groupCreate,
+            //            core, &Core::createGroup);
+            //  }
+            //  groupInviteForm->show(contentLayout);
+            //    setWindowTitle(fromDialogType(DialogType::GroupDialog));
+            //    setActiveToolMenuButton(ActiveToolMenuButton::GroupButton);
 }
 
 void ContactWidget::friendRequestsUpdate() {
     //    auto& settings = Nexus::getProfile()->getSettings();
 
-    //    unsigned int unreadFriendRequests = settings.getUnreadFriendRequests();
-    //    qDebug() << __func__ << "unreadFriendRequests" << unreadFriendRequests;
-    //  if (unreadFriendRequests == 0) {
-    //    delete friendRequestsButton;
-    //    friendRequestsButton = nullptr;
-    //  } else if (!friendRequestsButton) {
-    //    friendRequestsButton = new QPushButton(this);
-    //    friendRequestsButton->setObjectName("green");
-    //    connect(friendRequestsButton, &QPushButton::released, [this]() {
-    ////    onAddClicked();
-    //      addForm->setMode(AddFriendForm::Mode::FriendRequest);
-    //    });
-    //    ui->statusLayout->insertWidget(2, friendRequestsButton);
-    //  }
+            //    unsigned int unreadFriendRequests = settings.getUnreadFriendRequests();
+            //    qDebug() << __func__ << "unreadFriendRequests" << unreadFriendRequests;
+            //  if (unreadFriendRequests == 0) {
+            //    delete friendRequestsButton;
+            //    friendRequestsButton = nullptr;
+            //  } else if (!friendRequestsButton) {
+            //    friendRequestsButton = new QPushButton(this);
+            //    friendRequestsButton->setObjectName("green");
+            //    connect(friendRequestsButton, &QPushButton::released, [this]() {
+            ////    onAddClicked();
+            //      addForm->setMode(AddFriendForm::Mode::FriendRequest);
+            //    });
+            //    ui->statusLayout->insertWidget(2, friendRequestsButton);
+            //  }
 
-    //  if (friendRequestsButton) {
-    //    friendRequestsButton->setText(tr("%n New IMFriend Request(s)", "", unreadFriendRequests));
-    //  }
+            //  if (friendRequestsButton) {
+            //    friendRequestsButton->setText(tr("%n New IMFriend Request(s)", "", unreadFriendRequests));
+            //  }
 }
 void ContactWidget::retranslateUi() {
     ui->searchContact->setPlaceholderText(tr("Search Contacts"));
@@ -431,50 +435,54 @@ void ContactWidget::searchContacts() {
     contactListWidget->search(text);
 }
 
-void ContactWidget::showFriendDetails(const Friend* f) {
+void ContactWidget::showFriendDetails(  Friend* f) {
     qDebug() << __func__ << f->getIdAsString();
     removeAllDetails();
 
-    friendAbout = std::make_unique<AboutFriendForm>(f);
-    //    connect(about.get(), &AboutFriendForm::histroyRemoved, this,
+    friendAbout = new AboutFriendForm(f);
+    //    connect(about, &AboutFriendForm::histroyRemoved, this,
     //    &FriendWidget::friendHistoryRemoved);
-    contentLayout->addWidget(friendAbout.get());
-    contentLayout->setCurrentWidget(friendAbout.get());
+    contentLayout->addWidget(friendAbout);
+    contentLayout->setCurrentWidget(friendAbout);
 }
 
-void ContactWidget::removeFriendDetails(const Friend* f) {
+void ContactWidget::removeFriendDetails(  Friend* f) {
     if (friendAbout && friendAbout->getId() == f->getId()) {
-        contentLayout->removeWidget(friendAbout.get());
-        friendAbout.reset();
+        contentLayout->removeWidget(friendAbout);
+        friendAbout->deleteLater();
+        friendAbout=nullptr;
     }
 }
 
-void ContactWidget::showGroupDetails(const Group* g) {
+void ContactWidget::showGroupDetails(  Group* g) {
     qDebug() << __func__ << g->getIdAsString();
 
     removeAllDetails();
 
-    groupAbout = std::make_unique<AboutGroupForm>(g);
-    contentLayout->addWidget(groupAbout.get());
-    contentLayout->setCurrentWidget(groupAbout.get());
+    groupAbout = new AboutGroupForm(g, this);
+    contentLayout->addWidget(groupAbout );
+    contentLayout->setCurrentWidget(groupAbout);
 }
 
-void ContactWidget::removeGroupDetails(const Group* g) {
+void ContactWidget::removeGroupDetails(  Group* g) {
     if (groupAbout && groupAbout->getId() == g->getId()) {
-        contentLayout->removeWidget(groupAbout.get());
-        groupAbout.reset();
+        contentLayout->removeWidget(groupAbout);
+        groupAbout->deleteLater();
+        groupAbout=nullptr;
     }
 }
 
 void ContactWidget::removeAllDetails() {
     if (groupAbout) {
-        contentLayout->removeWidget(groupAbout.get());
-        groupAbout.reset();
+        contentLayout->removeWidget(groupAbout);
+        groupAbout->deleteLater();
+         groupAbout=nullptr;
     }
 
     if (friendAbout) {
-        contentLayout->removeWidget(friendAbout.get());
-        friendAbout.reset();
+        contentLayout->removeWidget(friendAbout);
+        friendAbout->deleteLater();
+        friendAbout=nullptr;
     }
 }
 

@@ -59,6 +59,7 @@ public:
 
     GroupWidget* addGroup(const GroupId& groupId, const QString& groupName = "");
     GroupWidget* getGroup(const GroupId& id);
+
     void removeGroup(const GroupId& groupId);
     void setGroupTitle(const GroupId& groupId, const QString& author, const QString& title);
     void setGroupInfo(const GroupId& groupId, const GroupInfo& info);
@@ -94,7 +95,7 @@ private:
 signals:
     void deleteGroupWidget(const FriendId& friendPk);
     void friendClicked(FriendWidget* w);
-    void groupClicked(const GroupWidget* w);
+    void groupClicked(GroupWidget* w);
 
 public slots:
     void renameGroupWidget(GroupWidget* groupWidget, const QString& newName);
@@ -105,6 +106,7 @@ public slots:
     void slot_groupClicked(GenericChatroomWidget*);
     void do_toShowDetails(const ContactId& cid);
     void do_groupDeleted(const ContactId& cid);
+    void init();
 
 private slots:
     void cycleContacts(bool forward);

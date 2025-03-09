@@ -272,8 +272,7 @@ void IM::stop() {
 
 void IM::onDisconnect(gloox::ConnectionError e) {
     qDebug() << __func__ << "error:" << e;
-
-    isConnected = false;
+    is_connected = false;
     for (auto h : imHandlers) {
         h->onDisconnected((int)e);
     }
@@ -281,11 +280,11 @@ void IM::onDisconnect(gloox::ConnectionError e) {
 
 void IM::onConnect() {
     qDebug() << __func__ << "connected";
-    if (isConnected) {
+    if (is_connected) {
         return;
     }
 
-    isConnected = true;
+    is_connected = true;
     for (auto* h : imHandlers) {
         h->onConnected();
     }
@@ -311,6 +310,7 @@ void IM::onConnect() {
     t->addChild(gloox::ExtDisco::newRequest());
     _client->send(t);
 
+    //联系人列表
     auto rosterManager = _client->rosterManager();
     if (!rosterManager) {
         rosterManager = enableRosterManager();
@@ -318,9 +318,7 @@ void IM::onConnect() {
 
     requestBookmarks();
 
-    for (auto* h : imHandlers) {
-         h->onStarted();
-    }
+
 
 }
 
@@ -1057,6 +1055,12 @@ void IM::createRoom(const gloox::JID& jid, const std::string& password) {
         room->setPassword(password);
     }
 
+    auto nick = (getNickname());
+
+    //Set roles
+    room->setRole(nick, gloox::MUCRoomRole::RoleModerator);
+    //Set affiliations
+    room->setAffiliation(nick, gloox::MUCRoomAffiliation::AffiliationAdmin, "");
     room->instantRoom(gloox::MUCOperation::CreateInstantRoom);
     cacheJoinRoom(jid.bare(), jid.resource());
 
@@ -1066,7 +1070,7 @@ void IM::createRoom(const gloox::JID& jid, const std::string& password) {
     item.name = jid.resource();
     item.jid = room->jid().full();
     item.autojoin = true;
-    item.nick = (getNickname());
+    item.nick = nick;
 
     // 添加到书签列表
     mConferenceList.emplace_back(item);
@@ -1095,11 +1099,20 @@ const IMRoomInfo* IM::findRoom(const std::string& groupId) const {
     auto it = m_roomMap.find(groupId);
     if (it == m_roomMap.end()) {
         qWarning() << "Unable to find room!";
-        return {};
+        return nullptr;
     }
     return it->second;
 }
 
+void IM::requestRoomInfo(const std::string &jid)
+{
+    auto it = m_roomMap.find(jid);
+    if (it == m_roomMap.end()) {
+        qWarning() << "Unable to find room!";
+        return;
+    }
+    it->second->room->getRoomInfo();
+}
 
 void IM::cacheJoinRoom(const std::string& jid, const std::string& name) {
     qDebug() << __func__ << jid.c_str() << name.c_str();
@@ -1363,8 +1376,16 @@ void IM::handleBookmarks(const gloox::BookmarkList& bList,    //
     }
 
     mBookmarkList = bList;
-    for (auto& c : mBookmarkList) {
-        qDebug() << "Bookmark name:" << c.name.c_str() << "url:" << c.url.c_str();
+    // for (auto& c : mBookmarkList) {
+        // qDebug() << "Bookmark name:" << c.name.c_str() << "url:" << c.url.c_str();
+    // }
+
+    // std::lock_guard<std::mutex> lock(mutex);
+    if(!is_started){
+        for (auto* h : imHandlers) {
+            h->onStarted();
+        }
+        is_started = true;
     }
 }
 
@@ -1889,7 +1910,6 @@ void IM::loadGroupList() {
      * openfire 服务器暂时不支持
      * m_nativeBookmark->retrievesAll();
      */
-
     loadRosterInfo();
 }
 

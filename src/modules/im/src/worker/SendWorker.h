@@ -28,9 +28,9 @@ namespace module::im {
 class SendWorker : public QObject {
     Q_OBJECT
 public:
-    SendWorker(const FriendId& m_friend);
-    SendWorker(const GroupId& m_group);
-    ~SendWorker();
+    explicit SendWorker(const FriendId& m_friend);
+    explicit SendWorker(const GroupId& m_group);
+    ~SendWorker() override;
 
     void clearHistory();
 

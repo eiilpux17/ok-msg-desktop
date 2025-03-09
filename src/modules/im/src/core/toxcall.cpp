@@ -13,6 +13,7 @@
 #include "toxcall.h"
 
 #include <QTimer>
+#include <QDebug>
 
 #include "lib/audio/audio.h"
 #include "src/core/coreav.h"
