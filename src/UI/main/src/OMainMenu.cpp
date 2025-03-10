@@ -26,7 +26,6 @@
 #include "base/files.h"
 #include "base/images.h"
 #include "base/resources.h"
-#include "lib/storage/settings/translator.h"
 #include "modules/im/src/nexus.h"
 #include "modules/document/src/Document.h"
 #include "modules/classroom/src/Classroom.h"

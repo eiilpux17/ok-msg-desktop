@@ -106,9 +106,9 @@ bool GenericChatForm::shouldRenderDate(ChatLogIdx idxToRender, const IChatLog& c
 }
 
 IChatItem::Ptr GenericChatForm::dateMessageForItem(const ChatLogItem& item) {
-    auto& s = lib::settings::OkSettings::getInstance();
+    auto* s = lib::settings::OkSettings::getInstance();
     const auto date = item.getTimestamp().date();
-    auto dateText = date.toString(s.getDateFormat());
+    auto dateText = date.toString(s->getDateFormat());
     return ChatMessage::createChatInfoMessage(dateText, ChatMessage::INFO, QDateTime());
 }
 
@@ -449,8 +449,8 @@ void GenericChatForm::addSystemInfoMessage(const QString& message,
 }
 
 void GenericChatForm::addSystemDateMessage(const QDate& date) {
-    auto& s = lib::settings::OkSettings::getInstance();
-    QString dateText = date.toString(s.getDateFormat());
+    auto* s = lib::settings::OkSettings::getInstance();
+    QString dateText = date.toString(s->getDateFormat());
     insertChatMessage(ChatMessage::createChatInfoMessage(dateText, ChatMessage::INFO, QDateTime()));
 }
 

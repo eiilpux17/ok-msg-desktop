@@ -42,23 +42,24 @@
 namespace module::im {
 
 CompatibleRecursiveMutex Settings::bigLock;
-QThread* Settings::settingsThread{nullptr};
+
+// QThread* Settings::settingsThread{nullptr};
 
 Settings::Settings(QSettings* s_) : s(s_), loaded(false) {
-    settingsThread = new QThread();
-    settingsThread->setObjectName("IM-Settings");
-    settingsThread->start(QThread::LowPriority);
-    moveToThread(settingsThread);
+    // settingsThread = new QThread();
+    // settingsThread->setObjectName("IM-Settings");
+    // settingsThread->start(QThread::LowPriority);
+    // moveToThread(settingsThread);
 
     loadGlobal();
 }
 
 Settings::~Settings() {
     sync();
-    settingsThread->exit(0);
-    settingsThread->wait();
-    delete s;
-    delete settingsThread;
+    // settingsThread->exit(0);
+    // settingsThread->wait();
+    // delete s;
+    // delete settingsThread;
 }
 
 void Settings::destroyInstance() {
@@ -388,8 +389,8 @@ void Settings::resetToDefault() {
  * @brief Asynchronous, saves the global settings.
  */
 void Settings::saveGlobal() {
-    if (QThread::currentThread() != settingsThread)
-        return (void)QMetaObject::invokeMethod(this, "saveGlobal");
+    // if (QThread::currentThread() != settingsThread)
+        // return (void)QMetaObject::invokeMethod(this, "saveGlobal");
 
     qDebug() << __func__;
 
@@ -691,17 +692,17 @@ void Settings::setGroupAlwaysNotify(bool newValue) {
 
 QString Settings::getTranslation() const {
     QMutexLocker locker{&bigLock};
-    auto& s = lib::settings::OkSettings::getInstance();
-    return s.getTranslation();
+    auto* s = lib::settings::OkSettings::getInstance();
+    return s->getTranslation();
 }
 
 void Settings::setTranslation(const QString& newValue) {
     QMutexLocker locker{&bigLock};
-    auto& s = lib::settings::OkSettings::getInstance();
-    auto translation = s.getTranslation();
+    auto* s = lib::settings::OkSettings::getInstance();
+    auto translation = s->getTranslation();
     if (newValue != translation) {
         translation = newValue;
-        s.translationChanged(translation);
+        s->translationChanged(translation);
     }
 }
 
@@ -1456,10 +1457,10 @@ void Settings::createSettingsDir() {
  * @brief Waits for all asynchronous operations to complete
  */
 void Settings::sync() {
-    if (QThread::currentThread() != settingsThread) {
-        QMetaObject::invokeMethod(this, "sync", Qt::BlockingQueuedConnection);
-        return;
-    }
+    // if (QThread::currentThread() != settingsThread) {
+        // QMetaObject::invokeMethod(this, "sync", Qt::BlockingQueuedConnection);
+        // return;
+    // }
 
     QMutexLocker locker{&bigLock};
     qApp->processEvents();

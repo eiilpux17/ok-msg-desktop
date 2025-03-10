@@ -25,8 +25,8 @@ Backend::Backend(const QString& baseUrl, const QString& authorization, QObject* 
     setHeader("Authorization", authorization);
     setHeader("Origin", baseUrl);
 
-    auto& s = lib::settings::OkSettings::getInstance();
-    QString trans = s.getTranslation();
+    auto* s = lib::settings::OkSettings::getInstance();
+    QString trans = s->getTranslation();
     setHeader("Accept-Language", trans);
 }
 

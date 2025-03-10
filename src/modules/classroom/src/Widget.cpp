@@ -87,7 +87,7 @@ void Widget::reloadTheme() {
 void Widget::doStart() {}
 
 void Widget::initTranslate() {
-    QString locale = lib::settings::OkSettings::getInstance().getTranslation();
+    QString locale = lib::settings::OkSettings::getInstance()->getTranslation();
     settings::Translator::translate(OK_Classroom_MODULE, locale);
 
     retranslateUi();

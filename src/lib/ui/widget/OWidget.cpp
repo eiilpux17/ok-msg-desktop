@@ -20,32 +20,12 @@
 namespace lib::ui {
 
 OWidget::OWidget(QWidget* parent) : QWidget(parent) {
-     setAutoFillBackground(true);
-
-    //   QPalette palette = this->palette();
-
-    //   QBrush brush;
-    //   brush.setColor(QColor(83,83,83, 20));
-    //   palette.setBrush(QPalette::Background, brush);
-
-    //   setPalette(palette);
-    //   setAutoFillBackground(true);
-
-    //    setAttribute(Qt::WA_TranslucentBackground); //设置窗口透明
-
-    //   QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
-    //   effect->setOffset(4,4);
-    //   effect->setColor(QColor(0,0,0,50));
-    //   effect->setBlurRadius(10);
-
-    //   setGraphicsEffect(effect);
+    //设置窗口透明,基于父类的背景。
+    setAttribute(Qt::WA_TranslucentBackground);
 }
 
 OWidget::~OWidget() {
 
 }
-
-// void OWidget::paintEvent(QPaintEvent* event) {}
-
 
 }  // namespace UI

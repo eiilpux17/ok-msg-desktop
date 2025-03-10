@@ -63,7 +63,7 @@ AVForm::AVForm( QWidget* parent)
         connect(qScreen, &QScreen::geometryChanged, this, &AVForm::rescanDevices);
     }
 
-    auto s = &lib::settings::OkSettings::getInstance();
+    auto s = lib::settings::OkSettings::getInstance();
     audioSettings = s;
     videoSettings = s;
     audio = std::unique_ptr<lib::audio::IAudioControl>(lib::audio::Audio::makeAudio(*s));

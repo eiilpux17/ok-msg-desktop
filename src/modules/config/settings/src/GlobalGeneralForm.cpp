@@ -37,9 +37,9 @@ GeneralForm::GeneralForm(QWidget* parent)
     const ok::base::RecursiveSignalBlocker signalBlocker(this);
 
     // 先获取当前语言
-    auto& s = lib::settings::OkSettings::getInstance();
+    auto* s = lib::settings::OkSettings::getInstance();
 
-    const QString& locale0 = s.getTranslation();
+    const QString& locale0 = s->getTranslation();
     settings::Translator::translate(OK_Config_MODULE, locale0);
     retranslateUi();
 
@@ -53,11 +53,11 @@ GeneralForm::GeneralForm(QWidget* parent)
     // 获取复选框状态
     //  bodyUI->checkUpdates->setChecked(s.getCheckUpdates());
 
-    auto& okSettings = lib::settings::OkSettings::getInstance();
+    auto* okSettings = lib::settings::OkSettings::getInstance();
 
-    for (int i = 0; i < okSettings.getLocales().size(); ++i) {
+    for (int i = 0; i < okSettings->getLocales().size(); ++i) {
         QString langName;
-        auto& locale = okSettings.getLocales().at(i);
+        auto& locale = okSettings->getLocales().at(i);
         if (locale.startsWith(QLatin1String("eo")))  // QTBUG-57802
             langName = QLocale::languageToString(QLocale::Esperanto);
         else if (locale.startsWith(QLatin1String("jbo")))
@@ -73,12 +73,12 @@ GeneralForm::GeneralForm(QWidget* parent)
     }
     // 当前语言下拉框状态
     ui->transComboBox->setCurrentIndex(
-            okSettings.getLocales().indexOf(okSettings.getTranslation()));
+            okSettings->getLocales().indexOf(okSettings->getTranslation()));
 
     // autorun
-    ui->cbAutorun->setChecked(okSettings.getAutorun());
+    ui->cbAutorun->setChecked(okSettings->getAutorun());
     // 系统图标
-    ui->showSystemTray->setChecked(okSettings.getShowSystemTray());
+    ui->showSystemTray->setChecked(okSettings->getShowSystemTray());
 
     // 主题
     //    bodyUI->styleBrowser->addItem(tr("None"));
@@ -92,7 +92,7 @@ GeneralForm::GeneralForm(QWidget* parent)
 
     for (const QString& color : lib::settings::Style::getThemeColorNames())
         ui->themeColorCBox->addItem(color);
-    ui->themeColorCBox->setCurrentIndex((int)s.getThemeColor());
+    ui->themeColorCBox->setCurrentIndex((int)s->getThemeColor());
 
     QLocale ql;
     QStringList timeFormats;
@@ -106,7 +106,7 @@ GeneralForm::GeneralForm(QWidget* parent)
     QRegularExpression re(QString("^[^\\n]{0,%0}$").arg(MAX_FORMAT_LENGTH));
     QRegularExpressionValidator* validator = new QRegularExpressionValidator(re, this);
 
-    QString timeFormat = s.getTimestampFormat();
+    QString timeFormat = s->getTimestampFormat();
 
     if (!re.match(timeFormat).hasMatch()) timeFormat = timeFormats[0];
 
@@ -126,7 +126,7 @@ GeneralForm::GeneralForm(QWidget* parent)
     dateFormats.removeDuplicates();
     ui->dateFormats->addItems(dateFormats);
 
-    QString dateFormat = s.getDateFormat();
+    QString dateFormat = s->getDateFormat();
     if (!re.match(dateFormat).hasMatch()) dateFormat = dateFormats[0];
 
     ui->dateFormats->setCurrentText(dateFormat);
@@ -139,19 +139,19 @@ GeneralForm::~GeneralForm() {
 }
 
 void GeneralForm::on_transComboBox_currentIndexChanged(int index) {
-    auto& s = lib::settings::OkSettings::getInstance();
-    const QString& locale = s.getLocales().at(index);
-    s.setTranslation(locale);
-    s.saveGlobal();
+    auto* s = lib::settings::OkSettings::getInstance();
+    const QString& locale = s->getLocales().at(index);
+    s->setTranslation(locale);
+    s->saveGlobal();
     emit onLanguageChanged(locale);
     emit ok::Application::Instance() -> bus()->languageChanged(locale);
     settings::Translator::translate(OK_Config_MODULE, locale);
 }
 
 void GeneralForm::on_cbAutorun_stateChanged() {
-    auto& s = lib::settings::OkSettings::getInstance();
-    s.setAutorun(ui->cbAutorun->isChecked());
-    s.saveGlobal();
+    auto* s = lib::settings::OkSettings::getInstance();
+    s->setAutorun(ui->cbAutorun->isChecked());
+    s->saveGlobal();
 }
 
 void GeneralForm::on_cbSpellChecking_stateChanged() {
@@ -159,27 +159,27 @@ void GeneralForm::on_cbSpellChecking_stateChanged() {
 }
 
 void GeneralForm::on_showSystemTray_stateChanged() {
-    auto& s = lib::settings::OkSettings::getInstance();
-    s.setShowSystemTray(ui->showSystemTray->isChecked());
-    s.saveGlobal();
+    auto* s = lib::settings::OkSettings::getInstance();
+    s->setShowSystemTray(ui->showSystemTray->isChecked());
+    s->saveGlobal();
 }
 
 void GeneralForm::on_startInTray_stateChanged() {
-    auto& s = lib::settings::OkSettings::getInstance();
-    s.setAutostartInTray(ui->startInTray->isChecked());
-    s.saveGlobal();
+    auto* s = lib::settings::OkSettings::getInstance();
+    s->setAutostartInTray(ui->startInTray->isChecked());
+    s->saveGlobal();
 }
 
 void GeneralForm::on_closeToTray_stateChanged() {
-    auto& s = lib::settings::OkSettings::getInstance();
-    s.setCloseToTray(ui->closeToTray->isChecked());
-    s.saveGlobal();
+    auto* s = lib::settings::OkSettings::getInstance();
+    s->setCloseToTray(ui->closeToTray->isChecked());
+    s->saveGlobal();
 }
 
 void GeneralForm::on_minimizeToTray_stateChanged() {
-    auto& s = lib::settings::OkSettings::getInstance();
-    s.setMinimizeToTray(ui->minimizeToTray->isChecked());
-    s.saveGlobal();
+    auto* s = lib::settings::OkSettings::getInstance();
+    s->setMinimizeToTray(ui->minimizeToTray->isChecked());
+    s->saveGlobal();
 }
 
 void GeneralForm::on_checkUpdates_stateChanged() {
@@ -207,7 +207,7 @@ void GeneralForm::on_dateFormats_editTextChanged(const QString& format) {
 void GeneralForm::on_themeColorCBox_currentIndexChanged(int) {
     int index = ui->themeColorCBox->currentIndex();
     auto color = ui->themeColorCBox->currentText();
-    lib::settings::OkSettings().setThemeColor(static_cast<lib::settings::MainTheme>(index));
+    lib::settings::OkSettings::getInstance()->setThemeColor(static_cast<lib::settings::MainTheme>(index));
     emit ok::Application::Instance() -> bus()->themeColorChanged(index, color);
 }
 

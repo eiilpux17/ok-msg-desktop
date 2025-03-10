@@ -96,7 +96,7 @@ ChatWidget::ChatWidget(QWidget* parent)
 
     // 右侧容器
     contentContainer = new QWidget(this);
-    contentContainer->setObjectName("ChatContentWidget");
+    contentContainer->setObjectName("contentContainer");
     contentLayout = new ContentLayout(contentContainer);
     contentContainer->setLayout(contentLayout);
 
@@ -124,7 +124,7 @@ ChatWidget::~ChatWidget() {
 }
 
 void ChatWidget::init() {
-    connect(ui->nameLabel, &lib::ui::CroppingLabel::clicked, this, &ChatWidget::on_nameClicked);
+    // connect(ui->nameLabel, &lib::ui::CroppingLabel::clicked, this, &ChatWidget::on_nameClicked);
 
     auto widget = Widget::getInstance();
 
@@ -153,7 +153,7 @@ void ChatWidget::init() {
 void ChatWidget::deinit() {
 
 
-    disconnect(ui->nameLabel, &lib::ui::CroppingLabel::clicked, this, &ChatWidget::on_nameClicked);
+    // disconnect(ui->nameLabel, &lib::ui::CroppingLabel::clicked, this, &ChatWidget::on_nameClicked);
 
     auto widget = Widget::getInstance();
 
@@ -265,8 +265,8 @@ void ChatWidget::showEvent(QShowEvent* e) {}
 void ChatWidget::onNicknameSet(const QString& nickname) {
     qDebug() << __func__ << nickname;
 
-    ui->nameLabel->setText(nickname);
-    ui->nameLabel->setToolTip(Qt::convertFromPlainText(nickname, Qt::WhiteSpaceNormal));
+    // ui->nameLabel->setText(nickname);
+    // ui->nameLabel->setToolTip(Qt::convertFromPlainText(nickname, Qt::WhiteSpaceNormal));
 
     // 修改消息列表自己的昵称
     auto core = Nexus::getInstance()->getProfile()->getCore();
@@ -275,9 +275,9 @@ void ChatWidget::onNicknameSet(const QString& nickname) {
 
 void ChatWidget::onStatusSet(Status status) {
     int icon_size = 15;
-    ui->statusButton->setProperty("status", static_cast<int>(status));
-    ui->statusButton->setIcon(
-            ok::base::SvgUtils::prepareIcon(getIconPath(status), icon_size, icon_size));
+    // ui->statusButton->setProperty("status", static_cast<int>(status));
+    // ui->statusButton->setIcon(
+            // ok::base::SvgUtils::prepareIcon(getIconPath(status), icon_size, icon_size));
     updateIcons();
 }
 
@@ -285,25 +285,25 @@ void ChatWidget::updateIcons() {
     QIcon ico;
     bool eventIcon = true;
 
-    const QString assetSuffix =
-            getAssetSuffix(static_cast<Status>(ui->statusButton->property("status").toInt())) +
-                                (eventIcon ? "_event" : "");
+    // const QString assetSuffix =
+            // getAssetSuffix(static_cast<Status>(ui->statusButton->property("status").toInt())) +
+                                // (eventIcon ? "_event" : "");
 
-    QString color = Nexus::getProfile()->getSettings()->getLightTrayIcon() ? "light" : "dark";
-    QString path = ":/img/taskbar/" + color + "/taskbar_" + assetSuffix + ".svg";
-    QSvgRenderer renderer(path);
+    // QString color = Nexus::getProfile()->getSettings()->getLightTrayIcon() ? "light" : "dark";
+    // QString path = ":/img/taskbar/" + color + "/taskbar_" + assetSuffix + ".svg";
+    // QSvgRenderer renderer(path);
 
     // Prepare a QImage with desired characteritisc
-    QImage image = QImage(250, 250, QImage::Format_ARGB32);
-    image.fill(Qt::transparent);
-    QPainter painter(&image);
-    renderer.render(&painter);
-    ico = QIcon(QPixmap::fromImage(image));
-    setWindowIcon(ico);
+    // QImage image = QImage(250, 250, QImage::Format_ARGB32);
+    // image.fill(Qt::transparent);
+    // QPainter painter(&image);
+    // renderer.render(&painter);
+    // ico = QIcon(QPixmap::fromImage(image));
+    // setWindowIcon(ico);
 }
 
 void ChatWidget::onStatusMessageSet(const QString& statusMessage) {
-    ui->statusLabel->setText(statusMessage);
+    // ui->statusLabel->setText(statusMessage);
 }
 
 void ChatWidget::onFriendAdded(const Friend* f) {
@@ -513,22 +513,22 @@ void ChatWidget::onError(QString msgId, QString error)
 void ChatWidget::onGroupClicked() {}
 
 void ChatWidget::reloadTheme() {
-    auto chat = lib::settings::Style::getStylesheet("window/chat.css");
+    auto chat = lib::settings::Style::getStylesheetFile("chat.css");
     setStyleSheet(chat);
 
-    auto statusPanelStyle = lib::settings::Style::getStylesheet("window/statusPanel.css");
-    ui->statusHead->setStyleSheet(statusPanelStyle);
+    // auto statusPanelStyle = lib::settings::Style::getStylesheet("window/statusPanel.css");
+    // ui->statusHead->setStyleSheet(statusPanelStyle);
 
-    auto statusButton = lib::settings::Style::getStylesheet("statusButton/statusButton.css");
-    ui->statusButton->setStyleSheet(statusButton);
+    // auto statusButton = lib::settings::Style::getStylesheet("statusButton/statusButton.css");
+    // ui->statusButton->setStyleSheet(statusButton);
 
-    auto friendList = lib::settings::Style::getStylesheet("friendList/friendList.css");
-    ui->sessionList->setStyleSheet(friendList);
-    ui->sessionList->setAutoFillBackground(false);
-    ui->sessionList->viewport()->setAutoFillBackground(false);
+    // auto friendList = lib::settings::Style::getStylesheet("friendList/friendList.css");
+    // ui->sessionList->setStyleSheet(friendList);
+    // ui->sessionList->setAutoFillBackground(false);
+    // ui->sessionList->viewport()->setAutoFillBackground(false);
 
-    sessionListWidget->reDraw();
-    sessionListWidget->reloadTheme();
+    // sessionListWidget->reDraw();
+    // sessionListWidget->reloadTheme();
 
     if (contentLayout != nullptr) {
         contentLayout->reloadTheme();
@@ -575,11 +575,11 @@ void ChatWidget::setupStatus() {
             ok::base::SvgUtils::prepareIcon(getIconPath(Status::Busy), icon_size, icon_size));
     connect(statusBusy, &QAction::triggered, this, &ChatWidget::setStatusBusy);
 
-    QMenu* statusButtonMenu = new QMenu(ui->statusButton);
-    statusButtonMenu->addAction(statusOnline);
-    statusButtonMenu->addAction(statusAway);
-    statusButtonMenu->addAction(statusBusy);
-    ui->statusButton->setMenu(statusButtonMenu);
+    // QMenu* statusButtonMenu = new QMenu(ui->statusButton);
+    // statusButtonMenu->addAction(statusOnline);
+    // statusButtonMenu->addAction(statusAway);
+    // statusButtonMenu->addAction(statusBusy);
+    // ui->statusButton->setMenu(statusButtonMenu);
 
     statusOnline->setText(tr("Online", "Button to set your status to 'Online'"));
     statusAway->setText(tr("Away", "Button to set your status to 'Away'"));

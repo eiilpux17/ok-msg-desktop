@@ -15,16 +15,14 @@
 #include <QObject>
 #include <memory>
 
-#include "base/Page.h"
 #include "modules/module.h"
-#include "src/UI/main/src/MainWindow.h"
 
 namespace UI {
-
+class OMainWindow;
 class WindowManager : public QObject {
     Q_OBJECT
 public:
-    WindowManager(QObject* parent = nullptr);
+    explicit WindowManager(QObject* parent = nullptr);
     ~WindowManager();
 
     static WindowManager* Instance();
@@ -36,7 +34,7 @@ public:
 
     QFrame* getPage(SystemMenu menu);
 
-    inline UI::MainWindow* window() {
+    inline UI::OMainWindow* window() {
         return m_mainWindow.get();
     }
 
@@ -45,7 +43,7 @@ public:
     OMainMenu* getMainMenu();
 
 private:
-    std::unique_ptr<UI::MainWindow> m_mainWindow;
+    std::unique_ptr<UI::OMainWindow> m_mainWindow;
 
 signals:
     void menuPushed(SystemMenu menu, bool checked);

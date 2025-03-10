@@ -10,3 +10,31 @@
  * See the Mulan PubL v2 for more details.
  */
 
+
+QPushButton#loginBtn {
+    font-weight: bold;
+    border-radius: 2px;
+}
+
+QLabel#signUp, QLabel#findPwd{
+    color: blue; text-decoration: underline;
+}
+
+QLabel#signUp:hover, QLabel#findPwd:hover { color: rgba(32, 56, 100); }
+
+QLabel#title {
+    font-size: 24px;
+}
+
+QLabel#loginMessage {
+    font-size: 14px;
+    color: #a2a2a2;
+}
+
+QLabel#settings {
+    color: #a2a2a2;
+}
+
+/* QCheckBox#rememberAccount:hover, QPushButton#forgetPassword:hover, QPushButton#registerAccount:hover {
+    color: rgb(204,0,0);
+} */

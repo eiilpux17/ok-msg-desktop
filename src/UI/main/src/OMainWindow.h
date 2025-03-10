@@ -9,8 +9,8 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PubL v2 for more details.
  */
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+
+#pragma once
 
 #include <QBoxLayout>
 #include <QMainWindow>
@@ -22,7 +22,7 @@
 #include "lib/session/AuthSession.h"
 
 namespace Ui {
-class MainWindow;
+class OMainWindow;
 }
 
 namespace UI {
@@ -32,15 +32,14 @@ class OMenuWidget;
 /**
  * 主窗口
  */
-class MainWindow : public QMainWindow {
+class OMainWindow : public QMainWindow {
     Q_OBJECT
-
 public:
-    explicit MainWindow(std::shared_ptr<lib::session::AuthSession> session,
+    explicit OMainWindow(std::shared_ptr<lib::session::AuthSession> session,
                         QWidget* parent = nullptr);
-    ~MainWindow();
+    ~OMainWindow();
 
-    static MainWindow* getInstance();
+    static OMainWindow* getInstance();
 
     void stop();
 
@@ -65,7 +64,7 @@ private:
 
     std::shared_ptr<::base::DelayedCallTimer> delayCaller;
 
-    Ui::MainWindow* ui;
+    Ui::OMainWindow* ui;
     OMainMenu* m_menu;
     QMap<SystemMenu, OMenuWidget*> menuMap;
 
@@ -96,4 +95,3 @@ private slots:
 
 }  // namespace UI
 
-#endif  // MAINWINDOW_H

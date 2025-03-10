@@ -50,7 +50,7 @@ QTabWidget#mainTab>QTabBar::tab
     border: 0;
     padding: 10px 10px 10px 10px;
     background: white;
-    color: #959595;
+		color: @mainText;
 }
 
 QTabWidget#mainTab > QTabBar::tab:first {
@@ -59,12 +59,12 @@ QTabWidget#mainTab > QTabBar::tab:first {
 
 QTabWidget#mainTab>QTabBar::tab:hover 
 {
-    color: #5d5d5d;
+    color: @selectText;
 }
 
 QTabWidget#mainTab>QTabBar::tab:selected 
 {
-    color: #19171b;
+    color: @selectText;
 }
 
 /*#subTab 二级菜单*/

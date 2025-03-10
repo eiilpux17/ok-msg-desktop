@@ -65,7 +65,7 @@ CoreAV::CoreAV(Core* core)
 
     connect(this, &CoreAV::createCallToPeerId, this, &CoreAV::doCreateCallToPeerId);
 
-    auto s = &lib::settings::OkSettings::getInstance();
+    auto* s = lib::settings::OkSettings::getInstance();
 
     connect(s, &lib::settings::OkSettings::outVolumeChanged, this, [&](int vol) {
         if (imCall) {

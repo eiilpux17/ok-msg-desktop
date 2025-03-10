@@ -404,7 +404,7 @@ void ContactWidget::onGroupClicked() {
 }
 
 void ContactWidget::friendRequestsUpdate() {
-    //    auto& settings = Nexus::getProfile()->getSettings();
+    //    auto* settings = Nexus::getProfile()->getSettings();
 
             //    unsigned int unreadFriendRequests = settings.getUnreadFriendRequests();
             //    qDebug() << __func__ << "unreadFriendRequests" << unreadFriendRequests;

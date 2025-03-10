@@ -109,7 +109,7 @@ void Widget::initTranslate() {
 }
 
 void Widget::retranslateUi() {
-    QString locale = lib::settings::OkSettings::getInstance().getTranslation();
+    QString locale = lib::settings::OkSettings::getInstance()->getTranslation();
     settings::Translator::translate(OK_Meet_MODULE, locale);
 
     ui->retranslateUi(this);

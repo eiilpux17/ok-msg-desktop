@@ -34,12 +34,12 @@ Profile::Profile(const QString& host,
     // connect(_profile, &lib::session::Profile::nickChanged, this, &Profile::nickChanged);
 
     storageManager = _profile->create(_profile->getUsername());
-    okSettings = storageManager->getGlobalSettings();
+    globalSettings = storageManager->getGlobalSettings();
     db = std::shared_ptr<lib::db::RawDatabase>(storageManager->createDatabase(OK_IM_MODULE));
     // TODO 待优化
     history.reset(new History(db));
-    s = std::make_unique<Settings>(storageManager->createSetting(OK_IM_MODULE));
-    initCore(s.get());
+    settings = std::make_unique<Settings>(storageManager->createSetting(OK_IM_MODULE));
+    initCore(settings.get());
 }
 
 /**
@@ -67,7 +67,7 @@ const QPixmap& Profile::loadAvatar() {
 
     if (avatar.isNull()) {
         // 获取默认
-        if (s->getShowIdenticons()) {
+        if (settings->getShowIdenticons()) {
             avatar = QPixmap::fromImage(
                     Identicon(core->getSelfPeerId().getPublicKey().getByteArray()).toImage(16));
         }
@@ -232,17 +232,14 @@ void Profile::onSaveToxSave() {
 QString Profile::setPassword(const QString& pwd) {
     return QString();
 }
+
 QString Profile::getHost() {
     return _profile->getSignIn().host;
 }
 
-Settings* Profile::getSettings() const {
-    return s.get();
-}
-
 void Profile::quit() {
-    s->saveGlobal();
-    s->sync();
+    settings->saveGlobal();
+    settings->sync();
 }
 
 void Profile::onAvatarSet(QByteArray avatar) {

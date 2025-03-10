@@ -28,7 +28,7 @@
         </message>
     </context>
     <context>
-        <name>UI::MainWindow</name>
+        <name>UI::OMainWindow</name>
         <message>
             <source>Exit</source>
             <comment>Tray action menu to exit tox</comment>

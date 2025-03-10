@@ -144,7 +144,7 @@ QStringList ApplicationInfo::pluginDirs() {
             QDir().absoluteFilePath(qApp->applicationDirPath() + "/../lib/" SHARE_SUFF "/plugins");
 #endif
 
-    static const QStringList&& dirs = {lib::settings::OkSettings().getAppPluginPath().path()};
+    static const QStringList&& dirs = {lib::settings::OkSettings::getInstance()->getAppPluginPath().path()};
     return dirs;
 }
 

@@ -16,6 +16,7 @@
 #include <QWidget>
 #include "MessageSessionWidget.h"
 #include "genericchatitemlayout.h"
+#include "lib/ui/widget/OWidget.h"
 #include "src/core/core.h"
 #include "src/model/friendmessagedispatcher.h"
 #include "src/model/message.h"
@@ -39,7 +40,7 @@ class Friend;
 class ContentLayout;
 class MainLayout;
 
-class MessageSessionListWidget : public QWidget {
+class MessageSessionListWidget  final : public lib::ui::OWidget {
     Q_OBJECT
 public:
     using SortingMode = Settings::FriendListSortingMode;

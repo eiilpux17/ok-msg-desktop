@@ -70,7 +70,7 @@
 #include "src/widget/form/groupinviteform.h"
 #include "src/widget/form/ProfileForm.h"
 #include "src/widget/form/settings/SettingsWidget.h"
-#include "ui_mainwindow.h"
+
 
 namespace module::im {
 
@@ -82,28 +82,30 @@ Widget* Widget::getInstance() {
 };
 
 Widget::Widget(QWidget* parent)  //
-        : QFrame(parent)
-        , ui(new Ui::IMMainWindow)
+        : lib::ui::OWidget(parent)
         , eventFlag(false)
         , eventIcon(false)
         , delayCaller(std::make_unique<base::DelayedCallTimer>())  //
 {
     instance = this;
+    layout = new QVBoxLayout(this);
+    layout->setSpacing(0);
 
-    ui->setupUi(this);
-    layout()->setSpacing(0);
+    tabWidget = new QTabWidget(this);
+    layout->addWidget(tabWidget);
 
-    ui->tabWidget->setObjectName("mainTab");
+
+    tabWidget->setObjectName("mainTab");
 
     chatWidget = new ChatWidget(this);
-    ui->tabWidget->addTab(chatWidget, tr("Chat"));
+    tabWidget->addTab(chatWidget, tr("Chat"));
 
     contactWidget = new ContactWidget(this);
-    ui->tabWidget->addTab(contactWidget, tr("Contacts"));
+    tabWidget->addTab(contactWidget, tr("Contacts"));
 
     settingsWidget = new SettingsWidget(this);
-    ui->tabWidget->addTab(settingsWidget, tr("Settings"));
-    ui->tabWidget->tabBar()->setCursor(Qt::PointingHandCursor);
+    tabWidget->addTab(settingsWidget, tr("Settings"));
+    tabWidget->tabBar()->setCursor(Qt::PointingHandCursor);
 
     installEventFilter(this);
 
@@ -177,8 +179,8 @@ Widget::Widget(QWidget* parent)  //
     // Disable some widgets until we're connected to the DHT
     //  ui->statusButton->setEnabled(false);
 
-    auto& settings = lib::settings::OkSettings::getInstance();
-    lib::settings::Style::setThemeColor(settings.getThemeColor());
+    auto* settings = lib::settings::OkSettings::getInstance();
+    lib::settings::Style::setThemeColor(settings->getThemeColor());
 
     onStatusSet(Status::Offline);
 
@@ -222,8 +224,8 @@ Widget::Widget(QWidget* parent)  //
     //    connect(groupInviteForm, &GroupInviteForm::groupInviteAccepted, this,
     //            &Widget::onGroupInviteAccepted);
 
-    connect(this, &Widget::toSendMessage, [&]() { ui->tabWidget->setCurrentIndex(0); });
-    connect(this, &Widget::toShowDetails, [&]() { ui->tabWidget->setCurrentIndex(1); });
+    connect(this, &Widget::toSendMessage, [&]() { tabWidget->setCurrentIndex(0); });
+    connect(this, &Widget::toShowDetails, [&]() { tabWidget->setCurrentIndex(1); });
     // 显示转发消息对话框
     connect(this, &Widget::toForwardMessage, this, &Widget::showForwardMessageDialog);
 
@@ -257,7 +259,7 @@ Widget::~Widget() {
     qDebug() << __func__;
     
     delete timer;
-    delete ui;
+
 }
 
 bool Widget::eventFilter(QObject* obj, QEvent* event) {
@@ -996,14 +998,14 @@ void Widget::reloadTheme() {
 }
 
 void Widget::retranslateUi() {
-    auto& settings = lib::settings::OkSettings::getInstance();
-    auto locale = settings.getTranslation();
+    auto* settings = lib::settings::OkSettings::getInstance();
+    auto locale = settings->getTranslation();
     settings::Translator::translate(OK_IM_MODULE, locale);
 
-    ui->retranslateUi(this);
-    ui->tabWidget->setTabText(0, tr("Chat"));
-    ui->tabWidget->setTabText(1, tr("Contacts"));
-    ui->tabWidget->setTabText(2, tr("Settings"));
+
+    tabWidget->setTabText(0, tr("Chat"));
+    tabWidget->setTabText(1, tr("Contacts"));
+    tabWidget->setTabText(2, tr("Settings"));
 }
 
 void Widget::showEvent(QShowEvent* e) {

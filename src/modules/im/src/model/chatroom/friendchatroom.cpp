@@ -59,31 +59,6 @@ bool FriendChatroom::canBeInvited() const {
     //    return Status::isOnline(frnd->getStatus());
 }
 
-int FriendChatroom::getCircleId() const {
-    return 0;
-}
-
-QString FriendChatroom::getCircleName() const {
-    const auto circleId = getCircleId();
-    return Nexus::getProfile()->getSettings()->getCircleName(circleId);
-}
-
-QString FriendChatroom::getAutoAcceptDir() const {
-    return Nexus::getProfile()->getSettings()->getAutoAcceptDir(*frnd);
-}
-
-void FriendChatroom::setAutoAcceptDir(const QString& dir) {
-    Nexus::getProfile()->getSettings()->setAutoAcceptDir(*frnd, dir);
-}
-
-void FriendChatroom::disableAutoAccept() {
-    setAutoAcceptDir(QString{});
-}
-
-bool FriendChatroom::autoAcceptEnabled() const {
-    return getAutoAcceptDir().isEmpty();
-}
-
 void FriendChatroom::inviteFriend(const Group* group) {
     const auto friendId = frnd->getId();
     const auto groupId = group->getIdAsString();
@@ -100,33 +75,6 @@ QVector<GroupToDisplay> FriendChatroom::getGroups() const {
     }
 
     return groups;
-}
-
-/**
- * @brief Return sorted list of circles exclude current circle.
- */
-QVector<CircleToDisplay> FriendChatroom::getOtherCircles() const {
-    QVector<CircleToDisplay> circles;
-    const auto currentCircleId = getCircleId();
-    auto s = Nexus::getProfile()->getSettings();
-    for (int i = 0; i < s->getCircleCount(); ++i) {
-        if (i == currentCircleId) {
-            continue;
-        }
-
-        const auto name = getShortName(s->getCircleName(i));
-        const CircleToDisplay circle = {name, i};
-        circles.push_back(circle);
-    }
-
-    std::sort(circles.begin(), circles.end(),
-              [](const CircleToDisplay& a, const CircleToDisplay& b) -> bool {
-                  QCollator collator;
-                  collator.setNumericMode(true);
-                  return collator.compare(a.name, b.name) < 0;
-              });
-
-    return circles;
 }
 
 void FriendChatroom::resetEventFlags() {

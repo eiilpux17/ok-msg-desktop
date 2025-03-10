@@ -26,7 +26,7 @@ inline QString makePath(const QString& id, const QString& name) {
 }
 
 inline QString makePluginPath(const QString& name) {
-    return QString("%1/%2").arg(lib::settings::OkSettings().getAppPluginPath().path(), name);
+    return QString("%1/%2").arg(lib::settings::OkSettings::getInstance()->getAppPluginPath().path(), name);
 }
 
 PluginInfoForm::PluginInfoForm(lib::backend::PluginInfo& info, QWidget* parent)

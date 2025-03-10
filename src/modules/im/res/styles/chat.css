@@ -1,0 +1,88 @@
+/*
+ * Copyright (c) 2022 船山信息 chuanshaninfo.com
+ * The project is licensed under Mulan PubL v2.
+ * You can use this software according to the terms and conditions of the Mulan
+ * PubL v2. You may obtain a copy of Mulan PubL v2 at:
+ *          http://license.coscl.org.cn/MulanPubL-2.0
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PubL v2 for more details.
+ */
+
+
+QWidget#ChatContentWidget
+{
+    background: @groundBase;
+    border: 0px solid;
+    border-radius: 10px;
+}
+
+
+QWidget#ContentSeperator{
+    background: #474747;
+}
+
+QLineEdit#searchContact{
+    color: @mainText;
+    border: 1px solid @groundBase;
+    background-color: @groundBase;
+    border-radius: 5px;
+    padding: 3px;
+    min-height: 30px;
+}
+
+
+QWidget#sessionPanel{
+    background: @groundExtra;
+		border-radius: 10px;
+    border: 0px solid;
+}
+
+
+
+module--im--MessageSessionWidget{
+    border: 0;
+    border-radius: 5px;
+}
+
+module--im--MessageSessionWidget:hover{
+    background-color:@themeLight;
+}
+
+module--im--MessageSessionWidget:selected{
+    background-color:@themeLight;
+		color: red;
+}
+
+module--im--MessageSessionWidget QLabel#nameLabel{
+    color: @mainText;
+}
+
+module--im--MessageSessionWidget QLabel#lastMessageLabel:!active{
+    color: #b3b1b3;
+}
+module--im--MessageSessionWidget QLabel#lastMessageLabel:active{
+    color: #b3b1b3;
+}
+
+
+QWidget#contentContainer
+{
+    background: @groundExtra;
+		border: 0;
+    border-radius: 10px;
+}
+
+QScrollArea#sessionList{
+    background: @groundExtra;
+}
+
+/* 聊天区 */
+QGraphicsView
+{
+    border: none;
+		background: @groundExtra;
+}
+
+

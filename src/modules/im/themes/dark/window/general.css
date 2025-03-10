@@ -10,94 +10,112 @@
  * See the Mulan PubL v2 for more details.
  */
 
- .Widget
-{
-    background-color: black;
-    padding: 8px;
-}
 
-QToolTip
-{
+QToolTip {
     /* explicit border width is required https://bugreports.qt.io/browse/QTBUG-41313 */
     border: 0px;
     color: black;
     background: #ffffdc;
 }
 
-QDialog
-{
+QDialog {
     background: @groundBase;
 }
-
-QTabWidget
-{
-    background-color: #100f0f;
+QTabWidget>QTabBar {
+  border: 0;
+	background: transparent;
 }
 
-QTabBar::tab:selected 
-{
-    background: #100f0f;
-    color: @mainText;
+QTabWidget>QTabBar::tab {
+  border: 0;
+	padding: 10px;
+	color: @mainText;
 }
 
-QTabBar::tab:!selected 
-{
-    background: #444242;
-    color: #8e8e8e;
+QTabWidget>QTabBar::tab:selected {
+    color: @selectText;
 }
 
-QTabBar[update-available=true]::tab:last:!selected
-{
-    background-color: #115508;
+QTabWidget>QTabBar[update-available=true]::tab:last: !selected {
+    background-color: @action;
 }
+
 
 QTabWidget#mainTab,
 QTabWidget#mainTab::pane,
-QTabWidget#mainTab>QTabBar
-{
-    border: 0px solid;
-    background: black;
+QTabWidget#mainTab>QTabBar {
+    border: 0;
+		background: red;
 }
 
-QTabWidget#mainTab>QTabBar
-{
+QTabWidget#mainTab>QTabBar {
     font: @bigBold;
 }
 
-QTabWidget#mainTab>QTabBar::tab
-{
+QTabWidget#mainTab>QTabBar::tab {
     border: 0px solid;
     padding: 10px 10px 10px 10px;
-    background: black;
-    color: #6f6f6f;
-}
-
-QTabWidget#mainTab > QTabBar::tab:first {
-    padding-left: 2px;
-}
-
-QTabWidget#mainTab>QTabBar::tab:hover 
-{
-    color: #999999;
-}
-
-QTabWidget#mainTab>QTabBar::tab:selected 
-{
-    color: #dddddd;
-}
-
-QLabel
-{
+		background: transparent;
     color: @mainText;
 }
 
-QListView
-{
+QTabWidget#mainTab>QTabBar::tab:first {
+    /* padding-left: 2px; */
+}
+
+QTabWidget#mainTab>QTabBar::tab:hover {
+    color: @selectText;
+}
+
+QTabWidget#mainTab>QTabBar::tab:selected {
+    color: @selectText;
+}
+
+
+/*#subTab 二级菜单*/
+QTabWidget#subTab>QTabBar::tab {
+    border-bottom: none;
+    padding: 5px 10px;
+		color: @mainText;
+}
+
+QTabWidget#subTab>QTabBar::tab:hover {
+    color: @selectText;
+}
+
+QTabWidget#subTab>QTabBar::tab:selected {
+    color: @selectText;
+    background: @groundBase;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+QTabWidget#subTab>QStackedWidget {
+    /*  border: none;
+    background: @groundBase;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;*/
+}
+
+QTabWidget#subTab::pane {
+    border: none;
+    background: @groundBase;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+QLabel {
     color: @mainText;
 }
 
-QTextEdit, QPlainTextEdit
-{
+QListView {
+    color: @mainText;
+}
+
+QTextEdit,
+QPlainTextEdit {
     border-color: #514f4f;
     border-style: solid;
     border-width: 1px 0 1px 1px;
@@ -105,18 +123,15 @@ QTextEdit, QPlainTextEdit
     color: @mainText;
 }
 
-QListWidget
-{
+QListWidget {
     background-color: @groundBase;
 }
 
-QMessageBox
-{
+QMessageBox {
     background-color: @groundBase;
 }
 
-QCheckBox
-{
+QCheckBox {
     color: @mainText;
 }
 
@@ -136,8 +151,7 @@ QCheckBox::indicator:unchecked:pressed {
     background: #514f4f;
 }
 
-QCheckBox:disabled
-{
+QCheckBox:disabled {
     color: grey;
 }
 
@@ -150,27 +164,25 @@ QCheckBox:indicator:checked:disabled {
     image: url("@getImagePath(settings/checkboxCheckedDisabled.svg)");
 }
 
-QSpinBox, QDoubleSpinBox
-{
+QSpinBox,
+QDoubleSpinBox {
     background: @groundBase;
     color: @mainText;
 }
 
-QSpinBox:disabled, QDoubleSpinBox:disabled
-{
+QSpinBox:disabled,
+QDoubleSpinBox:disabled {
     background: #262424;
     color: grey;
 }
 
-QGroupBox
-{
+QGroupBox {
     color: @mainText;
     background-color: @groundBase;
     font: @bigBold;
 }
 
-QComboBox
-{
+QComboBox {
     color: @mainText;
     background-color: @groundBase;
 }
@@ -180,171 +192,146 @@ QComboBox QAbstractItemView {
     outline: none;
 }
 
-QLineEdit
-{
+QLineEdit {
     background: @groundBase;
     color: @mainText;
 }
 
-QLineEdit:disabled
-{
+QLineEdit:disabled {
     background-color: #262424;
     color: grey;
 }
 
-QScrollArea
-{
+QScrollArea {
     background-color: @groundBase;
 }
 
-QScrollArea > QWidget > QWidget
-{
+QScrollArea>QWidget>QWidget {
     background: transparent;
 }
 
-QScrollArea::corner
-{
+QScrollArea::corner {
     background-color: @groundBase;
     border: none;
 }
 
-QScrollBar:vertical
-{
+QScrollBar:vertical {
     background: transparent;
     width: 5px;
     margin: 2px 0px 2px 0px;
 }
 
-QScrollBar::handle:vertical
-{
+QScrollBar::handle:vertical {
     background-color: #343232;
     min-height: 20px;
     border-radius: 2px;
 }
 
-QScrollBar::handle:vertical:hover
-{
+QScrollBar::handle:vertical:hover {
     background-color: #3e3c3c;
 }
 
-QScrollBar::handle:vertical:pressed
-{
+QScrollBar::handle:vertical:pressed {
     background-color: #474545;
 }
 
-QScrollBar::add-line:vertical
-{
+QScrollBar::add-line:vertical {
     background-color: white;
     height: 0px;
     subcontrol-position: bottom;
     subcontrol-origin: margin;
 }
 
-QScrollBar::sub-line:vertical
-{
+QScrollBar::sub-line:vertical {
     background-color: white;
     height: 0px;
     subcontrol-position: top;
     subcontrol-origin: margin;
 }
 
-QScrollBar::down-arrow:vertical
-{
+QScrollBar::down-arrow:vertical {
     width: 0px;
     height: 0px;
     background-color: white;
 }
 
-QScrollBar::up-arrow:vertical
-{
+QScrollBar::up-arrow:vertical {
     width: 0px;
     height: 0px;
     background-color: white;
 }
 
-QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
-{
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
     background: none;
 }
 
-QScrollBar:horizontal
-{
+QScrollBar:horizontal {
     background: transparent;
     height: 5px;
     margin: 0 2px 0 2px;
 }
 
-QScrollBar::handle:horizontal
-{
+QScrollBar::handle:horizontal {
     background-color: #343232;
     min-width: 20px;
     border-radius: 2px;
 }
 
-QScrollBar::handle:horizontal:hover
-{
+QScrollBar::handle:horizontal:hover {
     background-color: #3e3c3c;
 }
 
-QScrollBar::handle:horizontal:pressed
-{
+QScrollBar::handle:horizontal:pressed {
     background-color: #474545;
 }
 
-QScrollBar::add-line:horizontal
-{
+QScrollBar::add-line:horizontal {
     background-color: white;
     width: 0px;
     subcontrol-position: right;
     subcontrol-origin: margin;
 }
 
-QScrollBar::sub-line:horizontal
-{
+QScrollBar::sub-line:horizontal {
     background-color: white;
     width: 0px;
     subcontrol-position: left;
     subcontrol-origin: margin;
 }
 
-QScrollBar::right-arrow:horizontal
-{
+QScrollBar::right-arrow:horizontal {
     width: 0px;
     height: 0px;
     background-color: white;
 }
 
-QScrollBar::left-arrow:horizontal
-{
+QScrollBar::left-arrow:horizontal {
     width: 0px;
     height: 0px;
     background-color: white;
 }
 
-QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
-{
+QScrollBar::add-page:horizontal,
+QScrollBar::sub-page:horizontal {
     background: none;
 }
 
-QRadioButton
-{
+QRadioButton {
     background: @groundBase;
     color: @mainText;
 }
 
-QPushButton
-{
+QPushButton {
     background: #323030;
     color: @mainText;
 }
 
-QPushButton#updateAvailableButton
-{
+QPushButton#updateAvailableButton {
     background-color: #115508;
 }
 
-QSplitter:handle
-{
+QSplitter:handle {
     color: @groundBase;
     background-color: @groundBase;
 }

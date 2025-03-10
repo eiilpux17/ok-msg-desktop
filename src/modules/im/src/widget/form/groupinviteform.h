@@ -24,9 +24,6 @@ class QPushButton;
 class QScrollArea;
 class QSignalMapper;
 
-namespace Ui {
-class MainWindow;
-}
 
 namespace module::im {
 

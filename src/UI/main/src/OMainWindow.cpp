@@ -9,9 +9,9 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PubL v2 for more details.
  */
-#include "MainWindow.h"
+#include "OMainWindow.h"
 #include "Bus.h"
-#include "ui_MainWindow.h"
+#include "ui_OMainWindow.h"
 
 #include "application.h"
 #include "lib/storage/settings/OkSettings.h"
@@ -37,27 +37,21 @@
 
 namespace UI {
 
-static MainWindow* instance = nullptr;
+static OMainWindow* instance = nullptr;
 
-MainWindow::MainWindow(std::shared_ptr<lib::session::AuthSession> session, QWidget* parent)
+OMainWindow::OMainWindow(std::shared_ptr<lib::session::AuthSession> session, QWidget* parent)
         : QMainWindow(parent)
-        , ui(new Ui::MainWindow)
+        , ui(new Ui::OMainWindow)
         , delayCaller(std::make_unique<base::DelayedCallTimer>())
-        , session{session}
+        , session(session)
         , sysTrayIcon(nullptr) {
     qDebug() << __func__;
 
     ui->setupUi(this);
-    //  setStyleSheet("QMainWindow{background-color: white;}");
-    //  setAutoFillBackground(false);
 
-    setAutoFillBackground(true);
-    // 创建一个QPalette对象
-    QPalette palette = this->palette();
-    // 设置背景颜色为浅蓝色
-    palette.setColor(QPalette::Window, Qt::white);
-    // 应用新的调色板
-    this->setPalette(palette);
+
+    // setAutoFillBackground(true);
+
 
     setWindowTitle(APPLICATION_NAME);
     setMinimumSize(WindowSize());
@@ -65,14 +59,14 @@ MainWindow::MainWindow(std::shared_ptr<lib::session::AuthSession> session, QWidg
 
     // menu
     m_menu = ui->menu_widget;
-    connect(m_menu, &OMainMenu::menuPushed, this, &MainWindow::onSwitchPage);
+    connect(m_menu, &OMainMenu::menuPushed, this, &OMainWindow::onSwitchPage);
 
     // settings
-    auto& okSettings = lib::settings::OkSettings::getInstance();
-    connect(&okSettings, &lib::settings::OkSettings::showSystemTrayChanged, this,
-            &MainWindow::onSetShowSystemTray);
+    auto okSettings = lib::settings::OkSettings::getInstance();
+    connect(okSettings, &lib::settings::OkSettings::showSystemTrayChanged, this,
+            &OMainWindow::onSetShowSystemTray);
 
-    auto wg = okSettings.getWindowGeometry();
+    auto wg = okSettings->getWindowGeometry();
     if (!wg.isEmpty()) {
         restoreGeometry(wg);
     }
@@ -95,7 +89,7 @@ MainWindow::MainWindow(std::shared_ptr<lib::session::AuthSession> session, QWidg
 
     actionShow = new QAction(this);
     actionShow->setText(tr("Show", "Tray action menu to show window"));
-    connect(actionShow, &QAction::triggered, this, &MainWindow::forceShow);
+    connect(actionShow, &QAction::triggered, this, &OMainWindow::forceShow);
 
     instance = this;
 
@@ -103,7 +97,7 @@ MainWindow::MainWindow(std::shared_ptr<lib::session::AuthSession> session, QWidg
     createSystemTrayIcon();
 
 
-    auto locale = lib::settings::OkSettings().getTranslation();
+    auto locale = okSettings->getTranslation();
     settings::Translator::translate(OK_UIMainWindow_MODULE, locale);
 
     auto a = ok::Application::Instance();
@@ -111,10 +105,14 @@ MainWindow::MainWindow(std::shared_ptr<lib::session::AuthSession> session, QWidg
         retranslateUi();
     });
 
+
+    //auto css = lib::settings::Style::getStylesheet("application.css");
+    //qDebug() << css;
+
     qDebug() << __func__ << " has be created.";
 }
 
-MainWindow::~MainWindow() {
+OMainWindow::~OMainWindow() {
     qDebug() << __func__;
     stop();
 
@@ -124,15 +122,15 @@ MainWindow::~MainWindow() {
     }
     menuMap.clear();
 
-    disconnect(m_menu, &OMainMenu::menuPushed, this, &MainWindow::onSwitchPage);
+    disconnect(m_menu, &OMainMenu::menuPushed, this, &OMainWindow::onSwitchPage);
     delete ui;
 }
 
-MainWindow* MainWindow::getInstance() {
+OMainWindow* OMainWindow::getInstance() {
     return instance;
 }
 
-void MainWindow::stop() {
+void OMainWindow::stop() {
     qDebug() << __func__;
     for (auto k : menuMap.keys()) {
         auto menu = menuMap.value(k);
@@ -140,7 +138,7 @@ void MainWindow::stop() {
     }
 }
 
-inline QIcon MainWindow::prepareIcon(QString path, int w, int h) {
+inline QIcon OMainWindow::prepareIcon(QString path, int w, int h) {
 #ifdef Q_OS_LINUX
 
     QString desktop = getenv("XDG_CURRENT_DESKTOP");
@@ -166,15 +164,15 @@ inline QIcon MainWindow::prepareIcon(QString path, int w, int h) {
     return QIcon(path);
 }
 
-void MainWindow::saveWindowGeometry() {
-    auto& s = lib::settings::OkSettings::getInstance();
-    s.setWindowGeometry(saveGeometry());
-    s.setWindowState(saveState());
+void OMainWindow::saveWindowGeometry() {
+    auto* s = lib::settings::OkSettings::getInstance();
+    s->setWindowGeometry(saveGeometry());
+    s->setWindowState(saveState());
 }
 
-void MainWindow::showEvent(QShowEvent* event) {}
+void OMainWindow::showEvent(QShowEvent* event) {}
 
-void MainWindow::closeEvent(QCloseEvent* event) {
+void OMainWindow::closeEvent(QCloseEvent* event) {
     qDebug() << __func__ << "closeEvent...";
     //  auto &settings = lib::settings::OkSettings::getInstance();
 
@@ -199,22 +197,22 @@ void MainWindow::closeEvent(QCloseEvent* event) {
     //  emit Nexus::getInstance()->exit("");
 }
 
-void MainWindow::init() {}
+void OMainWindow::init() {}
 
-void MainWindow::onSetShowSystemTray(bool newValue) {
+void OMainWindow::onSetShowSystemTray(bool newValue) {
     if (sysTrayIcon) {
         sysTrayIcon->setVisible(newValue);
     }
 }
 
-void MainWindow::createSystemTrayIcon() {
+void OMainWindow::createSystemTrayIcon() {
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
         qWarning() << "System does not support system tray!";
         return;
     }
 
-    auto& settings = lib::settings::OkSettings::getInstance();
-    if (!settings.getShowSystemTray()) return;
+    auto* settings = lib::settings::OkSettings::getInstance();
+    if (!settings->getShowSystemTray()) return;
 
     sysTrayIcon = new QSystemTrayIcon(this);
     updateIcons();
@@ -232,11 +230,11 @@ void MainWindow::createSystemTrayIcon() {
     trayMenu->addAction(actionQuit);
 
     sysTrayIcon->setContextMenu(trayMenu);
-    connect(sysTrayIcon, &QSystemTrayIcon::activated, this, &MainWindow::onIconClick);
+    connect(sysTrayIcon, &QSystemTrayIcon::activated, this, &OMainWindow::onIconClick);
 
-    if (settings.getShowSystemTray()) {
+    if (settings->getShowSystemTray()) {
         sysTrayIcon->show();
-        setHidden(settings.getAutostartInTray());
+        setHidden(settings->getAutostartInTray());
     } else {
         show();
     }
@@ -246,7 +244,7 @@ void MainWindow::createSystemTrayIcon() {
  * 处理任务栏图标事件
  * @param reason
  */
-void MainWindow::onIconClick(QSystemTrayIcon::ActivationReason reason) {
+void OMainWindow::onIconClick(QSystemTrayIcon::ActivationReason reason) {
     if (reason == QSystemTrayIcon::Trigger) {
         if (isHidden() || isMinimized()) {
             if (wasMaximized) {
@@ -269,13 +267,13 @@ void MainWindow::onIconClick(QSystemTrayIcon::ActivationReason reason) {
     }
 }
 
-void MainWindow::forceShow() {
+void OMainWindow::forceShow() {
     hide();
     show();
     activateWindow();
 }
 
-void MainWindow::updateIcons() {
+void OMainWindow::updateIcons() {
     if (!sysTrayIcon) {
         return;
     }
@@ -303,7 +301,7 @@ void MainWindow::updateIcons() {
     }
 }
 
-void MainWindow::retranslateUi()
+void OMainWindow::retranslateUi()
 {
 
 }
@@ -313,7 +311,7 @@ void MainWindow::retranslateUi()
  * @param menu
  * @return
  */
-OMenuWidget* MainWindow::initMenuWindow(SystemMenu menu) {
+OMenuWidget* OMainWindow::initMenuWindow(SystemMenu menu) {
     auto w = ui->menu_widget->createWidget(menu);
 
     assert(w);
@@ -331,11 +329,11 @@ OMenuWidget* MainWindow::initMenuWindow(SystemMenu menu) {
     return w;
 }
 
-OMenuWidget* MainWindow::getMenuWindow(SystemMenu menu) {
+OMenuWidget* OMainWindow::getMenuWindow(SystemMenu menu) {
     return menuMap.value(menu);
 }
 
-void MainWindow::onSwitchPage(SystemMenu menu, bool checked) {
+void OMainWindow::onSwitchPage(SystemMenu menu, bool checked) {
     auto p = getMenuWindow(menu);
     if (!p) {
         p = initMenuWindow(menu);
@@ -351,7 +349,7 @@ void MainWindow::onSwitchPage(SystemMenu menu, bool checked) {
     }
 }
 
-QWidget* MainWindow::getContainer(SystemMenu menu) {
+QWidget* OMainWindow::getContainer(SystemMenu menu) {
     return ui->stacked_widget;
 }
 

@@ -14,7 +14,7 @@
 #include <QFrame>
 #include <QStyleFactory>
 #include "src/lib/storage/settings/style.h"
-#include "src/persistence/settings.h"
+
 
 namespace module::im {
 ContentLayout::ContentLayout() : QStackedLayout() {
@@ -61,8 +61,8 @@ void ContentLayout::reloadTheme() {
 }
 
 void ContentLayout::clear() {
-    for(auto i = 0; i < count(); i++){
-        removeWidget(widget(i));
+    while(0 < count()){
+        removeWidget(currentWidget());
     }
 }
 

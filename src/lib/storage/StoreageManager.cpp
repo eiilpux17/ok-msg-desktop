@@ -43,7 +43,7 @@ const QDir& StorageManager::getDir() {
 }
 
 std::unique_ptr<settings::OkSettings> StorageManager::getGlobalSettings() const {
-    return std::make_unique<settings::OkSettings>();
+    return std::unique_ptr<settings::OkSettings>(settings::OkSettings::getInstance());
 }
 
 StorageManager* StorageManager::create(const QString& profile_) {

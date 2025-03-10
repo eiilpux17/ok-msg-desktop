@@ -52,7 +52,7 @@ ConfigWindow::ConfigWindow(QWidget* parent) : lib::ui::OFrame(parent), ui(new Ui
 
     reloadTheme();
 
-    QString locale = lib::settings::OkSettings().getTranslation();
+    QString locale = lib::settings::OkSettings::getInstance()->getTranslation();
     settings::Translator::translate(OK_Config_MODULE, locale);
 
     retranslateUi();

@@ -26,7 +26,7 @@
         <file>themes/dark/window/profile.css</file>
         <file>themes/dark/window/statusPanel.css</file>
         <file>themes/dark/window/window.css</file>
-        <file>themes/dark/window/chat.css</file>
+     
         <file>themes/default/emoticonWidget/emoticonWidget.css</file>
         <file>themes/default/friendList/friendList.css</file>
         <file>themes/default/msgEdit/msgEdit.css</file>
@@ -43,7 +43,6 @@
         <file>themes/dark/genericChatForm/genericChatForm.css</file>
         <file>themes/default/addFriendForm/toxId.css</file>
         <file>themes/default/notificationEdge/notificationEdge.css</file>
-        <file>themes/default/loginScreen/loginScreen.css</file>
         <file>themes/default/contentDialog/contentDialog.css</file>
         <file>themes/default/tooliconsZone/tooliconsZone.css</file>
         <file>themes/default/CallDurationForm/CallDurationForm.css</file>
@@ -186,5 +185,9 @@
         <file>themes/dark/window/aboutFriend.css</file>
         <file>themes/default/chatForm/reply.svg</file>
         <file>themes/default/window/qrcode.svg</file>
+    </qresource>
+
+    <qresource prefix="styles">
+        <file alias="chat.css">res/styles/chat.css</file>
     </qresource>
 </RCC>

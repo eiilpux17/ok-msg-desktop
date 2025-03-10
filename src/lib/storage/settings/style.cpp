@@ -56,9 +56,9 @@
 
 namespace {
 
-const QLatin1String ThemeSubFolder{"themes/"};
-const QLatin1String BuiltinThemeDefaultPath{":themes/default/"};
-const QLatin1String BuiltinThemeDarkPath{":themes/dark/"};
+const QLatin1String ThemeSubFolder{":themes/"};
+const QLatin1String BuiltinThemeDefaultPath{":themes/default.ini"};
+const QLatin1String BuiltinThemeDarkPath{":themes/dark.ini"};
 }  // namespace
 
 // helper functions
@@ -102,7 +102,7 @@ QStringList Style::getThemeColorNames() {
 }
 
 QString Style::getThemeName() {
-    auto i = (int) OkSettings::getInstance().getThemeColor();
+    auto i = (int) OkSettings::getInstance()->getThemeColor();
     if (i >=0 && i < themeNameColors.length())
         return themeNameColors[i].name;
     return themeNameColors[0].name;
@@ -148,6 +148,22 @@ std::map<std::pair<const QString, const QFont>, const QString> Style::stylesheet
 
 const QString Style::getStylesheet(const QString& filename, const QFont& baseFont) {
     QString folder = QDir::isAbsolutePath(filename) ? QString() : getThemeFolder();
+    const QString fullPath = folder + filename;
+    //    qDebug() << "theme:" << fullPath;
+    const std::pair<const QString, const QFont> cacheKey(fullPath, baseFont);
+    auto it = stylesheetsCache.find(cacheKey);
+    if (it != stylesheetsCache.end()) {
+        // cache hit
+        return it->second;
+    }
+    // cache miss, new styleSheet, read it from file and add to cache
+    const QString newStylesheet = resolve(filename, baseFont);
+    stylesheetsCache.insert(std::make_pair(cacheKey, newStylesheet));
+    return newStylesheet;
+}
+
+const QString Style::getStylesheetFile(const QString& filename, const QFont& baseFont) {
+    QString folder = ":styles/";
     const QString fullPath = folder + filename;
     //    qDebug() << "theme:" << fullPath;
     const std::pair<const QString, const QFont> cacheKey(fullPath, baseFont);
@@ -216,8 +232,8 @@ QFont Style::getFont(Style::Font font) {
 }
 
 const QString Style::resolve(const QString& filename, const QFont& baseFont) {
-    QString themePath = QDir::isAbsolutePath(filename) ? QString() : getThemeFolder();
-    QString fullPath = themePath + filename;
+
+    QString fullPath = ":styles/" + filename;
     QString qss;
 
     QFile file{fullPath};
@@ -365,7 +381,7 @@ void Style::applyTheme() {
 }
 
 void Style::initPalette() {
-    QSettings settings(getThemePath() % "palette.ini", QSettings::IniFormat);
+    QSettings settings(getThemePath(), QSettings::IniFormat);
 
     settings.beginGroup("colors");
     QMap<Style::ColorPalette, QString> c;
@@ -399,11 +415,16 @@ void Style::initDictColor() {
                  {"@action", Style::getColor(Style::ColorPalette::Action).name()},
                  {"@link", Style::getColor(Style::ColorPalette::Link).name()},
                  {"@searchHighlighted", Style::getColor(Style::ColorPalette::SearchHighlighted).name()},
-                 {"@selectText", Style::getColor(Style::ColorPalette::SelectText).name()}};
+                 {"@selectText", Style::getColor(Style::ColorPalette::SelectText).name()},
+                 {"@themeMedium", Style::getColor(Style::ColorPalette::ThemeMedium).name()},
+                 {"@themeMediumDark", Style::getColor(Style::ColorPalette::ThemeMediumDark).name()},
+                 {"@themeLight", Style::getColor(Style::ColorPalette::ThemeLight).name()},
+                 {"@themeHighlight", Style::getColor(Style::ColorPalette::ThemeHighlight).name()},
+    };
 }
 
 QString Style::getThemePath() {
-    auto num = (int)OkSettings::getInstance().getThemeColor();
+    auto num = (int)OkSettings::getInstance()->getThemeColor();
     if (themeNameColors[num].type == MainTheme::Dark) {
         return BuiltinThemeDarkPath;
     }

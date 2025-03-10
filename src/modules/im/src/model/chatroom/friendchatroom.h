@@ -50,18 +50,11 @@ public slots:
 
     bool canBeInvited() const;
 
-    int getCircleId() const;
-    QString getCircleName() const;
+
 
     void inviteFriend(const Group* group);
 
-    bool autoAcceptEnabled() const;
-    QString getAutoAcceptDir() const;
-    void disableAutoAccept();
-    void setAutoAcceptDir(const QString& dir);
-
     QVector<GroupToDisplay> getGroups() const;
-    QVector<CircleToDisplay> getOtherCircles() const;
 
     void resetEventFlags();
 

@@ -5,7 +5,7 @@ add_definitions(-DOK_${PROJECT_NAME}_MODULE="${PROJECT_NAME}")
 file( GLOB ${PROJECT_NAME}_SOURCES src/*.cpp )
 file( GLOB ${PROJECT_NAME}_UIS src/*.ui )
 file(GLOB ${PROJECT_NAME}_TSS ts/*.xml)
-file(GLOB ${PROJECT_NAME}_QSS qss/*.css)
+file(GLOB ${PROJECT_NAME}_QSS styles/*.css)
 
 qt5_wrap_ui(${PROJECT_NAME}_FORMS
        ${${PROJECT_NAME}_UIS}
@@ -37,7 +37,7 @@ file(APPEND "${RESOURCE_NAME}"
 # qss
 file(APPEND "${RESOURCE_NAME}"
 "
-<qresource prefix=\"/qss\">
+<qresource prefix=\"/styles\">
 ")
 foreach (file ${${PROJECT_NAME}_QSS})
     get_filename_component(file_name ${file} NAME)

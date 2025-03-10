@@ -16,8 +16,6 @@
 #include <QPainter>
 #include <QSvgRenderer>
 
-#include "src/base/logs.h"
-#include "src/base/widgets.h"
 #include "ui_BannerWidget.h"
 
 namespace UI {
@@ -27,7 +25,7 @@ BannerWidget::BannerWidget(QWidget* parent)
     ui->setupUi(this);
     ui->imgBox->setGeometry(rect());
     ui->imgBox->setFixedSize(256, 256);
-    ui->imgBox->setStyleSheet("border-image: url(:/resources/logo/main.svg);");
+    ui->imgBox->setStyleSheet("border-image: url(:/logo/main.svg);");
 }
 
 BannerWidget::~BannerWidget() {}

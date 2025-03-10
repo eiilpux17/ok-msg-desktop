@@ -420,9 +420,9 @@ QVector<VideoDevice> CameraDevice::getDeviceList() {
  * This is either the device in the settings or the system default.
  */
 QString CameraDevice::getDefaultDeviceName() {
-    auto& s = lib::settings::OkSettings::getInstance();
+    auto* s = lib::settings::OkSettings::getInstance();
 
-    QString defaultdev = s.getVideoDev();
+    QString defaultdev = s->getVideoDev();
     qDebug() << "Get the set video device:" << defaultdev;
     // if (!getDefaultInputFormat()) return defaultdev;
 

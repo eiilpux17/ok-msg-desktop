@@ -42,9 +42,6 @@ class QVBoxLayout;
 class QHBoxLayout;
 class QTimer;
 
-namespace Ui {
-class MainWindow;
-}
 
 namespace module::im {
 

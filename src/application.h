@@ -17,7 +17,7 @@
 #include <memory>
 
 #include "UI/login/src/LoginWindow.h"
-#include "UI/main/src/MainWindow.h"
+#include "UI/main/src/OMainWindow.h"
 #include "lib/session/profile.h"
 #include "lib/storage/StorageManager.h"
 #include "lib/audio/iaudiocontrol.h"
@@ -96,7 +96,7 @@ private:
     Bus* _bus;
 
     std::unique_ptr<UI::LoginWindow> m_loginWindow;
-    std::unique_ptr<UI::MainWindow> m_mainWindow;
+    std::unique_ptr<UI::OMainWindow> m_mainWindow;
 
     //Audio controller
     std::unique_ptr<lib::audio::IAudioControl> audioControl;

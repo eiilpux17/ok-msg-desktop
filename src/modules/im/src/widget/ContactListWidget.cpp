@@ -147,18 +147,6 @@ void ContactListWidget::updateFriendActivity(const Friend& frnd) {
     updateActivityTime(oldTime);  // update old category widget
 }
 
-void ContactListWidget::setMode(SortingMode mode) {
-    if (this->mode == mode) return;
-
-    this->mode = mode;
-    //    Nexus::getProfile()->getSettings()->setFriendSortingMode(mode);
-
-    //    sortByMode(mode);
-}
-
-ContactListWidget::SortingMode ContactListWidget::getMode() const {
-    return mode;
-}
 
 GroupWidget* ContactListWidget::addGroup(const GroupId& groupId, const QString& groupName) {
     qDebug() << __func__ << groupId.toString();
@@ -355,45 +343,18 @@ void ContactListWidget::dropEvent(QDropEvent* event) {
 void ContactListWidget::showEvent(QShowEvent* event) {}
 
 void ContactListWidget::moveWidget(FriendWidget* widget, Status s, bool add) {
-    if (mode == SortingMode::Name) {
-        const Friend* f = widget->getFriend();
-        //    int circleId =
-        //    Nexus::getProfile()->getSettings()->getFriendCircleID(f->getPublicKey());//
-        //    CircleWidget *circleWidget = CircleWidget::getFromID(circleId);
 
-        //    if (circleWidget == nullptr || add) {
-        //      if (circleId != -1)
-        //        Nexus::getProfile()->getSettings()->setFriendCircleID(f->getPublicKey(), -1);
-
-        //      listLayout->addFriendWidget(widget, s);
-        //      return;
-        //    }
-
-        //    circleWidget->addFriendWidget(widget, s);
-    } else {
-        //    const IMFriend *contact = widget->getFriend();
-        //    auto *categoryWidget = getTimeCategoryWidget(contact);
-        //    categoryWidget->addFriendWidget(widget, contact->getStatus());
-        //    categoryWidget->show();
-    }
 }
 
 void ContactListWidget::updateActivityTime(const QDateTime& time) {
-    if (mode != SortingMode::Activity) return;
 
-    int timeIndex = static_cast<int>(ok::base::getTimeBucket(time));
+
+    // int timeIndex = static_cast<int>(ok::base::getTimeBucket(time));
     //  QWidget *widget = activityLayout->itemAt(timeIndex)->widget();
     //  CategoryWidget *categoryWidget = static_cast<CategoryWidget *>(widget);
     //  categoryWidget->updateStatus();
     //  categoryWidget->setVisible(categoryWidget->hasChatrooms());
 }
-
-// update widget after add/delete/hide/show
-// void ContactListWidget::reDraw() {
-//     hide();
-//     show();
-//     resize(QSize());  // lifehack
-// }
 
 GroupWidget* ContactListWidget::getGroup(const GroupId& id) {
     return groupWidgets.value(id.toString());

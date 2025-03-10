@@ -23,6 +23,7 @@
 #include <QSettings>
 #include <QStandardPaths>
 #include <QThread>
+#include <QTimer>
 
 #include "base/autorun.h"
 #include "base/system/sys_info.h"
@@ -47,13 +48,14 @@ static QStringList locales = {
 
 OkSettings::OkSettings(QObject* parent)
         : QObject(parent)
-        , settingsThread(nullptr)
+        // , settingsThread(nullptr)
         , currentProfileId(0)
         , themeColor(MainTheme::Light){
-    settingsThread = new QThread();
-    settingsThread->setObjectName(objectName());
-    settingsThread->start(QThread::LowPriority);
-    moveToThread(settingsThread);
+
+    // settingsThread = new QThread();
+    // settingsThread->setObjectName("Global-Settings");
+    // settingsThread->start(QThread::LowPriority);
+    // moveToThread(settingsThread);
 
     qRegisterMetaType<MainTheme>("MainTheme");
     connect(this, &OkSettings::themeColorChanged, this, &OkSettings::saveGlobal);
@@ -64,7 +66,8 @@ OkSettings::OkSettings(QObject* parent)
     connect(this, &OkSettings::camVideoResChanged, this, &OkSettings::saveGlobal);
     connect(this, &OkSettings::camVideoFPSChanged, this, &OkSettings::saveGlobal);
 
-    path = getGlobalSettingsFile();
+
+    path.setFileName(getGlobalSettingsFile());
     qDebug() << "Settings file at:" << path;
     loadGlobal();
 }
@@ -76,8 +79,9 @@ OkSettings::~OkSettings() {
 void OkSettings::loadGlobal() {
     QMutexLocker locker{&bigLock};
 
-    QSettings s(path, QSettings::IniFormat, this);
-    qDebug() << "Loaded global settings at:" << path;
+    QSettings s(path.fileName(), QSettings::IniFormat, this);
+    qDebug() << __func__ << "settings at:" << path;
+
     s.setIniCodec("UTF-8");
     s.beginGroup("General");
     {
@@ -138,13 +142,10 @@ void OkSettings::loadGlobal() {
 }
 
 void OkSettings::saveGlobal() {
-
-    qDebug() << __func__;
-
     QMutexLocker locker{&bigLock};
-    qDebug() << "Loaded global settings at:" << path;
+    qDebug() << __func__ << "settings at:" << path;
 
-    QSettings s(path, QSettings::IniFormat, this);
+    QSettings s(path.fileName(), QSettings::IniFormat, this);
     s.setIniCodec("UTF-8");
 
     s.clear();
@@ -198,10 +199,10 @@ void OkSettings::saveGlobal() {
     qDebug() << "Saved global settings at:" << path;
 }
 
-OkSettings& OkSettings::getInstance() {
+OkSettings* OkSettings::getInstance() {
     static OkSettings* settings = nullptr;
     if (!settings) settings = new OkSettings();
-    return *settings;
+    return settings;
 }
 
 // 国际化下拉框

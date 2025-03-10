@@ -10,10 +10,9 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#ifndef WIDGET_H
-#define WIDGET_H
+#pragma once
 
-#include "ui_mainwindow.h"
+#include "lib/ui/widget/OWidget.h"
 
 #include <QFileInfo>
 #include <QMainWindow>
@@ -26,7 +25,6 @@
 #include "src/core/toxid.h"
 #include "src/model/FriendId.h"
 #include "src/model/groupid.h"
-#include "ui_mainwindow.h"
 
 #include <base/timer.h>
 #if DESKTOP_NOTIFICATIONS
@@ -35,10 +33,6 @@
 
 #define PIXELS_TO_ACT 7
 
-namespace Ui {
-class IMMainWindow;
-}
-
 class AlSink;
 class Camera;
 class QActionGroup;
@@ -46,7 +40,8 @@ class QMenu;
 class QPushButton;
 class QSplitter;
 class QTimer;
-
+class QVBoxLayout;
+class QTabWidget;
 
 
 namespace module::im {
@@ -93,7 +88,7 @@ enum class ActiveToolMenuButton {
     None,
 };
 
-class Widget final : public QFrame {
+class Widget final : public lib::ui::OWidget {
     Q_OBJECT
 public:
     explicit Widget(QWidget* parent = nullptr);
@@ -245,7 +240,8 @@ private:
     void setStatusAway();
     void setStatusBusy();
 
-    Ui::IMMainWindow* ui;
+    QTabWidget* tabWidget;
+    QVBoxLayout* layout;
     QSplitter* centralLayout;
 
     ChatWidget* chatWidget;
@@ -284,4 +280,4 @@ private:
 
 bool toxActivateEventHandler(const QByteArray& data);
 }  // namespace module::im
-#endif  // WIDGET_H
+

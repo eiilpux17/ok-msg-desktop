@@ -55,7 +55,7 @@ Widget::Widget(QWidget* parent) : lib::ui::OFrame(parent), ui(new Ui::WorkPlatfo
     reloadTheme();
 
     auto a = ok::Application::Instance();
-    QString locale = lib::settings::OkSettings::getInstance().getTranslation();
+    QString locale = lib::settings::OkSettings::getInstance()->getTranslation();
     settings::Translator::translate(OK_Platform_MODULE, locale);
 
     retranslateUi();

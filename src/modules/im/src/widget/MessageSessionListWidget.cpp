@@ -58,13 +58,15 @@ inline QDateTime getActiveTimeFriend(const Friend* contact) {
 MessageSessionListWidget::MessageSessionListWidget(MainLayout* parent,
                                                    ContentLayout* contentBox,
                                                    bool groupsOnTop)
-        : QWidget(parent), m_contentLayout(contentBox), groupsOnTop(groupsOnTop) {
+        : lib::ui::OWidget(parent), m_contentLayout(contentBox), groupsOnTop(groupsOnTop) {
     setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
     setAcceptDrops(true);
+
 
     // Prevent QLayout's add child warning before setting the mode.
     listLayout = new ContactListLayout(this);
     setLayout(listLayout);
+
 
     auto w = Widget::getInstance();
     connect(w, &Widget::toDeleteChat, this, &MessageSessionListWidget::do_deleteSession);
@@ -76,6 +78,8 @@ MessageSessionListWidget::MessageSessionListWidget(MainLayout* parent,
     new QShortcut(QKeySequence(Qt::Key_Down), this, [this](){
         cycleMessageSession(false);
     });
+
+
 }
 
 MessageSessionListWidget::~MessageSessionListWidget() {

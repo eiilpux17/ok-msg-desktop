@@ -10,17 +10,82 @@ add_subdirectory(lib)
 add_subdirectory(modules)
 add_subdirectory(UI)
 
-# Add RC files.
-set(${PROJECT_NAME}_RC_FILES
-    icon/icon.rc)
+
 
 # Add QRC files.
-set(${PROJECT_NAME}_QRC_FILES
-    resources/application.qrc)
+# set(${PROJECT_NAME}_QRC_FILES resources/application.qrc)
 
-set(${PROJECT_NAME}_RESOURCES
-    ${${PROJECT_NAME}_RC_FILES}
-    ${${PROJECT_NAME}_QRC_FILES})
+# application.qrc
+set(RESOURCE_NAME "${PROJECT_BINARY_DIR}/application.qrc.in")
+
+file(WRITE "${RESOURCE_NAME}"
+		"<!DOCTYPE RCC>
+<RCC version=\"1.0\">
+")
+
+file(APPEND "${RESOURCE_NAME}"
+ "<qresource prefix=\"/icon\">\n")
+
+# Add icon files.
+file(GLOB ${PROJECT_NAME}_ICON resources/icon/icon.rc)
+foreach (item ${${PROJECT_NAME}_ICON})
+	get_filename_component(item_name ${item} NAME)
+	file(APPEND "${RESOURCE_NAME}"
+			"    <file alias=\"${item_name}\">${item}</file>\n")
+endforeach (item)
+file(APPEND "${RESOURCE_NAME}" "</qresource>\n")
+# Add icon files end.
+
+# Add Logo images
+file(APPEND "${RESOURCE_NAME}"
+ "<qresource prefix=\"/logo\">\n")
+ file(GLOB ${PROJECT_NAME}_LOGO resources/logo/app.icns resources/logo/main.svg)
+ foreach (item ${${PROJECT_NAME}_LOGO})
+ get_filename_component(item_name ${item} NAME)
+ file(APPEND "${RESOURCE_NAME}"
+         "    <file alias=\"${item_name}\">${item}</file>\n")
+endforeach (item)
+file(APPEND "${RESOURCE_NAME}" "</qresource>\n")
+# Add Logo images end.
+
+# Add styles
+file(APPEND "${RESOURCE_NAME}"
+ "<qresource prefix=\"/styles\">\n")
+ file(GLOB ${PROJECT_NAME}_styles resources/styles/*.css)
+ foreach (item ${${PROJECT_NAME}_styles})
+ get_filename_component(item_name ${item} NAME)
+ file(APPEND "${RESOURCE_NAME}"
+         "    <file alias=\"${item_name}\">${item}</file>\n")
+endforeach (item)
+file(APPEND "${RESOURCE_NAME}" "</qresource>\n")
+# Add styles end.
+
+# Add themes
+file(APPEND "${RESOURCE_NAME}"
+ "<qresource prefix=\"/themes\">\n")
+ file(GLOB ${PROJECT_NAME}_themes resources/themes/*.ini)
+ foreach (item ${${PROJECT_NAME}_themes})
+ get_filename_component(item_name ${item} NAME)
+ file(APPEND "${RESOURCE_NAME}"
+         "    <file alias=\"${item_name}\">${item}</file>\n")
+endforeach (item)
+file(APPEND "${RESOURCE_NAME}" "</qresource>\n")
+# Add themes end.
+
+file(APPEND "${RESOURCE_NAME}" "</RCC>")
+
+
+execute_process(
+		COMMAND
+		${CMAKE_COMMAND} -E copy_if_different
+		${RESOURCE_NAME}
+		${PROJECT_BINARY_DIR}/application.qrc)
+
+list(APPEND ${PROJECT_NAME}_RESOURCES ${PROJECT_BINARY_DIR}/application.qrc)
+message(STATUS "RESOURCES: ${${PROJECT_NAME}_RESOURCES}")
+qt5_add_resources(
+${${PROJECT_NAME}_RESOURCES}
+)
 
 file(GLOB ${PROJECT_NAME}_SOURCES *.h *.cpp)
 

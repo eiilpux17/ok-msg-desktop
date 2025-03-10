@@ -22,6 +22,11 @@ QPushButton {
 	width: 52px;
 	height: 52px;
 	outline: none;
+	border:0;
+}
+
+QPushButton:hover{
+  border:0
 }
 
 QPushButton#chatBtn,

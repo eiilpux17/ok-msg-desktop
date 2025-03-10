@@ -120,8 +120,8 @@ void SettingsWidget::onUpdateAvailable() {
 }
 
 void SettingsWidget::retranslateUi() {
-    auto& settings = lib::settings::OkSettings::getInstance();
-    auto locale = settings.getTranslation();
+    auto* settings = lib::settings::OkSettings::getInstance();
+    auto locale = settings->getTranslation();
     settings::Translator::translate(OK_IM_MODULE, locale);
 
     for (size_t i = 0; i < cfgForms.size(); ++i){

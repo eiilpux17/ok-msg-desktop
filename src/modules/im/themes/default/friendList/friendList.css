@@ -29,29 +29,6 @@ QLabel {
     color: @mainText;
 }
 
-module--im--MessageSessionWidget{
-    border: 0;
-    border-radius: 5px;
-}
-
-module--im--MessageSessionWidget:hover{
-    background-color:@themeLight;
-}
-
-module--im--MessageSessionWidget:selected{
-    background-color:@themeLight;
-}
-
-module--im--MessageSessionWidget QLabel#nameLabel{
-    color: @mainText;
-}
-
-module--im--MessageSessionWidget QLabel#lastMessageLabel:!active{
-    color: #b3b1b3;
-}
-module--im--MessageSessionWidget QLabel#lastMessageLabel:active{
-    color: #b3b1b3;
-}
 
 module--im--ContactListLayout {
   border: 0;

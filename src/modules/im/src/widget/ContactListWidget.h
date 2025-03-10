@@ -39,11 +39,9 @@ class MainLayout;
 class ContactListWidget : public QFrame {
     Q_OBJECT
 public:
-    using SortingMode = Settings::FriendListSortingMode;
+
     explicit ContactListWidget(QWidget* parent, bool groupsOnTop = true);
     ~ContactListWidget();
-    void setMode(SortingMode mode);
-    SortingMode getMode() const;
     void reloadTheme();
 
     FriendWidget* addFriend(const FriendId& friendId);
@@ -83,8 +81,6 @@ protected:
 
 private:
     void updateFriendActivity(const Friend& frnd);
-
-    SortingMode mode;
 
     bool groupsOnTop;
     ContactListLayout* listLayout;

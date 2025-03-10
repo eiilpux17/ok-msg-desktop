@@ -19,10 +19,6 @@
 
 class QTimer;
 
-namespace Ui {
-class MainWindow;
-}
-
 namespace lib::ui {
 class FlowLayout;
 }

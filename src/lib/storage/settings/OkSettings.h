@@ -32,9 +32,9 @@ enum class MainTheme;
 class OkSettings : public QObject, public audio::IAudioSettings, public video::IVideoSettings {
     Q_OBJECT
 public:
-    explicit OkSettings(QObject* parent = nullptr);
+
     ~OkSettings() override;
-    static OkSettings& getInstance();
+    static OkSettings* getInstance();
 
     QString getGlobalSettingsFile();
 
@@ -207,9 +207,10 @@ public:
     SIGNAL_IMPL(OkSettings, camVideoFPSChanged, unsigned short fps)
 
 private:
+    explicit OkSettings(QObject* parent = nullptr);
     static uint32_t makeProfileId(const QString& profile);
 
-    QThread* settingsThread;
+    // QThread* settingsThread;
 
     CompatibleRecursiveMutex bigLock;
 
@@ -235,7 +236,7 @@ private:
     QByteArray windowState;
     QByteArray dialogGeometry;
 
-    QString path;
+    QFile path;
 
     // Audio 音频
     QString inDev;

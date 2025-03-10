@@ -125,6 +125,6 @@ void StorageSettingsForm::onProfileChanged(Profile* profile) {
 
     // bodyUI->autoAwaySpinBox->setValue(s.getAutoAwayTime());
     // bodyUI->maxAutoAcceptSizeMB->setValue(static_cast<double>(s.getMaxAutoAcceptSize()) / 1024 /
-    // 1024); bodyUI->autoacceptFiles->setChecked(okSettings.getAutoSaveEnabled());
+    // 1024); bodyUI->autoacceptFiles->setChecked(okSettings->getAutoSaveEnabled());
 }
 }  // namespace module::im

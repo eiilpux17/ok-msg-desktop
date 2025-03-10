@@ -30,6 +30,8 @@
 
 #include <src/core/icoresettings.h>
 
+#include <lib/storage/settings/OkSettings.h>
+
 namespace module::im {
 class Settings;
 /**
@@ -93,7 +95,15 @@ public:
     QString setPassword(const QString& pwd);
     QString getHost();
 
-    [[nodiscard]] Settings* getSettings() const;
+    [[nodiscard]] lib::settings::OkSettings* getGloablSettings() const{
+        return globalSettings.get();
+    }
+
+
+    [[nodiscard]] Settings* getSettings() const{
+        return settings.get();
+    }
+
 
     const QDir& getDir() const {
         assert(_profile);
@@ -118,9 +128,11 @@ private:
 
     lib::storage::StorageManager* storageManager;
 
-    std::unique_ptr<Settings> s;
-    std::unique_ptr<lib::settings::OkSettings> okSettings;
+    std::unique_ptr<Settings> settings;
     std::shared_ptr<lib::db::RawDatabase> db;
+
+    //全局设置
+    std::unique_ptr<lib::settings::OkSettings> globalSettings;
 signals:
     void coreChanged(Core& core);
 

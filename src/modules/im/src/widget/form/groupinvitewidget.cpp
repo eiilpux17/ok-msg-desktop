@@ -50,11 +50,11 @@ GroupInviteWidget::GroupInviteWidget(QWidget* parent, const GroupInvite& invite)
  * @brief Retranslate all elements in the form.
  */
 void GroupInviteWidget::retranslateUi() {
-    auto& s = lib::settings::OkSettings::getInstance();
+    auto* s = lib::settings::OkSettings::getInstance();
 
     QDateTime inviteDate = inviteInfo.getInviteDate();
-    QString date = inviteDate.toString(s.getDateFormat());
-    QString time = inviteDate.toString(s.getTimestampFormat());
+    QString date = inviteDate.toString(s->getDateFormat());
+    QString time = inviteDate.toString(s->getTimestampFormat());
 
     QString name = Nexus::getCore()->getFriendUsername(inviteInfo.getFriendId());
     inviteMessageLabel->setText(tr("Invited by %1 on %2 at %3.")

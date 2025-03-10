@@ -356,11 +356,11 @@ void OpenAL::destroySource(AlSource& source) {
  * @return true, if device was initialized; false otherwise
  */
 bool OpenAL::autoInitInput() {
-    return alInDev ? true : initInput(lib::settings::OkSettings::getInstance().getInDev());
+    return alInDev ? true : initInput(lib::settings::OkSettings::getInstance()->getInDev());
 }
 
 bool OpenAL::autoInitOutput() {
-    return alOutDev ? true : initOutput(lib::settings::OkSettings::getInstance().getOutDev());
+    return alOutDev ? true : initOutput(lib::settings::OkSettings::getInstance()->getOutDev());
 }
 
 bool OpenAL::initInput(const QString& deviceName) {
@@ -415,7 +415,7 @@ bool OpenAL::initOutput(const QString& deviceName) {
     assert(sinks.size() == 0);
 
     outputInitialized = false;
-    if (!lib::settings::OkSettings::getInstance().getAudioOutDevEnabled()) return false;
+    if (!lib::settings::OkSettings::getInstance()->getAudioOutDevEnabled()) return false;
 
     qDebug() << "Opening audio output" << deviceName;
     assert(!alOutDev);

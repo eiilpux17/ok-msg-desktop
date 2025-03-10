@@ -16,8 +16,7 @@
 #include <QApplication>
 #include <QObject>
 
-#include "base/Page.h"
-#include "src/UI/main/src/MainWindow.h"
+#include "src/UI/main/src/OMainWindow.h"
 
 namespace UI {
 
@@ -38,12 +37,12 @@ QFrame* WindowManager::getPage(SystemMenu menu) {
 }
 
 void WindowManager::startMainUI() {
-    m_mainWindow = std::make_unique<UI::MainWindow>();
+    m_mainWindow = std::make_unique<UI::OMainWindow>();
 
     /**
      * connect menu's button events.
      */
-    connect(m_mainWindow.get(), &UI::MainWindow::toClose,  //
+    connect(m_mainWindow.get(), &UI::OMainWindow::toClose,  //
             [&]() { emit mainClose({m_mainWindow->saveGeometry()}); });
 
     // 统一注册类型

@@ -11,12 +11,6 @@
  */
 
 
-QWidget#ChatContentWidget
-{
-    background: @groundBase;
-    border: 0px solid;
-    border-radius: 10px;
-}
 
 QWidget#searchContactsContainer
 {
@@ -42,12 +36,7 @@ QSplitter::handle
 
 
 lib--ui--RoundedMaskContainer#statusPanel{
-    background: @groundBase;
+    background: @groundExtra;
     qproperty-radius: 10;
-    border: 0px solid;
-}
-
-module--im--ChatWidget {
-    background: @groundBase;
     border: 0px solid;
 }

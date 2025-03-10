@@ -128,7 +128,7 @@ ContentDialog* FriendWidget::addFriendDialog(const Friend* frnd) {
         dialog = createContentDialog();
     }
 
-            //    auto& settings = Nexus::getProfile()->getSettings();
+            //    auto* settings = Nexus::getProfile()->getSettings();
 
             //  FriendWidget *widget = friendWidgets[friendPk];
             //  bool isCurrent = activeChatroomWidget == widget;
@@ -218,33 +218,6 @@ void FriendWidget::onContextMenuCalled(QContextMenuEvent* event) {
             //            [=, this]() { chatRoom->inviteFriend(group.group); });
             //  }
             //
-            //  const auto circleId = chatRoom->getCircleId();
-            //  auto circleMenu = menu.addMenu(
-            //      tr("Move to circle...", "Menu to move a friend into a different
-            //      circle"));
-            //
-            //  const auto newCircleAction = circleMenu->addAction(tr("To new circle"));
-            //  connect(newCircleAction, &QAction::triggered, this,
-            //          &FriendWidget::moveToNewCircle);
-            //
-            //  if (circleId != -1) {
-            //    const auto circleName = chatRoom->getCircleName();
-            //    const auto removeCircleAction =
-            //        circleMenu->addAction(tr("Remove from circle
-            //        '%1'").arg(circleName));
-            //    connect(removeCircleAction, &QAction::triggered, this,
-            //            &FriendWidget::removeFromCircle);
-            //  }
-            //  circleMenu->addSeparator();
-            //
-            //  for (const auto &circle : chatRoom->getOtherCircles()) {
-            //    QAction *action =
-            //        new QAction(tr("Move  to circle \"%1\"").arg(circle.name),
-            //        circleMenu);
-            //    connect(action, &QAction::triggered,
-            //            [this]() { moveToCircle(circle.circleId); });
-            //    circleMenu->addAction(action);
-            //  }
 
             //  const auto setAlias = menu.addAction(tr("Set alias..."));
             //  connect(setAlias, &QAction::triggered, nameLabel, &CroppingLabel::editBegin);

@@ -12,8 +12,8 @@
   -->
 
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>OMainWindow</class>
+ <widget class="QMainWindow" name="OMainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>

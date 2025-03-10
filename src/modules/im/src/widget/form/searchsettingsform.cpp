@@ -100,7 +100,7 @@ void SearchSettingsForm::reloadTheme() {
 }
 
 void SearchSettingsForm::updateStartDateLabel() {
-    ui->startDateLabel->setText(startDate.toString(lib::settings::OkSettings().getDateFormat()));
+    ui->startDateLabel->setText(startDate.toString(lib::settings::OkSettings::getInstance()->getDateFormat()));
 }
 
 void SearchSettingsForm::setUpdate(const bool isUpdate) {

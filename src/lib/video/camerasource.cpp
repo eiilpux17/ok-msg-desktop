@@ -65,7 +65,7 @@ std::unique_ptr<CameraSource> CameraSource::CreateInstance(const VideoDevice &de
  * @note If a device is already open, the source will seamlessly switch to the new device.
  */
 void CameraSource::setupDefault() {
-    auto s = &lib::settings::OkSettings::getInstance();
+    auto* s = lib::settings::OkSettings::getInstance();
 
     auto deviceName = CameraDevice::getDefaultDeviceName();
     qDebug() << "Setup default device:" << deviceName;

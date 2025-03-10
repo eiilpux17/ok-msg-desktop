@@ -37,8 +37,7 @@ class LoginWindow : public QMainWindow {
     Q_OBJECT
 public:
     explicit LoginWindow(std::shared_ptr<lib::session::AuthSession> session,  //
-                         bool bootstrap,                                      //
-                         QWidget* parent = nullptr);
+                         bool bootstrap);
     ~LoginWindow();
 
     [[nodiscard]] LoginWidget* widget() { return loginWidget; }

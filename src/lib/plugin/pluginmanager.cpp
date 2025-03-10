@@ -21,7 +21,6 @@
 #include "OkOptions.h"
 #include "base/OkAccount.h"
 #include "base/basic_types.h"
-#include "base/task.h"
 #include "files.h"
 #include "iqnamespacefilter.h"
 #include "lib/messenger/Messenger.h"
@@ -175,7 +174,7 @@ bool PluginManager::installPlugin(const QString& filePath, const QString& shortN
         return false;
     }
 
-    auto pluginFile = lib::settings::OkSettings().getAppPluginPath().path() + '/' + shortName;
+    auto pluginFile = lib::settings::OkSettings::getInstance()->getAppPluginPath().path() + '/' + shortName;
     auto moved = ok::base::Files::moveFile(filePath, pluginFile);
     if (!moved) {
         qWarning() << "Plugin move failed!";

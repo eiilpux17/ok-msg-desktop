@@ -495,7 +495,7 @@ private:
     int themeColor;
 
     static CompatibleRecursiveMutex bigLock;
-    static QThread* settingsThread;
+    // static QThread* settingsThread;
 };
 }  // namespace module::im
 #endif  // SETTINGS_HPP

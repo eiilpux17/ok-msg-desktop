@@ -133,8 +133,8 @@ void Nexus::start(std::shared_ptr<lib::session::AuthSession> session) {
     qDebug() << "Starting up";
     stared = true;
 
-    auto& s = lib::settings::OkSettings::getInstance();
-    QString locale = s.getTranslation();
+    auto* s = lib::settings::OkSettings::getInstance();
+    QString locale = s->getTranslation();
     qDebug() << "locale" << locale;
 
     settings::Translator::translate(OK_IM_MODULE, locale);

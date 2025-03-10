@@ -14,18 +14,17 @@
 #include "BannerWidget.h"
 
 #include "LoginWidget.h"
-#include "base/files.h"
 #include "base/resources.h"
 #include "ui_LoginWindow.h"
+#include "lib/storage/settings/style.h"
 
 namespace UI {
 
 using namespace lib::session;
 
 /* 登录主窗口 */
-LoginWindow::LoginWindow(std::shared_ptr<lib::session::AuthSession> session, bool bootstrap,
-                         QWidget* parent)
-        : QMainWindow(parent), ui(new Ui::LoginWindow) {
+LoginWindow::LoginWindow(std::shared_ptr<lib::session::AuthSession> session, bool bootstrap)
+        : ui(new Ui::LoginWindow) {
     ui->setupUi(this);
 
     OK_RESOURCE_INIT(UILoginWindow);
@@ -35,6 +34,11 @@ LoginWindow::LoginWindow(std::shared_ptr<lib::session::AuthSession> session, boo
     // 黄金分割比例 874/520 = 1.618
     setFixedSize(QSize(874, 520));
 
+    // 样式
+    // auto css = lib::settings::Style::getStylesheetFile("application.css");
+    // qDebug() << css;
+    // setStyleSheet(css);
+
     bannerWidget = new BannerWidget(this);
     bannerWidget->setFixedWidth(width() / 2);
 
@@ -43,8 +47,9 @@ LoginWindow::LoginWindow(std::shared_ptr<lib::session::AuthSession> session, boo
     loginWidget = new LoginWidget(session, bootstrap, this);
     ui->hBoxLayout->addWidget(loginWidget);
 
+
     // 设置样式
-    QString qss = ok::base::Files::readStringAll(":/qss/login.css");
+    auto qss = lib::settings::Style::getStylesheetFile("login.css");
     setStyleSheet(qss);
 }
 

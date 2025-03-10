@@ -23,7 +23,7 @@
 #include "Bus.h"
 #include "UI/login/src/LoginWidget.h"
 #include "UI/login/src/LoginWindow.h"
-#include "UI/main/src/MainWindow.h"
+#include "UI/main/src/OMainWindow.h"
 #include "UI/main/src/OMainMenu.h"
 #include "base/files.h"
 #include "base/r.h"
@@ -33,6 +33,8 @@
 #include "lib/storage/StorageManager.h"
 #include "lib/storage/settings/OkSettings.h"
 #include "lib/audio/audio.h"
+
+#include <lib/storage/settings/style.h>
 
 namespace ok {
 
@@ -119,21 +121,21 @@ Application::Application(int& argc, char* argv[]) : QApplication(argc, argv) {
     ipc = new IPC(0, this);
 
     //获取设置
-    auto& s = lib::settings::OkSettings::getInstance();
+    auto* s = lib::settings::OkSettings::getInstance();
 
 
     //全局总线Bus
     _bus = new Bus(this);
     connect(_bus, &ok::Bus::languageChanged, [&](const QString& locale0) {
-        s.saveGlobal();
+        s->saveGlobal();
     });
 
     //选择的语言
-    QString locale = s.getTranslation();
+    QString locale = s->getTranslation();
     qDebug() << "locale" << locale;
 
     // 初始化音频
-    audioControl = std::unique_ptr<lib::audio::IAudioControl>(lib::audio::Audio::makeAudio(s));
+    audioControl = std::unique_ptr<lib::audio::IAudioControl>(lib::audio::Audio::makeAudio(*s));
     audioPlayer = new lib::audio::Player(this);
     connect(audioPlayer,  &lib::audio::Player::stateChanged, this,
             [](QString file , lib::audio::PlayState state){
@@ -141,7 +143,9 @@ Application::Application(int& argc, char* argv[]) : QApplication(argc, argv) {
             });
 
     // 样式
-    setStyleSheet(ok::base::Files::readStringAll(":/resources/style/application.css"));
+    auto css = lib::settings::Style::getStylesheetFile("application.css");
+    qDebug() << css;
+    setStyleSheet(css);
 
     qDebug() << "Application has be created";
 }
@@ -209,7 +213,7 @@ void Application::startMainUI() {
     }
 
     // Create main window
-    m_mainWindow = std::make_unique<UI::MainWindow>(session);
+    m_mainWindow = std::make_unique<UI::OMainWindow>(session);
     m_mainWindow->show();
 
 
@@ -258,11 +262,11 @@ void Application::on_logout(const QString& profile) {
 void Application::on_exit() {
     qDebug() << __func__;
     // auto &s = lib::settings::OkSettings::getInstance();
-    // s.saveGlobal();
+    // s->saveGlobal();
 }
 
 void Application::playNotificationSound(lib::audio::IAudioSink::Sound sound, bool loop) {
-    auto settings = &lib::settings::OkSettings::getInstance();
+    auto settings = lib::settings::OkSettings::getInstance();
     if (!settings->getAudioOutDevEnabled()) {
         // don't try to play sounds if audio is disabled
         return;

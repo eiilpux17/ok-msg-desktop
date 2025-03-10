@@ -219,9 +219,7 @@ void MessageSessionWidget::contextMenuEvent(QContextMenuEvent* event) {
  * Context menu handler. Always should be called to MessageSessionWidget from FriendList
  */
 void MessageSessionWidget::onContextMenuCalled(QContextMenuEvent* event) {
-    if (!active) {
-        setBackgroundRole(QPalette::Highlight);
-    }
+
 
     installEventFilter(this);  // Disable leave event.
 
@@ -235,40 +233,7 @@ void MessageSessionWidget::onContextMenuCalled(QContextMenuEvent* event) {
     connect(deleteAct, &QAction::triggered, this, &MessageSessionWidget::removeChat);
     //  inviteMenu->addSeparator();
 
-    //  for (const auto &group : chatRoom->getGroups()) {
-    //    const auto groupAction =
-    //        inviteMenu->addAction(tr("Invite to group '%1'").arg(group.name));
-    //    connect(groupAction, &QAction::triggered,
-    //            [=, this]() { chatRoom->inviteFriend(group.group); });
-    //  }
-    //
-    //  const auto circleId = chatRoom->getCircleId();
-    //  auto circleMenu = menu.addMenu(
-    //      tr("Move to circle...", "Menu to move a friend into a different
-    //      circle"));
-    //
-    //  const auto newCircleAction = circleMenu->addAction(tr("To new circle"));
-    //  connect(newCircleAction, &QAction::triggered, this,
-    //          &MessageSessionWidget::moveToNewCircle);
-    //
-    //  if (circleId != -1) {
-    //    const auto circleName = chatRoom->getCircleName();
-    //    const auto removeCircleAction =
-    //        circleMenu->addAction(tr("Remove from circle
-    //        '%1'").arg(circleName));
-    //    connect(removeCircleAction, &QAction::triggered, this,
-    //            &MessageSessionWidget::removeFromCircle);
-    //  }
-    //  circleMenu->addSeparator();
-    //
-    //  for (const auto &circle : chatRoom->getOtherCircles()) {
-    //    QAction *action =
-    //        new QAction(tr("Move  to circle \"%1\"").arg(circle.name),
-    //        circleMenu);
-    //    connect(action, &QAction::triggered,
-    //            [this]() { moveToCircle(circle.circleId); });
-    //    circleMenu->addAction(action);
-    //  }
+
 
     //  const auto setAlias = menu.addAction(tr("Set alias..."));
     //  connect(setAlias, &QAction::triggered, nameLabel, &CroppingLabel::editBegin);
@@ -313,9 +278,6 @@ void MessageSessionWidget::onContextMenuCalled(QContextMenuEvent* event) {
 
     removeEventFilter(this);
 
-    if (!active) {
-        setBackgroundRole(QPalette::Window);
-    }
 }
 
 void MessageSessionWidget::removeChat() {

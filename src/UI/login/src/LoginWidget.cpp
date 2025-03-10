@@ -11,6 +11,7 @@
  */
 
 #include "LoginWidget.h"
+#include <qnamespace.h>
 
 #include <QDesktopServices>
 #include <QPaintEvent>
@@ -49,6 +50,7 @@ LoginWidget::LoginWidget(std::shared_ptr<lib::session::AuthSession> session, boo
         , m_loaded(0) {
     qDebug() << __func__;
     ui->setupUi(this);
+    setAttribute(Qt::WA_TranslucentBackground, true);
 
     // return keyboard
     m_loginKey = new QShortcut(QKeySequence(Qt::Key_Return), this);
@@ -58,6 +60,7 @@ LoginWidget::LoginWidget(std::shared_ptr<lib::session::AuthSession> session, boo
     //  ui->settings->hide();
     ui->settings->setCursor(Qt::PointingHandCursor);
     ui->settings->installEventFilter(this);
+    // ui->loginBtn->setStyleSheet("background: red");
 
     // timer for login #TODO need to refactor
     if (bootstrap) {
@@ -97,22 +100,22 @@ void LoginWidget::init() {
     });
 
     // 2. i18n
-    auto& setting = lib::settings::OkSettings::getInstance();
-    qDebug() << "Last settings translation:" << setting.getTranslation();
+    auto* setting = lib::settings::OkSettings::getInstance();
+    qDebug() << "Last settings translation:" << setting->getTranslation();
 
-    for (int i = 0; i < setting.getLocales().size(); ++i) {
-        auto& locale = setting.getLocales().at(i);
+    for (int i = 0; i < setting->getLocales().size(); ++i) {
+        auto& locale = setting->getLocales().at(i);
         QString langName = QLocale(locale).nativeLanguageName();
         ui->language->addItem(langName);
     }
     // set default
-    auto i = setting.getLocales().indexOf(setting.getTranslation());
+    auto i = setting->getLocales().indexOf(setting->getTranslation());
     if (i >= 0 && i < ui->language->count()) ui->language->setCurrentIndex(i + 1);
 
     // 3.provider
     okCloudService = new lib::backend::OkCloudService(this);
     okCloudService->GetFederalInfo(
-            [&](lib::backend::Res<lib::backend::FederalInfo>& res) {
+            [&, setting](lib::backend::Res<lib::backend::FederalInfo>& res) {
                 for (const auto& item : res.data->states) {
                     if (!item.xmppHost.isEmpty()) {
                         ui->providers->addItem(item.name);
@@ -122,13 +125,12 @@ void LoginWidget::init() {
                 }
 
                 if (ui->providers->count() > 1) {
-                    auto& setting = lib::settings::OkSettings::getInstance();
-                    int index = ui->providers->findText(setting.getProvider());
+                    int index = ui->providers->findText(setting->getProvider());
                     // found
                     if (index != -1) {
                         ui->providers->setCurrentIndex(index);
                     } else {
-                        qDebug() << "provide not found in the comboBox: " << setting.getProvider();
+                        qDebug() << "provide not found in the comboBox: " << setting->getProvider();
                         ui->providers->setCurrentIndex(1);
                     }
 
@@ -246,10 +248,10 @@ void LoginWidget::on_language_currentIndexChanged(int index) {
         return;
     }
 
-    auto& s = lib::settings::OkSettings::getInstance();
-    const QString& locale = s.getLocales().at(index - 1);
-    s.setTranslation(locale);
-    s.saveGlobal();
+    auto* s = lib::settings::OkSettings::getInstance();
+    const QString& locale = s->getLocales().at(index - 1);
+    s->setTranslation(locale);
+    s->saveGlobal();
     qDebug() << "Selected locale:" << locale;
 
     settings::Translator::translate(OK_UILoginWindow_MODULE, locale);
@@ -266,9 +268,9 @@ void LoginWidget::on_providers_currentIndexChanged(int index) {
         return;
     }
 
-    auto& setting = lib::settings::OkSettings::getInstance();
+    auto setting = lib::settings::OkSettings::getInstance();
     QString provider = ui->providers->currentText();
-    QString settingProvider = setting.getProvider();
+    QString settingProvider = setting->getProvider();
 
     qDebug() << "setting provider: " << settingProvider << " wanna change to: " << provider;
 
@@ -276,8 +278,8 @@ void LoginWidget::on_providers_currentIndexChanged(int index) {
         qDebug() << "already in provider: " << provider;
         return;
     }
-    setting.setProvider(provider);
-    setting.saveGlobal();
+    setting->setProvider(provider);
+    setting->saveGlobal();
     qDebug() << "change to provider:" << provider;
 }
 
