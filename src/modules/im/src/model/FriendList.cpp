@@ -10,12 +10,12 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "friendlist.h"
+#include "FriendList.h"
 #include <QHash>
 #include <QMenu>
 #include <QDebug>
 #include "src/model/FriendId.h"
-#include "src/model/friend.h"
+#include "src/model/Friend.h"
 
 namespace module::im {
 
@@ -26,39 +26,26 @@ FriendList::~FriendList() {
 }
 
 Friend* FriendList::addFriend(Friend* newfriend) {
-    qDebug() << __func__ << "friendInfo:" << newfriend->toString();
-
     auto frnd = findFriend(newfriend->getId());
-    if (frnd) {
+    if (frnd.has_value()) {
         qWarning() << "friend is existing";
-        return frnd;
-    }
-
-    // auto* newfriend = new Friend(friendInfo.id, friendInfo.isFriend(), friendInfo.getAlias(), {});
+        return frnd.value();
+    }    
     friendMap[newfriend->getId().toString()] = newfriend;
-
     emit friendAdded(newfriend);
-
-    //  if(friendInfo.resource.isEmpty()){
-    //      newfriend->addEnd(friendInfo.resource);
-    //  }
     return newfriend;
 }
 
-Friend* FriendList::findFriend(const ContactId& cId) const {
-    auto f = friendMap.value(cId.toString());
-    // if (!f) {
-        // f = new Friend(FriendId(cId));
-        // friendMap.insert(cId.toString(), f);
-    // }
-    return f;
+std::optional<Friend*> FriendList::findFriend(const ContactId& cId) const {
+    auto f = friendMap.value(cId.getId());
+    return f ? std::make_optional(f) : std::nullopt;
 }
 
 void FriendList::removeFriend(const FriendId& friendPk, bool fake) {
     auto f = findFriend(friendPk);
-    if (f) {
+    if (f.has_value()) {
         friendMap.remove(((ContactId&)friendPk).toString());
-        f->deleteLater();
+        f.value()->deleteLater();
     }
 }
 
@@ -71,14 +58,14 @@ QList<Friend*> FriendList::getAllFriends() const {
     return friendMap.values();
 }
 
-QString FriendList::decideNickname(const FriendId& friendPk, const QString& origName) {
-    Friend* f = FriendList::findFriend(friendPk);
-    if (f != nullptr) {
-        return f->getDisplayedName();
+QString FriendList::decideNickname(const FriendId& fid, const QString& origName) {
+    auto f = FriendList::findFriend(fid);
+    if (f.has_value()) {
+        return f.value()->getDisplayedName();
     } else if (!origName.isEmpty()) {
         return origName;
     } else {
-        return friendPk.toString();
+        return fid.toString();
     }
 }
 }  // namespace module::im

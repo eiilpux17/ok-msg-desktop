@@ -25,11 +25,11 @@
 #include "src/core/core.h"
 #include "src/lib/storage/settings/style.h"
 #include "src/model/chatroom/friendchatroom.h"
-#include "src/model/friend.h"
-#include "src/model/friendlist.h"
-#include "src/model/group.h"
-#include "src/model/grouplist.h"
-#include "src/model/status.h"
+#include "src/model/Friend.h"
+#include "src/model/FriendList.h"
+#include "src/model/Group.h"
+#include "src/model/GroupList.h"
+#include "src/model/Status.h"
 #include "src/nexus.h"
 #include "src/persistence/settings.h"
 #include "src/widget/ContactListLayout.h"
@@ -361,12 +361,12 @@ void ContentDialog::dragEnterEvent(QDragEnterEvent* event) {
     if (frnd) {
         assert(event->mimeData()->hasFormat("toxPk"));
         FriendId toxPk{event->mimeData()->data("toxPk")};
-        Friend* contact = Nexus::getCore()->getFriendList().findFriend(toxPk);
-        if (!contact) {
+        auto contact = Nexus::getCore()->getFriendList().findFriend(toxPk);
+        if (!contact.has_value()) {
             return;
         }
 
-        FriendId friendId = contact->getPublicKey();
+        FriendId friendId = contact.value()->getPublicKey();
 
         // If friend is already in a dialog then you can't drop friend where it already is.
         if (!hasContact(friendId)) {

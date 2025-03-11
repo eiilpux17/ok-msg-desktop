@@ -15,8 +15,8 @@
 
 #include "src/core/core.h"
 #include "src/model/FriendId.h"
-#include "src/model/status.h"
-#include "toxfile.h"
+#include "src/model/Status.h"
+#include "File.h"
 
 #include "base/compatiblerecursivemutex.h"
 
@@ -94,20 +94,20 @@ public:
                            const lib::messenger::File& file, uint32_t m_sentBytes) override;
 
 signals:
-    void fileSendStarted(ToxFile& file);
-    void fileSendWait(ToxFile& file);
+    void fileSendStarted(File& file);
+    void fileSendWait(File& file);
     void fileSendFailed(QString friendId, const QString& fname);
 
-    void fileReceiveRequested(ToxFile& file);
-    void fileTransferAccepted(ToxFile& file);
-    void fileTransferCancelled(ToxFile& file);
-    void fileTransferFinished(ToxFile& file);
+    void fileReceiveRequested(File& file);
+    void fileTransferAccepted(File& file);
+    void fileTransferCancelled(File& file);
+    void fileTransferFinished(File& file);
     void fileTransferNoExisting(const QString& friendId, const QString& fileId);
 
-    void fileTransferPaused(ToxFile& file);
-    void fileTransferInfo(ToxFile& file);
-    void fileTransferRemotePausedUnpaused(ToxFile& file, bool paused);
-    void fileTransferBrokenUnbroken(ToxFile& file, bool broken);
+    void fileTransferPaused(File& file);
+    void fileTransferInfo(File& file);
+    void fileTransferRemotePausedUnpaused(File& file, bool paused);
+    void fileTransferBrokenUnbroken(File& file, bool broken);
     void fileNameChanged(const FriendId& friendPk);
 
     void fileUploadFinished(const QString& path);
@@ -116,15 +116,15 @@ signals:
 private:
     CoreFile(Core*);
 
-    ToxFile* findFile(QString fileId);
-    const QString& addFile(ToxFile& file);
+    File* findFile(QString fileId);
+    const QString& addFile(File& file);
     void removeFile(QString fileId);
 
     static QString getFriendKey(const QString& friendId, QString fileId) {
         return friendId + "-" + fileId;
     }
 
-    lib::messenger::File buildHandlerFile(const ToxFile* toxFile);
+    lib::messenger::File buildHandlerFile(const File* toxFile);
 
     static void onFileReceiveCallback(lib::messenger::Messenger* tox, QString friendId,
                                       QString fileId, uint32_t kind, uint64_t filesize,
@@ -143,7 +143,7 @@ private:
 
     Core* core;
     std::unique_ptr<QThread> thread;
-    QHash<QString, ToxFile> fileMap;
+    QHash<QString, File> fileMap;
     lib::messenger::Messenger* messenger;
     lib::messenger::MessengerFile* messengerFile;
     CompatibleRecursiveMutex* coreLoopLock = nullptr;

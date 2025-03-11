@@ -14,11 +14,11 @@
 #define FRIENDLIST_H
 
 #include <QMap>
-#include <cstdint>
 
 #include "src/model/FriendId.h"
-#include "src/model/contactid.h"
-#include "src/model/message.h"
+#include "src/model/ContactId.h"
+
+
 class QByteArray;
 class QString;
 template <class T> class QList;
@@ -38,7 +38,7 @@ public:
     ~FriendList() override;
 
     Friend* addFriend(Friend* f);
-    Friend* findFriend(const ContactId& cId) const;
+    std::optional<Friend*> findFriend(const ContactId& cId) const;
     QList<Friend*> getAllFriends() const;
     void removeFriend(const FriendId& friendPk, bool fake = false);
     void clear();

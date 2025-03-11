@@ -35,10 +35,9 @@ QLineEdit#searchContact{
 
 QWidget#sessionPanel{
     background: @groundExtra;
-		border-radius: 10px;
+	border-radius: 10px;
     border: 0px solid;
 }
-
 
 
 module--im--MessageSessionWidget{
@@ -52,7 +51,6 @@ module--im--MessageSessionWidget:hover{
 
 module--im--MessageSessionWidget:selected{
     background-color:@themeLight;
-		color: red;
 }
 
 module--im--MessageSessionWidget QLabel#nameLabel{

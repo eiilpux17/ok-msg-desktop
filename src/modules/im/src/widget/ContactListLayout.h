@@ -16,7 +16,7 @@
 #include <QBoxLayout>
 #include "genericchatitemlayout.h"
 #include "src/core/core.h"
-#include "src/model/status.h"
+#include "src/model/Status.h"
 namespace module::im {
 
 class FriendWidget;

@@ -47,11 +47,11 @@ public:
                                                 size_t maxDates) const override;
 
 public slots:
-    void onFileUpdated(const FriendId& sender, const ToxFile& file);
+    void onFileUpdated(const FriendId& sender, const File& file);
     void onFileCanceled(const FriendId& sender, const QString& fileId);
-    void onFileTransferRemotePausedUnpaused(const FriendId& sender, const ToxFile& file,
+    void onFileTransferRemotePausedUnpaused(const FriendId& sender, const File& file,
                                             bool paused);
-    void onFileTransferBrokenUnbroken(const FriendId& sender, const ToxFile& file, bool broken);
+    void onFileTransferBrokenUnbroken(const FriendId& sender, const File& file, bool broken);
 
 private slots:
     void onMessageReceived(const FriendId& sender, const Message& message);

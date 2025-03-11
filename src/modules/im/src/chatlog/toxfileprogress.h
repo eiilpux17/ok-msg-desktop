@@ -15,12 +15,12 @@
 
 #include <QTime>
 namespace module::im {
-struct ToxFile;
+struct File;
 
 class ToxFileProgress {
 public:
     bool needsUpdate() const;
-    void addSample(ToxFile const& file);
+    void addSample(File const& file);
     void resetSpeed();
 
     double getProgress() const;

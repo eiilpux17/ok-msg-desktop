@@ -19,9 +19,9 @@
 #include "src/core/core.h"
 #include "src/lib/storage/settings/style.h"
 #include "src/lib/ui/widget/tools/MaskablePixmap.h"
-#include "src/model/friend.h"
-#include "src/model/friendlist.h"
-#include "src/model/group.h"
+#include "src/model/Friend.h"
+#include "src/model/FriendList.h"
+#include "src/model/Group.h"
 #include "src/nexus.h"
 #include "src/persistence/profile.h"
 #include "src/persistence/settings.h"
@@ -113,8 +113,8 @@ void GenericChatItemWidget::updateLastMessage(const Message& m) {
             prefix = tr("I:");
         } else {
             auto f = Nexus::getCore()->getFriendList().findFriend(ContactId(m.from, m.chatType));
-            if (f) {
-                prefix = f->getDisplayedName() + tr(":");
+            if (f.has_value()) {
+                prefix = f.value()->getDisplayedName() + tr(":");
             } else {
                 prefix = m.displayName + tr(":");
             }

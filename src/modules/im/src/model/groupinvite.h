@@ -15,7 +15,7 @@
 
 #include <QByteArray>
 #include <QDateTime>
-#include "message.h"
+#include "Message.h"
 namespace module::im {
 
 class GroupInvite {

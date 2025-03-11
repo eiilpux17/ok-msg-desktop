@@ -10,8 +10,8 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#ifndef TOXCALL_H
-#define TOXCALL_H
+#ifndef CALL_H
+#define CALL_H
 
 #include <cstdint>
 #include <memory>
@@ -33,23 +33,40 @@ class CoreVideoSource;
 class CoreAV;
 class Group;
 
-class ToxCall : public QObject {
+/**
+ * The ToxCall class
+ *
+ * 呼叫阶段
+ * 1、呼叫取消：None-发起呼叫->Create-呼叫对方->Start-取消->Retract
+ * 2、呼叫对方拒绝：None-发起呼叫->Create-呼叫对方->Start-拒绝->Reject
+ * 3、呼叫对方接通：None-发起呼叫->Create-呼叫对方->Start-接通->Accept
+ * 3、接通挂断：None-发起呼叫->Create-呼叫对方->Start-接通->Accept-挂断->End(挂断人)
+ *
+ * 被动接收
+ * 1、邀请取消：None-来电->Invite-发起呼叫->等待接听->拒绝->Reject
+ * 2、对方取消：None-来电->Invite-发起呼叫->等待接听->取消->Cancel
+ * 3、自己拒绝：None-来电->Invite-发起呼叫->取消->Reject
+ * 4、自己接收：None-来电->Invite-发起呼叫->接受->Aceept-->Start
+ * 5、接通挂断：None-来电->Invite-发起呼叫->接受->Aceept-->Start-->End(挂断人)
+ */
+
+class Call : public QObject {
     Q_OBJECT
 
 protected:
-    ToxCall() = delete;
-    explicit ToxCall(lib::messenger::CallDirection direction,
+    Call() = delete;
+    explicit Call(lib::messenger::CallDirection direction,
                      CoreAV& av,
                      lib::audio::IAudioControl& audio,
                      bool videoEnabled = false);
-    ~ToxCall() override;
+    ~Call() override;
 
 public:
-    ToxCall(const ToxCall& other) = delete;
-    ToxCall(ToxCall&& other) = delete;
+    Call(const Call& other) = delete;
+    Call(Call&& other) = delete;
 
-    ToxCall& operator=(const ToxCall& other) = delete;
-    ToxCall& operator=(ToxCall&& other) = delete;
+    Call& operator=(const Call& other) = delete;
+    Call& operator=(Call&& other) = delete;
 
     bool isActive() const;
     void setActive(bool value);
@@ -110,7 +127,7 @@ protected:
     lib::messenger::CallFSM callFsm;
 };
 
-class ToxFriendCall : public ToxCall {
+class ToxFriendCall : public Call {
     Q_OBJECT
 public:
     ToxFriendCall() = delete;
@@ -143,7 +160,7 @@ private:
     QString peerId;
 };
 
-class ToxGroupCall : public ToxCall {
+class ToxGroupCall : public Call {
     Q_OBJECT
 public:
     ToxGroupCall() = delete;
@@ -175,4 +192,4 @@ private slots:
     void onAudioSinkInvalidated(FriendId peerId);
 };
 }  // namespace module::im
-#endif  // TOXCALL_H
+#endif  // CALL_H

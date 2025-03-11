@@ -19,10 +19,10 @@
 #include <QObject>
 #include <QStringList>
 
-#include "contact.h"
+#include "Contact.h"
 #include "FriendId.h"
-#include "groupid.h"
-#include "src/model/message.h"
+#include "GroupId.h"
+#include "src/model/Message.h"
 #include "src/persistence/profile.h"
 
 namespace module::im {

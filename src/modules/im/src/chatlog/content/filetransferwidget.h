@@ -18,7 +18,7 @@
 
 #include "src/chatlog/chatlinecontent.h"
 #include "src/chatlog/toxfileprogress.h"
-#include "src/core/toxfile.h"
+#include "src/core/File.h"
 
 namespace Ui {
 class FileTransferWidget;
@@ -31,23 +31,23 @@ class FileTransferWidget : public QWidget {
     Q_OBJECT
 
 public:
-    explicit FileTransferWidget(QWidget* parent, ToxFile file);
+    explicit FileTransferWidget(QWidget* parent, File file);
     ~FileTransferWidget() override;
     bool isActive() const;
     bool previewable();
     static QString getHumanReadableSize(qint64 size);
 
-    void onFileTransferUpdate(ToxFile file);
+    void onFileTransferUpdate(File file);
     void onCopy();
     QImage getImage();
 
 protected:
-    void updateWidgetColor(ToxFile const& file);
-    void updateWidgetText(ToxFile const& file);
-    void updateFileProgress(ToxFile const& file);
-    void updateSignals(ToxFile const& file);
-    void updatePreview(ToxFile const& file);
-    void setupButtons(ToxFile const& file);
+    void updateWidgetColor(File const& file);
+    void updateWidgetText(File const& file);
+    void updateFileProgress(File const& file);
+    void updateSignals(File const& file);
+    void updatePreview(File const& file);
+    void setupButtons(File const& file);
     void handleButton(QPushButton* btn);
     void showPreview(const QString& filename);
     void acceptTransfer(const QString& filepath);
@@ -70,12 +70,12 @@ private:
     static void applyTransformation(const int oritentation, QImage& image);
     static bool tryRemoveFile(const QString& filepath);
 
-    void updateWidget(ToxFile const& file);
+    void updateWidget(File const& file);
 
 private:
     Ui::FileTransferWidget* ui;
     ToxFileProgress fileProgress;
-    ToxFile fileInfo;
+    File fileInfo;
     QVariantAnimation* backgroundColorAnimation = nullptr;
     QVariantAnimation* buttonColorAnimation = nullptr;
     QColor backgroundColor;

@@ -13,7 +13,7 @@
 #ifndef GROUPINVITEFORM_H
 #define GROUPINVITEFORM_H
 
-#include "src/model/message.h"
+#include "src/model/Message.h"
 
 #include <QScrollArea>
 #include <QWidget>

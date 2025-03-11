@@ -141,7 +141,7 @@ protected slots:
     void renderMessage0(ChatLogIdx idx);
     void renderMessages(ChatLogIdx begin, ChatLogIdx end,
                         std::function<void(void)> onCompletion = std::function<void(void)>());
-    void renderFile(const ChatLogItem& item, ToxFile file, bool isSelf, QDateTime timestamp,
+    void renderFile(const ChatLogItem& item, File file, bool isSelf, QDateTime timestamp,
                     IChatItem::Ptr& chatMessage);
     void loadHistoryLower();
 

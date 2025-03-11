@@ -33,7 +33,7 @@ namespace module::im {
 class ContentLayout;
 
 class IProfileInfo;
-class ToxId;
+
 
 class ClickableTE : public QLabel {
     Q_OBJECT

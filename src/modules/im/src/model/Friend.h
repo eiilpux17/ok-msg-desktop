@@ -17,8 +17,8 @@
 #include <QString>
 
 #include "src/model/FriendId.h"
-#include "src/model/contact.h"
-#include "src/model/status.h"
+#include "src/model/Contact.h"
+#include "src/model/Status.h"
 
 namespace lib::messenger {
 class IMFriend;
@@ -38,10 +38,10 @@ public:
 
     explicit Friend(const FriendId& friendPk,
             const QString& name = {},
-           const QString& alias = {},
-           bool isFriend = false,
-           bool is_online = false,
-           const QStringList& groups = {});
+            const QString& alias = {},
+            bool isFriend = false,
+            bool is_online = false,
+            const QStringList& groups = {});
 
     ~Friend() override;
 
@@ -52,6 +52,7 @@ public:
     QString toString() const;
 
     bool hasAlias() const;
+
 
     void setStatusMessage(const QString& message);
     QString getStatusMessage() const;
@@ -76,8 +77,15 @@ signals:
     void onlineOfflineChanged(bool isOnline);
     void statusMessageChanged(const QString& message);
     void loadChatHistory();
-
     void relationStatusChanged(RelationStatus rs);
+
+
+    void avCreating(bool video);
+    void avInvite(PeerId pid, bool video);
+    void avStart(bool video);
+    void avPeerConnectionState(lib::ortc::PeerConnectionState state);
+    void avEnd(bool error = false);
+
 
 public slots:
 
@@ -86,6 +94,8 @@ private:
     bool hasNewEvents{};
     QString statusMessage;
     Status friendStatus;
+    QString name;
+    QString nick;
     QString alias;
     bool is_friend;
     bool is_online;

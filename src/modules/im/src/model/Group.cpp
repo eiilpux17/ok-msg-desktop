@@ -10,14 +10,14 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "group.h"
+#include "Group.h"
 #include <QDebug>
-#include "friendlist.h"
+#include "FriendList.h"
 #include "src/core/core.h"
 #include "src/core/coreav.h"
 #include "src/model/FriendId.h"
-#include "src/model/contactid.h"
-#include "src/model/groupid.h"
+#include "src/model/ContactId.h"
+#include "src/model/GroupId.h"
 #include "src/persistence/settings.h"
 
 static const int MAX_GROUP_TITLE_LENGTH = 128;

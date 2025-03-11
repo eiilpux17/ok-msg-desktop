@@ -25,11 +25,11 @@
 #include "contentlayout.h"
 #include "lib/storage/settings/style.h"
 #include "src/core/corefile.h"
-#include "src/model/friend.h"
-#include "src/model/friendlist.h"
-#include "src/model/group.h"
+#include "src/model/Friend.h"
+#include "src/model/FriendList.h"
+#include "src/model/Group.h"
 #include "src/model/groupinvite.h"
-#include "src/model/grouplist.h"
+#include "src/model/GroupList.h"
 #include "src/model/profile/profileinfo.h"
 #include "src/nexus.h"
 #include "src/persistence/profile.h"
@@ -57,7 +57,7 @@ bool tryRemoveFile(const QString& filepath) {
     return writable;
 }
 
-void acceptFileTransfer(ToxFile& file, const QString& path) {
+void acceptFileTransfer(File& file, const QString& path) {
     QString filepath;
     int number = 0;
 
@@ -213,11 +213,11 @@ void ChatWidget::connectToCoreFile(CoreFile* coreFile) {
 }
 
 void ChatWidget::connectToCoreAv(CoreAV* coreAv) {
-    connect(coreAv, &CoreAV::avCreating, this, &ChatWidget::onAvCreating);
     connect(coreAv, &CoreAV::avInvite, this, &ChatWidget::onAvInvite);
-    connect(coreAv, &CoreAV::avStart, this, &ChatWidget::onAvStart);
-    connect(coreAv, &CoreAV::avEnd, this, &ChatWidget::onAvEnd);
-    connect(coreAv, &CoreAV::avPeerConnectionState, this, &ChatWidget::onAvPeerConnectionState);
+    // connect(coreAv, &CoreAV::avCreating, this, &ChatWidget::onAvCreating);
+    // connect(coreAv, &CoreAV::avStart, this, &ChatWidget::onAvStart);
+    // connect(coreAv, &CoreAV::avEnd, this, &ChatWidget::onAvEnd);
+    // connect(coreAv, &CoreAV::avPeerConnectionState, this, &ChatWidget::onAvPeerConnectionState);
 }
 
 void ChatWidget::onMessageSessionReceived(const ContactId& contactId, const QString& sid) {
@@ -236,12 +236,12 @@ void ChatWidget::onReceiptReceived(const FriendId& friendId, MsgId receipt) {
 }
 
 void ChatWidget::onFriendStatusChanged(const FriendId& friendPk, Status status) {
-    Friend* f = Nexus::getCore()->getFriendList().findFriend(friendPk);
-    if (!f) {
+    auto f = Nexus::getCore()->getFriendList().findFriend(friendPk);
+    if (!f.has_value()) {
         qWarning() << "Unable to find friend" << friendPk.toString();
         return;
     }
-    f->setStatus(status);
+    f.value()->setStatus(status);
 }
 
 void ChatWidget::onFriendStatusMessageChanged(const FriendId& friendPk, const QString& message) {
@@ -592,7 +592,7 @@ void ChatWidget::cancelFile(const QString& friendId, const QString& fileId) {
     sessionListWidget->setFriendFileCancelled(frndId, fileId);
 }
 
-void ChatWidget::dispatchFile(ToxFile file) {
+void ChatWidget::dispatchFile(File file) {
     qDebug() << __func__ << "file:" << file.toString();
 
     const auto& cId = ContactId(file.getFriendId(), file.chatType);
@@ -615,7 +615,7 @@ void ChatWidget::dispatchFile(ToxFile file) {
     sessionListWidget->setFriendFileReceived(cId, file);
 }
 
-void ChatWidget::dispatchFileWithBool(ToxFile file, bool) {
+void ChatWidget::dispatchFileWithBool(File file, bool) {
     dispatchFile(file);
 }
 
@@ -651,9 +651,9 @@ void ChatWidget::setStatusBusy() {
     Nexus::getCore()->setStatus(Status::Busy);
 }
 
-void ChatWidget::onAvInvite(const PeerId& peerId, bool video) {
-    qDebug() << __func__ << "peerId" << peerId << "video:" << video;
-    sessionListWidget->setFriendAvInvite(peerId, video);
+void ChatWidget::onAvInvite(const ContactId& cid, bool video) {
+    qDebug() << __func__ << "peerId" << cid << "video:" << video;
+    sessionListWidget->setFriendAvInvite(cid, video);
 }
 
 void ChatWidget::onAvCreating(const FriendId& friendId, bool video) {

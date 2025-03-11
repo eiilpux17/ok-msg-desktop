@@ -826,97 +826,48 @@ void Settings::setAutoAwayTime(int newValue) {
 QString Settings::getAutoAcceptDir(const FriendId& id) const {
     QMutexLocker locker{&bigLock};
 
-    auto it = friendLst.find(id.getByteArray());
-    if (it != friendLst.end()) return it->autoAcceptDir;
-
     return QString();
 }
 
 void Settings::setAutoAcceptDir(const FriendId& id, const QString& dir) {
-    QMutexLocker locker{&bigLock};
 
-    auto& frnd = getOrInsertFriendPropRef(id);
-
-    if (frnd.autoAcceptDir != dir) {
-        frnd.autoAcceptDir = dir;
-        emit autoAcceptDirChanged(id, dir);
-    }
 }
 
 Settings::AutoAcceptCallFlags Settings::getAutoAcceptCall(const FriendId& id) const {
-    QMutexLocker locker{&bigLock};
-
-    auto it = friendLst.find(id.getByteArray());
-    if (it != friendLst.end()) return it->autoAcceptCall;
 
     return Settings::AutoAcceptCallFlags();
 }
 
 void Settings::setAutoAcceptCall(const FriendId& id, AutoAcceptCallFlags accept) {
-    QMutexLocker locker{&bigLock};
 
-    auto& frnd = getOrInsertFriendPropRef(id);
-
-    if (frnd.autoAcceptCall != accept) {
-        frnd.autoAcceptCall = accept;
-        emit autoAcceptCallChanged(id, accept);
-    }
 }
 
 bool Settings::getAutoGroupInvite(const FriendId& id) const {
-    QMutexLocker locker{&bigLock};
-
-    auto it = friendLst.find(id.getByteArray());
-    if (it != friendLst.end()) {
-        return it->autoGroupInvite;
-    }
 
     return false;
 }
 
 void Settings::setAutoGroupInvite(const FriendId& id, bool accept) {
-    QMutexLocker locker{&bigLock};
 
-    auto& frnd = getOrInsertFriendPropRef(id);
-
-    if (frnd.autoGroupInvite != accept) {
-        frnd.autoGroupInvite = accept;
-        emit autoGroupInviteChanged(id, accept);
-    }
 }
 
 QString Settings::getContactNote(const FriendId& id) const {
-    QMutexLocker locker{&bigLock};
-
-    auto it = friendLst.find(id.getByteArray());
-    if (it != friendLst.end()) return it->note;
 
     return QString();
 }
 
 void Settings::setContactNote(const FriendId& id, const QString& note) {
-    QMutexLocker locker{&bigLock};
 
-    auto& frnd = getOrInsertFriendPropRef(id);
 
-    if (frnd.note != note) {
-        frnd.note = note;
-        emit contactNoteChanged(id, note);
-    }
 }
 
 QString Settings::getGlobalAutoAcceptDir() const {
-    QMutexLocker locker{&bigLock};
+
     return globalAutoAcceptDir;
 }
 
 void Settings::setGlobalAutoAcceptDir(const QString& newValue) {
-    QMutexLocker locker{&bigLock};
 
-    if (newValue != globalAutoAcceptDir) {
-        globalAutoAcceptDir = newValue;
-        emit globalAutoAcceptDirChanged(globalAutoAcceptDir);
-    }
 }
 
 size_t Settings::getMaxAutoAcceptSize() const {
@@ -1158,64 +1109,46 @@ void Settings::setTypingNotification(bool enabled) {
 
 QString Settings::getFriendAddress(const QString& publicKey) const {
     QMutexLocker locker{&bigLock};
-    // TODO: using ToxId here is a hack
-    QByteArray key = ToxId(publicKey).getPublicKey().getByteArray();
-    auto it = friendLst.find(key);
-    if (it != friendLst.end()) return it->addr;
 
     return QString();
 }
 
 void Settings::updateFriendAddress(const QString& newAddr) {
     QMutexLocker locker{&bigLock};
-    // TODO: using ToxId here is a hack
-    auto key = ToxId(newAddr).getPublicKey();
-    auto& frnd = getOrInsertFriendPropRef(key);
-    frnd.addr = newAddr;
+
 }
 
 QString Settings::getFriendAlias(const ContactId& id) const {
     QMutexLocker locker{&bigLock};
-    if (friendLst.isEmpty()) return {};
-
-    auto it = friendLst.find(id.getByteArray());
-    if (it != friendLst.end()) return it->alias;
 
     return {};
 }
 
 void Settings::setFriendAlias(const FriendId& id, const QString& alias) {
     QMutexLocker locker{&bigLock};
-    auto& frnd = getOrInsertFriendPropRef(id);
-    frnd.alias = alias;
+
 }
 
 int Settings::getFriendCircleID(const FriendId& id) const {
     QMutexLocker locker{&bigLock};
-    auto it = friendLst.find(id.getByteArray());
-    if (it != friendLst.end()) return it->circleID;
 
     return -1;
 }
 
 void Settings::setFriendCircleID(const FriendId& id, int circleID) {
     QMutexLocker locker{&bigLock};
-    auto& frnd = getOrInsertFriendPropRef(id);
-    frnd.circleID = circleID;
+
 }
 
 QDateTime Settings::getFriendActivity(const FriendId& id) const {
     QMutexLocker locker{&bigLock};
-    auto it = friendLst.find(id.getByteArray());
-    if (it != friendLst.end()) return it->activity;
 
     return QDateTime();
 }
 
 void Settings::setFriendActivity(const FriendId& id, const QDateTime& activity) {
     QMutexLocker locker{&bigLock};
-    auto& frnd = getOrInsertFriendPropRef(id);
-    frnd.activity = activity;
+
 }
 
 void Settings::saveFriendSettings(const FriendId& id) {
@@ -1224,7 +1157,7 @@ void Settings::saveFriendSettings(const FriendId& id) {
 
 void Settings::removeFriendSettings(const FriendId& id) {
     QMutexLocker locker{&bigLock};
-    friendLst.remove(id.getByteArray());
+
 }
 
 Settings::FriendListSortingMode Settings::getFriendSortingMode() const {
@@ -1297,46 +1230,7 @@ void Settings::setShowIdenticons(bool value) {
     }
 }
 
-int Settings::getCircleCount() const {
-    QMutexLocker locker{&bigLock};
-    return circleLst.size();
-}
 
-QString Settings::getCircleName(int id) const {
-    QMutexLocker locker{&bigLock};
-    return circleLst[id].name;
-}
-
-void Settings::setCircleName(int id, const QString& name) {
-    QMutexLocker locker{&bigLock};
-    circleLst[id].name = name;
-}
-
-int Settings::addCircle(const QString& name) {
-    QMutexLocker locker{&bigLock};
-
-    circleProp cp;
-    cp.expanded = false;
-
-    if (name.isEmpty())
-        cp.name = tr("Circle #%1").arg(circleLst.count() + 1);
-    else
-        cp.name = name;
-
-    circleLst.append(cp);
-
-    return circleLst.count() - 1;
-}
-
-bool Settings::getCircleExpanded(int id) const {
-    QMutexLocker locker{&bigLock};
-    return circleLst[id].expanded;
-}
-
-void Settings::setCircleExpanded(int id, bool expanded) {
-    QMutexLocker locker{&bigLock};
-    circleLst[id].expanded = expanded;
-}
 
 bool Settings::addFriendRequest(const QString& friendAddress, const QString& message) {
     QMutexLocker locker{&bigLock};
@@ -1390,15 +1284,6 @@ void Settings::removeFriendRequest(int index) {
 void Settings::readFriendRequest(int index) {
     QMutexLocker locker{&bigLock};
     friendRequests[index].read = true;
-}
-
-int Settings::removeCircle(int id) {
-    // Replace index with last one and remove last one instead.
-    // This gives you contiguous ids all the time.
-    circleLst[id] = circleLst.last();
-    circleLst.pop_back();
-
-    return circleLst.count();
 }
 
 int Settings::getThemeColor() const {
@@ -1466,16 +1351,6 @@ void Settings::sync() {
     qApp->processEvents();
 }
 
-Settings::friendProp& Settings::getOrInsertFriendPropRef(const FriendId& id) {
-    // No mutex lock, this is a private fn that should only be called by other
-    // public functions that already locked the mutex
-    auto it = friendLst.find(id.getByteArray());
-    if (it == friendLst.end()) {
-        it = friendLst.insert(id.getByteArray(), friendProp{id.toString()});
-    }
-
-    return *it;
-}
 
 ICoreSettings::ProxyType Settings::fixInvalidProxyType(ICoreSettings::ProxyType proxyType) {
     switch (proxyType) {

@@ -148,7 +148,6 @@ signals:
 
 public slots:
     void onAvatarSet(QByteArray avatar);
-    void onSaveToxSave();
 
     void setFriendAvatar(const ContactId& owner, const QByteArray& pic);
     void removeFriendAvatar(const ContactId& owner);

@@ -15,7 +15,7 @@
 
 #include <QDateTime>
 #include "chatline.h"
-#include "src/core/toxfile.h"
+#include "src/core/File.h"
 #include "src/model/chatlogitem.h"
 #include "src/persistence/history.h"
 
@@ -47,7 +47,7 @@ public:
                                                 SystemMessageType type,
                                                 const QDateTime& date);
 
-    static IChatItem::Ptr createFileTransferMessage(const ChatLogItem& item, ToxFile file,
+    static IChatItem::Ptr createFileTransferMessage(const ChatLogItem& item, File file,
                                                     bool isMe, const QDateTime& date);
 
     static IChatItem::Ptr createTypingNotification(const QFont& baseFont);

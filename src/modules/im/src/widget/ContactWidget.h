@@ -20,9 +20,9 @@
 #include "src/widget/form/aboutgroupform.h"
 
 #include "ContactListWidget.h"
-#include "src/model/group.h"
+#include "src/model/Group.h"
 #include "src/model/groupinvite.h"
-#include "src/model/status.h"
+#include "src/model/Status.h"
 #include "src/widget/ContactListWidget.h"
 #include "src/widget/MainLayout.h"
 #include "src/widget/form/aboutfriendform.h"

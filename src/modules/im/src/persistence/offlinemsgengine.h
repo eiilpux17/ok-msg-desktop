@@ -16,7 +16,7 @@
 #include "lib/storage/db/rawdatabase.h"
 #include "src/chatlog/chatmessage.h"
 #include "src/core/core.h"
-#include "src/model/message.h"
+#include "src/model/Message.h"
 
 #include "base/compatiblerecursivemutex.h"
 

@@ -46,6 +46,7 @@ private:
     void init();
 
     QWidget* mainHead;
+    ChatFormHeader* headWidget;
     QWidget* seperator;
     QWidget* mainContent;
 };

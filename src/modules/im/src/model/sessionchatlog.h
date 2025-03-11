@@ -14,7 +14,7 @@
 #define SESSION_CHAT_LOG_H
 
 #include "ichatlog.h"
-#include "imessagedispatcher.h"
+#include "IMessageDispatcher.h"
 
 #include <QList>
 #include <QObject>
@@ -58,12 +58,12 @@ public slots:
     // 消息接收
     void onMessageReceipt(DispatchedMessageId id);
 
-    void onFileUpdated(const FriendId& sender, const ToxFile& file);
+    void onFileUpdated(const FriendId& sender, const File& file);
     void onFileCanceled(const FriendId& sender, const QString& fileId);
 
-    void onFileTransferRemotePausedUnpaused(const FriendId& sender, const ToxFile& file,
+    void onFileTransferRemotePausedUnpaused(const FriendId& sender, const File& file,
                                             bool paused);
-    void onFileTransferBrokenUnbroken(const FriendId& sender, const ToxFile& file, bool broken);
+    void onFileTransferBrokenUnbroken(const FriendId& sender, const File& file, bool broken);
     ChatLogIdx getNextIdx(MsgId msgId);
 
 private:
@@ -77,7 +77,7 @@ private:
 
     struct CurrentFileTransfer {
         ChatLogIdx idx;
-        ToxFile file;
+        File file;
     };
 
     /**

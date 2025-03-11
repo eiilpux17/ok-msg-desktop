@@ -21,10 +21,9 @@
 
 
 #include "src/core/core.h"
-#include "src/core/toxfile.h"
-#include "src/core/toxid.h"
+#include "src/core/File.h"
 #include "src/model/FriendId.h"
-#include "src/model/groupid.h"
+#include "src/model/GroupId.h"
 
 #include <base/timer.h>
 #if DESKTOP_NOTIFICATIONS
@@ -145,7 +144,7 @@ public slots:
 
     void addFriendFailed(const FriendId& userId, const QString& errorInfo = QString());
 
-    void onFileReceiveRequested(const ToxFile& file);
+    void onFileReceiveRequested(const File& file);
 
     void titleChangedByUser(const QString& title);
     void onGroupPeerAudioPlaying(QString groupnumber, FriendId peerPk);
@@ -164,7 +163,7 @@ signals:
     void friendRemoved( Friend* f);
     void friendRequestAccepted(const FriendId& friendPk);
     void friendRequestRejected(const FriendId& friendPk);
-    void friendRequested(const ToxId& friendAddress, const QString& nick, const QString& message);
+    void friendRequested(const ok::base::Jid& friendAddress, const QString& nick, const QString& message);
 
     void groupAdded(const Group* g);
     void groupRemoved(const Group* g);
@@ -209,7 +208,7 @@ private slots:
     void onDialogShown(GenericChatroomWidget* widget);
 
     void registerContentDialog(ContentDialog& contentDialog) const;
-    void friendRequestedTo(const ToxId& friendAddress, const QString& nick, const QString& message);
+    void friendRequestedTo(const ok::base::Jid& friendAddress, const QString& nick, const QString& message);
 
 private:
     // QMainWindow overrides

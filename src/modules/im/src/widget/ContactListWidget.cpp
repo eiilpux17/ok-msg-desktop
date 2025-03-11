@@ -18,10 +18,10 @@
 #include "groupwidget.h"
 #include "src/model/chathistory.h"
 #include "src/model/chatroom/friendchatroom.h"
-#include "src/model/friend.h"
-#include "src/model/friendlist.h"
-#include "src/model/group.h"
-#include "src/model/status.h"
+#include "src/model/Friend.h"
+#include "src/model/FriendList.h"
+#include "src/model/Group.h"
+#include "src/model/Status.h"
 #include "src/nexus.h"
 #include "src/persistence/settings.h"
 
@@ -98,8 +98,14 @@ FriendWidget* ContactListWidget::addFriend(const FriendId& friendId) {
     }
 
     Core* core = Nexus::getCore();
-    auto m_friend = core->getFriendList().findFriend(friendId);
-    auto fw = new FriendWidget(m_friend, this);
+    auto f = core->getFriend(friendId);
+    if(!f.has_value()){
+        return exist;
+    }
+
+    // auto f = new Friend(friendId);
+
+    auto fw = new FriendWidget(f.value(), this);
     connect(fw, &FriendWidget::updateFriendActivity, this,
             &ContactListWidget::updateFriendActivity);
     connect(fw, &FriendWidget::friendClicked, this, &ContactListWidget::slot_friendClicked);
@@ -114,7 +120,7 @@ FriendWidget* ContactListWidget::addFriend(const FriendId& friendId) {
     auto status = core->getFriendStatus(friendId.toString());
     setFriendStatus(friendId, status);
 
-    emit Widget::getInstance() -> friendAdded(m_friend);
+    // emit Widget::getInstance() -> friendAdded(f.value());
     return fw;
 }
 
@@ -321,8 +327,9 @@ void ContactListWidget::dragEnterEvent(QDragEnterEvent* event) {
         return;
     }
     FriendId toxPk(event->mimeData()->data("toxPk"));
-    Friend* frnd = Nexus::getCore()->getFriendList().findFriend(toxPk);
-    if (frnd) event->acceptProposedAction();
+    auto frnd = Nexus::getCore()->getFriendList().findFriend(toxPk);
+    if (frnd.has_value())
+        event->acceptProposedAction();
 }
 
 void ContactListWidget::dropEvent(QDropEvent* event) {
@@ -334,10 +341,10 @@ void ContactListWidget::dropEvent(QDropEvent* event) {
     // Check, that the user has a friend with the same ToxPk
     assert(event->mimeData()->hasFormat("toxPk"));
     const FriendId toxPk{event->mimeData()->data("toxPk")};
-    Friend* f = Nexus::getCore()->getFriendList().findFriend(toxPk);
-    if (!f) return;
+    auto f = Nexus::getCore()->getFriendList().findFriend(toxPk);
+    if (!f.has_value()) return;
 
-    moveWidget(widget, f->getStatus(), true);
+    moveWidget(widget, f.value()->getStatus(), true);
 }
 
 void ContactListWidget::showEvent(QShowEvent* event) {}
@@ -424,21 +431,21 @@ void ContactListWidget::setFriendStatusMsg(const FriendId& friendPk, const QStri
 
 void ContactListWidget::setFriendName(const FriendId& friendPk, const QString& name) {
     auto f = Nexus::getCore()->getFriendList().findFriend(friendPk);
-    if (!f) {
+    if (!f.has_value()) {
         qWarning() << "friend is no existing.";
         return;
     }
-    f->setName(name);
+    f.value()->setName(name);
 }
 
 void ContactListWidget::setFriendAlias(const FriendId& friendPk, const QString& alias) {
     qDebug() << __func__ << friendPk.toString() << alias;
     auto f = Nexus::getCore()->getFriendList().findFriend(friendPk);
-    if (!f) {
+    if (!f.has_value()) {
         qWarning() << "friend is no existing.";
         return;
     }
-    f->setAlias(alias);
+    f.value()->setAlias(alias);
 }
 
 void ContactListWidget::setFriendAvatar(const FriendId& friendPk, const QByteArray& avatar) {
@@ -459,17 +466,6 @@ void ContactListWidget::setFriendTyping(const FriendId& friendId, bool isTyping)
 }
 
 void ContactListWidget::reloadTheme() {
-    auto p = palette();
-    p.setColor(QPalette::Window,
-               lib::settings::Style::getColor(
-                       lib::settings::Style::ColorPalette::ThemeMedium));  // Base background color
-    p.setColor(QPalette::Highlight,
-               lib::settings::Style::getColor(
-                       lib::settings::Style::ColorPalette::ThemeHighlight));  // On mouse over
-    p.setColor(QPalette::Light,
-               lib::settings::Style::getColor(
-                       lib::settings::Style::ColorPalette::ThemeLight));  // When active
-    setPalette(p);
 
     for (auto gw : groupWidgets) {
         gw->reloadTheme();

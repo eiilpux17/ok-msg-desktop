@@ -16,16 +16,12 @@
 #include "genericchatroomwidget.h"
 
 #include "src/model/chatroom/groupchatroom.h"
-#include "src/model/groupid.h"
-#include "src/model/message.h"
+#include "src/model/GroupId.h"
 
 #include <src/widget/form/aboutgroupform.h>
-#include <memory>
-#include "ContentWidget.h"
 #include "contentdialog.h"
 #include "form/groupchatform.h"
-#include "src/model/groupmessagedispatcher.h"
-#include "src/model/sessionchatlog.h"
+
 namespace module::im {
 
 /**

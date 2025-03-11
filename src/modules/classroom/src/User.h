@@ -12,12 +12,13 @@
 
 #pragma once
 
-#include <map>
 
 #include <base/basic_types.h>
 #include <QString>
+#include <map>
 #include <string>
-#include "base/OkAccount.h"
+#include "base/jid.h"
+
 
 namespace module::classroom {
 

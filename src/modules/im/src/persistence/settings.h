@@ -16,7 +16,7 @@
 
 #include "lib/audio/iaudiosettings.h"
 #include "src/core/icoresettings.h"
-#include "src/core/toxfile.h"
+#include "src/core/File.h"
 #include "src/persistence/ifriendsettings.h"
 #include "src/persistence/igroupsettings.h"
 
@@ -32,7 +32,7 @@
 #include <QPixmap>
 #include <QSettings>
 
-#include "src/model/contactid.h"
+#include "src/model/ContactId.h"
 
 class QCommandLineParser;
 
@@ -395,11 +395,11 @@ public:
     }
 
 private:
-    struct friendProp;
+
 
     Settings(Settings& settings) = delete;
     Settings& operator=(const Settings&) = delete;
-    friendProp& getOrInsertFriendPropRef(const FriendId& id);
+
     ICoreSettings::ProxyType fixInvalidProxyType(ICoreSettings::ProxyType proxyType);
 
     QSettings* s;
@@ -469,28 +469,6 @@ private:
     // Privacy 隐私
     bool typingNotification;
     Db::syncType dbSyncType;
-
-    struct friendProp {
-        friendProp() = delete;
-        friendProp(QString addr) : addr(addr) {}
-        QString alias = "";
-        QString addr = "";
-        QString autoAcceptDir = "";
-        QString note = "";
-        int circleID = -1;
-        QDateTime activity = QDateTime();
-        AutoAcceptCallFlags autoAcceptCall;
-        bool autoGroupInvite = false;
-    };
-
-    struct circleProp {
-        QString name;
-        bool expanded;
-    };
-
-    QHash<QByteArray, friendProp> friendLst;
-
-    QVector<circleProp> circleLst;
 
     int themeColor;
 

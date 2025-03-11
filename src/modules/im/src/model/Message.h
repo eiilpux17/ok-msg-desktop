@@ -24,8 +24,19 @@
 
 #include "MsgId.h"
 
+namespace lib::messenger {
+enum class ChatType;
+}
 
 namespace module::im {
+
+enum class ChatType {
+    Chat,      // 单聊
+    GroupChat  // 群聊
+};
+
+// static ChatType ForChatType(lib::messenger::ChatType type);
+
 
 // NOTE: This could be extended in the future to handle all text processing (see
 // ChatMessage::createChatMessage)

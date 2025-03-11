@@ -10,7 +10,7 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include <src/model/status.h>
+#include <src/model/Status.h>
 
 #include <QDebug>
 #include <QObject>

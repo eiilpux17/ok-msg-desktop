@@ -16,8 +16,8 @@
 #include "src/model/FriendId.h"
 #include "src/model/chatroom/chatroom.h"
 #include "src/model/dialogs/idialogs.h"
-#include "src/model/groupid.h"
-#include "src/model/status.h"
+#include "src/model/GroupId.h"
+#include "src/model/Status.h"
 #include "src/widget/genericchatitemlayout.h"
 #include "src/widget/tool/activatedialog.h"
 

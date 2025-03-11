@@ -11,6 +11,7 @@
  */
 
 #include <QObject>
+#include "base/jid.h"
 #include "iprofileinfo.h"
 #include "src/base/interface.h"
 
@@ -56,7 +57,7 @@ public:
     SetAvatarResult setAvatar(const QString& path) override;
     void removeAvatar() override;
 
-    SIGNAL_IMPL(ProfileInfo, idChanged, const ToxId& id)
+
     SIGNAL_IMPL(ProfileInfo, usernameChanged, const QString& username)
     SIGNAL_IMPL(ProfileInfo, avatarChanged, const QString& avatar)
     SIGNAL_IMPL(ProfileInfo, statusMessageChanged, const QString& message)

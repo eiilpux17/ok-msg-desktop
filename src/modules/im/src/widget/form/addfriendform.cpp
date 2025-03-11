@@ -195,10 +195,7 @@ void AddFriendForm::setIdFromClipboard() {
     const QString trimmedId = clipboard->text().trimmed();
     const QString strippedId = getToxId(trimmedId);
     const Core* core = Core::getInstance();
-    const bool isSelf = ToxId::isToxId(strippedId) && ToxId(strippedId) != core->getSelfPeerId();
-    if (!strippedId.isEmpty() && ToxId::isToxId(strippedId) && isSelf) {
-        //    toxId.setText(trimmedId);
-    }
+
 }
 
 void AddFriendForm::onCurrentChanged(int index) {}

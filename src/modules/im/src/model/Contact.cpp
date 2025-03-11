@@ -10,7 +10,7 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "contact.h"
+#include "Contact.h"
 #include <QVariant>
 #include "base/images.h"
 #include "src/nexus.h"

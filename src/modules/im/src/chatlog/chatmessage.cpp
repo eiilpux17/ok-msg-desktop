@@ -79,13 +79,13 @@ IChatItem::Ptr ChatMessage::createChatInfoMessage(const QString& rawMessage,
     return IChatItem::Ptr(item);
 }
 
-IChatItem::Ptr ChatMessage::createFileTransferMessage(const ChatLogItem& item, ToxFile file,
+IChatItem::Ptr ChatMessage::createFileTransferMessage(const ChatLogItem& item, File file,
                                                       bool isMe, const QDateTime& date) {
     qDebug() << __func__ << file.fileName;
     QPixmap avatar;
     if (isMe) {
-        const auto& self = Core::getInstance()->getSelfPeerId().getPublicKey();
-        avatar = Nexus::getProfile()->loadAvatar(self);
+        auto self = Core::getInstance()->getSelfId().getId();
+        avatar = Nexus::getProfile()->loadAvatar(ContactId(self, lib::messenger::ChatType::Chat));
     } else {
         avatar = Nexus::getProfile()->loadAvatar(item.getSender());
     }

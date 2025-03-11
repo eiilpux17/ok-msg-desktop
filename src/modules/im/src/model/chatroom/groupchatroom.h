@@ -17,7 +17,7 @@
 
 #include <QObject>
 
-#include "src/model/groupid.h"
+#include "src/model/GroupId.h"
 namespace module::im {
 
 class IDialogsManager;
@@ -37,7 +37,7 @@ public:
     bool hasNewMessage() const;
     void resetEventFlags();
 
-    Friend* findFriend(const FriendId& pk);
+    std::optional<Friend*> findFriend(const FriendId& pk);
     bool friendExists(const FriendId& pk);
     void inviteFriend(const FriendId& pk);
 

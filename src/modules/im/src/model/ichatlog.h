@@ -14,8 +14,8 @@
 #define ICHAT_LOG_H
 
 #include "base/strongtype.h"
-#include "friendlist.h"
-#include "grouplist.h"
+#include "FriendList.h"
+#include "GroupList.h"
 #include "src/model/chatlogitem.h"
 #include "src/widget/searchtypes.h"
 

@@ -370,9 +370,6 @@ QScrollBar::groove:vertical {
 }
 
 
-
-
-
 QTabWidget {
 	border: none;
 	/* 整体边框 */

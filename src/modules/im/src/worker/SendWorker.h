@@ -19,10 +19,10 @@
 
 #include <src/model/chathistory.h>
 #include <src/model/chatroom/friendchatroom.h>
-#include <src/model/imessagedispatcher.h>
+#include <src/model/IMessageDispatcher.h>
 #include <src/widget/form/chatform.h>
 #include <QObject>
-#include "src/model/message.h"
+#include "src/model/Message.h"
 
 namespace module::im {
 class SendWorker : public QObject {
@@ -37,9 +37,9 @@ public:
     static std::unique_ptr<SendWorker> forFriend(const FriendId& m_friend);
     static std::unique_ptr<SendWorker> forGroup(const GroupId& m_group);
 
-    ChatFormHeader* getHeader() const {
-        return headWidget.get();
-    }
+    // ChatFormHeader* getHeader() const {
+        // return headWidget.get();
+    // }
 
     GenericChatForm* getChatForm() const {
         return chatForm.get();
@@ -61,10 +61,14 @@ public:
         return chatHistory.get();
     }
 
-    CallDurationForm* createCallDuration(bool video = false);
-    void destroyCallDuration(bool error = false);
-    [[nodiscard]] CallDurationForm* getCallDuration() const {
-        return callDuration.get();
+
+
+    const ContactId& getContactId() const {
+        return contactId;
+    }
+
+    bool getLastCallIsVideo(){
+        return lastCallIsVideo;
     }
 
 private:
@@ -82,11 +86,10 @@ private:
     ContactId contactId;
     bool lastCallIsVideo = false;
 
-    std::unique_ptr<CallDurationForm> callDuration;
+
 
 signals:
-    void rejectCall(const PeerId& peerId);
-    void acceptCall(const PeerId& peerId, bool video);
+
     void onCallTriggered();
     void onVideoCallTriggered();
     void endCall();

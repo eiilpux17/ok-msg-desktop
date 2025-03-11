@@ -20,8 +20,8 @@ namespace module::im {
 
 GenericChatroomWidget::GenericChatroomWidget(lib::messenger::ChatType type, const ContactId& cid, QWidget* parent)
         : GenericChatItemWidget(type, cid, parent), contactId(cid) {
-    setAutoFillBackground(true);
-    reloadTheme();
+    // setAutoFillBackground(true);
+    // reloadTheme();
     compactChange(false);
 }
 

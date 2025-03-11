@@ -22,8 +22,8 @@
 #include "genericchatform.h"
 #include "src/core/core.h"
 #include "src/model/ichatlog.h"
-#include "src/model/imessagedispatcher.h"
-#include "src/model/status.h"
+#include "src/model/IMessageDispatcher.h"
+#include "src/model/Status.h"
 #include "src/persistence/history.h"
 #include "src/widget/tool/screenshotgrabber.h"
 
@@ -79,7 +79,7 @@ public slots:
     void clearChatArea();
 
 private slots:
-    void updateFriendActivityForFile(const ToxFile& file);
+    void updateFriendActivityForFile(const File& file);
     //    void onAttachClicked() override;
     //    void onScreenshotClicked() override;
 

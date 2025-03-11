@@ -15,7 +15,7 @@
 
 #include <QByteArray>
 #include <QHash>
-#include "contactid.h"
+#include "ContactId.h"
 
 namespace lib::messenger {
 class IMContactId;

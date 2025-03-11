@@ -18,9 +18,9 @@
 #include "genericchatitemlayout.h"
 #include "lib/ui/widget/OWidget.h"
 #include "src/core/core.h"
-#include "src/model/friendmessagedispatcher.h"
-#include "src/model/message.h"
-#include "src/model/status.h"
+#include "src/model/FriendMessageDispatcher.h"
+#include "src/model/Message.h"
+#include "src/model/Status.h"
 #include "src/persistence/settings.h"
 
 class QVBoxLayout;
@@ -68,7 +68,7 @@ public:
     void setFriendName(const FriendId& fId, const QString& name);
     void setFriendAvatar(const FriendId& fId, const QByteArray& avatar);
     void setFriendTyping(const ContactId& cId, bool typing);
-    void setFriendFileReceived(const ContactId& cId, const ToxFile& file);
+    void setFriendFileReceived(const ContactId& cId, const File& file);
     void setFriendFileCancelled(const ContactId& cId, const QString& fileId);
 
     void search(const QString& searchString);
@@ -92,7 +92,7 @@ public:
     void toForwardMessage(const ContactId& cid, const MsgId& id);
 
     // av
-    void setFriendAvInvite(const PeerId& peer, bool video);
+    void setFriendAvInvite(const ContactId& cid, bool video);
     void setFriendAvCreating(const FriendId& friendId, bool video);
     void setFriendAvStart(const FriendId& friendId, bool video);
     void setFriendAvPeerConnectedState(const FriendId& friendId,

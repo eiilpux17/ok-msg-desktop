@@ -16,7 +16,9 @@
 #include "genericchatroomwidget.h"
 #include "src/model/FriendId.h"
 #include "src/model/chatroom/groupchatroom.h"
-#include "src/model/message.h"
+#include "src/model/Message.h"
+#include "src/widget/form/CallDurationForm.h"
+#include "src/widget/tool/callconfirmwidget.h"
 
 class QPixmap;
 class MaskablePixmapWidget;
@@ -52,6 +54,20 @@ public:
     void search(const QString& searchString, bool hide = false);
     void setRecvMessage(const FriendMessage& message, bool isAction);
 
+    CallConfirmWidget* createCallConfirm(const PeerId& pid, bool video, QString& displayedName);
+    void showCallConfirm();
+    void removeCallConfirm();
+    CallConfirmWidget* getCallConfirm() const {
+        return callConfirm.get();
+    }
+
+
+    CallDurationForm* createCallDuration(bool video = false);
+    void destroyCallDuration(bool error = false);
+    [[nodiscard]] CallDurationForm* getCallDuration() const {
+        return callDuration.get();
+    }
+
 protected:
     void contextMenuEvent(QContextMenuEvent* event) override final;
     void mousePressEvent(QMouseEvent* ev) override;
@@ -68,14 +84,10 @@ private:
 
     ContentDialog* createContentDialog() const;
     ContentDialog* addFriendDialog(const Friend* frnd);
-
-public slots:
-    void onContextMenuCalled(QContextMenuEvent* event);
-    void do_widgetClicked(GenericChatroomWidget* w);
-
-    void changeAutoAccept(bool enable);
-    void inviteToNewGroup();
-
+    //呼叫确定框
+    std::unique_ptr<CallConfirmWidget> callConfirm;
+    //呼叫进行中窗口
+    std::unique_ptr<CallDurationForm> callDuration;
 signals:
     void friendClicked(FriendWidget* widget);
 
@@ -87,6 +99,29 @@ signals:
 
     void updateFriendActivity(const Friend& frnd);
     //    void setActive(bool active);
+public slots:
+
+    void onContextMenuCalled(QContextMenuEvent* event);
+    void do_widgetClicked(GenericChatroomWidget* w);
+
+    void changeAutoAccept(bool enable);
+    void inviteToNewGroup();
+
+    void doMuteMicrophone(bool mute);
+    void doSilenceSpeaker(bool mute);
+    void endCall();
+
+    void doAcceptCall(const PeerId& p, bool video);
+    void doRejectCall(const PeerId& p);
+    void doCall();
+    void doVideoCall();
+
+    void setAvInvite(const PeerId& pid, bool video);
+    void setAvCreating(const FriendId& fid, bool video);
+    void setAvStart(bool video);
+    void setAvPeerConnectedState(lib::ortc::PeerConnectionState state);
+    void setAvEnd(bool error);
 };
+
 }  // namespace module::im
 #endif  // FRIENDWIDGET_H

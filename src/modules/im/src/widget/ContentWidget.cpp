@@ -38,9 +38,20 @@ ContentWidget::ContentWidget(SendWorker* sendWorker, QWidget* parent) : QWidget(
     mainHead = new QWidget(this);
     mainHead->setLayout(new QVBoxLayout);
     mainHead->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
-    mainHead->layout()->setContentsMargins(HEADER_MARIGN, HEADER_MARIGN, HEADER_MARIGN,
-                                           HEADER_MARIGN);
-    mainHead->layout()->addWidget(sendWorker->getHeader());
+    // mainHead->layout()->setContentsMargins(HEADER_MARIGN, HEADER_MARIGN, HEADER_MARIGN, HEADER_MARIGN);
+
+
+    headWidget =  new ChatFormHeader(sendWorker->getContactId(), this);
+    connect(headWidget, &ChatFormHeader::callTriggered, this,[this,sendWorker](){
+        emit sendWorker->onCallTriggered();
+    });
+    connect(headWidget, &ChatFormHeader::videoCallTriggered, this, [this,sendWorker](){
+        emit sendWorker->onVideoCallTriggered();
+    });
+
+
+    mainHead->layout()->addWidget(headWidget);
+
     // 头部信息
     layout()->addWidget(mainHead);
 

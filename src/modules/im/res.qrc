@@ -5,12 +5,11 @@
     <qresource prefix="/">
         <file>themes/dark/palette.ini</file>
         <file>themes/default/palette.ini</file>
-        <file>themes/default/chatArea/chatArea.css</file>
-        <file>themes/default/chatArea/chatHead.css</file>
-        <file>themes/default/chatArea/innerStyle.css</file>
+        
         <file>themes/default/chatForm/buttons.css</file>
         <file>themes/default/chatForm/fullScreenButtons.css</file>
         <file>themes/default/chatForm/labels.css</file>
+   
         <file>themes/dark/chatArea/chatArea.css</file>
         <file>themes/dark/chatArea/chatHead.css</file>
         <file>themes/dark/chatArea/innerStyle.css</file>
@@ -39,7 +38,7 @@
         <file>themes/default/window/chat.css</file>
         <file>themes/default/fileTransferInstance/filetransferWidget.css</file>
         <file>themes/dark/fileTransferInstance/filetransferWidget.css</file>
-        <file>themes/default/genericChatForm/genericChatForm.css</file>
+
         <file>themes/dark/genericChatForm/genericChatForm.css</file>
         <file>themes/default/addFriendForm/toxId.css</file>
         <file>themes/default/notificationEdge/notificationEdge.css</file>
@@ -189,5 +188,7 @@
 
     <qresource prefix="styles">
         <file alias="chat.css">res/styles/chat.css</file>
+        <file alias="chatArea.css">res/styles/chatArea.css</file>
+        <file alias="chatHead.css">res/styles/chatHead.css</file>
     </qresource>
 </RCC>

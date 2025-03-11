@@ -17,8 +17,8 @@
 #include "genericchatroomwidget.h"
 #include "src/model/FriendId.h"
 #include "src/model/chatroom/groupchatroom.h"
-#include "src/model/friendmessagedispatcher.h"
-#include "src/model/message.h"
+#include "src/model/FriendMessageDispatcher.h"
+#include "src/model/Message.h"
 #include "src/model/sessionchatlog.h"
 
 #include <memory>
@@ -35,8 +35,8 @@ class ChatForm;
 class ChatHistory;
 class ContentDialog;
 class ContentLayout;
-class Widget;
 class FriendWidget;
+
 class MessageSessionWidget : public GenericChatroomWidget {
     Q_OBJECT
 
@@ -44,6 +44,8 @@ public:
     MessageSessionWidget(ContentLayout* layout, const ContactId& cid, lib::messenger::ChatType);
 
     ~MessageSessionWidget();
+
+    void doDelete();
 
     void contextMenuEvent(QContextMenuEvent* event) override final;
     void setAsActiveChatroom() override final;
@@ -65,7 +67,7 @@ public:
 
     void setRecvGroupMessage(const GroupMessage& msg);
 
-    void setFileReceived(const ToxFile& file);
+    void setFileReceived(const File& file);
     void setFileCancelled(const QString& fileId);
 
     void clearHistory();
@@ -73,11 +75,7 @@ public:
     void setFriend(const Friend* f);
     void removeFriend();
 
-    void setAvInvite(const PeerId& peerId, bool video);
-    void setAvCreating(const FriendId& friendId, bool video);
-    void setAvStart(bool video);
-    void setAvPeerConnectedState(lib::ortc::PeerConnectionState state);
-    void setAvEnd(bool error);
+
 
     void setGroup(const Group* g);
     void removeGroup();
@@ -85,6 +83,7 @@ public:
     void clearReceipts();
 
     void doForwardMessage(const ContactId& cid, const MsgId& msgId);
+
 
 signals:
     void removeFriend(const FriendId& friendPk);
@@ -113,13 +112,9 @@ private slots:
     void changeAutoAccept(bool enable);
     void showDetails();
     void onMessageSent(DispatchedMessageId id, const Message& message);
-    void doAcceptCall(const PeerId& p, bool video);
-    void doRejectCall(const PeerId& p);
-    void doCall();
-    void doVideoCall();
-    void endCall();
-    void doMuteMicrophone(bool mute);
-    void doSilenceSpeaker(bool mute);
+
+
+
 
 protected:
     virtual void mousePressEvent(QMouseEvent* ev) override;

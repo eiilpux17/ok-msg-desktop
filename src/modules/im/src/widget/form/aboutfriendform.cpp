@@ -31,7 +31,7 @@
 #include "src/persistence/settings.h"
 #include "src/widget/widget.h"
 #include "src/persistence/profile.h"
-#include "src/model/friend.h"
+#include "src/model/Friend.h"
 
 
 namespace module::im {
@@ -135,8 +135,11 @@ void AboutFriendForm::onAliasChanged(const QString& text) {
     auto fid = ui->id->text();
 
     auto f = Nexus::getCore()->getFriendList().findFriend(ContactId(fid, lib::messenger::ChatType::Chat));
-    f->setAlias(text);
+    if(!f.has_value()){
+        return;
+    }
 
+    f.value()->setAlias(text);
     Core::getInstance()->setFriendAlias(fid, text);
 }
 

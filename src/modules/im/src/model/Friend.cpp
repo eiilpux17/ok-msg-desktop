@@ -10,8 +10,8 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "friend.h"
-#include "src/model/status.h"
+#include "Friend.h"
+#include "src/model/Status.h"
 
 #include <src/core/core.h>
 

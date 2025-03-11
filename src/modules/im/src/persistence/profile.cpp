@@ -69,7 +69,7 @@ const QPixmap& Profile::loadAvatar() {
         // 获取默认
         if (settings->getShowIdenticons()) {
             avatar = QPixmap::fromImage(
-                    Identicon(core->getSelfPeerId().getPublicKey().getByteArray()).toImage(16));
+                    Identicon(core->getSelfPeerId().full().toUtf8()).toImage(16));
         }
     }
     return avatar;
@@ -115,15 +115,11 @@ void Profile::initCore(ICoreSettings* s) {
         return;
     }
 
-    // save tox file when Core requests it
-    connect(core.get(), &Core::saveRequest, this, &Profile::onSaveToxSave);
+
     // react to avatar changes
     connect(core.get(), &Core::friendAvatarRemoved, this, &Profile::removeFriendAvatar);
     connect(core.get(), &Core::friendAvatarChanged, this, &Profile::setFriendAvatar);
-    //    connect(core.get(), &Core::fileAvatarOfferReceived, this, &Profile::onAvatarOfferReceived,
-    //            Qt::ConnectionType::QueuedConnection);
     connect(core.get(), &Core::started, this, [this]() { emit selfAvatarChanged(loadAvatar()); });
-
     connect(core.get(), &Core::vCardSet, [&](const VCard& vCard) { setVCard(vCard); });
     connect(core.get(), &Core::avatarSet, this, &Profile::onAvatarSet);
 
@@ -216,18 +212,7 @@ void Profile::setVCard(const VCard& v) {
     emit vCardChanged(vCard);
 }
 
-/**
- * @brief Saves the profile's .tox save, encrypted if needed.
- * @warning Invalid on deleted profiles.
- */
-void Profile::onSaveToxSave() {
-    QByteArray data = core->getToxSaveData();
-    if (!data.size()) {
-        return;
-    }
-    // assert(data.size());
-    //    saveToxSave(data);
-}
+
 
 QString Profile::setPassword(const QString& pwd) {
     return QString();

@@ -17,7 +17,7 @@
 #include <QLabel>
 #include <QWidget>
 
-#include <src/model/contact.h>
+#include <src/model/Contact.h>
 #include "src/video/genericnetcamview.h"
 
 namespace Ui {

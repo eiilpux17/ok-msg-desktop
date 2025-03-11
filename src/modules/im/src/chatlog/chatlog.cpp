@@ -158,6 +158,8 @@ ChatLog::ChatLog(QWidget* parent) : QGraphicsView(parent), scrollBarValue{0} {
 
     auto s = Nexus::getProfile()->getSettings();
     connect(s, &Settings::emojiFontPointSizeChanged, this, &ChatLog::forceRelayout);
+
+
 }
 
 ChatLog::~ChatLog() {

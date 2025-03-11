@@ -33,7 +33,7 @@
 #include "src/core/coreav.h"
 #include "src/core/corefile.h"
 #include "src/lib/storage/settings/style.h"
-#include "src/model/status.h"
+#include "src/model/Status.h"
 #include "src/nexus.h"
 #include "src/persistence/history.h"
 #include "src/persistence/settings.h"
@@ -142,7 +142,7 @@ void ChatForm::callUpdateFriendActivity() {
     emit updateFriendActivity(*f);
 }
 
-void ChatForm::updateFriendActivityForFile(const ToxFile& file) {
+void ChatForm::updateFriendActivityForFile(const File& file) {
     if (file.receiver != f->getId()) {
         return;
     }

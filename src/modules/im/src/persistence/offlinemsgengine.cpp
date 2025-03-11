@@ -15,7 +15,7 @@
 #include <QMutexLocker>
 #include <QTimer>
 #include <chrono>
-#include "src/model/status.h"
+#include "src/model/Status.h"
 
 namespace module::im {
 

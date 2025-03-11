@@ -13,9 +13,9 @@
 #ifndef CHAT_LOG_ITEM_H
 #define CHAT_LOG_ITEM_H
 
-#include "src/core/toxfile.h"
+#include "src/core/File.h"
 #include "src/model/FriendId.h"
-#include "src/model/message.h"
+#include "src/model/Message.h"
 #include "src/persistence/history.h"
 
 #include <memory>
@@ -28,7 +28,7 @@ struct ChatLogMessage {
 
 struct ChatLogFile {
     QDateTime timestamp;
-    ToxFile file;
+    File file;
 };
 
 class ChatLogItem {

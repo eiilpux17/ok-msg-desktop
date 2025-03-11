@@ -14,8 +14,8 @@
 #define FRIEND_MESSAGE_DISPATCHER_H
 
 #include "src/core/icorefriendmessagesender.h"
-#include "src/model/imessagedispatcher.h"
-#include "src/model/message.h"
+#include "src/model/IMessageDispatcher.h"
+#include "src/model/Message.h"
 #include "src/persistence/offlinemsgengine.h"
 
 #include <QObject>
@@ -41,7 +41,7 @@ public:
     void onReceiptReceived(MsgId receipt);
     void clearOutgoingMessages() override;
 
-    void onFileReceived(const ToxFile& file);
+    void onFileReceived(const File& file);
     void onFileCancelled(const QString& fileId);
 
 private slots:

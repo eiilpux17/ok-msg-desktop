@@ -14,7 +14,7 @@
 #define GROUPLIST_H
 
 
-#include "groupid.h"
+#include "GroupId.h"
 #include <QHash>
 #include <QString>
 #include <QList>

@@ -26,16 +26,18 @@
 #include "src/model/FriendId.h"
 #include "src/model/MsgId.h"
 #include "src/model/VCard.h"
-#include "src/model/friendlist.h"
-#include "src/model/groupid.h"
-#include "src/model/grouplist.h"
-#include "toxfile.h"
-#include "toxid.h"
+#include "src/model/Contact.h"
+#include "src/model/FriendList.h"
+#include "src/model/GroupId.h"
+#include "src/model/GroupList.h"
+#include "src/model/Message.h"
+#include "File.h"
+
 
 #include "base/compatiblerecursivemutex.h"
 #include "lib/messenger/Messenger.h"
 
-#include "src/model/status.h"
+#include "src/model/Status.h"
 
 
 
@@ -87,14 +89,10 @@ public:
     const FriendList& getFriendList() const {
         return friendList;
     }
-    void loadGroupList() const;
-    // GroupId getGroupPersistentId(QString groupId) const override;
-    uint32_t getGroupNumberPeers(QString groupId) const override;
-    QString getGroupPeerName(QString groupId, QString peerId) const override;
-    PeerId getGroupPeerPk(QString groupId, QString peerId) const override;
-    QStringList getGroupPeerNames(QString groupId) const override;
-    bool getGroupAvEnabled(QString groupId) const override;
-    FriendId getFriendPublicKey(QString friendNumber) const;
+
+    std::optional<Friend*> getFriend(const ContactId& cid) const;
+    void addFriend(Friend*);
+
 
     QString getFriendUsername(QString friendNumber) const;
     void setFriendAlias(const QString& friendId, const QString& alias);
@@ -104,17 +102,13 @@ public:
 
     bool isFriendOnline(QString friendId) const;
     bool hasFriendWithPublicKey(const FriendId& publicKey) const;
-    QString joinGroupchat(const GroupInvite& inviteInfo);
-    void joinRoom(const QString& groupId);
-    void quitGroupChat(const QString& groupId) const;
-    void requestRoomInfo(const QString& groupId);
 
 
     QString getUsername() const override;
     QString getNick() const override;
     Status getStatus() const;
     QString getStatusMessage() const;
-    ToxId getSelfPeerId() const override;
+    ok::base::Jid getSelfPeerId() const override;
     FriendId getSelfId() const override;
     QPair<QByteArray, QByteArray> getKeypair() const;
 
@@ -125,7 +119,6 @@ public:
     void start();
     void stop();
 
-    QByteArray getToxSaveData();
 
     void acceptFriendRequest(const FriendId& friendPk);
     void rejectFriendRequest(const FriendId& friendPk);
@@ -134,6 +127,12 @@ public:
                            const QString& message);
 
     void sendTyping(QString friendId, bool typing);
+
+
+    QString joinGroupchat(const GroupInvite& inviteInfo);
+    void joinRoom(const QString& groupId);
+    void quitGroupChat(const QString& groupId) const;
+    void requestRoomInfo(const QString& groupId);
 
     GroupId createGroup(const QString& name = "");
     void inviteToGroup(const ContactId& friendId, const GroupId& groupId);
@@ -145,16 +144,31 @@ public:
         return groupList;
     }
     void addGroup(Group*);
+    std::optional<Group*> getGroup(const ContactId& cid) const;
+    void loadGroupList() const;
+
+    // GroupId getGroupPersistentId(QString groupId) const override;
+    uint32_t getGroupNumberPeers(QString groupId) const override;
+    QString getGroupPeerName(QString groupId, QString peerId) const override;
+    PeerId getGroupPeerPk(QString groupId, QString peerId) const override;
+    QStringList getGroupPeerNames(QString groupId) const override;
+    bool getGroupAvEnabled(QString groupId) const override;
+    FriendId getFriendPublicKey(QString friendNumber) const;
+
+    void setGroupName(const QString& groupId, const QString& name);
+    void setGroupSubject(const QString& groupId, const QString& subject);
+    void setGroupDesc(const QString& groupId, const QString& desc);
+    void setGroupAlias(const QString& groupId, const QString& alias);
+
+
+    std::optional<Contact*> getContact(const ContactId& cid) const;
+
 
     void setStatus(Status status);
     void setNick(const QString& nick);
     void setPassword(const QString& password);
     void setStatusMessage(const QString& message);
     void setAvatar(const QByteArray& avatar);
-    void setGroupName(const QString& groupId, const QString& name);
-    void setGroupSubject(const QString& groupId, const QString& subject);
-    void setGroupDesc(const QString& groupId, const QString& desc);
-    void setGroupAlias(const QString& groupId, const QString& alias);
 
     void logout();
 
@@ -198,7 +212,7 @@ private:
 
     void checkLastOnline(QString friendId);
 
-    QString getFriendRequestErrorMessage(const ToxId& friendId, const QString& message) const;
+
     void registerCallbacks(lib::messenger::Messenger* messenger);
 
     /**
@@ -307,7 +321,7 @@ signals:
     void avatarSet(QByteArray avatar);
     void statusMessageSet(const QString& message);
     void statusSet(Status status);
-    void idSet(const ToxId& id);
+    void idSet(const ok::base::Jid id);
     void vCardSet(const VCard& imvCard);
 
     void failedToSetUsername(const QString& username);

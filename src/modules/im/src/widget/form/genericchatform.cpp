@@ -33,9 +33,9 @@
 #include "src/chatlog/content/filetransferwidget.h"
 #include "src/chatlog/content/simpletext.h"
 #include "src/core/core.h"
-#include "src/model/friend.h"
-#include "src/model/friendlist.h"
-#include "src/model/grouplist.h"
+#include "src/model/Friend.h"
+#include "src/model/FriendList.h"
+#include "src/model/GroupList.h"
 #include "src/nexus.h"
 #include "src/persistence/profile.h"
 #include "src/persistence/settings.h"
@@ -67,18 +67,10 @@ static constexpr int TYPING_NOTIFICATION_DURATION = 3000;
  * representation if no one was found
  */
 QString GenericChatForm::resolveToxPk(const FriendId& pk) {
-    Friend* f = Nexus::getCore()->getFriendList().findFriend(pk);
-    if (f) {
-        return f->getDisplayedName();
+    auto f = Nexus::getCore()->getFriendList().findFriend(pk);
+    if (f.has_value()) {
+        return f.value()->getIdAsString();
     }
-
-    //  for (Group *it : GroupList::getAllGroups()) {
-    //    QString res = it->resolveToxId(pk);
-    //    if (!res.isEmpty()) {
-    //      return res;
-    //    }
-    //  }
-
     return pk.toString();
 }
 
@@ -124,7 +116,7 @@ void GenericChatForm::renderMessage(const ChatLogItem& item, bool isSelf, bool c
     }
 }
 
-void GenericChatForm::renderFile(const ChatLogItem& item, ToxFile file, bool isSelf,
+void GenericChatForm::renderFile(const ChatLogItem& item, File file, bool isSelf,
                                  QDateTime timestamp, IChatItem::Ptr& chatMessage) {
     qDebug() << __func__ << "file" << file.fileName;
 
@@ -147,9 +139,9 @@ void GenericChatForm::renderItem(const ChatLogItem& item,
     const Core* core = Core::getInstance();
 
     const auto& sender = item.getSender();
-    const auto& selfPk = core->getSelfPeerId().getPublicKey();
+    const auto& selfPk = core->getSelfPeerId().full();
 
-    bool isSelf = sender == selfPk;  // || sender.getResource() == selfPk.getUsername();
+    bool isSelf = sender.getId() == selfPk;  // || sender.getResource() == selfPk.getUsername();
 
     switch (item.getContentType()) {
         case ChatLogItem::ContentType::message: {
@@ -204,7 +196,6 @@ GenericChatForm::GenericChatForm(const ContactId* contact_,
     connect(s, &Settings::chatMessageFontChanged, this, &GenericChatForm::onChatMessageFontChanged);
     //    chatLog->setMinimumHeight(200);
     chatLog->setBusyNotification(ChatMessage::createBusyNotification(s->getChatMessageFont()));
-
     connect(chatLog, &ChatLog::firstVisibleLineChanged, this, &GenericChatForm::updateShowDateInfo);
     connect(chatLog, &ChatLog::loadHistoryLower, this, &GenericChatForm::loadHistoryLower);
 
@@ -312,15 +303,9 @@ QDateTime GenericChatForm::getFirstTime() const {
     return getTime(chatLog->getFirstLine());
 }
 
-void GenericChatForm::reloadTheme() {
-    //    auto s = Nexus::getProfile()->getSettings();
-
-    //  searchForm->reloadTheme();
-    //  headWidget->setStyleSheet(Style::getStylesheet("chatArea/chatHead.css"));
-    //  headWidget->reloadTheme();
-
-    setStyleSheet(lib::settings::Style::getStylesheet("genericChatForm/genericChatForm.css"));
-    chatLog->setStyleSheet(lib::settings::Style::getStylesheet("chatArea/chatArea.css"));
+void GenericChatForm::reloadTheme() {   
+    auto css = lib::settings::Style::getStylesheetFile("chatArea.css");
+    chatLog->setStyleSheet(css);
     chatLog->reloadTheme();
 }
 
@@ -352,8 +337,8 @@ void GenericChatForm::showEvent(QShowEvent*) {
     if (contact) {
         if (!contact->isGroup()) {
             auto f = Nexus::getCore()->getFriendList().findFriend(*contactId);
-            if (f) {
-                setContact(f);
+            if (f.has_value()) {
+                setContact(f.value());
             }
         }
     }

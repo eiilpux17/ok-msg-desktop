@@ -19,6 +19,7 @@
 #include <QMap>
 #include <QMenu>
 #include <QtCore>
+#include "base/jid.h"
 
 class QPluginLoader;
 class Profile;
@@ -32,7 +33,7 @@ class Messenger;
 namespace ok {
 
 namespace base {
-class OkAccount;
+class Jid;
 }
 
 namespace plugin {
@@ -61,16 +62,16 @@ using namespace ok::base;
 
 class AccountIds {
 public:
-    int appendAccount(OkAccount* acc);
-    void removeAccount(OkAccount* acc);
+    int appendAccount(Jid* acc);
+    void removeAccount(Jid* acc);
     void clear();
     bool isValidRange(int id) const { return id_keys.contains(id); }
-    OkAccount* account(int id) const;
-    int id(OkAccount* acc) const;
+    Jid* account(int id) const;
+    int id(Jid* acc) const;
 
 private:
-    QHash<OkAccount*, int> acc_keys;
-    QHash<int, OkAccount*> id_keys;
+    QHash<Jid*, int> acc_keys;
+    QHash<int, Jid*> id_keys;
 };
 
 class PluginManager : public QObject {
@@ -107,32 +108,32 @@ public:
 
     void setShortcuts();
 
-    bool processEvent(OkAccount* account, QDomElement& eventXml);
-    bool processMessage(OkAccount* account, const QString& jidFrom, const QString& body,
+    bool processEvent(Jid* account, QDomElement& eventXml);
+    bool processMessage(Jid* account, const QString& jidFrom, const QString& body,
                         const QString& subject);
-    bool processOutgoingMessage(OkAccount* account, const QString& jidTo, QString& body,
+    bool processOutgoingMessage(Jid* account, const QString& jidTo, QString& body,
                                 const QString& type, QString& subject);
-    void processOutgoingStanza(OkAccount* account, QDomElement& stanza);
-    void startLogin(OkAccount* account);
-    void logout(OkAccount* account);
+    void processOutgoingStanza(Jid* account, QDomElement& stanza);
+    void startLogin(Jid* account);
+    void logout(Jid* account);
 
     void addSettingPage(OAH_PluginOptionsTab* tab);
     void removeSettingPage(OAH_PluginOptionsTab* tab);
     QList<OAH_PluginOptionsTab*> settingsPages() const;
     void applyOptions(const QString& plugin);
     void restoreOptions(const QString& plugin);
-    void addToolBarButton(QObject* parent, QWidget* toolbar, OkAccount* account,
+    void addToolBarButton(QObject* parent, QWidget* toolbar, Jid* account,
                           const QString& contact, const QString& plugin = "");
     bool hasToolBarButton(const QString& plugin) const;
-    void addGCToolBarButton(QObject* parent, QWidget* toolbar, OkAccount* account,
+    void addGCToolBarButton(QObject* parent, QWidget* toolbar, Jid* account,
                             const QString& contact, const QString& plugin = "");
     bool hasGCToolBarButton(const QString& plugin) const;
-    void addAccountMenu(QMenu* menu, OkAccount* account);
-    void addContactMenu(QMenu* menu, OkAccount* account, QString jid);
+    void addAccountMenu(QMenu* menu, Jid* account);
+    void addContactMenu(QMenu* menu, Jid* account, QString jid);
 
-    void setupChatTab(QWidget* tab, OkAccount* account, const QString& contact);
-    void setupGCTab(QWidget* tab, OkAccount* account, const QString& contact);
-    bool appendingChatMessage(OkAccount* account, const QString& contact, QString& body,
+    void setupChatTab(QWidget* tab, Jid* account, const QString& contact);
+    void setupGCTab(QWidget* tab, Jid* account, const QString& contact);
+    bool appendingChatMessage(Jid* account, const QString& contact, QString& body,
                               QDomElement& html, bool local);
 
     QString pluginInfo(const QString& plugin) const;
@@ -270,9 +271,9 @@ private slots:
     void accountDestroyed();
 
 public slots:
-    int addAccount(OkAccount* account, ::lib::messenger::Messenger* messenger);
-    bool decryptMessageElement(OkAccount* account, QDomElement& message);
-    bool encryptMessageElement(OkAccount* account, QDomElement& message);
+    int addAccount(Jid* account, ::lib::messenger::Messenger* messenger);
+    bool decryptMessageElement(Jid* account, QDomElement& message);
+    bool encryptMessageElement(Jid* account, QDomElement& message);
 };
 }  // namespace plugin
 }  // namespace ok

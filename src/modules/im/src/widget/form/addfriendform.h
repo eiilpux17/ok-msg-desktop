@@ -13,8 +13,6 @@
 #ifndef ADDFRIENDFORM_H
 #define ADDFRIENDFORM_H
 
-#include "src/core/toxid.h"
-
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
@@ -24,6 +22,7 @@
 #include <QTabWidget>
 #include <QTextEdit>
 #include <QVBoxLayout>
+#include "src/model/FriendId.h"
 
 #include <lib/session/AuthSession.h>
 

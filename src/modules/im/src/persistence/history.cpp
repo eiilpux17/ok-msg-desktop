@@ -383,7 +383,7 @@ QVector<lib::db::RawDatabase::Query> History::generateNewMessageQueries(const Me
     return queries;
 }
 
-void History::addNewFileMessage(const ToxFile& file) {
+void History::addNewFileMessage(const File& file) {
     if (historyAccessBlocked()) {
         return;
     }
@@ -431,7 +431,7 @@ void History::addNewMessage(const Message& message,
     db->execLater(sql);
 }
 
-void History::setFileMessage(const ToxFile& file) {
+void History::setFileMessage(const File& file) {
     qDebug() << __func__ << "file:" << file.fileId;
 
     if (historyAccessBlocked()) {

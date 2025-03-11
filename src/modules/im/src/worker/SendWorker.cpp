@@ -17,8 +17,8 @@
 #include "SendWorker.h"
 
 #include <src/model/chatroom/groupchatroom.h>
-#include <src/model/friendmessagedispatcher.h>
-#include <src/model/groupmessagedispatcher.h>
+#include <src/model/FriendMessageDispatcher.h>
+#include <src/model/GroupMessageDispatcher.h>
 #include <src/persistence/settings.h>
 #include <src/widget/chatformheader.h>
 #include <src/widget/contentdialogmanager.h>
@@ -35,7 +35,7 @@ SendWorker::SendWorker(const FriendId& friendId) : contactId{friendId} {
     auto profile = Nexus::getProfile();
     auto history = profile->getHistory();
 
-    initChatHeader(friendId);
+    // initChatHeader(friendId);
 
     messageDispatcher =
             std::make_unique<FriendMessageDispatcher>(friendId, sharedParams, *core, *core);
@@ -85,9 +85,14 @@ SendWorker::~SendWorker() {
 }
 
 void SendWorker::clearHistory() {
+    qDebug() << __func__;
     auto profile = Nexus::getProfile();
+
+    //数据库
     auto history = profile->getHistory();
     history->removeFriendHistory(contactId.toString());
+
+    //TODO 存储
 }
 
 std::unique_ptr<SendWorker> SendWorker::forFriend(const FriendId& friend_) {
@@ -99,53 +104,8 @@ std::unique_ptr<SendWorker> SendWorker::forGroup(const GroupId& group) {
 }
 
 void SendWorker::initChatHeader(const ContactId& contactId) {
-    headWidget = std::make_unique<ChatFormHeader>(contactId);
 
-    connect(headWidget.get(), &ChatFormHeader::callAccepted, this, [this](const PeerId& p) {
-        // headWidget->removeCallConfirm();
-        emit acceptCall(p, lastCallIsVideo);
-    });
-
-    connect(headWidget.get(), &ChatFormHeader::callRejected, this, [this](const PeerId& p) {
-        // headWidget->removeCallConfirm();
-        emit rejectCall(p);
-    });
-
-    connect(headWidget.get(), &ChatFormHeader::callTriggered, this, &SendWorker::onCallTriggered);
-
-    connect(headWidget.get(), &ChatFormHeader::videoCallTriggered, this,
-            &SendWorker::onVideoCallTriggered);
 }
 
-CallDurationForm* SendWorker::createCallDuration(bool video) {
-    qDebug() << __func__ << "video:" << video;
 
-    if (!callDuration) {
-        callDuration = std::make_unique<CallDurationForm>();
-        callDuration->setContact(headWidget->getContact());
-
-        connect(callDuration.get(), &CallDurationForm::endCall, [&]() { emit endCall(); });
-        connect(callDuration.get(), &CallDurationForm::muteSpeaker,
-                [&](bool mute) { emit muteSpeaker(mute); });
-        connect(callDuration.get(), &CallDurationForm::muteMicrophone,
-                [&](bool mute) { emit muteMicrophone(mute); });
-    }
-
-    callDuration->show();
-    if (video) {
-        callDuration->showNetcam();
-    } else {
-        callDuration->showAvatar();
-    }
-
-    return callDuration.get();
-}
-
-void SendWorker::destroyCallDuration(bool error) {
-    qDebug() << __func__;
-    if (!callDuration) {
-        return;
-    }
-    callDuration.reset();
-}
 }  // namespace module::im

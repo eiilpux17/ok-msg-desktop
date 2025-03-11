@@ -27,7 +27,7 @@
 #include "lib/ui/gui.h"
 #include "lib/ui/widget/tools/CroppingLabel.h"
 #include "lib/ui/widget/tools/RoundedPixmapLabel.h"
-#include "src/model/status.h"
+#include "src/model/Status.h"
 #include "src/nexus.h"
 #include "src/widget/friendwidget.h"
 #include "src/widget/widget.h"

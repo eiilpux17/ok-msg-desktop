@@ -15,7 +15,7 @@
 
 #include <QMap>
 #include <QString>
-#include "src/model/group.h"
+#include "src/model/Group.h"
 #include "src/widget/tool/chattextedit.h"
 namespace module::im {
 class TabCompleter : public QObject {

@@ -24,16 +24,17 @@
 #include "lib/messenger/Messenger.h"
 #include "src/Bus.h"
 #include "src/application.h"
-#include "src/base/images.h"
 #include "src/core/coreav.h"
 #include "src/core/icoresettings.h"
 #include "src/core/toxoptions.h"
-#include "src/model/friend.h"
-#include "src/model/group.h"
+#include "src/model/Friend.h"
+#include "src/model/Group.h"
 #include "src/model/groupinvite.h"
-#include "src/model/status.h"
+#include "src/model/Status.h"
 #include "src/nexus.h"
 #include "src/persistence/profile.h"
+
+#include "base/jid.h"
 
 
 namespace module::im {
@@ -511,27 +512,6 @@ void Core::rejectFriendRequest(const FriendId& friendPk) {
     messenger->rejectFriendRequest(friendPk.toString().toStdString());
 }
 
-/**
- * @brief Checks that sending friendship request is correct and returns error
- * message accordingly
- * @param friendId Id of a friend which request is destined to
- * @param message Friendship request message
- * @return Returns empty string if sending request is correct, according error
- * message otherwise
- */
-QString Core::getFriendRequestErrorMessage(const ToxId& friendId, const QString& message) const {
-    QMutexLocker ml{&mutex};
-
-    if (!friendId.isValid()) {
-        return tr("Invalid Ok ID", "Error while sending friendship request");
-    }
-
-    if (message.isEmpty()) {
-        return tr("You need to write a message with your request",
-                  "Error while sending friendship request");
-    }
-    return tr("IMFriend is already added", "Error while sending friendship request");
-}
 
 void Core::requestFriendship(const FriendId& friendId, const QString& nick,
                              const QString& message) {
@@ -552,22 +532,6 @@ bool Core::sendMessageWithType(QString friendId, const QString& message, const M
 
     bool yes = messenger->sendToFriend(friendId.toStdString(), message.toStdString(),
                                        id.toStdString(), encrypt);
-
-            //  int size = message.toUtf8().size();
-            //  auto maxSize = tox_max_message_length();
-            //  if (size > maxSize) {
-            //    qCritical() << "Core::sendMessageWithType called with message of
-            //    size:"
-            //                << size << "when max is:" << maxSize << ". Ignoring.";
-            //    return false;
-            //  }
-            //
-            //  ToxString cMessage(message);
-            //  Tox_Err_Friend_Send_Message error;
-            //  receipt = MsgId{receipts};
-            //  if (parseFriendSendMessageError(error)) {
-            //    return true;
-            //  }
     return yes;
 }
 
@@ -626,6 +590,17 @@ void Core::setGroupAlias(const QString& groupId, const QString& alias) {
     messenger->setRoomAlias(groupId.toStdString(), alias.toStdString());
 }
 
+std::optional<Contact *> Core::getContact(const ContactId &cid) const
+{
+    auto f = getFriend(cid);
+    if(f.has_value()){
+        return f;
+    }
+
+    return getGroup(cid);
+
+}
+
 bool Core::removeFriend(QString friendId) {
     qDebug() << __func__ << friendId;
     QMutexLocker ml{&mutex};
@@ -664,6 +639,16 @@ void Core::addGroup(Group *g)
     groupList.addGroup(g);
 }
 
+std::optional<Group *> Core::getGroup(const ContactId &cid) const
+{
+    for(auto& f: groupList.getAllGroups()){
+        if(f->getId().toString() == cid.toString()){
+            return std::make_optional(f);
+        }
+    }
+    return std::nullopt;
+}
+
 /**
  * @brief Returns our username, or an empty string on failure
  */
@@ -700,8 +685,8 @@ void Core::setPassword(const QString& password) {
 /**
  * @brief Returns our Ok ID
  */
-ToxId Core::getSelfPeerId() const {
-    return ToxId(qstring(messenger->getSelfId().toString()));
+ok::base::Jid Core::getSelfPeerId() const {
+    return ok::base::Jid(qstring(messenger->getSelfId().toString()));
 }
 
 /**
@@ -803,24 +788,11 @@ void Core::setStatus(Status status_) {
 
 void Core::setAvatar(const QByteArray& avatar) {
     // 从朋友列表寻找到自己
-    auto self = friendList.findFriend(getSelfId());
-    if (self) {
-        self->setAvatar(avatar);
+    auto self = getFriend(getSelfId());
+    if (self.has_value()) {
+        self.value()->setAvatar(avatar);
+        messenger->setSelfAvatar(avatar.toStdString());
     }
-    messenger->setSelfAvatar(avatar.toStdString());
-}
-
-/**
- * @brief Returns the unencrypted tox save data
- */
-QByteArray Core::getToxSaveData() {
-    QMutexLocker ml{&mutex};
-
-    QByteArray data;
-    //  uint32_t fileSize = tox_get_savedata_size(tox.get());
-    //  data.resize(fileSize);
-    //  tox_get_savedata(tox.get(), (uint8_t *)data.data());
-    return data;
 }
 
 // Declared to avoid code duplication
@@ -943,6 +915,16 @@ const FriendList& Core::loadFriendList() {
     }
 
     return friendList;
+}
+
+std::optional<Friend*> Core::getFriend(const ContactId &cid) const
+{
+    for(auto& f: friendList.getAllFriends()){
+        if(f->getId().toString() == cid.toString()){
+            return std::make_optional(f);
+        }
+    }
+    return std::nullopt;
 }
 
 // GroupId Core::getGroupPersistentId(QString groupId) const {
@@ -1348,8 +1330,7 @@ void Core::onSelfVCardChanged(lib::messenger::IMVCard& imvCard) {
 }
 
 void Core::onSelfIdChanged(const std::string& id) {
-    QMutexLocker ml{&mutex};
-    emit idSet(ToxId(qstring(id)));
+    emit idSet(ok::base::Jid(qstring(id)));
 }
 
 void Core::sendReceiptReceived(const QString& friendId, const QString& receipt) {

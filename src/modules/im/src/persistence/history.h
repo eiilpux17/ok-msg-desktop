@@ -26,9 +26,9 @@
 #include <base/jsons.h>
 
 #include "lib/storage/db/rawdatabase.h"
-#include "src/core/toxfile.h"
+#include "src/core/File.h"
 #include "src/model/FriendId.h"
-#include "src/model/message.h"
+#include "src/model/Message.h"
 #include "src/widget/searchtypes.h"
 
 namespace module::im {
@@ -144,9 +144,9 @@ public:
                        bool isDelivered,
                        const std::function<void(RowId)>& insertIdCallback = {});
 
-    void addNewFileMessage(const ToxFile& file);
+    void addNewFileMessage(const File& file);
 
-    void setFileMessage(const ToxFile& file);
+    void setFileMessage(const File& file);
 
     QList<HistMessage> getMessageByDataId(const QString& dataId);
 

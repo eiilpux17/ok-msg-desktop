@@ -12,7 +12,7 @@
 
 #include "toxfileprogress.h"
 
-#include "src/core/toxfile.h"
+#include "src/core/File.h"
 namespace module::im {
 bool ToxFileProgress::needsUpdate() const {
     QTime now = QTime::currentTime();
@@ -25,7 +25,7 @@ bool ToxFileProgress::needsUpdate() const {
     return true;
 }
 
-void ToxFileProgress::addSample(ToxFile const& file) {
+void ToxFileProgress::addSample(File const& file) {
     QTime now = QTime::currentTime();
     qint64 dt = lastTick.msecsTo(now);  // ms
 

@@ -14,7 +14,7 @@
 #define MODEL_CHATROOM_H
 
 #include <QObject>
-#include "src/model/contactid.h"
+#include "src/model/ContactId.h"
 
 namespace module::im {
 

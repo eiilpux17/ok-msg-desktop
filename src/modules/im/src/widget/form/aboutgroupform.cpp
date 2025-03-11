@@ -13,8 +13,8 @@
 #include "aboutgroupform.h"
 
 #include <QDebug>
-#include "src/model/group.h"
-#include "src/model/grouplist.h"
+#include "src/model/Group.h"
+#include "src/model/GroupList.h"
 #include "src/nexus.h"
 #include "src/widget/widget.h"
 #include "ui_aboutgroupform.h"

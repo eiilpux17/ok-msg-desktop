@@ -10,10 +10,10 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "grouplist.h"
+#include "GroupList.h"
 #include <QDebug>
 #include <QHash>
-#include "src/model/group.h"
+#include "src/model/Group.h"
 
 namespace module::im {
 

@@ -15,16 +15,22 @@
 //
 
 #include "OkAccount.h"
-#include "jid.h"
 
-namespace ok {
-namespace base {
+namespace ok::base {
 
-OkAccount::OkAccount(const QString& username_) : username(username_) {}
+OkAccount::OkAccount(const QString& username_,const QString& password_)
+        : username(username_) , password(password_){}
 
-void OkAccount::setJid(const  ok::base::Jid& jid) { m_jid = jid; }
+void OkAccount::setUsername(const QString &username_)
+{
+    username = username_;
+}
 
-ok::base::Jid OkAccount::realJid(ok::base::Jid jid) { return jid; }
+void OkAccount::setPassword(const QString &password_)
+{
+    password = password_;
+}
 
-}  // namespace base
-}  // namespace ok
+
+} // namespace ok::base
+

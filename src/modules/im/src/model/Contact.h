@@ -16,8 +16,8 @@
 #include <QObject>
 #include <QPixmap>
 #include <QString>
-#include "src/model/contactid.h"
-#include "src/model/status.h"
+#include "src/model/ContactId.h"
+#include "src/model/Status.h"
 namespace module::im {
 
 /**

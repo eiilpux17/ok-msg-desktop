@@ -10,18 +10,14 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#ifndef RECEIPT_NUM_H
-#define RECEIPT_NUM_H
-
-#include "base/strongtype.h"
+#pragma once
 
 #include <QMetaType>
-#include <cstdint>
+
 namespace module::im {
 
 using MsgId = QString;
-
 // NamedType<uint32_t, struct ReceiptNumTag, Orderable>;
-// Q_DECLARE_METATYPE(MsgId);
+
 }  // namespace module::im
-#endif /* RECEIPT_NUM_H */
+Q_DECLARE_METATYPE(module::im::MsgId);

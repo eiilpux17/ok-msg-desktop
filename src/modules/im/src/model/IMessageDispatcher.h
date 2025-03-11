@@ -13,9 +13,9 @@
 #ifndef IMESSAGE_DISPATCHER_H
 #define IMESSAGE_DISPATCHER_H
 
-#include "message.h"
-#include "src/core/toxfile.h"
-#include "src/model/message.h"
+#include "base/strongtype.h"
+#include "src/core/File.h"
+#include "src/model/Message.h"
 
 #include <QObject>
 #include <QString>
@@ -59,7 +59,7 @@ signals:
      */
     void messageReceipt(DispatchedMessageId id);
 
-    void fileReceived(const FriendId& f, const ToxFile& file);
+    void fileReceived(const FriendId& f, const File& file);
 
     void fileCancelled(const FriendId& f, const QString& fileId);
 };

@@ -30,7 +30,7 @@ class QMenu;
 namespace module::im {
 
 class ChatLineContent;
-struct ToxFile;
+struct File;
 
 class ChatLog : public QGraphicsView {
     Q_OBJECT

@@ -15,10 +15,10 @@
 #include <tuple>
 
 #include "src/lib/session/profile.h"
-#include "src/model/friend.h"
-#include "src/model/friendlist.h"
-#include "src/model/group.h"
-#include "src/model/grouplist.h"
+#include "src/model/Friend.h"
+#include "src/model/FriendList.h"
+#include "src/model/Group.h"
+#include "src/model/GroupList.h"
 #include "src/nexus.h"
 #include "src/widget/friendwidget.h"
 #include "src/widget/groupwidget.h"
@@ -122,8 +122,9 @@ void ContentDialogManager::updateFriendStatus(const FriendId& friendPk) {
 
     auto profile = Nexus::getProfile();
     if (profile) {
-        Friend* f = Nexus::getCore()->getFriendList().findFriend(friendPk);
-        dialog->updateFriendStatus(friendPk, f->getStatus());
+        auto f = Nexus::getCore()->getFriendList().findFriend(friendPk);
+        if(f.has_value())
+            dialog->updateFriendStatus(friendPk, f.value()->getStatus());
     }
 }
 

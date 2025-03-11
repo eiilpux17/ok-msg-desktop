@@ -230,7 +230,7 @@ ChatHistory::getDateIdxs(const QDate& startDate, size_t maxDates) const {
     }
 }
 
-void ChatHistory::onFileUpdated(const FriendId& sender, const ToxFile& file) {
+void ChatHistory::onFileUpdated(const FriendId& sender, const File& file) {
     qDebug() << __func__ << "friendId:" << sender.toString() << file.fileName;
 
     if (canUseHistory()) {
@@ -262,16 +262,16 @@ void ChatHistory::onFileCanceled(const FriendId& sender, const QString& fileId) 
     for (auto f : files) {
         auto ff = f.asFile();
         ff.status = FileStatus::CANCELED;
-        history->setFileMessage(ToxFile(ff));
+        history->setFileMessage(File(ff));
     }
 }
 
-void ChatHistory::onFileTransferRemotePausedUnpaused(const FriendId& sender, const ToxFile& file,
+void ChatHistory::onFileTransferRemotePausedUnpaused(const FriendId& sender, const File& file,
                                                      bool paused) {
     sessionChatLog.onFileTransferRemotePausedUnpaused(sender, file, paused);
 }
 
-void ChatHistory::onFileTransferBrokenUnbroken(const FriendId& sender, const ToxFile& file,
+void ChatHistory::onFileTransferBrokenUnbroken(const FriendId& sender, const File& file,
                                                bool broken) {
     sessionChatLog.onFileTransferBrokenUnbroken(sender, file, broken);
 }
@@ -381,16 +381,16 @@ void ChatHistory::loadHistoryIntoSessionChatLog(ChatLogIdx start) const {
         // global id not a per-chat id like the ChatLogIdx
         auto currentIdx = nextIdx++;
 
-        auto sender = ToxId(hisMsg.sender).getPublicKey();
         //        auto frnd =
         //        Nexus::getCore()->getFriendList().findFriend(ContactId{message.sender});
+        auto sender = FriendId(hisMsg.sender);
         auto dispName = sender.username;
         const auto date = hisMsg.timestamp;
 
         switch (hisMsg.type) {
             case HistMessageContentType::file: {
                 auto file = hisMsg.asFile();
-                auto tfile = ToxFile{file};
+                auto tfile = File{file};
                 tfile.receiver = hisMsg.receiver;
                 tfile.sender = hisMsg.sender;
                 auto chatLogFile = ChatLogFile{date, tfile};

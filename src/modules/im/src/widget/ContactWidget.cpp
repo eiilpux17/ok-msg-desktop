@@ -22,10 +22,10 @@
 #include "src/widget/form/aboutfriendform.h"
 #include "widget.h"
 
-#include "src/model/friend.h"
-#include "src/model/friendlist.h"
-#include "src/model/group.h"
-#include "src/model/grouplist.h"
+#include "src/model/Friend.h"
+#include "src/model/FriendList.h"
+#include "src/model/Group.h"
+#include "src/model/GroupList.h"
 #include "src/widget/form/addfriendform.h"
 #include "src/widget/form/groupinviteform.h"
 #include "src/widget/friendwidget.h"
@@ -191,7 +191,7 @@ void ContactWidget::connectToCore(Core* core) {
 }
 
 void ContactWidget::onFriendAdded(const Friend* frnd) {
-    qDebug() << __func__ << "friend:" << frnd->getId().toString();
+    qDebug() << __func__  << frnd->getId().toString();
     if (!frnd->getId().isValid()) {
         qWarning() << "Invalid friend id:" << frnd->getId();
         return;

@@ -126,6 +126,11 @@ QString Jid::full() const {
     return bare() + SLASH + m_resource;
 }
 
+QString Jid::toString() const
+{
+    return full();
+}
+
 bool Jid::compare(const Jid& a) const {
     return full().compare(a.full());
 }

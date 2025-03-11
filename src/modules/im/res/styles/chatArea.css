@@ -9,26 +9,15 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PubL v2 for more details.
  */
+ .QWidget,
+ QSplitter
+ {
+     background: @groundBase;
+ }
+ 
+QTextEdit
+{
+    background: white;
+    color: black;
+}
 
-#ifndef GROUPID_H
-#define GROUPID_H
-
-#include "contactid.h"
-namespace module::im {
-
-class GroupId : public ContactId {
-public:
-    GroupId();
-    GroupId(const GroupId& other);
-    explicit GroupId(const QString& rawId);
-    explicit GroupId(const ContactId& contactId);
-    int getSize() const;
-
-    bool operator==(const GroupId& other) const;
-    bool operator<(const GroupId& other) const;
-
-    QString name;
-    QString nick;
-};
-}  // namespace module::im
-#endif  // GROUPID_H

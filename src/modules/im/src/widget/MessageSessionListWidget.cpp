@@ -28,8 +28,8 @@
 #include "friendwidget.h"
 #include "groupwidget.h"
 
-#include "src/model/friend.h"
-#include "src/model/status.h"
+#include "src/model/Friend.h"
+#include "src/model/Status.h"
 #include "src/nexus.h"
 #include "widget.h"
 #include "Bus.h"
@@ -330,8 +330,9 @@ void MessageSessionListWidget::dragEnterEvent(QDragEnterEvent* event) {
         return;
     }
     FriendId toxPk(event->mimeData()->data("toxPk"));
-    Friend* frnd = Nexus::getCore()->getFriendList().findFriend(toxPk);
-    if (frnd) event->acceptProposedAction();
+    auto frnd = Nexus::getCore()->getFriendList().findFriend(toxPk);
+    if (frnd.has_value())
+        event->acceptProposedAction();
 }
 
 void MessageSessionListWidget::dropEvent(QDropEvent* event) {
@@ -343,14 +344,14 @@ void MessageSessionListWidget::dropEvent(QDropEvent* event) {
     // Check, that the user has a friend with the same ToxPk
     assert(event->mimeData()->hasFormat("toxPk"));
     const FriendId toxPk{event->mimeData()->data("toxPk")};
-    Friend* f = Nexus::getCore()->getFriendList().findFriend(toxPk);
-    if (!f) return;
+    auto f = Nexus::getCore()->getFriendList().findFriend(toxPk);
+    if (!f.has_value()) return;
 
     // Save CircleWidget before changing the Id
     //  int circleId = Nexus::getProfile()->getSettings()->getFriendCircleID(f->getPublicKey());
     //  CircleWidget *circleWidget = CircleWidget::getFromID(circleId);
 
-    moveWidget(widget, f->getStatus(), true);
+    moveWidget(widget, f.value()->getStatus(), true);
 
     //  if (circleWidget)
     //    circleWidget->updateStatus();
@@ -442,49 +443,37 @@ void MessageSessionListWidget::toForwardMessage(const ContactId& pk, const MsgId
     w->doForwardMessage(pk, id);
 }
 
-void MessageSessionListWidget::setFriendAvInvite(const PeerId& peerId, bool video) {
-    auto friendId = peerId.toFriendId();
-    auto w = sessionWidgets.value(friendId.toString());
+void MessageSessionListWidget::setFriendAvInvite(const ContactId& cid, bool video) {
+    auto w = sessionWidgets.value(cid.getId());
     if (!w) {
-        qDebug() << "Create session for friend" << friendId;
-        w = createMessageSession(friendId, "", lib::messenger::ChatType::Chat);
+        w = createMessageSession(cid, "", lib::messenger::ChatType::Chat);
     }
-    w->setAvInvite(peerId, video);
 }
 
 void MessageSessionListWidget::setFriendAvCreating(const FriendId& friendId, bool video) {
-    auto w = sessionWidgets.value(friendId.toString());
-    assert(w);
-    w->setAvCreating(friendId, video);
+
 }
 
 void MessageSessionListWidget::setFriendAvStart(const FriendId& friendId, bool video) {
     auto w = sessionWidgets.value(friendId.toString());
     if (!w) {
-        qWarning() << "The message session is no existing!";
-        return;
+        w = createMessageSession(friendId, "", lib::messenger::ChatType::Chat);
     }
-    w->setAvStart(video);
 }
 
 void MessageSessionListWidget::setFriendAvPeerConnectedState(const FriendId& friendId,
                                                              lib::ortc::PeerConnectionState state) {
     auto w = sessionWidgets.value(friendId.toString());
     if (!w) {
-        qWarning() << "The message session is no existing!";
-        return;
+        w = createMessageSession(friendId, "", lib::messenger::ChatType::Chat);
     }
-
-    w->setAvPeerConnectedState(state);
 }
 
 void MessageSessionListWidget::setFriendAvEnd(const FriendId& friendId, bool error) {
     auto w = sessionWidgets.value(friendId.toString());
     if (!w) {
-        qWarning() << "The message session is no existing!";
-        return;
+        w = createMessageSession(friendId, "", lib::messenger::ChatType::Chat);
     }
-    w->setAvEnd(error);
 }
 
 void MessageSessionListWidget::addGroup(const Group* g) {
@@ -559,9 +548,9 @@ void MessageSessionListWidget::do_deleteSession(const QString& cid) {
     qDebug() << __func__ << cid;
     auto w = sessionWidgets.value(cid);
     if (w) {
-        qDebug() << "delete" << w;
-        sessionWidgets.remove(cid);
+        w->doDelete();
         w->deleteLater();
+        sessionWidgets.remove(cid);
     }
 }
 
@@ -642,7 +631,7 @@ void MessageSessionListWidget::setFriendTyping(const ContactId& f, bool isTyping
     if (fw) fw->setTyping(isTyping);
 }
 
-void MessageSessionListWidget::setFriendFileReceived(const ContactId& f, const ToxFile& file) {
+void MessageSessionListWidget::setFriendFileReceived(const ContactId& f, const File& file) {
     auto ms = getMessageSession(f.toString());
     if (ms) {
         ms->setFileReceived(file);

@@ -13,11 +13,11 @@
 #ifndef GROUP_MESSAGE_DISPATCHER_H
 #define GROUP_MESSAGE_DISPATCHER_H
 
-#include "groupid.h"
+#include "GroupId.h"
 #include "src/core/icoregroupmessagesender.h"
 #include "src/core/icoreidhandler.h"
-#include "src/model/imessagedispatcher.h"
-#include "src/model/message.h"
+#include "src/model/IMessageDispatcher.h"
+#include "src/model/Message.h"
 
 #include <QObject>
 #include <QString>

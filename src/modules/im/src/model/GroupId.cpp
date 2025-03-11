@@ -10,7 +10,7 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "groupid.h"
+#include "GroupId.h"
 
 #include <QByteArray>
 #include <QString>

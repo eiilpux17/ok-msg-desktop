@@ -18,10 +18,10 @@
 #include "src/lib/session/profile.h"
 #include "src/model/FriendId.h"
 #include "src/model/dialogs/idialogsmanager.h"
-#include "src/model/friend.h"
-#include "src/model/friendlist.h"
-#include "src/model/group.h"
-#include "src/model/status.h"
+#include "src/model/Friend.h"
+#include "src/model/FriendList.h"
+#include "src/model/Group.h"
+#include "src/model/Status.h"
 #include "src/nexus.h"
 #include "src/persistence/settings.h"
 namespace module::im {
@@ -53,13 +53,13 @@ bool GroupChatroom::friendExists(const FriendId& pk) {
     return Nexus::getCore()->getFriendList().findFriend(pk) != nullptr;
 }
 
-Friend* GroupChatroom::findFriend(const FriendId& pk) {
+std::optional<Friend*> GroupChatroom::findFriend(const FriendId& pk) {
     return Nexus::getCore()->getFriendList().findFriend(pk);
 }
 
 void GroupChatroom::inviteFriend(const FriendId& pk) {
-    const Friend* frnd = Nexus::getCore()->getFriendList().findFriend(pk);
-    if (!frnd) {
+    auto frnd = Nexus::getCore()->getFriendList().findFriend(pk);
+    if (!frnd.has_value()) {
         qWarning() << "Unable to find friend:" << pk.toString();
         return;
     }

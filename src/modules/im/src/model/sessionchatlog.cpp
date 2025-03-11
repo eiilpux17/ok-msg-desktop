@@ -18,9 +18,9 @@
 
 #include "Bus.h"
 #include "application.h"
-#include "friendlist.h"
+#include "FriendList.h"
 #include "src/lib/session/profile.h"
-#include "src/model/friend.h"
+#include "src/model/Friend.h"
 #include "src/nexus.h"
 
 #include <lib/ortc/webrtc/Instance.h>
@@ -421,7 +421,7 @@ void SessionChatLog::onMessageReceipt(DispatchedMessageId id) {
  * validation
  * @note This should be attached to any CoreFile signal that fits the signature
  */
-void SessionChatLog::onFileUpdated(const FriendId& friendId, const ToxFile& file) {
+void SessionChatLog::onFileUpdated(const FriendId& friendId, const File& file) {
     qDebug() << __func__ << "friendId:" << friendId.toString() << "file" << file.fileName;
 
     auto fileIt = std::find_if(
@@ -438,9 +438,9 @@ void SessionChatLog::onFileUpdated(const FriendId& friendId, const ToxFile& file
 
         QString senderName;
         FriendId senderId{file.sender};
-        auto* frnd = Nexus::getCore()->getFriendList().findFriend(senderId);
-        if (frnd) {
-            senderName = frnd->getDisplayedName();
+        auto frnd = Nexus::getCore()->getFriendList().findFriend(senderId);
+        if (frnd.has_value()) {
+            senderName = frnd.value()->getDisplayedName();
         }
 
         const auto chatLogFile = ChatLogFile{QDateTime::currentDateTime(), file};
@@ -499,13 +499,13 @@ void SessionChatLog::onFileCanceled(const FriendId& sender, const QString& fileI
 }
 
 void SessionChatLog::onFileTransferRemotePausedUnpaused(const FriendId& sender,
-                                                        const ToxFile& file,
+                                                        const File& file,
                                                         bool /*paused*/) {
     onFileUpdated(sender, file);
 }
 
 void SessionChatLog::onFileTransferBrokenUnbroken(const FriendId& sender,
-                                                  const ToxFile& file,
+                                                  const File& file,
                                                   bool /*broken*/) {
     onFileUpdated(sender, file);
 }

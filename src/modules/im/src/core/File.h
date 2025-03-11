@@ -83,9 +83,9 @@ public:
     }
 };
 
-struct ToxFile : public FileInfo {
-    explicit ToxFile() = default;
-    explicit ToxFile(const QString& sender,
+struct File : public FileInfo {
+    explicit File() = default;
+    explicit File(const QString& sender,
                      const QString& receiver,
                      const QString& sId,
                      const QString& fileId,
@@ -96,15 +96,15 @@ struct ToxFile : public FileInfo {
                      FileStatus status,
                      FileDirection Direction);
 
-    explicit ToxFile(const QString& sender,
+    explicit File(const QString& sender,
                      const QString& friendId,
                      const QString& sId,
                      const lib::messenger::File& file);
-    explicit ToxFile(const FileInfo& fi);
-    ~ToxFile();
+    explicit File(const FileInfo& fi);
+    ~File();
 
-    bool operator==(const ToxFile& other) const;
-    bool operator!=(const ToxFile& other) const;
+    bool operator==(const File& other) const;
+    bool operator!=(const File& other) const;
 
     void setFilePath(QString path);
     bool open(bool write);

@@ -13,18 +13,17 @@
 #include "MessageSessionWidget.h"
 
 #include "ContactListWidget.h"
-#include "groupwidget.h"
 
-#include "lib/ui/widget/tools/CroppingLabel.h"
 #include "src/lib/ui/widget/tools/RoundedPixmapLabel.h"
 
-#include "contentdialogmanager.h"
+
 #include "src/core/core.h"
+#include "src/model/GroupMessageDispatcher.h"
 #include "src/model/aboutfriend.h"
-#include "src/model/friend.h"
-#include "src/model/friendlist.h"
-#include "src/model/group.h"
-#include "src/model/status.h"
+#include "src/model/Friend.h"
+#include "src/model/FriendList.h"
+#include "src/model/Group.h"
+#include "src/model/Status.h"
 #include "src/nexus.h"
 #include "src/persistence/settings.h"
 #include "src/widget/contentlayout.h"
@@ -85,23 +84,11 @@ MessageSessionWidget::MessageSessionWidget(ContentLayout* layout, const ContactI
         sendWorker = std::move(SendWorker::forFriend(friendId));
         connect(sendWorker->dispacher(), &IMessageDispatcher::messageSent, this,
                 &MessageSessionWidget::onMessageSent);
-        connect(sendWorker.get(), &SendWorker::acceptCall, this,
-                &MessageSessionWidget::doAcceptCall);
-        connect(sendWorker.get(), &SendWorker::rejectCall, this,
-                &MessageSessionWidget::doRejectCall);
-        connect(sendWorker.get(), &SendWorker::endCall, this, &MessageSessionWidget::endCall);
-        connect(sendWorker.get(), &SendWorker::onCallTriggered, this,
-                &MessageSessionWidget::doCall);
-        connect(sendWorker.get(), &SendWorker::onVideoCallTriggered, this,
-                &MessageSessionWidget::doVideoCall);
-        connect(sendWorker.get(), &SendWorker::muteMicrophone, this,
-                &MessageSessionWidget::doMuteMicrophone);
-        connect(sendWorker.get(), &SendWorker::muteSpeaker, this,
-                &MessageSessionWidget::doSilenceSpeaker);
 
-        auto& fl = core->getFriendList();
-        auto* f = fl.findFriend(friendId);
-        setFriend(f);
+
+        auto f = core->getFriend(friendId);
+        if(f.has_value())
+            setFriend(f.value());
 
     } else if (chatType == lib::messenger::ChatType::GroupChat) {
         auto nick = core->getNick();
@@ -148,6 +135,13 @@ MessageSessionWidget::~MessageSessionWidget() {
     qDebug() << __func__ << contactId;
 }
 
+void MessageSessionWidget::doDelete()
+{
+    qDebug() << __func__ << contactId;
+    //清空记录
+    sendWorker->clearHistory();
+}
+
 void MessageSessionWidget::do_widgetClicked() {
     //    qDebug() << __func__ << "contactId:" << contactId.toString();
 
@@ -156,24 +150,25 @@ void MessageSessionWidget::do_widgetClicked() {
         contentLayout->addWidget(w);
     }
     contentWidget->showTo(contentLayout);
+
+
 }
 
 void MessageSessionWidget::showEvent(QShowEvent* e) {
     auto core = Nexus::getCore();
 
     if (isGroup()) {
-        auto group = Core::getInstance()->getGroupList().findGroup(GroupId{contactId.toString()});
-        if (group) {
-            setContact(*group);
-            sendWorker->getHeader()->setContact(contact);
+        auto group = core->getGroup(contactId);
+        if (group.has_value()) {
+            setContact(*group.value());
+
             sendWorker->getChatForm()->setContact(contact);
             core->requestRoomInfo(contactId.toString());
         }
     } else {
-        auto f = core->getFriendList().findFriend(contactId);
-        if (f) {
-            setContact(*f);
-            sendWorker->getHeader()->setContact(contact);
+        auto f = core->getFriend(contactId);
+        if (f.has_value()) {
+            setContact(*f.value());
             sendWorker->getChatForm()->setContact(contact);
         }
 
@@ -401,96 +396,16 @@ void MessageSessionWidget::setFriend(const Friend* f) {
     setContact(*f);
 
     sendWorker->getChatForm()->setContact(f);
-    sendWorker->getHeader()->setContact(f);
+    // sendWorker->getHeader()->setContact(f);
 }
 
 void MessageSessionWidget::removeFriend() {
     removeContact();
 
     sendWorker->getChatForm()->removeContact();
-    sendWorker->getHeader()->removeContact();
+    // sendWorker->getHeader()->removeContact();
 }
 
-void MessageSessionWidget::setAvInvite(const PeerId& peerId, bool video) {
-    qDebug() << __func__ << "peerId:" << peerId.toString() << "video:" << video;
-
-    auto f = Nexus::getCore()->getFriendList().findFriend(peerId);
-    QString displayedName = f ? f->getDisplayedName() : peerId.username;
-
-    // 显示呼叫请求框
-    auto header = sendWorker->getHeader();
-    header->createCallConfirm(peerId, video, displayedName);
-    header->showCallConfirm();
-
-    // 发送来电声音
-    auto nexus = Nexus::getInstance();
-    nexus->incomingNotification(peerId.toFriendId().toString());
-}
-
-void MessageSessionWidget::setAvCreating(const FriendId& friendId, bool video) {
-    qDebug() << __func__ << "friendId:" << friendId.toString() << "video:" << video;
-    auto peerId = PeerId(friendId.toString());
-
-    auto f = Nexus::getCore()->getFriendList().findFriend(peerId);
-    QString displayedName = f ? f->getDisplayedName() : peerId.username;
-
-    // 显示呼叫请求框
-    auto header = sendWorker->getHeader();
-    auto callConfirm = header->createCallConfirm(peerId, video, displayedName);
-    callConfirm->setCallLabel(tr("Calling..."));
-    header->showCallConfirm();
-}
-
-void MessageSessionWidget::setAvStart(bool video) {
-    qDebug() << __func__ << friendId.toString();
-    // 显示呼叫请求框
-    sendWorker->createCallDuration(video);
-
-    auto frd = Nexus::getCore()->getFriendList().findFriend(friendId);
-    if (frd) {
-        auto header = sendWorker->getHeader();
-        header->updateCallButtons(frd->getStatus());
-        header->removeCallConfirm();
-    }
-
-    ok::Application::Instance()->onStopNotification();
-}
-
-void MessageSessionWidget::setAvPeerConnectedState(lib::ortc::PeerConnectionState state) {
-    auto dur = sendWorker->getCallDuration();
-    if (dur) {
-        switch (state) {
-            case lib::ortc::PeerConnectionState::Connected: {
-                dur->startCounter();
-                break;
-            }
-            case lib::ortc::PeerConnectionState::Disconnected:
-                dur->stopCounter();
-                break;
-        }
-    };
-}
-
-void MessageSessionWidget::setAvEnd(bool error) {
-    qDebug() << __func__ << "error:" << error;
-
-    auto header = sendWorker->getHeader();
-    header->removeCallConfirm();
-    // header->updateCallButtons();
-
-    auto f = Nexus::getCore()->getFriendList().findFriend(friendId);
-    if (f) {
-        header->updateCallButtons(f->getStatus() == Status::Online, false, false);
-    }
-
-    auto chatForm = (ChatForm*)sendWorker->getChatForm();
-    // 关闭呼叫请求框
-    chatForm->stopNotification();
-    // 关计时器
-    sendWorker->destroyCallDuration(error);
-
-    ok::Application::Instance()->onStopNotification();
-}
 
 void MessageSessionWidget::setGroup(const Group* g) {
     qDebug() << __func__ << g;
@@ -504,12 +419,10 @@ void MessageSessionWidget::setGroup(const Group* g) {
     setContact(*g);
 
     sendWorker->getChatForm()->setContact(g);
-    sendWorker->getHeader()->setContact(g);
 }
 
 void MessageSessionWidget::removeGroup() {
     sendWorker->getChatForm()->removeContact();
-    sendWorker->getHeader()->removeContact();
 }
 
 void MessageSessionWidget::clearReceipts() {
@@ -527,106 +440,6 @@ void MessageSessionWidget::doForwardMessage(const ContactId& cid, const MsgId& m
 
     auto& msg = msgs.at(0);
     sendWorker->dispacher()->sendMessage(false, msg.asMessage(), false);
-}
-
-void MessageSessionWidget::doAcceptCall(const PeerId& p, bool video) {
-    qDebug() << __func__ << p.toString();
-
-    // 关闭声音
-    ok::Application::Instance()->onStopNotification();
-
-    // 关闭确认窗
-    auto header = sendWorker->getHeader();
-    header->removeCallConfirm();
-
-    // 发送接收应答
-    CoreAV* coreav = CoreAV::getInstance();
-    coreav->answerCall(p, video);
-}
-
-void MessageSessionWidget::doRejectCall(const PeerId& p) {
-    qDebug() << __func__ << p.toString();
-
-    auto header = sendWorker->getHeader();
-    header->removeCallConfirm();
-
-    // 关闭声音
-    ok::Application::Instance()->onStopNotification();
-
-    // 发送拒绝应答
-    CoreAV* coreav = CoreAV::getInstance();
-    coreav->rejectOrCancelCall(p);
-}
-
-/**
- * 执行呼叫
- */
-void MessageSessionWidget::doCall() {
-    auto cId = contactId.getId();
-    qDebug() << __func__ << cId;
-    auto av = CoreAV::getInstance();
-    if (av->isCallStarted(&contactId)) {
-        av->cancelCall(cId);
-        return;
-    }
-
-    auto started = av->startCall(cId, false);
-    if (!started) {
-        // 返回失败对方可能不在线，免费版本不支持离线呼叫！
-        lib::ui::GUI::showWarning(tr("The feature unsupported in the open-source version"),
-                                  tr("The call cannot be made due participant is offline!"));
-        return;
-    }
-
-    // 播放外呼声音
-    auto nexus = Nexus::getInstance();
-    nexus->outgoingNotification();
-}
-
-void MessageSessionWidget::doVideoCall() {
-    QString cId = contactId.getId();
-    qDebug() << __func__ << cId;
-    auto av = CoreAV::getInstance();
-    if (av->isCallStarted(&contactId)) {
-        if (av->isCallVideoEnabled(&contactId)) {
-            av->cancelCall(cId);
-        }
-    }
-
-    auto started = av->startCall(cId, true);
-    if (!started) {
-        // 返回失败对方可能不在线，免费版本不支持离线呼叫！
-        lib::ui::GUI::showWarning(tr("The feature unsupported in the open-source version"),
-                                  tr("The call cannot be made due participant is offline!"));
-        return;
-    }
-}
-
-void MessageSessionWidget::endCall() {
-    auto fId = contactId.getId();
-    qDebug() << __func__ << fId;
-    auto av = CoreAV::getInstance();
-    if (av->isCallStarted(&contactId)) {
-        av->cancelCall(fId);
-    }
-}
-
-void MessageSessionWidget::doMuteMicrophone(bool mute) {
-    auto fId = contactId.getId();
-    qDebug() << __func__ << fId;
-    auto av = CoreAV::getInstance();
-    if (av->isCallStarted(&contactId)) {
-        av->muteCallOutput(&contactId, mute);
-    }
-}
-
-void MessageSessionWidget::doSilenceSpeaker(bool mute) {
-    auto fId = contactId.getId();
-    qDebug() << __func__ << fId;
-    auto av = CoreAV::getInstance();
-    if (av->isCallStarted(&contactId)) {
-        av->muteCallSpeaker(&contactId, mute);
-    }
 }
 
 void MessageSessionWidget::setAsActiveChatroom() {
@@ -750,9 +563,9 @@ void MessageSessionWidget::setRecvMessage(const FriendMessage& msg, bool isActio
     FriendMessage m = msg;
     m.from = ContactId(m.from, lib::messenger::ChatType::Chat).toString();
 
-    auto frd = Nexus::getCore()->getFriendList().findFriend(contactId);
-    if (frd) {
-        m.displayName = frd->getDisplayedName();
+    auto f = Nexus::getCore()->getFriendList().findFriend(contactId);
+    if (f.has_value()) {
+        m.displayName = f.value()->getDisplayedName();
     }
 
     auto md = (FriendMessageDispatcher*)sendWorker->dispacher();
@@ -780,8 +593,8 @@ void MessageSessionWidget::setRecvGroupMessage(const GroupMessage& msg) {
     GroupMessage m = msg;
     m.from = ContactId(m.from, lib::messenger::ChatType::GroupChat).toString();
     auto frd = Nexus::getCore()->getFriendList().findFriend(contactId);
-    if (frd) {
-        m.displayName = frd->getDisplayedName();
+    if (frd.has_value()) {
+        m.displayName = frd.value()->getDisplayedName();
     } else {
         auto g = Core::getInstance()->getGroupList().findGroup(GroupId(msg.from));
         if (g) m.displayName = g->getPeerDisplayName(PeerId(msg.from).getResource());
@@ -797,12 +610,13 @@ void MessageSessionWidget::setRecvGroupMessage(const GroupMessage& msg) {
         // 更新状态信号灯
         updateStatusLight(Status::Online, true);
         // 聊天界面不显示，消息提示。
-        Widget::getInstance()->newGroupMessageAlert(GroupId(contactId), FriendId(msg.from),
+        Widget::getInstance()->newGroupMessageAlert(GroupId(contactId),
+                                                    FriendId(msg.from),
                                                     msg.content, true);
     }
 }
 
-void MessageSessionWidget::setFileReceived(const ToxFile& file) {
+void MessageSessionWidget::setFileReceived(const File& file) {
     qDebug() << __func__ << file.toString();
     auto md = (FriendMessageDispatcher*)sendWorker->dispacher();
     if (md) md->onFileReceived(file);
@@ -821,11 +635,11 @@ void MessageSessionWidget::clearHistory() {
 void MessageSessionWidget::setStatus(Status status, bool event) {
     updateStatusLight(status, event);
     auto f = Nexus::getCore()->getFriendList().findFriend(contactId);
-    if (!f) {
+    if (!f.has_value()) {
         qWarning() << "friend is no existing.";
         return;
     }
-    f->setStatus(status);
+    f.value()->setStatus(status);
 }
 
 void MessageSessionWidget::setStatusMsg(const QString& msg) {
@@ -841,11 +655,12 @@ void MessageSessionWidget::setTyping(bool typing) {
 
 void MessageSessionWidget::setName(const QString& name) {
     GenericChatroomWidget::setName(name);
-    sendWorker->getHeader()->setName(name);
 }
 
 void MessageSessionWidget::setAvatar(const QPixmap& avatar) {
     GenericChatroomWidget::setAvatar(avatar);
-    sendWorker->getHeader()->setAvatar(avatar);
 }
+
+
+
 }  // namespace module::im

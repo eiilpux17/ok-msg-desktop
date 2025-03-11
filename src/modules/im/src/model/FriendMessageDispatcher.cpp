@@ -10,9 +10,9 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "friendmessagedispatcher.h"
-#include "src/model/message.h"
-#include "src/model/status.h"
+#include "FriendMessageDispatcher.h"
+#include "src/model/Message.h"
+#include "src/model/Status.h"
 
 
 namespace module::im {
@@ -132,7 +132,7 @@ void FriendMessageDispatcher::clearOutgoingMessages() {
     offlineMsgEngine.removeAllMessages();
 }
 
-void FriendMessageDispatcher::onFileReceived(const ToxFile& file) {
+void FriendMessageDispatcher::onFileReceived(const File& file) {
     const auto& friendId = FriendId(f);
     emit fileReceived(friendId, file);
 }

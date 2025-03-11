@@ -15,9 +15,9 @@
 
 #include "contentdialog.h"
 #include "src/model/FriendId.h"
-#include "src/model/contactid.h"
+#include "src/model/ContactId.h"
 #include "src/model/dialogs/idialogsmanager.h"
-#include "src/model/groupid.h"
+#include "src/model/GroupId.h"
 
 #include <QObject>
 namespace module::im {

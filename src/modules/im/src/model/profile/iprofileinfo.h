@@ -14,9 +14,9 @@
 
 #include <QObject>
 #include "../VCard.h"
-namespace module::im {
 
-class ToxId;
+
+namespace module::im {
 
 class IProfileInfo {
 public:
@@ -55,7 +55,6 @@ public:
     virtual SetAvatarResult setAvatar(const QString& path) = 0;
     virtual void removeAvatar() = 0;
 
-    DECLARE_SIGNAL(idChanged, const ToxId&);
     DECLARE_SIGNAL(usernameChanged, const QString&);
     DECLARE_SIGNAL(avatarChanged, const QString&);
     DECLARE_SIGNAL(statusMessageChanged, const QString&);

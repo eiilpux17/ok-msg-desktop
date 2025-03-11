@@ -14,7 +14,7 @@
 #define DELETEFRIENDDIALOG_H
 
 #include <QDialog>
-#include "src/model/friend.h"
+#include "src/model/Friend.h"
 #include "ui_removefrienddialog.h"
 namespace module::im {
 

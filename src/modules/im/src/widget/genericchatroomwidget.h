@@ -14,8 +14,8 @@
 #define GENERICCHATROOMWIDGET_H
 
 #include "genericchatitemwidget.h"
-#include "src/model/message.h"
-#include "src/model/status.h"
+#include "src/model/Message.h"
+#include "src/model/Status.h"
 
 class QVBoxLayout;
 class QHBoxLayout;

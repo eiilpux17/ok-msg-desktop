@@ -10,7 +10,7 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "message.h"
+#include "Message.h"
 #include "base/uuid.h"
 
 namespace module::im {
@@ -48,7 +48,7 @@ std::vector<Message> MessageProcessor::processOutgoingMessage(bool isAction,
     QStringList splitMsgs(content);
 
     auto toxId = idHandler.getSelfPeerId();
-    PeerId peerId(toxId.toString());
+    PeerId peerId(toxId.full());
 
     QDateTime timestamp = QDateTime::currentDateTime();
     std::transform(splitMsgs.begin(), splitMsgs.end(), std::back_inserter(ret),
@@ -98,5 +98,10 @@ Message MessageProcessor::processIncomingMessage(Message& ret) {
 
     return ret;
 }
+
+// ChatType ForChatType(lib::messenger::ChatType type)
+// {
+//     return static_cast<ChatType>(type);
+// }
 
 }  // namespace module::im

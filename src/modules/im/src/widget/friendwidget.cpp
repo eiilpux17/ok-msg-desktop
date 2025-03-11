@@ -36,9 +36,9 @@
 #include "src/lib/ui/widget/tools/RoundedPixmapLabel.h"
 #include "src/model/aboutfriend.h"
 #include "src/model/chatroom/friendchatroom.h"
-#include "src/model/friend.h"
-#include "src/model/friendlist.h"
-#include "src/model/status.h"
+#include "src/model/Friend.h"
+#include "src/model/FriendList.h"
+#include "src/model/Status.h"
 #include "src/nexus.h"
 #include "src/persistence/profile.h"
 #include "src/persistence/settings.h"
@@ -56,33 +56,22 @@ FriendWidget::FriendWidget(Friend* f, QWidget* parent)
     setHidden(true);
     setCursor(Qt::PointingHandCursor);
     nameLabel->setText(m_friend->getDisplayedName());
-
-    connect(m_friend, &Friend::avatarChanged, [&](const QPixmap& pixmap) { setAvatar(pixmap); });
     // update alias when edited
     connect(nameLabel, &lib::ui::CroppingLabel::editFinished, m_friend, &Friend::setAlias);
-    // update on changes of the displayed name
+
+    connect(m_friend, &Friend::avatarChanged, [&](const QPixmap& pixmap) { setAvatar(pixmap); });
     connect(m_friend, &Friend::displayedNameChanged, nameLabel, &lib::ui::CroppingLabel::setText);
     connect(m_friend, &Friend::displayedNameChanged, this, [this](const QString& newName) {
         Q_UNUSED(newName);
         emit friendWidgetRenamed(this);
     });
 
-            //  connect(getContact(), &Contact::avatarChanged,
-            //          [&](auto& pic) {
-            //            setAvatar(pic);
-            //          });
 
-            //  connect(chatRoom.get(), &Chatroom::activeChanged, this,
-            //          &FriendWidget::setActive);
-            //  statusMessageLabel->setTextFormat(Qt::PlainText);
 
-            //  connect(friendWidget, &FriendWidget::copyFriendIdToClipboard, this,
-            //          &Widget::copyFriendIdToClipboard);
+    connect(f, &Friend::avInvite, this, &FriendWidget::setAvInvite);
+    connect(f, &Friend::avEnd, this, &FriendWidget::setAvEnd);
 
-            // Signal transmission from the created `friendWidget` (which shown in
-            // ContentDialog) to the `widget` (which shown in main widget)
 
-            //
     connect(this, &FriendWidget::chatroomWidgetClicked, [=, this](GenericChatroomWidget* w) {
         Q_UNUSED(w);
         do_widgetClicked(this);
@@ -480,4 +469,229 @@ void FriendWidget::setName(const QString& name) {
         about->setName(name);
     }
 }
+
+
+CallConfirmWidget* FriendWidget::createCallConfirm(const PeerId& peer,
+                                                           bool video,
+                                                           QString& displayedName) {
+    qDebug() << __func__ << "peer:" << peer.toString() << "video?" << video;
+    callConfirm = std::make_unique<CallConfirmWidget>(peer, video, this);
+    connect(callConfirm.get(), &CallConfirmWidget::accepted, this, [&, peer]() {
+        doAcceptCall(peer, video);
+    });
+    connect(callConfirm.get(), &CallConfirmWidget::rejected, this, [&, peer]() {
+        doRejectCall(peer);
+    });
+    return callConfirm.get();
+}
+
+void FriendWidget::showCallConfirm() {
+    callConfirm->show();
+}
+
+void FriendWidget::removeCallConfirm() {
+    callConfirm.reset();
+}
+
+void FriendWidget::setAvInvite(const PeerId& peerId, bool video) {
+    qDebug() << __func__ << "video:" << video;
+
+
+    auto displayedName = m_friend->getDisplayedName();
+
+    // 显示呼叫请求框
+    createCallConfirm(peerId, video, displayedName);
+    showCallConfirm();
+
+    // 发送来电声音
+    auto nexus = Nexus::getInstance();
+    nexus->incomingNotification(peerId.toFriendId().toString());
+}
+
+void FriendWidget::setAvCreating(const FriendId& friendId, bool video) {
+    qDebug() << __func__ << "friendId:" << friendId.toString() << "video:" << video;
+    auto peerId = PeerId(friendId.toString());
+
+    auto f = Nexus::getCore()->getFriend(peerId);
+    if(!f.has_value())
+        return;
+
+    auto displayedName = f.value()->getDisplayedName();
+
+    // 显示呼叫请求框
+    auto callConfirm = createCallConfirm(peerId, video, displayedName);
+    callConfirm->setCallLabel(tr("Calling..."));
+    showCallConfirm();
+}
+
+void FriendWidget::setAvStart(bool video) {
+    qDebug() << __func__;
+
+    // 移除确认框
+    removeCallConfirm();
+
+    // 显示呼叫请求框
+    createCallDuration(video);
+}
+
+
+void FriendWidget::setAvEnd(bool error) {
+    qDebug() << __func__ << "error:" << error;
+
+    // 移除确认框
+    removeCallConfirm();
+    // 关计时器
+    destroyCallDuration(error);
+
+}
+
+void FriendWidget::setAvPeerConnectedState(lib::ortc::PeerConnectionState state) {
+    auto dur = getCallDuration();
+    if (dur) {
+        switch (state) {
+            case lib::ortc::PeerConnectionState::Connected: {
+                dur->startCounter();
+                break;
+            }
+            case lib::ortc::PeerConnectionState::Disconnected:
+                dur->stopCounter();
+                break;
+            default:
+                break;
+        }
+    };
+}
+
+
+
+CallDurationForm* FriendWidget::createCallDuration(bool video) {
+    qDebug() << __func__ << "video:" << video;
+
+    if (!callDuration) {
+        callDuration = std::make_unique<CallDurationForm>(this);
+        callDuration->setContact(getContact());
+
+        connect(callDuration.get(), &CallDurationForm::endCall, [&]() {
+            endCall();
+        });
+
+        connect(callDuration.get(), &CallDurationForm::muteSpeaker,
+                [&](bool mute) { doSilenceSpeaker(mute); });
+
+        connect(callDuration.get(), &CallDurationForm::muteMicrophone,
+                [&](bool mute) { doMuteMicrophone(mute); });
+    }
+
+    callDuration->show();
+    if (video) {
+        callDuration->showNetcam();
+    } else {
+        callDuration->showAvatar();
+    }
+
+    return callDuration.get();
+}
+
+void FriendWidget::destroyCallDuration(bool error) {
+    qDebug() << __func__;
+    callDuration.reset();
+}
+
+void FriendWidget::doMuteMicrophone(bool mute) {
+    auto fId = contactId.getId();
+    qDebug() << __func__ << fId;
+    auto av = CoreAV::getInstance();
+    if (av->isCallStarted(&contactId)) {
+        av->muteCallOutput(&contactId, mute);
+    }
+}
+
+void FriendWidget::doSilenceSpeaker(bool mute) {
+    auto fId = contactId.getId();
+    qDebug() << __func__ << fId;
+    auto av = CoreAV::getInstance();
+    if (av->isCallStarted(&contactId)) {
+        av->muteCallSpeaker(&contactId, mute);
+    }
+}
+
+void FriendWidget::endCall() {
+    auto fId = contactId.getId();
+    qDebug() << __func__ << fId;
+    auto av = CoreAV::getInstance();
+    if (av->isCallStarted(&contactId)) {
+        av->cancelCall(fId);
+    }
+}
+
+
+
+void FriendWidget::doAcceptCall(const PeerId& p, bool video) {
+    qDebug() << __func__ << p.toString();
+
+    // 关闭确认窗
+    removeCallConfirm();
+
+    // 发送接收应答
+    CoreAV* coreav = CoreAV::getInstance();
+    coreav->answerCall(p, video);
+}
+
+void FriendWidget::doRejectCall(const PeerId& p) {
+    qDebug() << __func__ << p.toString();
+
+    // 关闭确认窗
+    removeCallConfirm();
+
+    // 发送拒绝应答
+    CoreAV* coreav = CoreAV::getInstance();
+    coreav->rejectOrCancelCall(p);
+}
+
+/**
+ * 执行呼叫
+ */
+void FriendWidget::doCall() {
+    auto cId = contactId.getId();
+    qDebug() << __func__ << cId;
+    auto av = CoreAV::getInstance();
+    if (av->isCallStarted(&contactId)) {
+        av->cancelCall(cId);
+        return;
+    }
+
+    auto started = av->startCall(cId, false);
+    if (!started) {
+        // 返回失败对方可能不在线，免费版本不支持离线呼叫！
+        lib::ui::GUI::showWarning(tr("The feature unsupported in the open-source version"),
+                                  tr("The call cannot be made due participant is offline!"));
+        return;
+    }
+
+            // 播放外呼声音
+    auto nexus = Nexus::getInstance();
+    nexus->outgoingNotification();
+}
+
+void FriendWidget::doVideoCall() {
+    QString cId = contactId.getId();
+    qDebug() << __func__ << cId;
+    auto av = CoreAV::getInstance();
+    if (av->isCallStarted(&contactId)) {
+        if (av->isCallVideoEnabled(&contactId)) {
+            av->cancelCall(cId);
+        }
+    }
+
+    auto started = av->startCall(cId, true);
+    if (!started) {
+        // 返回失败对方可能不在线，免费版本不支持离线呼叫！
+        lib::ui::GUI::showWarning(tr("The feature unsupported in the open-source version"),
+                                  tr("The call cannot be made due participant is offline!"));
+        return;
+    }
+}
+
+
+
 }  // namespace module::im

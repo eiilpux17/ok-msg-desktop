@@ -26,7 +26,6 @@
 namespace module::im {
 
 ProfileInfo::ProfileInfo(Core* core, Profile* profile) : profile{profile}, core{core} {
-    connect(core, &Core::idSet, this, &ProfileInfo::idChanged);
     connect(core, &Core::vCardSet, this, &ProfileInfo::vCardChanged);
     connect(core, &Core::usernameSet, this, &ProfileInfo::usernameChanged);
     connect(core, &Core::avatarSet, this, &ProfileInfo::avatarChanged);
@@ -61,10 +60,10 @@ bool ProfileInfo::isEncrypted() const {
 }
 
 /**
- * @brief Copy self ToxId to clipboard.
+ * @brief Copy self ok::base::Jid to clipboard.
  */
 void ProfileInfo::copyId() const {
-    ToxId selfId = core->getSelfPeerId();
+    ok::base::Jid selfId = core->getSelfPeerId();
     QString txt = selfId.toString();
     QClipboard* clip = QApplication::clipboard();
     clip->setText(txt, QClipboard::Clipboard);

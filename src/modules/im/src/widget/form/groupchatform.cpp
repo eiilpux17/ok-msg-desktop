@@ -24,9 +24,9 @@
 #include "src/core/core.h"
 #include "src/core/coreav.h"
 #include "src/lib/storage/settings/style.h"
-#include "src/model/friend.h"
-#include "src/model/friendlist.h"
-#include "src/model/groupid.h"
+#include "src/model/Friend.h"
+#include "src/model/FriendList.h"
+#include "src/model/GroupId.h"
 #include "src/persistence/igroupsettings.h"
 #include "src/widget/chatformheader.h"
 #include "src/widget/form/chatform.h"
@@ -262,8 +262,10 @@ void GroupChatForm::dragEnterEvent(QDragEnterEvent* ev) {
 
     auto profile = Nexus::getProfile();
     if (profile) {
-        Friend* frnd = Nexus::getCore()->getFriendList().findFriend(toxPk);
-        if (frnd) ev->acceptProposedAction();
+        auto frnd = Nexus::getCore()->getFriendList().findFriend(toxPk);
+        if (frnd.has_value()){
+            ev->acceptProposedAction();
+        }
     }
 }
 

@@ -16,6 +16,7 @@
 #include "lib/storage/settings/translator.h"
 #include "lib/ui/widget/tools/CroppingLabel.h"
 #include "lib/ui/widget/tools/MaskablePixmap.h"
+#include "src/model/Group.h"
 #include "src/widget/tool/callconfirmwidget.h"
 
 #include <QDebug>
@@ -27,9 +28,9 @@
 
 #include "src/core/coreav.h"
 #include "src/model/FriendId.h"
-#include "src/model/contact.h"
-#include "src/model/friend.h"
-#include "src/model/friendlist.h"
+#include "src/model/Contact.h"
+#include "src/model/Friend.h"
+#include "src/model/FriendList.h"
 #include "src/widget/tool/callconfirmwidget.h"
 #include "Bus.h"
 #include "application.h"
@@ -160,7 +161,7 @@ ChatFormHeader::ChatFormHeader(const ContactId& contactId, QWidget* parent)
     headLayout->addLayout(headTextLayout, 1);
 
     // 空间
-    headLayout->addSpacing(HEAD_LAYOUT_SPACING);
+    // headLayout->addSpacing(HEAD_LAYOUT_SPACING);
 
     // 控制按钮
     callButton = createButton("callButton", this, &ChatFormHeader::callTriggered);
@@ -179,11 +180,36 @@ ChatFormHeader::ChatFormHeader(const ContactId& contactId, QWidget* parent)
     statusLabel->setVisible(false);
     statusIcon->setVisible(false);
 
-    mProfile = Nexus::getProfile();
-    connect(ok::Application::Instance()->bus(), &ok::Bus::profileChanged, this,
-            [&](Profile* profile) { mProfile = profile; });
+    mProfile = Nexus::getOptProfile();
+    if(mProfile.has_value()){
+        auto c = profile->getCore()->getContact(contactId);
+        if(c.has_value()){
+            setName(c.value()->getDisplayedName());
+        }
+    }
 
-    setContact(Nexus::getCore()->getFriendList().findFriend(contactId));
+    connect(ok::Application::Instance()->bus(), &ok::Bus::profileChanged, this,
+            [&](Profile* profile) {
+                mProfile = profile;
+                if(contactId.getChatType() == lib::messenger::ChatType::Chat){
+
+                    auto c = profile->getCore()->getContact(contactId);
+                    if(c.has_value()){
+                        connect(c.value(), &Friend::displayedNameChanged, this, [&](const QString& dn){
+                            setName(dn);
+                        });
+
+                        connect(c.value(), &Friend::avatarChanged, this, [&](const QPixmap& avatar){
+                            setAvatar(avatar);
+                        });
+                    }
+                }
+
+    });
+
+    auto f = Nexus::getCore()->getFriendList().findFriend(contactId);
+    if(f.has_value())
+        setContact(f.value());
 
 
     retranslateUi();
@@ -287,8 +313,9 @@ void ChatFormHeader::nameChanged(const QString& name) {
         return;
     }
 
-    if (auto f = Nexus::getCore()->getFriendList().findFriend(contactId)) {
-        f->setAlias(name);
+    auto f = Nexus::getCore()->getFriendList().findFriend(contactId);
+    if (f.has_value()) {
+        f.value()->setAlias(name);
         Core::getInstance()->setFriendAlias(contactId.getId(), name);
     }
 }
@@ -305,26 +332,6 @@ void ChatFormHeader::showOutgoingCall(bool video) {
     updateButtonsView();
 }
 
-CallConfirmWidget* ChatFormHeader::createCallConfirm(const PeerId& peer, bool video,
-                                                     QString& displayedName) {
-    qDebug() << __func__ << "peer:" << peer.toString() << "video?" << video;
-    callConfirm = std::make_unique<CallConfirmWidget>(peer, video);
-    connect(callConfirm.get(), &CallConfirmWidget::accepted, this, [=]() {
-        emit callAccepted(peer, video);
-    });
-    connect(callConfirm.get(), &CallConfirmWidget::rejected, this, [=]() {
-        emit callRejected(peer);
-    });
-    return callConfirm.get();
-}
-
-void ChatFormHeader::showCallConfirm() {
-    callConfirm->show();
-}
-
-void ChatFormHeader::removeCallConfirm() {
-    callConfirm.reset(nullptr);
-}
 
 void ChatFormHeader::updateMuteVolButton() {
     const CoreAV* av = CoreAV::getInstance();

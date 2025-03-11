@@ -20,7 +20,7 @@
 #include <memory>
 
 #include "base/compatiblerecursivemutex.h"
-#include "src/core/toxcall.h"
+#include "src/core/Call.h"
 
 class QThread;
 class QTimer;
@@ -62,7 +62,7 @@ public:
     bool sendGroupCallAudio(QString groupNum, const int16_t* pcm, size_t samples, uint8_t chans,
                             uint32_t rate) const;
 
-    ToxCall* getCall(const QString& friendId);
+    Call* getCall(const QString& friendId);
 
     CoreVideoSource* getSelfVideoSource() {
         return selfVideoSource.get();
@@ -128,46 +128,6 @@ protected:
 
     void onEnd(const lib::messenger::IMPeerId& peerId) override;
 
-public slots:
-    bool startCall(QString friendId, bool video);
-    bool answerCall(PeerId peerId, bool video);
-    bool cancelCall(const QString& friendId);
-    void rejectOrCancelCall(const PeerId& peerId);
-    void timeoutCall(QString friendId);
-
-signals:
-    void avCreating(FriendId friendId, bool video);
-    void avInvite(PeerId peerId, bool video);
-    void avStart(FriendId friendId, bool video);
-    void avPeerConnectionState(FriendId friendId, lib::ortc::PeerConnectionState state);
-    void avEnd(FriendId friendId, bool error = false);
-    void createCallToPeerId(lib::messenger::IMPeerId friendId, const QString& callId, bool video);
-
-private slots:
-    void doCreateCallToPeerId(const lib::messenger::IMPeerId& friendId, const QString& callId,
-                              bool video);
-
-    void stateCallback(QString friendId, lib::messenger::CallState state);
-
-    void bitrateCallback(QString friendId, uint32_t arate, uint32_t vrate, void* self);
-    void audioBitrateCallback(QString friendId, uint32_t rate, void* self);
-    void videoBitrateCallback(QString friendId, uint32_t rate, void* self);
-    void onFriendVideoFrame(const std::string& friendId,  //
-                            uint16_t w, uint16_t h,       //
-                            const uint8_t* y,             //
-                            const uint8_t* u,             //
-                            const uint8_t* v,             //
-                            int32_t ystride,              //
-                            int32_t ustride,              //
-                            int32_t vstride) override;
-
-    void onSelfVideoFrame(uint16_t w, uint16_t h,  //
-                          const uint8_t* y,        //
-                          const uint8_t* u,        //
-                          const uint8_t* v,        //
-                          int32_t ystride,         //
-                          int32_t ustride,         //
-                          int32_t vstride) override;
 
 private:
     CoreAV(Core* core);
@@ -179,10 +139,10 @@ private:
 
     void videoFramePush(CoreVideoSource* vs, std::unique_ptr<lib::video::vpx_image> frame);
 
-private:
+
     static constexpr uint32_t VIDEO_DEFAULT_BITRATE = 2500;
 
-private:
+
     Core* core;
 
     lib::messenger::MessengerCall* imCall;
@@ -211,6 +171,51 @@ private:
     mutable QReadWriteLock callsLock{QReadWriteLock::Recursive};
 
     lib::ortc::CtrlState ctrlState;
+
+
+signals:
+    void createCallToPeerId(lib::messenger::IMPeerId friendId, const QString& callId, bool video);
+    void avCreate(const ContactId& cid, bool video);
+    void avInvite(const PeerId& pid, bool video);
+    void avStart(const ContactId& cid, bool video);
+    void avEnd(const PeerId& pid,const ContactId& ender);
+    void avReject(const ContactId& cid);
+    void avCancel(const ContactId& cid);
+    void avRetract(const ContactId& cid);
+
+public slots:
+    bool startCall(QString friendId, bool video);
+    bool answerCall(PeerId peerId, bool video);
+    bool cancelCall(const QString& friendId);
+    void rejectOrCancelCall(const PeerId& fid);
+    void timeoutCall(QString friendId);
+
+
+private slots:
+    void doCreateCallToPeerId(const lib::messenger::IMPeerId& friendId, const QString& callId,
+                              bool video);
+
+    void stateCallback(QString friendId, lib::messenger::CallState state);
+
+    void bitrateCallback(QString friendId, uint32_t arate, uint32_t vrate, void* self);
+    void audioBitrateCallback(QString friendId, uint32_t rate, void* self);
+    void videoBitrateCallback(QString friendId, uint32_t rate, void* self);
+    void onFriendVideoFrame(const std::string& friendId,  //
+                            uint16_t w, uint16_t h,       //
+                            const uint8_t* y,             //
+                            const uint8_t* u,             //
+                            const uint8_t* v,             //
+                            int32_t ystride,              //
+                            int32_t ustride,              //
+                            int32_t vstride) override;
+
+    void onSelfVideoFrame(uint16_t w, uint16_t h,  //
+                          const uint8_t* y,        //
+                          const uint8_t* u,        //
+                          const uint8_t* v,        //
+                          int32_t ystride,         //
+                          int32_t ustride,         //
+                          int32_t vstride) override;
 };
 }  // namespace module::im
 #endif  // COREAV_H

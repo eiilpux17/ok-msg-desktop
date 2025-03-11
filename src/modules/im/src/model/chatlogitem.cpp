@@ -11,11 +11,11 @@
  */
 
 #include "chatlogitem.h"
-#include "friendlist.h"
-#include "grouplist.h"
+#include "FriendList.h"
+#include "GroupList.h"
 #include "src/core/core.h"
-#include "src/model/friend.h"
-#include "src/model/group.h"
+#include "src/model/Friend.h"
+#include "src/model/Group.h"
 
 #include <QDebug>
 #include <cassert>

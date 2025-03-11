@@ -44,7 +44,7 @@
 
 namespace module::im {
 
-FileTransferWidget::FileTransferWidget(QWidget* parent, ToxFile file)
+FileTransferWidget::FileTransferWidget(QWidget* parent, File file)
         : QWidget(parent)
         , ui(new Ui::FileTransferWidget)
         , fileInfo(file)
@@ -119,7 +119,7 @@ bool FileTransferWidget::tryRemoveFile(const QString& filepath) {
     return writable;
 }
 
-void FileTransferWidget::onFileTransferUpdate(ToxFile file) {
+void FileTransferWidget::onFileTransferUpdate(File file) {
     updateWidget(file);
 }
 
@@ -323,7 +323,7 @@ QString FileTransferWidget::getHumanReadableSize(qint64 size) {
     return QString().setNum(size / pow(1024, exp), 'f', exp > 1 ? 2 : 0).append(suffix[exp]);
 }
 
-void FileTransferWidget::updateWidgetColor(ToxFile const& file) {
+void FileTransferWidget::updateWidgetColor(File const& file) {
     if (lastStatus == file.status) {
         return;
     }
@@ -343,7 +343,7 @@ void FileTransferWidget::updateWidgetColor(ToxFile const& file) {
     }
 }
 
-void FileTransferWidget::updateWidgetText(ToxFile const& file) {
+void FileTransferWidget::updateWidgetText(File const& file) {
     if (lastStatus == file.status && file.status != FileStatus::PAUSED) {
         return;
     }
@@ -380,7 +380,7 @@ void FileTransferWidget::updateWidgetText(ToxFile const& file) {
     }
 }
 
-void FileTransferWidget::updatePreview(ToxFile const& file) {
+void FileTransferWidget::updatePreview(File const& file) {
     if (lastStatus == file.status) {
         return;
     }
@@ -404,7 +404,7 @@ void FileTransferWidget::updatePreview(ToxFile const& file) {
     }
 }
 
-void FileTransferWidget::updateFileProgress(ToxFile const& file) {
+void FileTransferWidget::updateFileProgress(File const& file) {
     switch (file.status) {
         case FileStatus::INITIALIZING:
             break;
@@ -450,7 +450,7 @@ void FileTransferWidget::updateFileProgress(ToxFile const& file) {
     }
 }
 
-void FileTransferWidget::updateSignals(ToxFile const& file) {
+void FileTransferWidget::updateSignals(File const& file) {
     if (lastStatus == file.status) {
         return;
     }
@@ -472,7 +472,7 @@ void FileTransferWidget::updateSignals(ToxFile const& file) {
     }
 }
 
-void FileTransferWidget::setupButtons(ToxFile const& file) {
+void FileTransferWidget::setupButtons(File const& file) {
     if (lastStatus == file.status && file.status != FileStatus::PAUSED) {
         return;
     }
@@ -749,7 +749,7 @@ void FileTransferWidget::applyTransformation(const int orientation, QImage& imag
     image = image.transformed(exifTransform);
 }
 
-void FileTransferWidget::updateWidget(ToxFile const& file) {
+void FileTransferWidget::updateWidget(File const& file) {
     assert(file == fileInfo);
 
     fileInfo = file;

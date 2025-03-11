@@ -10,7 +10,7 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "groupmessagedispatcher.h"
+#include "GroupMessageDispatcher.h"
 #include "src/persistence/igroupsettings.h"
 
 #include <QtCore>
@@ -77,7 +77,7 @@ void GroupMessageDispatcher::onMessageReceived(GroupMessage& msg) {
         return;
     }
 
-    auto self = idHandler.getSelfPeerId().toString();
+    auto self = idHandler.getSelfPeerId().full();
     if (self == msg.from) {
         qWarning() << "Is self message (from is mine).";
         return;

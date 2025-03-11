@@ -10,7 +10,7 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "src/core/toxfile.h"
+#include "src/core/File.h"
 #include <base/jsons.h>
 #include <lib/messenger/Messenger.h>
 #include <QFile>
@@ -61,7 +61,7 @@ void FileInfo::parse(const QString& json) {
     direction = (FileDirection)obj.value("direction").toInt();
 }
 
-ToxFile::ToxFile(const QString& sender,
+File::File(const QString& sender,
                  const QString& friendId,
                  const QString& sId_,
                  const QString& fileId_,
@@ -77,7 +77,7 @@ ToxFile::ToxFile(const QString& sender,
         , receiver{friendId}
         , timestamp(QDateTime::currentDateTime()) {}
 
-ToxFile::ToxFile(const QString& sender, const QString& friendId, const QString& msgId,
+File::File(const QString& sender, const QString& friendId, const QString& msgId,
                  const lib::messenger::File& file)
         : FileInfo(qstring(file.sId), qstring(file.id), qstring(file.name), qstring(file.path),
                    file.size, 0, (FileStatus)file.status, (FileDirection)file.direction)
@@ -86,33 +86,33 @@ ToxFile::ToxFile(const QString& sender, const QString& friendId, const QString& 
         , receiver{friendId}
         , timestamp(QDateTime::currentDateTime()) {}
 
-ToxFile::ToxFile(const FileInfo& fi) : FileInfo(fi), file(new QFile(fi.filePath)) {}
+File::File(const FileInfo& fi) : FileInfo(fi), file(new QFile(fi.filePath)) {}
 
-ToxFile::~ToxFile() {}
+File::~File() {}
 
-bool ToxFile::operator==(const ToxFile& other) const {
+bool File::operator==(const File& other) const {
     return (fileId == other.fileId);
 }
 
-bool ToxFile::operator!=(const ToxFile& other) const {
+bool File::operator!=(const File& other) const {
     return !(*this == other);
 }
 
-void ToxFile::setFilePath(QString path) {
+void File::setFilePath(QString path) {
     filePath = path;
     file->setFileName(path);
 }
 
-bool ToxFile::open(bool write) {
+bool File::open(bool write) {
     return write ? file->open(QIODevice::ReadWrite) : file->open(QIODevice::ReadOnly);
 }
 
-lib::messenger::File ToxFile::toIMFile() {
+lib::messenger::File File::toIMFile() {
     return lib::messenger::File{fileId.toStdString(), sId.toStdString(), fileName.toStdString(),
                                 filePath.toStdString(), fileSize};
 }
 
-const QString& ToxFile::getFriendId() const {
+const QString& File::getFriendId() const {
     return direction == FileDirection::RECEIVING ? sender : receiver;
 }
 }  // namespace module::im

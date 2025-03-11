@@ -31,7 +31,7 @@ namespace module::im {
 class CallConfirmWidget final : public QWidget {
     Q_OBJECT
 public:
-    explicit CallConfirmWidget(const PeerId& from, bool video, QWidget* parent = nullptr);
+    explicit CallConfirmWidget(const FriendId& from, bool video, QWidget* parent = nullptr);
     void setCallLabel(const QString& label);
 
 protected:
@@ -41,10 +41,11 @@ protected:
     bool eventFilter(QObject*, QEvent* event) final;
 
 private:
-    PeerId from;
+    FriendId from;
     QRect mainRect;
     QPolygon spikePoly;
     QBrush brush;
+    QLabel* name;
     QLabel* callLabel;
     QDialogButtonBox* buttonBox;
     QVBoxLayout* layout;

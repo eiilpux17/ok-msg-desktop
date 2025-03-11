@@ -14,13 +14,13 @@
 #define ICORE_ID_HANDLER_H
 
 #include "src/model/FriendId.h"
-#include "toxid.h"
+
 namespace module::im {
 
 class ICoreIdHandler {
 public:
     virtual ~ICoreIdHandler() = default;
-    virtual ToxId getSelfPeerId() const = 0;
+    virtual ok::base::Jid getSelfPeerId() const = 0;
     virtual FriendId getSelfId() const = 0;
     virtual QString getUsername() const = 0;
     virtual QString getNick() const = 0;

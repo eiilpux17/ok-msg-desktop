@@ -14,7 +14,7 @@
 #define ABOUTGROUPFORM_H
 
 #include <QWidget>
-#include "src/model/group.h"
+#include "src/model/Group.h"
 
 namespace Ui {
 class AboutGroupForm;

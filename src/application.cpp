@@ -293,11 +293,5 @@ void Application::cleanupNotificationSound() {
     audioNotification.reset();
 }
 
-/**
- * @brief Widget::onStopNotification Stop the notification sound.
- */
-void Application::onStopNotification() {
-    audioNotification.reset();
-}
 
 }  // namespace ok

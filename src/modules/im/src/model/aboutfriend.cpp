@@ -12,7 +12,7 @@
 
 #include "aboutfriend.h"
 
-#include "src/model/friend.h"
+#include "src/model/Friend.h"
 #include "src/nexus.h"
 #include "src/persistence/history.h"
 #include "src/persistence/ifriendsettings.h"

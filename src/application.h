@@ -85,7 +85,6 @@ public:
     }
 
     void playNotificationSound(lib::audio::IAudioSink::Sound sound, bool loop = false);
-    void onStopNotification();
     void cleanupNotificationSound();
 
 private:

@@ -19,8 +19,8 @@
 
 #include "lib/ui/widget/tools/RoundedPixmapLabel.h"
 #include "src/model/FriendId.h"
-#include "src/model/contactid.h"
-#include "src/model/status.h"
+#include "src/model/ContactId.h"
+#include "src/model/Status.h"
 
 class QVBoxLayout;
 class QPushButton;
@@ -71,9 +71,7 @@ public:
 
     void showOutgoingCall(bool video);
 
-    CallConfirmWidget* createCallConfirm(const PeerId& peer, bool video, QString& displayedName);
-    void showCallConfirm();
-    void removeCallConfirm();
+
 
     void updateMuteMicButton(bool active, bool inputMuted);
     void updateMuteVolButton(bool active, bool outputMuted);
@@ -103,9 +101,6 @@ signals:
     void micMuteToggle();
     void volMuteToggle();
 
-    void callAccepted(const PeerId& peerId, bool video);
-    void callRejected(const PeerId& peerId);
-
 private slots:
     void retranslateUi();
     void updateButtonsView();
@@ -133,8 +128,8 @@ private:
     CallButtonState callState;
     CallButtonState videoState;
 
-    std::unique_ptr<CallConfirmWidget> callConfirm;
-    Profile* mProfile;
+
+    std::optional<Profile*> mProfile;
 };
 }  // namespace module::im
 #endif  // CHAT_FORM_HEADER

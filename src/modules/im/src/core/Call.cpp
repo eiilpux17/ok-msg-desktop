@@ -10,19 +10,19 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "toxcall.h"
+#include "Call.h"
 
 #include <QTimer>
 #include <QDebug>
 
 #include "lib/audio/audio.h"
 #include "src/core/coreav.h"
-#include "src/model/group.h"
+#include "src/model/Group.h"
 #include "src/video/corevideosource.h"
 
 namespace module::im {
 
-ToxCall::ToxCall(lib::messenger::CallDirection direction,
+Call::Call(lib::messenger::CallDirection direction,
                  CoreAV& av,
                  lib::audio::IAudioControl& audio,
                  bool videoEnabled)
@@ -34,7 +34,7 @@ ToxCall::ToxCall(lib::messenger::CallDirection direction,
     audioSource = audio.makeSource();
 }
 
-ToxCall::~ToxCall() {
+Call::~Call() {
     qDebug() << __func__;
     if (ctrlState.enableCam) {
         QObject::disconnect(videoInConn);
@@ -42,55 +42,55 @@ ToxCall::~ToxCall() {
     }
 }
 
-bool ToxCall::isActive() const {
+bool Call::isActive() const {
     return active;
 }
 
-void ToxCall::setActive(bool value) {
+void Call::setActive(bool value) {
     active = value;
 }
 
-bool ToxCall::getMuteVol() const {
+bool Call::getMuteVol() const {
     return !ctrlState.enableSpk;
 }
 
-void ToxCall::setMuteVol(bool value) {
+void Call::setMuteVol(bool value) {
     ctrlState.enableSpk = !value;
 }
 
-bool ToxCall::getMuteMic() const {
+bool Call::getMuteMic() const {
     return !ctrlState.enableMic;
 }
 
-void ToxCall::setMuteMic(bool value) {
+void Call::setMuteMic(bool value) {
     ctrlState.enableMic = !value;
 }
 
-bool ToxCall::getVideoEnabled() const {
+bool Call::getVideoEnabled() const {
     return ctrlState.enableCam;
 }
 
-void ToxCall::setVideoEnabled(bool value) {
+void Call::setVideoEnabled(bool value) {
     ctrlState.enableCam = value;
 }
 
-bool ToxCall::getNullVideoBitrate() const {
+bool Call::getNullVideoBitrate() const {
     return nullVideoBitrate;
 }
 
-void ToxCall::setNullVideoBitrate(bool value) {
+void Call::setNullVideoBitrate(bool value) {
     nullVideoBitrate = value;
 }
 
-CoreVideoSource* ToxCall::getVideoSource() const {
+CoreVideoSource* Call::getVideoSource() const {
     return videoSource;
 }
 
-QString ToxCall::getCallId() const {
+QString Call::getCallId() const {
     return callId;
 }
 
-void ToxCall::setCallId(QString value) {
+void Call::setCallId(QString value) {
     callId = value;
 }
 
@@ -99,7 +99,7 @@ ToxFriendCall::ToxFriendCall(QString peerId,
                              CoreAV& av,
                              lib::audio::IAudioControl& audio,
                              bool videoEnabled)
-        : ToxCall(direction, av, audio, videoEnabled), sink(audio.makeSink())
+        : Call(direction, av, audio, videoEnabled), sink(audio.makeSink())
         , peerId{peerId}
 {
     connect(audioSource.get(), &lib::audio::IAudioSource::frameAvailable, this,
@@ -177,7 +177,7 @@ ToxGroupCall::ToxGroupCall(const Group& group,
                            CoreAV& av,
                            lib::audio::IAudioControl& audio,
                            bool videoEnabled)
-        : ToxCall(direction, av, audio, videoEnabled), group{group} {
+        : Call(direction, av, audio, videoEnabled), group{group} {
     // register audio
     connect(audioSource.get(),              //
             &lib::audio::IAudioSource::frameAvailable,  //

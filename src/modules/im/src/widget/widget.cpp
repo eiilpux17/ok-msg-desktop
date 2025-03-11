@@ -53,12 +53,12 @@
 #include "src/core/core.h"
 #include "src/core/coreav.h"
 #include "src/lib/storage/settings/style.h"
-#include "src/model/friend.h"
-#include "src/model/friendlist.h"
-#include "src/model/group.h"
-#include "src/model/grouplist.h"
+#include "src/model/Friend.h"
+#include "src/model/FriendList.h"
+#include "src/model/Group.h"
+#include "src/model/GroupList.h"
 #include "src/model/profile/profileinfo.h"
-#include "src/model/status.h"
+#include "src/model/Status.h"
 #include "src/nexus.h"
 #include "src/persistence/settings.h"
 #include "src/platform/timer.h"
@@ -240,7 +240,7 @@ Widget::Widget(QWidget* parent)  //
 
 
     updateIcons();
-
+    reloadTheme();
 
     retranslateUi();
     auto a = ok::Application::Instance();
@@ -249,7 +249,6 @@ Widget::Widget(QWidget* parent)  //
                 retranslateUi();
             });
 
-    reloadTheme();
     connect(a->bus(), &ok::Bus::themeColorChanged, this,
             [&]() { reloadTheme(); });
 
@@ -564,7 +563,7 @@ bool Widget::newFriendMessageAlert(const FriendId& friendId, const QString& text
     bool hasActive = false;
     QWidget* currentWindow;
     ContentDialog* contentDialog = ContentDialogManager::getInstance()->getFriendDialog(friendId);
-    Friend* f = Nexus::getCore()->getFriendList().findFriend(friendId);
+    // auto f = Nexus::getCore()->getFriend(friendId);
 
     if (contentDialog != nullptr) {
         currentWindow = contentDialog->window();
@@ -710,17 +709,18 @@ bool Widget::newMessageAlert(QWidget* currentWindow, bool isActive, bool sound, 
     return true;
 }
 
-void Widget::friendRequestedTo(const ToxId& friendAddress, const QString& nick,
+void Widget::friendRequestedTo(const ok::base::Jid& friendAddress,
+                               const QString& nick,
                                const QString& message) {
-    qDebug() << "friendRequestedTo" << friendAddress.getPublicKey().toString() << nick << message;
-    auto frd = Nexus::getCore()->getFriendList().findFriend(friendAddress.getPublicKey());
+    qDebug() << __func__ << friendAddress.full() << nick << message;
+    auto frd = Nexus::getCore()->getFriendList().findFriend(ContactId( friendAddress.full(), lib::messenger::ChatType::Chat));
     if (frd) {
         return;
     }
     emit friendRequested(friendAddress, nick, message);
 }
 
-void Widget::onFileReceiveRequested(const ToxFile& file) {
+void Widget::onFileReceiveRequested(const File& file) {
     const FriendId& friendPk = FriendId(file.receiver);
     newFriendMessageAlert(
             friendPk,
@@ -730,9 +730,6 @@ void Widget::onFileReceiveRequested(const ToxFile& file) {
 
 void Widget::onDialogShown(GenericChatroomWidget* widget) {
     widget->resetEventFlags();
-    //  widget->updateStatusLight();
-
-    //  ui->friendList->updateTracking(widget);
     resetIcon();
 }
 
@@ -839,8 +836,8 @@ ContentLayout* Widget::createContentDialog(DialogType type) const {
 }
 
 void Widget::copyFriendIdToClipboard(const FriendId& friendId) {
-    Friend* f = Nexus::getCore()->getFriendList().findFriend(friendId);
-    if (f != nullptr) {
+    auto f = Nexus::getCore()->getFriendList().findFriend(friendId);
+    if (f.has_value()) {
         QClipboard* clipboard = QApplication::clipboard();
         clipboard->setText(friendId.toString(), QClipboard::Clipboard);
     }

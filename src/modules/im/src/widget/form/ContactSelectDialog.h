@@ -14,7 +14,7 @@
 #define CHATFORWARDIALOG_H
 
 #include <QDialog>
-#include "src/model/contactid.h"
+#include "src/model/ContactId.h"
 
 namespace Ui {
 class ContactSelectDialog;

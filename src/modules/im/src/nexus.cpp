@@ -26,7 +26,7 @@
 #include "src/core/core.h"
 #include "src/core/coreav.h"
 #include "src/model/groupinvite.h"
-#include "src/model/status.h"
+#include "src/model/Status.h"
 #include "src/persistence/profile.h"
 #include "src/widget/widget.h"
 
@@ -74,7 +74,7 @@ Nexus::Nexus(QObject* parent)
     qRegisterMetaType<FileStatus>("FileStatus");
 
     qRegisterMetaType<FriendId>("ToxPk");
-    qRegisterMetaType<ToxId>("ToxId");
+    qRegisterMetaType<ok::base::Jid>("ok::base::Jid");
     qRegisterMetaType<GroupId>("GroupId");
     qRegisterMetaType<ContactId>("ContactId");
     qRegisterMetaType<GroupInvite>("GroupInvite");
@@ -147,41 +147,43 @@ void Nexus::start(std::shared_ptr<lib::session::AuthSession> session) {
     connect(profile.get(), &Profile::selfAvatarChanged, m_widget, &Widget::onSelfAvatarLoaded);
 
     connect(profile.get(), &Profile::coreChanged,
-            [&, bus](Core& core) { emit bus->coreChanged(&core); });
+            [&, bus](Core& core) {
+                emit bus->coreChanged(&core);
+            });
+
+    connect(bus, &ok::Bus::coreAvChanged, this, [&](const CoreAV* av){
+        connect(av, &CoreAV::avInvite, this, [&](const ContactId& cid, bool video){
+            incomingNotification(cid.getId());
+        });
+
+        connect(av, &CoreAV::avCreate, this, [&](const ContactId& cid, bool video){
+            outgoingNotification();
+        });
+
+        connect(av, &CoreAV::avStart, this, [&](const ContactId& cid, bool video){
+            stopNotification();
+        });
+
+        connect(av, &CoreAV::avReject, this, [&](const ContactId& cid){
+            stopNotification();
+        });
+
+        connect(av, &CoreAV::avRetract, this, [&](const ContactId& cid){
+            stopNotification();
+        });
+
+        connect(av, &CoreAV::avCancel, this, [&](const ContactId& cid){
+            stopNotification();
+        });
+
+        connect(av, &CoreAV::avEnd, this, [&](const ContactId& cid){
+            stopNotification();
+        });
+    });
+
 
     profile->start();
 
-// #ifdef Q_OS_MAC
-//     // TODO: still needed?
-//     globalMenuBar = new QMenuBar(0);
-//     dockMenu = new QMenu(globalMenuBar);
-
-//     viewMenu = globalMenuBar->addMenu(QString());
-
-//     windowMenu = globalMenuBar->addMenu(QString());
-//     globalMenuBar->addAction(windowMenu->menuAction());
-
-//     fullscreenAction = viewMenu->addAction(QString());
-//     fullscreenAction->setShortcut(QKeySequence::FullScreen);
-//     connect(fullscreenAction, &QAction::triggered, this, &Nexus::toggleFullscreen);
-
-//     minimizeAction = windowMenu->addAction(QString());
-//     minimizeAction->setShortcut(Qt::CTRL + Qt::Key_M);
-//     connect(minimizeAction, &QAction::triggered, [this]() {
-//         minimizeAction->setEnabled(false);
-//         QApplication::focusWindow()->showMinimized();
-//     });
-
-//     windowMenu->addSeparator();
-//     frontAction = windowMenu->addAction(QString());
-//     connect(frontAction, &QAction::triggered, this, &Nexus::bringAllToFront);
-
-//     QAction* quitAction = new QAction(globalMenuBar);
-//     quitAction->setMenuRole(QAction::QuitRole);
-//     connect(quitAction, &QAction::triggered, qApp, &QApplication::quit);
-
-//     retranslateUi();
-// #endif
 }
 
 void Nexus::stop() {
@@ -252,6 +254,11 @@ Profile* Nexus::getProfile() {
     return m_self->profile.get();
 }
 
+std::optional<Profile *> Nexus::getOptProfile()
+{
+    return std::make_optional(m_self->profile.get());
+}
+
 /**
  * @brief Get core instance.
  * @return nullptr if not started, core instance otherwise.
@@ -276,14 +283,16 @@ void Nexus::incomingNotification(const QString& friendnumber) {
     qDebug() << __func__ << friendnumber;
     const auto& friendId = FriendId(friendnumber);
     m_widget->newFriendMessageAlert(friendId, {}, false);
-
-    // loop until call answered or rejected
     ok::Application::Instance()->playNotificationSound(lib::audio::IAudioSink::Sound::IncomingCall, true);
 }
 
 void Nexus::outgoingNotification() {
-    // loop until call answered or rejected
     ok::Application::Instance()->playNotificationSound(lib::audio::IAudioSink::Sound::OutgoingCall, true);
+}
+
+void Nexus::stopNotification()
+{
+    ok::Application::Instance()->cleanupNotificationSound();
 }
 
 

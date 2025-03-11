@@ -15,7 +15,7 @@
 
 #include "src/lib/storage/settings/style.h"
 
-#include "src/model/friendlist.h"
+#include "src/model/FriendList.h"
 
 #include "lib/video/videoframe.h"
 #include "src/widget/friendwidget.h"

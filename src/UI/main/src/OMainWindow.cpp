@@ -17,7 +17,7 @@
 #include "lib/storage/settings/OkSettings.h"
 #include "lib/storage/settings/style.h"
 #include "lib/storage/settings/translator.h"
-#include "modules/im/src/model/status.h"
+#include "modules/im/src/model/Status.h"
 
 #include <QLabel>
 #include <QMenu>

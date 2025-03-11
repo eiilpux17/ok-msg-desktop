@@ -64,6 +64,7 @@ public:
     static Nexus* getInstance();
     static Core* getCore();
     static Profile* getProfile();
+    static std::optional<Profile*> getOptProfile();
     static Widget* getDesktopGUI();
     const QString& getName() const override;
     QWidget* widget() override;
@@ -76,6 +77,7 @@ public:
 
     void incomingNotification(const QString& friendId);
     void outgoingNotification();
+    void stopNotification();
 
 
 

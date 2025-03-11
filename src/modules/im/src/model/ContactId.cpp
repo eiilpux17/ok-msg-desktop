@@ -10,7 +10,7 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "contactid.h"
+#include "ContactId.h"
 #include <QByteArray>
 #include <QDebug>
 #include <QHash>
