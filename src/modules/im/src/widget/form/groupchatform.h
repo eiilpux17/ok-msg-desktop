@@ -36,11 +36,12 @@ struct Message;
 class GroupChatForm : public GenericChatForm {
     Q_OBJECT
 public:
-    GroupChatForm(const GroupId* chatGroup,
+    GroupChatForm(const GroupId& chatGroup,
                   IChatLog& chatLog,
                   IMessageDispatcher& messageDispatcher,
-                  IGroupSettings& _settings);
-    ~GroupChatForm();
+                  IGroupSettings& _settings,
+                  QWidget* parent = nullptr);
+    ~GroupChatForm() override;
 
     void peerAudioPlaying(QString peerPk);
 
@@ -70,7 +71,7 @@ private:
     void leaveGroupCall();
 
 private:
-    const GroupId* group;
+    GroupId group;
     QMap<QString, QLabel*> peerLabels;
     QMap<QString, QTimer*> peerAudioTimers;
     lib::ui::FlowLayout* namesListLayout;

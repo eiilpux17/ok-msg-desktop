@@ -16,6 +16,7 @@
 #include <QObject>
 #include <QPixmap>
 #include <QString>
+#include "src/core/ICallSender.h"
 #include "src/model/ContactId.h"
 #include "src/model/Status.h"
 namespace module::im {
@@ -66,6 +67,7 @@ public:
 
     virtual void setEventFlag(bool flag);
     virtual bool getEventFlag() const;
+
 
 signals:
     // 用户名称

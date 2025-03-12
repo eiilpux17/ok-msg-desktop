@@ -58,7 +58,7 @@ struct Message;
 class GenericChatForm : public QWidget {
     Q_OBJECT
 public:
-    GenericChatForm(const ContactId* contact,
+    GenericChatForm(const ContactId& contactId,
                     IChatLog& chatLog,
                     IMessageDispatcher& messageDispatcher,
                     QWidget* parent = nullptr);
@@ -96,6 +96,9 @@ public:
     [[__nodiscard__]] inline ChatLog* getChatLog() const {
         return chatLog;
     }
+
+
+    void setFriendTyping(bool typing, const QString contact);
 
 signals:
     void messageInserted();
@@ -166,7 +169,7 @@ protected:
     QDateTime getTime(const IChatItem::Ptr& chatLine) const;
     void sendFile(const QFile& file);
 
-    const ContactId* contactId;
+    ContactId contactId;
     const Contact* contact = nullptr;
 
     bool audioInputFlag;

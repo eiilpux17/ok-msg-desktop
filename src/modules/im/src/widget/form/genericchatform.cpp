@@ -42,7 +42,7 @@
 #include "src/persistence/smileypack.h"
 #include "src/widget/contentdialog.h"
 #include "src/widget/contentlayout.h"
-#include "src/widget/form/chatform.h"
+#include "src/widget/form/FriendChatForm.h"
 #include "src/widget/form/loadhistorydialog.h"
 #include "src/widget/widget.h"
 #include "src/application.h"
@@ -166,24 +166,25 @@ ChatLogIdx GenericChatForm::firstItemAfterDate(QDate date, const IChatLog& chatL
     }
 }
 
-GenericChatForm::GenericChatForm(const ContactId* contact_,
+GenericChatForm::GenericChatForm(const ContactId& contactId,
                                  IChatLog& iChatLog_,
                                  IMessageDispatcher& messageDispatcher,
                                  QWidget* parent)
         : QWidget(parent, Qt::Window)
-        , contactId(contact_)
+        , contactId(contactId)
         , contact(nullptr)
         , audioInputFlag(false)
         , audioOutputFlag(false)
         , iChatLog(iChatLog_)
         , messageDispatcher(messageDispatcher)
         , isTyping{false} {
-    qDebug() << __func__ << "contact:" << contact_;
+    qDebug() << __func__ << "contact:" << contactId;
 
     setContentsMargins(0, 0, 0, 0);
 
     mainLayout = new QVBoxLayout(this);
     mainLayout->setMargin(0);
+    mainLayout->setSpacing(0);
 
     bodySplitter = new QSplitter(Qt::Vertical, this);
     mainLayout->addWidget(bodySplitter);
@@ -303,8 +304,13 @@ QDateTime GenericChatForm::getFirstTime() const {
     return getTime(chatLog->getFirstLine());
 }
 
+void GenericChatForm::setFriendTyping(bool typing, const QString contact)
+{
+
+}
+
 void GenericChatForm::reloadTheme() {   
-    auto css = lib::settings::Style::getStylesheetFile("chatArea.css");
+    auto css = lib::settings::Style::getStylesheet("chatArea.css");
     chatLog->setStyleSheet(css);
     chatLog->reloadTheme();
 }
@@ -336,7 +342,7 @@ void GenericChatForm::showEvent(QShowEvent*) {
     inputForm->setFocus();
     if (contact) {
         if (!contact->isGroup()) {
-            auto f = Nexus::getCore()->getFriendList().findFriend(*contactId);
+            auto f = Nexus::getCore()->getFriend(contactId);
             if (f.has_value()) {
                 setContact(f.value());
             }
@@ -365,7 +371,7 @@ bool GenericChatForm::event(QEvent* e) {
 }
 
 void GenericChatForm::onDisplayedNameChanged(const QString& name) {
-    qDebug() << __func__ << contactId->toString() << name;
+    qDebug() << __func__ << contactId.toString() << name;
     //    headWidget->setName(name);
     for (auto msg : messages) {
         auto it = msg.second;
@@ -664,7 +670,7 @@ void GenericChatForm::handleSearchResult(SearchResult result, SearchDirection di
 }
 
 void GenericChatForm::renderMessage0(ChatLogIdx idx) {
-    qDebug() << __func__ << "for contact:" << contactId->toString()
+    qDebug() << __func__ << "for contact:" << contactId.toString()
              << "message log index:" << idx.get();
     renderMessages(idx, idx + 1);
 }
@@ -765,14 +771,14 @@ void GenericChatForm::onTextEditChanged(const QString& text) {
     if (!Nexus::getProfile()->getSettings()->getTypingNotification()) {
         if (isTyping) {
             isTyping = false;
-            Core::getInstance()->sendTyping(contactId->getId(), false);
+            Core::getInstance()->sendTyping(contactId.getId(), false);
         }
         return;
     }
 
     bool isTypingNow = !text.isEmpty();
     if (isTyping != isTypingNow) {
-        Core::getInstance()->sendTyping(contactId->getId(), isTypingNow);
+        Core::getInstance()->sendTyping(contactId.getId(), isTypingNow);
         if (isTypingNow) {
             typingTimer->start(TYPING_NOTIFICATION_DURATION);
         }

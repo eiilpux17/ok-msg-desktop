@@ -25,7 +25,7 @@ class IMFriend;
 }
 namespace module::im {
 
-class Friend : public Contact {
+class Friend : public Contact , public ICallSender{
     Q_OBJECT
 public:
     // 朋友关系
@@ -70,9 +70,12 @@ public:
     void addEnd(const QString& end) {
         ends.append(end);
     }
+
+
+    bool startCall(bool video) override;
+
 signals:
-    //  void nameChanged(const QString &name);
-    //  void aliasChanged(const ToxPk &receiver, QString alias);
+
     void statusChanged(Status status, bool event);
     void onlineOfflineChanged(bool isOnline);
     void statusMessageChanged(const QString& message);
@@ -81,6 +84,7 @@ signals:
 
 
     void avCreating(bool video);
+    void avAccept(bool video);
     void avInvite(PeerId pid, bool video);
     void avStart(bool video);
     void avPeerConnectionState(lib::ortc::PeerConnectionState state);

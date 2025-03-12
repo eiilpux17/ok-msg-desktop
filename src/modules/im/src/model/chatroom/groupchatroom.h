@@ -29,8 +29,8 @@ class Profile;
 class GroupChatroom : public Chatroom {
     Q_OBJECT
 public:
-    GroupChatroom(const GroupId* groupId, IDialogsManager* dialogsManager);
-    ~GroupChatroom();
+    GroupChatroom(const GroupId* groupId, IDialogsManager* dialogsManager, QObject* parent=nullptr);
+    ~GroupChatroom() override;
 
     virtual const ContactId& getContactId() override;
 

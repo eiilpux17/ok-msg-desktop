@@ -10,7 +10,7 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "chatform.h"
+#include "FriendChatForm.h"
 
 #include <QMimeData>
 #include <QPushButton>
@@ -58,12 +58,13 @@ namespace module::im {
 static constexpr int CHAT_WIDGET_MIN_HEIGHT = 50;
 static constexpr int SCREENSHOT_GRABBER_OPENING_DELAY = 500;
 
-const QString ChatForm::ACTION_PREFIX = QStringLiteral("/me ");
+const QString FriendChatForm::ACTION_PREFIX = QStringLiteral("/me ");
 
-ChatForm::ChatForm(const FriendId* chatFriend,
+FriendChatForm::FriendChatForm(const FriendId& chatFriend,
                    IChatLog& chatLog_,
-                   IMessageDispatcher& messageDispatcher)
-        : GenericChatForm(chatFriend, chatLog_, messageDispatcher), f(chatFriend) {
+                   IMessageDispatcher& messageDispatcher,
+                    QWidget* parent)
+        : GenericChatForm(chatFriend, chatLog_, messageDispatcher, parent), f(chatFriend) {
     statusMessageLabel = new lib::ui::CroppingLabel();
     statusMessageLabel->setObjectName("statusLabel");
     statusMessageLabel->setFont(lib::settings::Style::getFont(lib::settings::Style::Font::Medium));
@@ -114,7 +115,7 @@ ChatForm::ChatForm(const FriendId* chatFriend,
             });
 
     connect(typingTimer, &QTimer::timeout, this, [this] {
-        Core::getInstance()->sendTyping(f->toString(), false);
+        Core::getInstance()->sendTyping(f.getId(), false);
         isTyping = false;
     });
 
@@ -128,29 +129,29 @@ ChatForm::ChatForm(const FriendId* chatFriend,
     retranslateUi();
 }
 
-ChatForm::~ChatForm() {
+FriendChatForm::~FriendChatForm() {
     
 }
 
-void ChatForm::setStatusMessage(const QString& newMessage) {
+void FriendChatForm::setStatusMessage(const QString& newMessage) {
     statusMessageLabel->setText(newMessage);
     // for long messsages
     statusMessageLabel->setToolTip(Qt::convertFromPlainText(newMessage, Qt::WhiteSpaceNormal));
 }
 
-void ChatForm::callUpdateFriendActivity() {
-    emit updateFriendActivity(*f);
+void FriendChatForm::callUpdateFriendActivity() {
+    emit updateFriendActivity(f);
 }
 
-void ChatForm::updateFriendActivityForFile(const File& file) {
-    if (file.receiver != f->getId()) {
+void FriendChatForm::updateFriendActivityForFile(const File& file) {
+    if (file.receiver != f.getId()) {
         return;
     }
-    emit updateFriendActivity(*f);
+    emit updateFriendActivity(f);
 }
 
-void ChatForm::onFileNameChanged(const FriendId& friendPk) {
-    if (friendPk != *f) {
+void FriendChatForm::onFileNameChanged(const FriendId& friendPk) {
+    if (friendPk != f) {
         return;
     }
 
@@ -159,18 +160,18 @@ void ChatForm::onFileNameChanged(const FriendId& friendPk) {
                                      "so you can save the file on windows."));
 }
 
-void ChatForm::showOutgoingCall(bool video) {
+void FriendChatForm::showOutgoingCall(bool video) {
     //  headWidget->showOutgoingCall(video);
-    addSystemInfoMessage(tr("Calling %1").arg(f->username), ChatMessage::INFO,
+    addSystemInfoMessage(tr("Calling %1").arg(f.username), ChatMessage::INFO,
                          QDateTime::currentDateTime());
     emit outgoingNotification();
-    emit updateFriendActivity(*f);
+    emit updateFriendActivity(f);
 }
 
-void ChatForm::onFriendStatusChanged(const FriendId& friendId, Status status) {
+void FriendChatForm::onFriendStatusChanged(const FriendId& friendId, Status status) {
     qDebug() << __func__ << friendId.toString() << (int)status;
     // Disable call buttons if friend is offline
-    if (friendId.toString() != f->getId()) {
+    if (friendId.toString() != f.getId()) {
         return;
     }
 
@@ -190,27 +191,27 @@ void ChatForm::onFriendStatusChanged(const FriendId& friendId, Status status) {
     //  }
 }
 
-void ChatForm::onFriendNameChanged(const QString& name) {
+void FriendChatForm::onFriendNameChanged(const QString& name) {
     qDebug() << __func__ << name;
     //  if (sender() == f->toString()) {
     //    setName(name);
     //  }
 }
 
-void ChatForm::onStatusMessage(const QString& message) {
+void FriendChatForm::onStatusMessage(const QString& message) {
     qDebug() << __func__ << message;
     //  if (sender() == f) {
     //    setStatusMessage(message);
     //  }
 }
 
-void ChatForm::dragEnterEvent(QDragEnterEvent* ev) {
+void FriendChatForm::dragEnterEvent(QDragEnterEvent* ev) {
     if (ev->mimeData()->hasUrls()) {
         ev->acceptProposedAction();
     }
 }
 
-void ChatForm::dropEvent(QDropEvent* ev) {
+void FriendChatForm::dropEvent(QDropEvent* ev) {
     if (!ev->mimeData()->hasUrls()) {
         return;
     }
@@ -247,16 +248,16 @@ void ChatForm::dropEvent(QDropEvent* ev) {
         }
 
         if (info.exists()) {
-            CoreFile::getInstance()->sendFile(f->getId(), file);
+            CoreFile::getInstance()->sendFile(f.getId(), file);
         }
     }
 }
 
-void ChatForm::clearChatArea() {
+void FriendChatForm::clearChatArea() {
     GenericChatForm::clearChatArea(/* confirm = */ false, /* inform = */ true);
 }
 
-void ChatForm::sendImage(const QPixmap& pixmap) {
+void FriendChatForm::sendImage(const QPixmap& pixmap) {
     QDir(Nexus::getProfile()->getSettings()->getAppDataDirPath()).mkpath("images");
 
     // use ~ISO 8601 for screenshot timestamp, considering FS limitations
@@ -276,7 +277,7 @@ void ChatForm::sendImage(const QPixmap& pixmap) {
         file.close();
 
         CoreFile* coreFile = CoreFile::getInstance();
-        coreFile->sendFile(f->getId(), file);
+        coreFile->sendFile(f.getId(), file);
     } else {
         ok::base::MessageBox::warning(
                 this,
@@ -285,11 +286,11 @@ void ChatForm::sendImage(const QPixmap& pixmap) {
     }
 }
 
-void ChatForm::insertChatMessage(IChatItem::Ptr msg) {
+void FriendChatForm::insertChatMessage(IChatItem::Ptr msg) {
     GenericChatForm::insertChatMessage(msg);
 }
 
-void ChatForm::onCopyStatusMessage() {
+void FriendChatForm::onCopyStatusMessage() {
     qDebug() << __func__;
     //  QString text = f->getStatusMessage();
     //  QClipboard *clipboard = QApplication::clipboard();
@@ -298,7 +299,7 @@ void ChatForm::onCopyStatusMessage() {
     //  }
 }
 
-void ChatForm::setFriendTyping(bool typing) {
+void FriendChatForm::setFriendTyping(bool typing) {
     isTyping = typing;
     if (chatLog) chatLog->setTypingNotificationVisible(typing);
     //  QString typingDiv = "<div class=typing>%1</div>";
@@ -307,25 +308,25 @@ void ChatForm::setFriendTyping(bool typing) {
     //  text->setText(typingDiv.arg(tr("%1 is typing").arg(name)));
 }
 
-void ChatForm::show(ContentLayout* contentLayout) {
+void FriendChatForm::show(ContentLayout* contentLayout) {
     GenericChatForm::show(contentLayout);
 }
 
-void ChatForm::reloadTheme() {
+void FriendChatForm::reloadTheme() {
     auto s = Nexus::getProfile()->getSettings();
     chatLog->setTypingNotification(ChatMessage::createTypingNotification(s->getChatMessageFont()));
     GenericChatForm::reloadTheme();
 }
 
-void ChatForm::showEvent(QShowEvent* event) {
+void FriendChatForm::showEvent(QShowEvent* event) {
     //  GenericChatForm::showEvent(event);
 }
 
-void ChatForm::hideEvent(QHideEvent* event) {
+void FriendChatForm::hideEvent(QHideEvent* event) {
     //  GenericChatForm::hideEvent(event);
 }
 
-void ChatForm::retranslateUi() {
+void FriendChatForm::retranslateUi() {
     copyStatusAction->setText(tr("Copy"));
 }
 }  // namespace module::im

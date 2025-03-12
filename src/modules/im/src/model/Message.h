@@ -181,7 +181,7 @@ public:
 private:
     bool detectingMentions = false;
     ICoreIdHandler& idHandler;
-    const ContactId& f;
+    ContactId cid;
     const SharedParams& sharedParams;
 };
 }  // namespace module::im

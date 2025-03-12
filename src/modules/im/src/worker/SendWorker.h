@@ -20,30 +20,33 @@
 #include <src/model/chathistory.h>
 #include <src/model/chatroom/friendchatroom.h>
 #include <src/model/IMessageDispatcher.h>
-#include <src/widget/form/chatform.h>
+#include <src/widget/form/FriendChatForm.h>
 #include <QObject>
 #include "src/model/Message.h"
 
 namespace module::im {
+
 class SendWorker : public QObject {
     Q_OBJECT
 public:
-    explicit SendWorker(const FriendId& m_friend);
-    explicit SendWorker(const GroupId& m_group);
+    // explicit SendWorker(const FriendId& m_friend);
+    // explicit SendWorker(const GroupId& m_group);
+
+     explicit SendWorker(const ContactId& cid);
     ~SendWorker() override;
 
     void clearHistory();
 
-    static std::unique_ptr<SendWorker> forFriend(const FriendId& m_friend);
-    static std::unique_ptr<SendWorker> forGroup(const GroupId& m_group);
+    // static std::unique_ptr<SendWorker> forFriend(const FriendId& m_friend);
+    // static std::unique_ptr<SendWorker> forGroup(const GroupId& m_group);
 
     // ChatFormHeader* getHeader() const {
         // return headWidget.get();
     // }
 
-    GenericChatForm* getChatForm() const {
-        return chatForm.get();
-    };
+    // GenericChatForm* getChatForm() const {
+    //     return chatForm.get();
+    // };
 
     Chatroom* getChatroom() const {
         return chatRoom.get();
@@ -58,10 +61,8 @@ public:
     }
 
     IChatLog* getChatLog() const {
-        return chatHistory.get();
+        return chatLog.get();
     }
-
-
 
     const ContactId& getContactId() const {
         return contactId;
@@ -72,14 +73,13 @@ public:
     }
 
 private:
-    void initChatHeader(const ContactId& contactId);
 
     MessageProcessor::SharedParams sharedParams;
-
     std::unique_ptr<IMessageDispatcher> messageDispatcher;
     std::unique_ptr<ChatHistory> chatHistory;
+
     std::unique_ptr<SessionChatLog> chatLog;
-    std::unique_ptr<GenericChatForm> chatForm;
+
     std::unique_ptr<Chatroom> chatRoom;
     std::unique_ptr<ChatFormHeader> headWidget;
 

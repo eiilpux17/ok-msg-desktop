@@ -15,14 +15,18 @@
 //
 
 #include "ContentWidget.h"
+#include "contentdialogmanager.h"
 #include <QLabel>
 #include <QStyleFactory>
 #include "chatformheader.h"
 #include "contentlayout.h"
-#include "form/chatform.h"
+#include "form/FriendChatForm.h"
+#include "src/persistence/profile.h"
 #include "src/persistence/settings.h"
 #include "src/widget/form/groupchatform.h"
 #include "src/worker/SendWorker.h"
+#include <src/nexus.h>
+#include <src/model/chatroom/groupchatroom.h>
 
 namespace module::im {
 static constexpr int HEADER_MARIGN = 8;
@@ -40,8 +44,9 @@ ContentWidget::ContentWidget(SendWorker* sendWorker, QWidget* parent) : QWidget(
     mainHead->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
     // mainHead->layout()->setContentsMargins(HEADER_MARIGN, HEADER_MARIGN, HEADER_MARIGN, HEADER_MARIGN);
 
+    auto& cid = sendWorker->getContactId();
 
-    headWidget =  new ChatFormHeader(sendWorker->getContactId(), this);
+    headWidget =  new ChatFormHeader(cid, this);
     connect(headWidget, &ChatFormHeader::callTriggered, this,[this,sendWorker](){
         emit sendWorker->onCallTriggered();
     });
@@ -55,21 +60,32 @@ ContentWidget::ContentWidget(SendWorker* sendWorker, QWidget* parent) : QWidget(
     // 头部信息
     layout()->addWidget(mainHead);
 
-    // 分割条
-    seperator = new QWidget(this);
-    seperator->setObjectName("ContentSeperator");
-    seperator->setFixedHeight(SEPERATOR_WIDTH);
-    layout()->addWidget(seperator);
+
+    auto core = Core::getInstance();
+    auto profile = Nexus::getProfile();
+    auto history = profile->getHistory();
+    auto settings = profile->getSettings();
+
+    if(cid.getChatType() == lib::messenger::ChatType::Chat){
+        FriendId friendId = FriendId(cid);
+        chatroom = new FriendChatroom(&friendId, ContentDialogManager::getInstance(), this);
+        chatForm = new FriendChatForm(friendId, *sendWorker->getChatLog(), *sendWorker->dispacher(), this);
+    }else{
+        GroupId groupId = GroupId(cid);
+        chatroom = new GroupChatroom(&groupId, ContentDialogManager::getInstance(), this);
+        chatForm = new GroupChatForm(groupId, *sendWorker->getChatLog(), *sendWorker->dispacher(), *settings, this);
+    }
+
 
     // 主体内容区
     mainContent = new QWidget(this);
     mainContent->setLayout(new QVBoxLayout);
     mainContent->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     mainContent->layout()->setContentsMargins(CONTENT_MARIGN, 0, CONTENT_MARIGN, CONTENT_MARIGN);
-    mainContent->layout()->addWidget(sendWorker->getChatForm());
+    mainContent->layout()->addWidget(chatForm);
     layout()->addWidget(mainContent);
 
-       hide();
+    hide();
 }
 
 ContentWidget::~ContentWidget() {

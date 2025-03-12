@@ -20,12 +20,13 @@
 #include <QFrame>
 #include <QHBoxLayout>
 
-#include "src/widget/form/groupchatform.h"
 #include "src/worker/SendWorker.h"
 
 namespace module::im {
 class ContentLayout;
-class ChatForm;
+class GenericChatForm;
+class IMessageDispatcher;
+class ChatHistory;
 
 /**
  * 主业务面板（聊天区）
@@ -38,7 +39,10 @@ public:
 
     void showTo(ContentLayout*);
     void setChatForm(GenericChatForm*);
-
+    GenericChatForm* getChatForm()const{
+        return chatForm;
+    }
+protected:
     virtual void showEvent(QShowEvent* event) override;
     virtual void hideEvent(QHideEvent* event) override;
 
@@ -47,8 +51,11 @@ private:
 
     QWidget* mainHead;
     ChatFormHeader* headWidget;
-    QWidget* seperator;
     QWidget* mainContent;
+    GenericChatForm* chatForm;
+
+    Chatroom *chatroom;
+
 };
 }  // namespace module::im
 #endif  // OKMSG_PROJECT_CONTENTWIDGET_H

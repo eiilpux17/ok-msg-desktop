@@ -31,7 +31,7 @@ class MaskablePixmapWidget;
 namespace module::im {
 class FriendChatroom;
 class CircleWidget;
-class ChatForm;
+class FriendChatForm;
 class ChatHistory;
 class ContentDialog;
 class ContentLayout;

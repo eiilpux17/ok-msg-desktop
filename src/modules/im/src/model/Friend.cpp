@@ -14,6 +14,7 @@
 #include "src/model/Status.h"
 
 #include <src/core/core.h>
+#include <src/core/coreav.h>
 
 namespace module::im {
 
@@ -73,4 +74,17 @@ void Friend::setStatus(Status s) {
 Status Friend::getStatus() const {
     return friendStatus;
 }
+
+bool Friend::startCall(bool video)
+{
+    auto av = CoreAV::getInstance();
+    if (av->isCallStarted(id)) {
+        av->cancelCall(id);
+        return false;
+    }
+
+    return av->createCall(id, false);
+}
+
+
 }  // namespace module::im

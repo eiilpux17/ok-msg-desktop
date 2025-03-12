@@ -164,6 +164,10 @@ void Nexus::start(std::shared_ptr<lib::session::AuthSession> session) {
             stopNotification();
         });
 
+        connect(av, &CoreAV::avAccept, this, [&](const ContactId& cid){
+            stopNotification();
+        });
+
         connect(av, &CoreAV::avReject, this, [&](const ContactId& cid){
             stopNotification();
         });

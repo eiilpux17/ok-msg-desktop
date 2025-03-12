@@ -10,8 +10,8 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#ifndef CHATFORM_H
-#define CHATFORM_H
+#ifndef FRIENDCHATFORM_H
+#define FRIENDCHATFORM_H
 
 #include <QElapsedTimer>
 #include <QLabel>
@@ -44,16 +44,16 @@ class History;
 class OfflineMsgEngine;
 
 /**
- * 聊天框
- * @brief The ChatForm class
+ * 朋友聊天框
+ * @brief The FriendChatForm class
  */
-class ChatForm : public GenericChatForm {
+class FriendChatForm : public GenericChatForm {
     Q_OBJECT
 public:
     static const QString ACTION_PREFIX;
 
-    ChatForm(const FriendId* contact, IChatLog& chatLog, IMessageDispatcher& messageDispatcher);
-    ~ChatForm();
+    FriendChatForm(const FriendId& contact, IChatLog& chatLog, IMessageDispatcher& messageDispatcher, QWidget* parent=nullptr);
+    ~FriendChatForm() override;
 
     void setStatusMessage(const QString& newMessage);
 
@@ -61,7 +61,7 @@ public:
 
     virtual void show(ContentLayout* contentLayout) final override;
 
-    virtual void reloadTheme() final override;
+    void reloadTheme() final ;
 
     void insertChatMessage(IChatItem::Ptr msg) final override;
 
@@ -109,11 +109,11 @@ private:
     void retranslateUi();
     void showOutgoingCall(bool video);
 
-    const FriendId* f;
+    FriendId f;
     lib::ui::CroppingLabel* statusMessageLabel;
     QMenu statusMessageMenu;
 
     QAction* copyStatusAction;
 };
 }  // namespace module::im
-#endif  // CHATFORM_H
+#endif  // FRIENDCHATFORM_H

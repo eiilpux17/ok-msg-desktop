@@ -28,7 +28,7 @@
 #include "ContactListWidget.h"
 #include "base/MessageBox.h"
 #include "contentdialogmanager.h"
-#include "form/chatform.h"
+#include "form/FriendChatForm.h"
 #include "lib/ui/gui.h"
 #include "lib/ui/widget/tools/CroppingLabel.h"
 #include "src/core/core.h"
@@ -44,7 +44,7 @@
 #include "src/persistence/settings.h"
 #include "src/widget/form/GroupCreateForm.h"
 #include "src/widget/form/aboutfriendform.h"
-#include "src/widget/form/chatform.h"
+#include "src/widget/form/FriendChatForm.h"
 #include "src/widget/widget.h"
 
 namespace module::im {
@@ -91,9 +91,6 @@ FriendWidget::FriendWidget(Friend* f, QWidget* parent)
             //    sendWorker->onAvatarChanged(friendPk, avatar);
             //    setAvatar(avatar);
             //  }
-
-
-
 }
 
 FriendWidget::~FriendWidget() {
@@ -601,8 +598,8 @@ void FriendWidget::doMuteMicrophone(bool mute) {
     auto fId = contactId.getId();
     qDebug() << __func__ << fId;
     auto av = CoreAV::getInstance();
-    if (av->isCallStarted(&contactId)) {
-        av->muteCallOutput(&contactId, mute);
+    if (av->isCallStarted(contactId)) {
+        av->muteCallOutput(contactId, mute);
     }
 }
 
@@ -610,17 +607,17 @@ void FriendWidget::doSilenceSpeaker(bool mute) {
     auto fId = contactId.getId();
     qDebug() << __func__ << fId;
     auto av = CoreAV::getInstance();
-    if (av->isCallStarted(&contactId)) {
-        av->muteCallSpeaker(&contactId, mute);
+    if (av->isCallStarted(contactId)) {
+        av->muteCallSpeaker(contactId, mute);
     }
 }
 
 void FriendWidget::endCall() {
-    auto fId = contactId.getId();
-    qDebug() << __func__ << fId;
+
+    qDebug() << __func__ << contactId;
     auto av = CoreAV::getInstance();
-    if (av->isCallStarted(&contactId)) {
-        av->cancelCall(fId);
+    if (av->isCallStarted(contactId)) {
+        av->cancelCall(contactId);
     }
 }
 
@@ -652,15 +649,16 @@ void FriendWidget::doRejectCall(const PeerId& p) {
  * 执行呼叫
  */
 void FriendWidget::doCall() {
-    auto cId = contactId.getId();
-    qDebug() << __func__ << cId;
+
+    qDebug() << __func__ << contactId;
+
     auto av = CoreAV::getInstance();
-    if (av->isCallStarted(&contactId)) {
-        av->cancelCall(cId);
+    if (av->isCallStarted(contactId)) {
+        av->cancelCall(contactId);
         return;
     }
 
-    auto started = av->startCall(cId, false);
+    auto started = av->createCall(contactId, false);
     if (!started) {
         // 返回失败对方可能不在线，免费版本不支持离线呼叫！
         lib::ui::GUI::showWarning(tr("The feature unsupported in the open-source version"),
@@ -674,16 +672,17 @@ void FriendWidget::doCall() {
 }
 
 void FriendWidget::doVideoCall() {
-    QString cId = contactId.getId();
-    qDebug() << __func__ << cId;
+
+    qDebug() << __func__ << contactId;
+
     auto av = CoreAV::getInstance();
-    if (av->isCallStarted(&contactId)) {
-        if (av->isCallVideoEnabled(&contactId)) {
-            av->cancelCall(cId);
+    if (av->isCallStarted(contactId)) {
+        if (av->isCallVideoEnabled(contactId)) {
+            av->cancelCall(contactId);
         }
     }
 
-    auto started = av->startCall(cId, true);
+    auto started = av->createCall(contactId, true);
     if (!started) {
         // 返回失败对方可能不在线，免费版本不支持离线呼叫！
         lib::ui::GUI::showWarning(tr("The feature unsupported in the open-source version"),

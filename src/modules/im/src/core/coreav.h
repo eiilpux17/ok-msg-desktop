@@ -53,35 +53,35 @@ public:
 
     void start();
 
-    bool isCallStarted(const ContactId* f) const;
-    bool isCallActive(const ContactId* f) const;
-    bool isCallVideoEnabled(const ContactId* f) const;
+    bool isCallStarted(const ContactId& f) const;
+    bool isCallActive(const ContactId& f) const;
+    bool isCallVideoEnabled(const ContactId& f) const;
     bool sendCallAudio(QString friendId, const int16_t* pcm, size_t samples, uint8_t chans,
                        uint32_t rate) const;
     void sendCallVideo(QString friendId, std::shared_ptr<lib::video::VideoFrame> frame);
     bool sendGroupCallAudio(QString groupNum, const int16_t* pcm, size_t samples, uint8_t chans,
                             uint32_t rate) const;
 
-    Call* getCall(const QString& friendId);
+    Call* getCall(const ContactId& cid);
 
     CoreVideoSource* getSelfVideoSource() {
         return selfVideoSource.get();
     }
 
-    lib::video::VideoSource* getVideoSourceFromCall(QString callNumber) const;
+    lib::video::VideoSource* getVideoSourceFromCall(const ContactId& f) const;
     void sendNoVideo();
 
     void joinGroupCall(const Group& group);
     void leaveGroupCall(QString groupNum);
-    void muteCallSpeaker(const ContactId* g, bool mute);
-    void muteCallOutput(const ContactId* g, bool mute);
+    void muteCallSpeaker(const ContactId& cid, bool mute);
+    void muteCallOutput(const ContactId& cid, bool mute);
     bool isGroupCallInputMuted(const Group* g) const;
     bool isGroupCallOutputMuted(const Group* g) const;
 
-    bool isCallInputMuted(const ContactId* f) const;
-    bool isCallOutputMuted(const ContactId* f) const;
-    void toggleMuteCallInput(const ContactId* f);
-    void toggleMuteCallOutput(const ContactId* f);
+    bool isCallInputMuted(const ContactId& cid) const;
+    bool isCallOutputMuted(const ContactId& cid) const;
+    void toggleMuteCallInput(const ContactId& cid);
+    void toggleMuteCallOutput(const ContactId& cid);
     static void groupCallCallback(void* tox, QString group, QString peer, const int16_t* data,
                                   unsigned samples, uint8_t channels, uint32_t sample_rate,
                                   void* core);
@@ -134,7 +134,7 @@ private:
 
     void process();
 
-    void audioFrameCallback(QString friendId, const int16_t* pcm, size_t sampleCount,
+    void audioFrameCallback(const ContactId& cid, const int16_t* pcm, size_t sampleCount,
                             uint8_t channels, uint32_t samplingRate, void* self);
 
     void videoFramePush(CoreVideoSource* vs, std::unique_ptr<lib::video::vpx_image> frame);
@@ -151,20 +151,10 @@ private:
 
     std::unique_ptr<CoreVideoSource> selfVideoSource;
 
-    /**
-     * @brief Maps friend IDs to ToxFriendCall.
-     * @note Need to use STL container here, because Qt containers need a copy
-     * constructor.
-     */
     using ToxFriendCallPtr = std::unique_ptr<ToxFriendCall>;
-    std::map<QString, ToxFriendCallPtr> calls;
+    std::map<ContactId, ToxFriendCallPtr> calls;
 
     using ToxGroupCallPtr = std::unique_ptr<ToxGroupCall>;
-    /**
-     * @brief Maps group IDs to ToxGroupCalls.
-     * @note Need to use STL container here, because Qt containers need a copy
-     * constructor.
-     */
     std::map<QString, ToxGroupCallPtr> groupCalls;
 
     // protect 'calls' and 'groupCalls'
@@ -179,23 +169,25 @@ signals:
     void avInvite(const PeerId& pid, bool video);
     void avStart(const ContactId& cid, bool video);
     void avEnd(const PeerId& pid,const ContactId& ender);
+
+    void avAccept(const ContactId& cid);
     void avReject(const ContactId& cid);
     void avCancel(const ContactId& cid);
     void avRetract(const ContactId& cid);
 
 public slots:
-    bool startCall(QString friendId, bool video);
+    bool createCall(const ContactId& cid, bool video);
     bool answerCall(PeerId peerId, bool video);
-    bool cancelCall(const QString& friendId);
+    bool cancelCall(const ContactId& cid);
     void rejectOrCancelCall(const PeerId& fid);
-    void timeoutCall(QString friendId);
+    void timeoutCall(const ContactId& cid);
 
 
 private slots:
     void doCreateCallToPeerId(const lib::messenger::IMPeerId& friendId, const QString& callId,
                               bool video);
 
-    void stateCallback(QString friendId, lib::messenger::CallState state);
+    void stateCallback(const ContactId& cid, lib::messenger::CallState state);
 
     void bitrateCallback(QString friendId, uint32_t arate, uint32_t vrate, void* self);
     void audioBitrateCallback(QString friendId, uint32_t rate, void* self);

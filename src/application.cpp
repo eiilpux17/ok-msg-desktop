@@ -143,7 +143,7 @@ Application::Application(int& argc, char* argv[]) : QApplication(argc, argv) {
             });
 
     // 样式
-    auto css = lib::settings::Style::getStylesheetFile("application.css");
+    auto css = lib::settings::Style::getStylesheet("application.css");
     qDebug() << css;
     setStyleSheet(css);
 

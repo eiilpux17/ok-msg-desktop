@@ -46,7 +46,7 @@ public:
     void clearOutgoingMessages() override;
 
 private:
-    const GroupId& groupId;
+    GroupId groupId;
     MessageProcessor processor;
     ICoreIdHandler& idHandler;
     ICoreGroupMessageSender& messageSender;

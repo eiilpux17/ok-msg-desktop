@@ -26,8 +26,8 @@
 #include "src/persistence/settings.h"
 namespace module::im {
 
-GroupChatroom::GroupChatroom(const GroupId* groupId_, IDialogsManager* dialogsManager)
-        : groupId{groupId_}, dialogsManager{dialogsManager}, mProfile{nullptr} {
+GroupChatroom::GroupChatroom(const GroupId* groupId_, IDialogsManager* dialogsManager,QObject* parent)
+        : Chatroom(parent),groupId{groupId_}, dialogsManager{dialogsManager}, mProfile{nullptr} {
     connect(ok::Application::Instance()->bus(), &ok::Bus::profileChanged, this,
             [&](Profile* profile) { mProfile = profile; });
 }

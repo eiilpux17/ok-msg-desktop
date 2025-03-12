@@ -38,6 +38,7 @@
 #include "src/persistence/profile.h"
 #include "src/nexus.h"
 #include "widget.h"
+#include "lib/ui/gui.h"
 
 namespace module::im {
 
@@ -45,7 +46,7 @@ static const short HEAD_LAYOUT_SPACING = 5;
 static const short MIC_BUTTONS_LAYOUT_SPACING = 4;
 static const short BUTTONS_LAYOUT_HOR_SPACING = 4;
 
-const QString STYLE_PATH = QStringLiteral("chatForm/buttons.css");
+const QString STYLE_PATH = QStringLiteral("callButtons.css");
 
 const QString STATE_NAME[] = {
         QString{},
@@ -165,8 +166,22 @@ ChatFormHeader::ChatFormHeader(const ContactId& contactId, QWidget* parent)
 
     // 控制按钮
     callButton = createButton("callButton", this, &ChatFormHeader::callTriggered);
+    connect(this, &ChatFormHeader::callTriggered, this, [&, profile](){
+        auto f = Core::getInstance()->getFriend(contactId);
+        if(f.has_value()){
+            auto started = f.value()->startCall(false);
+            if (!started) {
+                // 返回失败对方可能不在线，免费版本不支持离线呼叫！
+                lib::ui::GUI::showWarning(tr("The feature unsupported in the open-source version"),
+                                          tr("The call cannot be made due participant is offline!"));
+                return ;
+            }
+        }
+    });
+
+
     videoButton = createButton("videoButton", this, &ChatFormHeader::videoCallTriggered);
-    QHBoxLayout* buttonsLayout = new QHBoxLayout(this);
+    buttonsLayout = new QHBoxLayout(this);
     buttonsLayout->addWidget(callButton);
     buttonsLayout->addWidget(videoButton);
     buttonsLayout->setSpacing(BUTTONS_LAYOUT_HOR_SPACING);
@@ -237,8 +252,7 @@ void ChatFormHeader::setContact(const Contact* contact_) {
         return;
     }
 
-    connect(contact_, &Contact::displayedNameChanged, this,
-            &ChatFormHeader::onDisplayedNameChanged);
+    connect(contact_, &Contact::displayedNameChanged, this, &ChatFormHeader::onDisplayedNameChanged);
     connect(contact_, &Contact::avatarChanged, this, &ChatFormHeader::setAvatar);
 
     setName(contact_->getDisplayedName());
@@ -335,8 +349,8 @@ void ChatFormHeader::showOutgoingCall(bool video) {
 
 void ChatFormHeader::updateMuteVolButton() {
     const CoreAV* av = CoreAV::getInstance();
-    bool active = av->isCallActive(&contactId);
-    bool outputMuted = av->isCallOutputMuted(&contactId);
+    bool active = av->isCallActive(contactId);
+    bool outputMuted = av->isCallOutputMuted(contactId);
     updateMuteVolButton(active, outputMuted);
     //  if (netcam) {
     //    netcam->updateMuteVolButton(outputMuted);
@@ -345,8 +359,8 @@ void ChatFormHeader::updateMuteVolButton() {
 
 void ChatFormHeader::updateMuteMicButton() {
     const CoreAV* av = CoreAV::getInstance();
-    bool active = av->isCallActive(&contactId);
-    bool inputMuted = av->isCallInputMuted(&contactId);
+    bool active = av->isCallActive(contactId);
+    bool inputMuted = av->isCallInputMuted(contactId);
     updateMuteMicButton(active, inputMuted);
     //  if (netcam) {
     //    netcam->updateMuteMicButton(inputMuted);
@@ -395,8 +409,8 @@ void ChatFormHeader::updateCallButtons() {
 void ChatFormHeader::updateCallButtons(Status status) {
     //    qDebug() << __func__ << (int)status;
     CoreAV* av = CoreAV::getInstance();
-    const bool audio = av->isCallActive(&contactId);
-    const bool video = av->isCallVideoEnabled(&contactId);
+    const bool audio = av->isCallActive(contactId);
+    const bool video = av->isCallVideoEnabled(contactId);
     const bool online = isOnline(status);
 
     updateCallButtons(online, audio, video);

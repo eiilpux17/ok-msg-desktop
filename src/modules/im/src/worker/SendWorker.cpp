@@ -27,58 +27,34 @@
 #include "src/persistence/profile.h"
 
 namespace module::im {
-SendWorker::SendWorker(const FriendId& friendId) : contactId{friendId} {
-    qDebug() << __func__ << "friend:" << friendId.toString();
+
+SendWorker::SendWorker(const ContactId& cid) : contactId{cid} {
+    qDebug() << __func__ << "ContactId:" << cid.toString();
 
     auto core = Core::getInstance();
-    auto settings = Nexus::getProfile()->getSettings();
     auto profile = Nexus::getProfile();
     auto history = profile->getHistory();
+    auto settings = profile->getSettings();
 
-    // initChatHeader(friendId);
+    if(cid.getChatType() == lib::messenger::ChatType::Chat){
+        messageDispatcher = std::make_unique<FriendMessageDispatcher>(FriendId(cid), sharedParams, *core, *core);
+    }else{
+        messageDispatcher = std::make_unique<GroupMessageDispatcher>(GroupId(cid), sharedParams, *core, *core,*settings);
+    }
 
-    messageDispatcher =
-            std::make_unique<FriendMessageDispatcher>(friendId, sharedParams, *core, *core);
-
-    chatHistory = std::make_unique<ChatHistory>(friendId, history, *core, *settings,
-                                                *messageDispatcher.get());
-
-    chatForm = std::make_unique<ChatForm>(&friendId, *chatHistory.get(), *messageDispatcher.get());
-
-    chatRoom = std::make_unique<FriendChatroom>(&friendId, ContentDialogManager::getInstance());
-
-    // createCallDuration(true);
-}
-
-SendWorker::SendWorker(const GroupId& groupId) : contactId{groupId} {
-    qDebug() << __func__ << "group:" << groupId.toString();
-
-    auto profile = Nexus::getProfile();
-    auto core = Core::getInstance();
-    auto settings = Nexus::getProfile()->getSettings();
-    auto history = profile->getHistory();
-
-    initChatHeader(groupId);
-
-    messageDispatcher = std::make_unique<GroupMessageDispatcher>(groupId, sharedParams, *core,
-                                                                 *core, *settings);
-
-    chatHistory = std::make_unique<ChatHistory>(groupId, history, *core, *settings,
-                                                *messageDispatcher.get());
+    chatHistory = std::make_unique<ChatHistory>(cid, history, *core, *settings, *messageDispatcher);
 
     chatLog = std::make_unique<SessionChatLog>(*core);
+
+
     connect(messageDispatcher.get(), &IMessageDispatcher::messageSent, chatLog.get(),
             &SessionChatLog::onMessageSent);
     connect(messageDispatcher.get(), &IMessageDispatcher::messageComplete, chatLog.get(),
             &SessionChatLog::onMessageComplete);
     connect(messageDispatcher.get(), &IMessageDispatcher::messageReceived, chatLog.get(),
             &SessionChatLog::onMessageReceived);
-
-    chatForm = std::make_unique<GroupChatForm>(&groupId, *chatLog.get(), *messageDispatcher.get(),
-                                               *settings);
-
-    chatRoom = std::make_unique<GroupChatroom>(&groupId, ContentDialogManager::getInstance());
 }
+
 
 SendWorker::~SendWorker() {
     qDebug() << __func__;
@@ -93,18 +69,6 @@ void SendWorker::clearHistory() {
     history->removeFriendHistory(contactId.toString());
 
     //TODO 存储
-}
-
-std::unique_ptr<SendWorker> SendWorker::forFriend(const FriendId& friend_) {
-    return std::make_unique<SendWorker>(friend_);
-}
-
-std::unique_ptr<SendWorker> SendWorker::forGroup(const GroupId& group) {
-    return std::make_unique<SendWorker>(group);
-}
-
-void SendWorker::initChatHeader(const ContactId& contactId) {
-
 }
 
 

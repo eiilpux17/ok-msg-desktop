@@ -15,14 +15,13 @@
 
 #include <QWidget>
 
-#include <memory>
-
 #include "lib/ui/widget/tools/RoundedPixmapLabel.h"
 #include "src/model/FriendId.h"
 #include "src/model/ContactId.h"
 #include "src/model/Status.h"
 
 class QVBoxLayout;
+class QHBoxLayout;
 class QPushButton;
 class QToolButton;
 class QLabel;
@@ -114,9 +113,10 @@ private:
     ContactId contactId;
     const Contact* contact = nullptr;
 
-    QVBoxLayout* headTextLayout;
     Mode mode;
+    QVBoxLayout* headTextLayout;
     // lib::ui::MaskablePixmapWidget* avatar;
+    QHBoxLayout* buttonsLayout;
     lib::ui::RoundedPixmapLabel* avatar;
     lib::ui::CroppingLabel* nameLabel;
     QLabel* statusLabel = nullptr;

@@ -147,22 +147,6 @@ QMap<Style::ColorPalette, QString> Style::aliasColors = {{ColorPalette::Transfer
 std::map<std::pair<const QString, const QFont>, const QString> Style::stylesheetsCache;
 
 const QString Style::getStylesheet(const QString& filename, const QFont& baseFont) {
-    QString folder = QDir::isAbsolutePath(filename) ? QString() : getThemeFolder();
-    const QString fullPath = folder + filename;
-    //    qDebug() << "theme:" << fullPath;
-    const std::pair<const QString, const QFont> cacheKey(fullPath, baseFont);
-    auto it = stylesheetsCache.find(cacheKey);
-    if (it != stylesheetsCache.end()) {
-        // cache hit
-        return it->second;
-    }
-    // cache miss, new styleSheet, read it from file and add to cache
-    const QString newStylesheet = resolve(filename, baseFont);
-    stylesheetsCache.insert(std::make_pair(cacheKey, newStylesheet));
-    return newStylesheet;
-}
-
-const QString Style::getStylesheetFile(const QString& filename, const QFont& baseFont) {
     QString folder = ":styles/";
     const QString fullPath = folder + filename;
     //    qDebug() << "theme:" << fullPath;

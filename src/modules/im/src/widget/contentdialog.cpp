@@ -34,7 +34,7 @@
 #include "src/persistence/settings.h"
 #include "src/widget/ContactListLayout.h"
 #include "src/widget/contentlayout.h"
-#include "src/widget/form/chatform.h"
+#include "src/widget/form/FriendChatForm.h"
 #include "src/widget/friendwidget.h"
 #include "src/widget/groupwidget.h"
 #include "src/widget/widget.h"

@@ -130,7 +130,7 @@ void CallConfirmWidget::paintEvent(QPaintEvent*) {
 }
 
 void CallConfirmWidget::showEvent(QShowEvent*) {
-    auto call = CoreAV::getInstance()->getCall(from.toString());
+    auto call = CoreAV::getInstance()->getCall(from);
     if (!call) {
         return;
     }

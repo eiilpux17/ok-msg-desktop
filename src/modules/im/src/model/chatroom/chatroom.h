@@ -22,8 +22,8 @@ class Chatroom : public QObject {
     Q_OBJECT
 public:
     virtual const ContactId& getContactId() = 0;
-    Chatroom();
-    ~Chatroom();
+    explicit Chatroom(QObject* parent=nullptr);
+    ~Chatroom() override;
     void setActive(bool _active);
 
 signals:

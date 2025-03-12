@@ -77,14 +77,6 @@ QByteArray ContactId::getByteArray() const {
     return toString().toUtf8();
 }
 
-/**
- * @brief Checks if the ContactId contains a id.
- * @return True if there is a id, False otherwise.
- */
-bool ContactId::isValid() const {
-    return !username.isEmpty() && !server.isEmpty();
-}
-
 QDebug& operator<<(QDebug& debug, const ContactId& f) {
     QDebugStateSaver saver(debug);
     debug.nospace() << f.toString();

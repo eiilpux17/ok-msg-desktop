@@ -16,7 +16,7 @@
 #include "chatroom.h"
 namespace module::im {
 
-Chatroom::Chatroom() {}
+Chatroom::Chatroom(QObject* parent): QObject(parent) {}
 
 Chatroom::~Chatroom() {}
 

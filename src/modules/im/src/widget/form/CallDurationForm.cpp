@@ -141,12 +141,12 @@ GenericNetCamView* CallDurationForm::createNetcam() {
         return nullptr;
     }
 
-    auto fId = FriendId(contact->getIdAsString());
+    auto& fId = contact->getId();
 
-    auto view = new NetCamView(fId, this);
+    auto view = new NetCamView(FriendId(fId.getId()), this);
     CoreAV* av = CoreAV::getInstance();
 
-    lib::video::VideoSource* source = av->getVideoSourceFromCall(fId.getId());
+    lib::video::VideoSource* source = av->getVideoSourceFromCall(fId);
     view->show(source, contact->getDisplayedName());
 
     //  connect(view, &GenericNetCamView::videoCallEnd, this,

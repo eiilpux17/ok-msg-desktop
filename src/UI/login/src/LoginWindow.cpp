@@ -35,7 +35,7 @@ LoginWindow::LoginWindow(std::shared_ptr<lib::session::AuthSession> session, boo
     setFixedSize(QSize(874, 520));
 
     // 样式
-    // auto css = lib::settings::Style::getStylesheetFile("application.css");
+    // auto css = lib::settings::Style::getStylesheet("application.css");
     // qDebug() << css;
     // setStyleSheet(css);
 
@@ -49,7 +49,7 @@ LoginWindow::LoginWindow(std::shared_ptr<lib::session::AuthSession> session, boo
 
 
     // 设置样式
-    auto qss = lib::settings::Style::getStylesheetFile("login.css");
+    auto qss = lib::settings::Style::getStylesheet("login.css");
     setStyleSheet(qss);
 }
 

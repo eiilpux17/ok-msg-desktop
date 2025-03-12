@@ -12,7 +12,7 @@
 
 #include "chathistory.h"
 #include "src/persistence/settings.h"
-#include "src/widget/form/chatform.h"
+#include "src/widget/form/FriendChatForm.h"
 
 namespace module::im {
 
@@ -53,9 +53,9 @@ bool handleActionPrefix(QString& content) {
     // inserting and parsing for ACTION_PREFIX in our messages even
     // though we have the ability to something more intelligent now
     // that we aren't owned by chatform logic
-    auto isAction = content.startsWith(ChatForm::ACTION_PREFIX, Qt::CaseInsensitive);
+    auto isAction = content.startsWith(FriendChatForm::ACTION_PREFIX, Qt::CaseInsensitive);
     if (isAction) {
-        content.remove(0, ChatForm::ACTION_PREFIX.size());
+        content.remove(0, FriendChatForm::ACTION_PREFIX.size());
     }
 
     return isAction;
@@ -290,7 +290,7 @@ void ChatHistory::onMessageReceived(const FriendId& sender, const Message& messa
         //        auto displayName = f.getDisplayedName();
         auto content = message.content;
         if (message.isAction) {
-            content = ChatForm::ACTION_PREFIX + content;
+            content = FriendChatForm::ACTION_PREFIX + content;
         }
         history->addNewMessage(message, HistMessageContentType::message, true);
     }
@@ -305,7 +305,7 @@ void ChatHistory::onMessageSent(DispatchedMessageId id, const Message& message) 
 
         auto content = message.content;
         if (message.isAction) {
-            content = ChatForm::ACTION_PREFIX + content;
+            content = FriendChatForm::ACTION_PREFIX + content;
         }
 
         auto username = coreIdHandler.getUsername();

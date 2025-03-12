@@ -48,7 +48,7 @@ private slots:
     void onFriendOnlineOfflineChanged(bool isOnline);
 
 private:
-    const FriendId& f;
+    FriendId fid;
     DispatchedMessageId nextMessageId = DispatchedMessageId(0);
 
     ICoreFriendMessageSender& messageSender;

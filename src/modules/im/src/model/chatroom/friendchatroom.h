@@ -39,7 +39,7 @@ struct CircleToDisplay {
 class FriendChatroom : public Chatroom {
     Q_OBJECT
 public:
-    FriendChatroom(const FriendId* frnd, IDialogsManager* dialogsManager);
+    FriendChatroom(const FriendId* frnd, IDialogsManager* dialogsManager, QObject* parent=nullptr);
     ~FriendChatroom() override;
 
     virtual const ContactId& getContactId() override;

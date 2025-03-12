@@ -28,7 +28,7 @@
 #include "src/persistence/settings.h"
 #include "src/widget/contentlayout.h"
 #include "src/widget/form/aboutfriendform.h"
-#include "src/widget/form/chatform.h"
+#include "src/widget/form/FriendChatForm.h"
 #include "src/widget/tool/callconfirmwidget.h"
 #include "src/widget/widget.h"
 
@@ -47,7 +47,7 @@
 
 #include <cassert>
 
-#include "form/chatform.h"
+#include "form/FriendChatForm.h"
 #include "lib/ui/gui.h"
 #include "src/chatlog/chatlog.h"
 #include "src/core/coreav.h"
@@ -81,10 +81,10 @@ MessageSessionWidget::MessageSessionWidget(ContentLayout* layout, const ContactI
     if (chatType == lib::messenger::ChatType::Chat) {
         friendId = FriendId(contactId);
 
-        sendWorker = std::move(SendWorker::forFriend(friendId));
+        sendWorker = std::make_unique<SendWorker>(friendId);
         connect(sendWorker->dispacher(), &IMessageDispatcher::messageSent, this,
                 &MessageSessionWidget::onMessageSent);
-
+        contentWidget = std::make_unique<ContentWidget>(sendWorker.get(), this);
 
         auto f = core->getFriend(friendId);
         if(f.has_value())
@@ -95,10 +95,12 @@ MessageSessionWidget::MessageSessionWidget(ContentLayout* layout, const ContactI
         groupId = GroupId(contactId);
         groupId.nick = nick;
 
-        sendWorker = std::move(SendWorker::forGroup(groupId));
+        sendWorker = std::make_unique<SendWorker>(groupId);
 
         connect(sendWorker->dispacher(), &IMessageDispatcher::messageSent, this,
                 &MessageSessionWidget::onMessageSent);
+
+        contentWidget = std::make_unique<ContentWidget>(sendWorker.get(), this);
 
         auto& gl = core->getGroupList();
         auto* g = gl.findGroup(groupId);
@@ -106,11 +108,9 @@ MessageSessionWidget::MessageSessionWidget(ContentLayout* layout, const ContactI
         core->requestRoomInfo(contactId.toString());
     }
 
-    contentWidget = std::make_unique<ContentWidget>(sendWorker.get(), this);
 
 
-
-    auto chatForm = sendWorker->getChatForm();
+    auto chatForm = contentWidget->getChatForm();
     connect(chatForm->getChatLog(), &ChatLog::readAll, this, [&]() {
         if (contentWidget->isVisible()) {
             // 已经阅读完消息，信号灯还原
@@ -162,14 +162,14 @@ void MessageSessionWidget::showEvent(QShowEvent* e) {
         if (group.has_value()) {
             setContact(*group.value());
 
-            sendWorker->getChatForm()->setContact(contact);
+            contentWidget->getChatForm()->setContact(contact);
             core->requestRoomInfo(contactId.toString());
         }
     } else {
         auto f = core->getFriend(contactId);
         if (f.has_value()) {
             setContact(*f.value());
-            sendWorker->getChatForm()->setContact(contact);
+            contentWidget->getChatForm()->setContact(contact);
         }
 
         updateStatusLight(core->getFriendStatus(contactId.toString()), false);
@@ -395,15 +395,15 @@ void MessageSessionWidget::setFriend(const Friend* f) {
 
     setContact(*f);
 
-    sendWorker->getChatForm()->setContact(f);
-    // sendWorker->getHeader()->setContact(f);
+    contentWidget->getChatForm()->setContact(f);
+
 }
 
 void MessageSessionWidget::removeFriend() {
     removeContact();
 
-    sendWorker->getChatForm()->removeContact();
-    // sendWorker->getHeader()->removeContact();
+    contentWidget->getChatForm()->removeContact();
+
 }
 
 
@@ -418,11 +418,11 @@ void MessageSessionWidget::setGroup(const Group* g) {
 
     setContact(*g);
 
-    sendWorker->getChatForm()->setContact(g);
+    contentWidget->getChatForm()->setContact(g);
 }
 
 void MessageSessionWidget::removeGroup() {
-    sendWorker->getChatForm()->removeContact();
+    contentWidget->getChatForm()->removeContact();
 }
 
 void MessageSessionWidget::clearReceipts() {
@@ -649,8 +649,8 @@ void MessageSessionWidget::setStatusMsg(const QString& msg) {
 
 void MessageSessionWidget::setTyping(bool typing) {
     qDebug() << __func__ << typing;
-    auto chatForm = (ChatForm*)sendWorker->getChatForm();
-    if (chatForm) chatForm->setFriendTyping(typing);
+    auto chatForm = contentWidget->getChatForm();
+    if (chatForm) chatForm->setFriendTyping(typing, "");
 }
 
 void MessageSessionWidget::setName(const QString& name) {

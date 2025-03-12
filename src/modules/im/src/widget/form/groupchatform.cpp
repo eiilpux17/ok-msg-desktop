@@ -29,7 +29,7 @@
 #include "src/model/GroupId.h"
 #include "src/persistence/igroupsettings.h"
 #include "src/widget/chatformheader.h"
-#include "src/widget/form/chatform.h"
+#include "src/widget/form/FriendChatForm.h"
 #include "src/nexus.h"
 #include "src/application.h"
 
@@ -69,9 +69,9 @@ QString editName(const QString& name) {
  */
 namespace module::im {
 
-GroupChatForm::GroupChatForm(const GroupId* chatGroup, IChatLog& chatLog,
-                             IMessageDispatcher& messageDispatcher, IGroupSettings& _settings)
-        : GenericChatForm(chatGroup, chatLog, messageDispatcher)
+GroupChatForm::GroupChatForm(const GroupId& chatGroup, IChatLog& chatLog,
+                             IMessageDispatcher& messageDispatcher, IGroupSettings& _settings, QWidget *parent)
+        : GenericChatForm(chatGroup, chatLog, messageDispatcher, parent)
         , group(chatGroup)
         , inCall(false)
         , settings(_settings) {

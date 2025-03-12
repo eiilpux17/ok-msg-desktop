@@ -41,7 +41,7 @@ FriendMessageDispatcher::FriendMessageDispatcher(const FriendId& f_,
                                                  const MessageProcessor::SharedParams& p,
                                                  ICoreIdHandler& idHandler_,
                                                  ICoreFriendMessageSender& messageSender_)
-        : f(f_)
+        : fid(f_)
         , messageSender(messageSender_)
         , offlineMsgEngine(&f_, &messageSender_)
         , processor(MessageProcessor(idHandler_, f_, p)) {
@@ -78,7 +78,7 @@ std::optional<std::pair<DispatchedMessageId, MsgId>> FriendMessageDispatcher::se
 
         emit messageSent(dispatcherId, message);
 
-        bool messageSent = sendMessageToCore(messageSender, f, message, message.id, encrypt);
+        bool messageSent = sendMessageToCore(messageSender, fid, message, message.id, encrypt);
         qDebug() << "sendMessage=>" << messageSent
                  << QString("{msgId:%1, dispatcherId:%2}").arg(message.id).arg(dispatcherId.get());
 
@@ -133,12 +133,12 @@ void FriendMessageDispatcher::clearOutgoingMessages() {
 }
 
 void FriendMessageDispatcher::onFileReceived(const File& file) {
-    const auto& friendId = FriendId(f);
-    emit fileReceived(friendId, file);
+
+    emit fileReceived(fid, file);
 }
 
 void FriendMessageDispatcher::onFileCancelled(const QString& fileId) {
-    const auto& friendId = FriendId(f);
-    emit fileCancelled(friendId, fileId);
+
+    emit fileCancelled(fid, fileId);
 }
 }  // namespace module::im

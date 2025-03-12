@@ -1,0 +1,227 @@
+/*
+ * Copyright (c) 2022 船山信息 chuanshaninfo.com
+ * The project is licensed under Mulan PubL v2.
+ * You can use this software according to the terms and conditions of the Mulan
+ * PubL v2. You may obtain a copy of Mulan PubL v2 at:
+ *          http://license.coscl.org.cn/MulanPubL-2.0
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PubL v2 for more details.
+ */
+
+QAbstractButton
+{
+    border-radius: 5px;
+    background-color: #2A67F6;
+    padding: 2px;
+    width: 50px;
+    height: 26px;
+}
+
+QAbstractButton#emoteButton,
+QAbstractButton#fileButton,
+QAbstractButton#screenshotButton
+{
+    width: 24px;
+    height: 24px;
+    icon-size: 20px;
+    background-color: #F7F8FF;
+    border-radius: 5px;
+    padding: 2px;
+}
+
+QAbstractButton#emoteButton
+{
+    qproperty-icon: url(:/icons/call/emoteButton.svg);
+}
+
+QAbstractButton#fileButton
+{
+    qproperty-icon: url(:/icons/call/fileButton.svg);
+}
+
+QAbstractButton#screenshotButton
+{
+    qproperty-icon: url(:/icons/call/screenshotButton.svg);
+}
+
+QAbstractButton#removeReplyButton {
+    qproperty-icon: url(:/icons/call/searchHideButton.svg);
+}
+
+QAbstractButton#replyIcon {
+    qproperty-icon: url(:/icons/call/reply.svg);
+}
+
+QAbstractButton#emoteButton:hover,
+QAbstractButton#fileButton:hover,
+QAbstractButton#screenshotButton:hover，
+QAbstractButton#removeReplyButton:hover
+{
+    background-color: #e7e8f4;
+}
+
+QAbstractButton#sendButton
+{
+    qproperty-icon: url(:/icons/call/sendButton.svg);
+    icon-size: 16px;
+    border-radius: 5px;
+    background-color: #2A67F6;
+    padding: 2px;
+    width: 50px;
+    height: 26px;
+}
+
+QAbstractButton#encryptButton
+{
+    qproperty-icon: url(:/icons/call/encrypt_off.svg);
+    icon-size: 20px;
+    border-radius: 3px;
+    width: 24px;
+    height: 24px;
+    background-color: #c84e4e;
+}
+
+QAbstractButton#encryptButton:checked
+{
+    qproperty-icon: url(:/icons/call/encrypt_on.svg);
+    icon-size: 16px;
+    width: 24px;
+    height: 24px;
+    background-color: #51b244;
+}
+
+
+/* Header */                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+QAbstractButton#volButton
+{
+    border-image: url(:/icons/call/volButton.svg);
+    border-radius: 5px;
+    width: 22px;
+    height: 18px;
+}
+
+QAbstractButton#micButton
+{
+    border-image: url(:/icons/call/micButton.svg);
+    border-radius: 5px;
+    width: 22px;
+    height: 18px;
+}
+
+QAbstractButton#videoButton,
+QAbstractButton#callButton
+{
+    icon-size: 18px;
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+    padding: 0px;
+}
+
+QAbstractButton#videoButton
+{
+    qproperty-icon: url(:/icons/call/videoButton.svg);
+    background-color: #FC034D;
+}
+
+QAbstractButton#videoButton:disabled
+{
+    background-color: #ad1c48;
+}
+
+QAbstractButton#callButton
+{
+    qproperty-icon: url(:/icons/call/callButton.svg);
+    background-color: #4d3db1;
+}
+
+QAbstractButton#callButton:disabled
+{
+    background-color: #48407a;
+}
+
+
+/* SearchLine */
+
+QAbstractButton#searchSettingsButton
+{
+    qproperty-icon: url(:/icons/call/searchSettingsButton.svg);
+    border-radius: 5px;
+    width: 35px;
+    height: 35px;
+    padding: 0px;
+}
+
+QAbstractButton#searchHideButton
+{
+    qproperty-icon: url(:/icons/call/searchHideButton.svg);
+    border-radius: 5px;
+    width: 35px;
+    height: 35px;
+    padding: 0px;
+}
+
+QAbstractButton#searchUpButton
+{
+    qproperty-icon: url(:/icons/call/searchUpButton.svg);
+    border-radius: 5px;
+    width: 35px;
+    height: 35px;
+    padding: 0px;
+}
+
+QAbstractButton#searchDownButton
+{
+    qproperty-icon: url(:/icons/call/searchDownButton.svg);
+    border-radius: 5px;
+    width: 35px;
+    height: 35px;
+    padding: 0px;
+}
+
+QAbstractButton#choiceDateButton
+{
+    qproperty-icon: url(:/icons/call/searchCalendarButton.svg);
+    border-radius: 5px;
+    width: 45px;
+    height: 35px;
+    padding: 0px;
+}
+
+
+QAbstractButton#startButton
+{
+    border-radius: 5px;
+    width: 60px;
+    height: 35px;
+    color: #fff;
+    padding: 0px;
+}
+
+/* Common */
+
+QAbstractButton
+{
+    background-repeat: none;
+    background-position: center;
+    border: none;
+}
+
+QAbstractButton:disabled
+{
+    color: gray;
+    background-color: #919191;
+}
+
+QAbstractButton:focus
+{
+    outline: none;
+}
+
+QWidget#ChatReplyForm {
+    background-color: #F7F8FF;
+    border-radius: 5px;
+    padding: 2px;
+}

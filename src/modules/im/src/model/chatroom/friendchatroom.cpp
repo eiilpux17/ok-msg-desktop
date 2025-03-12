@@ -37,8 +37,8 @@ QString getShortName(const QString& name) {
 }  // namespace
 namespace module::im {
 
-FriendChatroom::FriendChatroom(const FriendId* frnd, IDialogsManager* dialogsManager)
-        : frnd{frnd}, dialogsManager{dialogsManager} {
+FriendChatroom::FriendChatroom(const FriendId* frnd, IDialogsManager* dialogsManager, QObject* parent)
+        :Chatroom(parent), frnd{frnd}, dialogsManager{dialogsManager} {
     qDebug() << __func__ << "friend" << frnd->getId();
 }
 

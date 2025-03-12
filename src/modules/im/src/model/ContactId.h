@@ -52,7 +52,10 @@ public:
     bool operator<(const ContactId& other) const;
 
     QByteArray getByteArray() const;
-    virtual bool isValid() const;
+
+    virtual bool isValid() const {
+        return !username.isEmpty() && !server.isEmpty();
+    }
 
     lib::messenger::ChatType getChatType() const{
         return type;
@@ -66,9 +69,6 @@ public:
         return username + "@" + server;
     }
 
-    // inline bool isLinked() const {
-    //     return linked;
-    // }
 
     // void setLinked(bool linked_) {
     //     linked = linked_;

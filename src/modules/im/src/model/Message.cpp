@@ -36,7 +36,7 @@ void MessageProcessor::SharedParams::setPublicKey(const QString& pk) {
 
 MessageProcessor::MessageProcessor(ICoreIdHandler& idHandler_, const ContactId& f_,
                                    const MessageProcessor::SharedParams& sharedParams_)
-        : idHandler{idHandler_}, f{f_}, sharedParams(sharedParams_) {}
+        : idHandler{idHandler_}, cid{f_}, sharedParams(sharedParams_) {}
 
 /**
  * @brief Converts an outgoing message into one (or many) sanitized Message(s)
@@ -56,7 +56,7 @@ std::vector<Message> MessageProcessor::processOutgoingMessage(bool isAction,
                        Message message;
                        message.id = ok::base::UUID::make();
                        message.isAction = isAction;
-                       message.to = f.getId();
+                       message.to = cid.getId();
                        message.from = peerId.getId();
                        message.from_resource = peerId.resource;
                        message.content = part;

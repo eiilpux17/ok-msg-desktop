@@ -58,7 +58,6 @@ public:
     };
     static QStringList getThemeColorNames();
     static const QString getStylesheet(const QString& filename, const QFont& baseFont = QFont());
-    static const QString getStylesheetFile(const QString& filename, const QFont& baseFont= QFont());
     static const QString getImagePath(const QString& filename);
 
     static QString getThemeFolder();

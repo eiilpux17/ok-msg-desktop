@@ -221,7 +221,8 @@ void ChatWidget::connectToCoreAv(CoreAV* coreAv) {
 }
 
 void ChatWidget::onMessageSessionReceived(const ContactId& contactId, const QString& sid) {
-    sessionListWidget->createMessageSession(
+    if(contactId.isValid())
+        sessionListWidget->createMessageSession(
             contactId, sid, contactId.getChatType());
 }
 
@@ -485,7 +486,8 @@ void ChatWidget::onProfileChanged(Profile* profile) {
         }
 
         ContactId cid(p.peer_jid, type);
-        sessionListWidget->createMessageSession(cid, p.session_id, type);
+        if(cid.isValid())
+            sessionListWidget->createMessageSession(cid, p.session_id, type);
     }
 }
 
@@ -513,7 +515,7 @@ void ChatWidget::onError(QString msgId, QString error)
 void ChatWidget::onGroupClicked() {}
 
 void ChatWidget::reloadTheme() {
-    auto chat = lib::settings::Style::getStylesheetFile("chat.css");
+    auto chat = lib::settings::Style::getStylesheet("chat.css");
     setStyleSheet(chat);
 
     // auto statusPanelStyle = lib::settings::Style::getStylesheet("window/statusPanel.css");
