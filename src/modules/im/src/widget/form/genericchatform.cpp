@@ -35,7 +35,6 @@
 #include "src/core/core.h"
 #include "src/model/Friend.h"
 #include "src/model/FriendList.h"
-#include "src/model/GroupList.h"
 #include "src/nexus.h"
 #include "src/persistence/profile.h"
 #include "src/persistence/settings.h"
@@ -203,7 +202,7 @@ GenericChatForm::GenericChatForm(const ContactId& contactId,
     bodySplitter->addWidget(chatLog);
 
     // 输入框
-    inputForm = new ChatInputForm(this);
+    inputForm = new ChatInputForm(contactId, this);
     connect(inputForm, &ChatInputForm::inputText, this, &GenericChatForm::onTextSend);
     connect(inputForm, &ChatInputForm::inputTextChanged, this, &GenericChatForm::onTextEditChanged);
     connect(inputForm, &ChatInputForm::inputFile, this, &GenericChatForm::onFileSend);

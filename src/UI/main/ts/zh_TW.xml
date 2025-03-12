@@ -14,17 +14,24 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_TW">
     <context>
-        <name>MainWindow</name>
+        <name>OMainMenu</name>
+        <message>
+            <source>Frame</source>
+            <translation>框架</translation>
+        </message>
+    </context>
+    <context>
+        <name>OMainWindow</name>
         <message>
             <source>MainWindow</source>
             <translation>主視窗</translation>
         </message>
     </context>
     <context>
-        <name>OMainMenu</name>
+        <name>UI::OMainMenu</name>
         <message>
-            <source>Frame</source>
-            <translation>框架</translation>
+            <source>Setting</source>
+            <translation>設置</translation>
         </message>
     </context>
     <context>
@@ -38,13 +45,6 @@
             <source>Show</source>
             <comment>Tray action menu to show window</comment>
             <translation>顯示</translation>
-        </message>
-    </context>
-    <context>
-        <name>UI::OMainMenu</name>
-        <message>
-            <source>Setting</source>
-            <translation>設置</translation>
         </message>
     </context>
 </TS>

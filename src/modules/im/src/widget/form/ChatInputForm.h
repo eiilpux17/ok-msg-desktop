@@ -17,6 +17,7 @@
 #include <QPushButton>
 #include <QSplitter>
 #include <QWidget>
+#include "src/model/ContactId.h"
 
 class QHBoxLayout;
 class QVBoxLayout;
@@ -33,7 +34,7 @@ class ChatReplyForm;
 class ChatInputForm : public QWidget {
     Q_OBJECT
 public:
-    ChatInputForm(QWidget* parent = nullptr, bool isGroup = false);
+    ChatInputForm(const ContactId& cid, QWidget* parent = nullptr);
     void reloadTheme();
     void retranslateUi();
     void setFocus();
@@ -53,7 +54,7 @@ protected:
 
 private:
     bool isEncrypt;
-    bool isGroup;
+    ContactId cid;
 
     QVBoxLayout* mainLayout;
     QHBoxLayout* mainFootLayout;
@@ -63,7 +64,13 @@ private:
     QPushButton* emoteButton;
     QPushButton* fileButton;
     QPushButton* screenshotButton;
+
+
+    QPushButton* callButton;
+    QPushButton* videoButton;
     QPushButton* sendButton;
+
+
     ChatTextEdit* msgEdit;
 
     ChatReplyForm* reply;
@@ -88,11 +95,15 @@ protected slots:
     void onTextEditChanged();
     void onReplyEvent(IChatItem* item);
     void onReplyRemove();
+    void doCallTriggered(bool video);
 
 signals:
     void inputText(const QString& text);
     void inputTextChanged(const QString& text);
     void inputFile(const QFile& file);
     void inputScreenCapture(const QPixmap& pixmap);
+
+    void callTriggered();
+    void videoCallTriggered();
 };
 }  // namespace module::im

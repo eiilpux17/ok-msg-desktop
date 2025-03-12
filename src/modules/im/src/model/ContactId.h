@@ -69,10 +69,9 @@ public:
         return username + "@" + server;
     }
 
-
-    // void setLinked(bool linked_) {
-    //     linked = linked_;
-    // }
+    inline bool isGroup() const {
+        return type == lib::messenger::ChatType::GroupChat;
+    }
 
     // 用户名
     QString username;

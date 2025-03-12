@@ -238,38 +238,6 @@ which may lead to problems with video calls.</source>
             <translation>폼</translation>
         </message>
         <message>
-            <source>Open profile</source>
-            <translation>프로필 열기</translation>
-        </message>
-        <message>
-            <source>Open profile page when clicked</source>
-            <translation>클릭하면 프로필 페이지 열기</translation>
-        </message>
-        <message>
-            <source>Your name</source>
-            <translation>이름</translation>
-        </message>
-        <message>
-            <source>Status message input</source>
-            <translation>상태 메시지 입력</translation>
-        </message>
-        <message>
-            <source>Set your status message that will be shown to others</source>
-            <translation>다른 사람에게 표시할 상태 메시지를 설정합니다.</translation>
-        </message>
-        <message>
-            <source>Your status</source>
-            <translation>상태</translation>
-        </message>
-        <message>
-            <source>Status</source>
-            <translation>상태</translation>
-        </message>
-        <message>
-            <source>Set availability status</source>
-            <translation>가용성 상태 설정</translation>
-        </message>
-        <message>
             <source>Contact search</source>
             <translation>연락처 검색</translation>
         </message>
@@ -484,13 +452,6 @@ which may lead to problems with video calls.</source>
         <message>
             <source>Confirm</source>
             <translation>확실한가요</translation>
-        </message>
-    </context>
-    <context>
-        <name>IMMainWindow</name>
-        <message>
-            <source>Close</source>
-            <translation>닫다</translation>
         </message>
     </context>
     <context>
@@ -903,52 +864,6 @@ which may lead to problems with video calls.</source>
         </message>
     </context>
     <context>
-        <name>module::im::ChatForm</name>
-        <message>
-            <source>Filename contained illegal characters</source>
-            <translation>파일 이름에 잘못된 문자가 포함되어 있습니다.</translation>
-        </message>
-        <message>
-            <source>Illegal characters have been changed to _ 
-so you can save the file on windows.</source>
-            <translation>잘못된 문자가 _로 변경되었습니다. 
-따라서 Windows에 파일을 저장할 수 있습니다.</translation>
-        </message>
-        <message>
-            <source>Calling %1</source>
-            <translation>%1 호출</translation>
-        </message>
-        <message>
-            <source>Unable to open</source>
-            <translation>열 수 없습니다</translation>
-        </message>
-        <message>
-            <source>OkMsg wasn't able to open %1</source>
-            <translation>OkMsg에서 %1을(를) 열 수 없습니다.</translation>
-        </message>
-        <message>
-            <source>Bad idea</source>
-            <translation>좋지않은 의견</translation>
-        </message>
-        <message>
-            <source>You're trying to send a sequential file, which is not going to work!</source>
-            <translation>작동하지 않는 순차 파일을 보내려고 합니다!</translation>
-        </message>
-        <message>
-            <source>Failed to open temporary file</source>
-            <comment>Temporary file for screenshot</comment>
-            <translation>필요한 임시 파일을 만들 수 없습니다</translation>
-        </message>
-        <message>
-            <source>OkMsg wasn't able to save the screenshot</source>
-            <translation>OkMsg에서 스크린샷을 저장할 수 없습니다.</translation>
-        </message>
-        <message>
-            <source>Copy</source>
-            <translation>복사</translation>
-        </message>
-    </context>
-    <context>
         <name>module::im::ChatFormHeader</name>
         <message>
             <source>Can't start audio call</source>
@@ -1014,6 +929,14 @@ so you can save the file on windows.</source>
             <source>Unmute microphone</source>
             <translation>마이크 음소거 해제</translation>
         </message>
+        <message>
+            <source>The feature unsupported in the open-source version</source>
+            <translation>오픈 소스 버전에서 지원되지 않는 기능</translation>
+        </message>
+        <message>
+            <source>The call cannot be made due participant is offline!</source>
+            <translation>참가자가 오프라인 상태이므로 전화를 걸 수 없습니다!</translation>
+        </message>
     </context>
     <context>
         <name>module::im::ChatInputForm</name>
@@ -1052,6 +975,14 @@ so you can save the file on windows.</source>
         <message>
             <source>You're trying to send a sequential file, which is not going to work!</source>
             <translation>작동하지 않는 순차 파일을 보내려고 합니다!</translation>
+        </message>
+        <message>
+            <source>The feature unsupported in the open-source version</source>
+            <translation>오픈 소스 버전에서 지원되지 않는 기능</translation>
+        </message>
+        <message>
+            <source>The call cannot be made due participant is offline!</source>
+            <translation>참가자가 오프라인 상태이므로 전화를 걸 수 없습니다!</translation>
         </message>
     </context>
     <context>
@@ -1150,24 +1081,6 @@ so you can save the file on windows.</source>
         </message>
     </context>
     <context>
-        <name>module::im::Core</name>
-        <message>
-            <source>Invalid Ok ID</source>
-            <comment>Error while sending friendship request</comment>
-            <translation>유효하지 않은 확인 ID</translation>
-        </message>
-        <message>
-            <source>You need to write a message with your request</source>
-            <comment>Error while sending friendship request</comment>
-            <translation>요청과 함께 메시지를 작성해야 합니다.</translation>
-        </message>
-        <message>
-            <source>IMFriend is already added</source>
-            <comment>Error while sending friendship request</comment>
-            <translation>IMFriend가 이미 추가되었습니다.</translation>
-        </message>
-    </context>
-    <context>
         <name>module::im::FileTransferWidget</name>
         <message>
             <source>Location not writable</source>
@@ -1229,6 +1142,52 @@ so you can save the file on windows.</source>
         <message>
             <source>Uploads</source>
             <translation>업로드</translation>
+        </message>
+    </context>
+    <context>
+        <name>module::im::FriendChatForm</name>
+        <message>
+            <source>Filename contained illegal characters</source>
+            <translation>파일 이름에 잘못된 문자가 포함되어 있습니다.</translation>
+        </message>
+        <message>
+            <source>Illegal characters have been changed to _ 
+so you can save the file on windows.</source>
+            <translation>잘못된 문자가 _로 변경되었습니다. 
+따라서 Windows에 파일을 저장할 수 있습니다.</translation>
+        </message>
+        <message>
+            <source>Calling %1</source>
+            <translation>%1 호출</translation>
+        </message>
+        <message>
+            <source>Unable to open</source>
+            <translation>열 수 없습니다</translation>
+        </message>
+        <message>
+            <source>OkMsg wasn't able to open %1</source>
+            <translation>OkMsg에서 %1을(를) 열 수 없습니다.</translation>
+        </message>
+        <message>
+            <source>Bad idea</source>
+            <translation>좋지않은 의견</translation>
+        </message>
+        <message>
+            <source>You're trying to send a sequential file, which is not going to work!</source>
+            <translation>작동하지 않는 순차 파일을 보내려고 합니다!</translation>
+        </message>
+        <message>
+            <source>Failed to open temporary file</source>
+            <comment>Temporary file for screenshot</comment>
+            <translation>필요한 임시 파일을 만들 수 없습니다</translation>
+        </message>
+        <message>
+            <source>OkMsg wasn't able to save the screenshot</source>
+            <translation>OkMsg에서 스크린샷을 저장할 수 없습니다.</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>복사</translation>
         </message>
     </context>
     <context>
@@ -1310,6 +1269,18 @@ so you can save the file on windows.</source>
         <message>
             <source>New message</source>
             <translation>새 메시지</translation>
+        </message>
+        <message>
+            <source>Calling...</source>
+            <translation>부름...</translation>
+        </message>
+        <message>
+            <source>The feature unsupported in the open-source version</source>
+            <translation>오픈 소스 버전에서 지원되지 않는 기능</translation>
+        </message>
+        <message>
+            <source>The call cannot be made due participant is offline!</source>
+            <translation>참가자가 오프라인 상태이므로 전화를 걸 수 없습니다!</translation>
         </message>
     </context>
     <context>
@@ -1524,18 +1495,6 @@ so you can save the file on windows.</source>
         <message>
             <source>Show details</source>
             <translation>상세 정보 표시</translation>
-        </message>
-        <message>
-            <source>Calling...</source>
-            <translation>부름...</translation>
-        </message>
-        <message>
-            <source>The feature unsupported in the open-source version</source>
-            <translation>오픈 소스 버전에서 지원되지 않는 기능</translation>
-        </message>
-        <message>
-            <source>The call cannot be made due participant is offline!</source>
-            <translation>참가자가 오프라인 상태이므로 전화를 걸 수 없습니다!</translation>
         </message>
     </context>
     <context>
@@ -1808,13 +1767,6 @@ Please use another image.</source>
         <message>
             <source>The password doesn't match.</source>
             <translation>비밀번호가 일치하지 않습니다.</translation>
-        </message>
-    </context>
-    <context>
-        <name>module::im::Settings</name>
-        <message>
-            <source>Circle #%1</source>
-            <translation>서클 #%1</translation>
         </message>
     </context>
     <context>

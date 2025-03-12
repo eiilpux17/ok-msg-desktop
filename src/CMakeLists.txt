@@ -10,8 +10,6 @@ add_subdirectory(lib)
 add_subdirectory(modules)
 add_subdirectory(UI)
 
-
-
 # Add QRC files.
 # set(${PROJECT_NAME}_QRC_FILES resources/application.qrc)
 
@@ -139,6 +137,9 @@ else ()
         ${${PROJECT_NAME}_SOURCES}
         ${${PROJECT_NAME}_RESOURCES})
 endif ()
+
+# 让 ${PROJECT_NAME} 依赖 PreBuild，确保 PreBuild 先执行
+add_dependencies(${PROJECT_NAME} PreBuild)
 
 target_link_libraries(
     ${PROJECT_NAME}

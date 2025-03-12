@@ -14,17 +14,24 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ko">
     <context>
-        <name>MainWindow</name>
+        <name>OMainMenu</name>
+        <message>
+            <source>Frame</source>
+            <translation>프레임</translation>
+        </message>
+    </context>
+    <context>
+        <name>OMainWindow</name>
         <message>
             <source>MainWindow</source>
             <translation>메인윈도우</translation>
         </message>
     </context>
     <context>
-        <name>OMainMenu</name>
+        <name>UI::OMainMenu</name>
         <message>
-            <source>Frame</source>
-            <translation>프레임</translation>
+            <source>Setting</source>
+            <translation>설정</translation>
         </message>
     </context>
     <context>
@@ -38,13 +45,6 @@
             <source>Show</source>
             <comment>Tray action menu to show window</comment>
             <translation>보이다</translation>
-        </message>
-    </context>
-    <context>
-        <name>UI::OMainMenu</name>
-        <message>
-            <source>Setting</source>
-            <translation>설정</translation>
         </message>
     </context>
 </TS>

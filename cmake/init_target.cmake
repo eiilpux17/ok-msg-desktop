@@ -57,3 +57,16 @@ function(init_non_host_target target_name)
 		)
 	endif ()
 endfunction()
+
+
+# 定义一个自定义目标，在构建前执行
+add_custom_target(PreBuild
+	  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+		COMMAND ${CMAKE_COMMAND} -E echo "Running pre-build step..."
+		# COMMAND bash ${CMAKE_SOURCE_DIR}/prebuild.sh # Linux/Mac 示例
+		# COMMAND ${CMAKE_SOURCE_DIR}/prebuild.bat # Windows 示例
+		#	if error occurred please execute: `sudo pip3 install openpyxl [--break-system-packages]`
+		COMMAND python3 translation.py
+		COMMENT "Executing pre-build step"
+)
+

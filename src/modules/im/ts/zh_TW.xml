@@ -238,38 +238,6 @@ which may lead to problems with video calls.</source>
             <translation>表單</translation>
         </message>
         <message>
-            <source>Open profile</source>
-            <translation>打開個人檔案</translation>
-        </message>
-        <message>
-            <source>Open profile page when clicked</source>
-            <translation>點擊后打開個人檔案頁面</translation>
-        </message>
-        <message>
-            <source>Your name</source>
-            <translation>你的名字</translation>
-        </message>
-        <message>
-            <source>Status message input</source>
-            <translation>輸入狀態消息</translation>
-        </message>
-        <message>
-            <source>Set your status message that will be shown to others</source>
-            <translation>設置您要展示給他人的個人狀態消息</translation>
-        </message>
-        <message>
-            <source>Your status</source>
-            <translation>你的狀態</translation>
-        </message>
-        <message>
-            <source>Status</source>
-            <translation>狀態</translation>
-        </message>
-        <message>
-            <source>Set availability status</source>
-            <translation>設置個人狀態</translation>
-        </message>
-        <message>
             <source>Contact search</source>
             <translation>搜索連絡人</translation>
         </message>
@@ -484,13 +452,6 @@ which may lead to problems with video calls.</source>
         <message>
             <source>Confirm</source>
             <translation>確定</translation>
-        </message>
-    </context>
-    <context>
-        <name>IMMainWindow</name>
-        <message>
-            <source>Close</source>
-            <translation>關閉</translation>
         </message>
     </context>
     <context>
@@ -903,52 +864,6 @@ which may lead to problems with video calls.</source>
         </message>
     </context>
     <context>
-        <name>module::im::ChatForm</name>
-        <message>
-            <source>Filename contained illegal characters</source>
-            <translation>檔名包含非法字元</translation>
-        </message>
-        <message>
-            <source>Illegal characters have been changed to _ 
-so you can save the file on windows.</source>
-            <translation>非法字元已變更為 _
-因此，您可以在 Windows 上保存檔。</translation>
-        </message>
-        <message>
-            <source>Calling %1</source>
-            <translation>正在呼叫 %1</translation>
-        </message>
-        <message>
-            <source>Unable to open</source>
-            <translation>無法打開</translation>
-        </message>
-        <message>
-            <source>OkMsg wasn't able to open %1</source>
-            <translation>OkMsg 無法開啟 %1</translation>
-        </message>
-        <message>
-            <source>Bad idea</source>
-            <translation>這不是個好主意</translation>
-        </message>
-        <message>
-            <source>You're trying to send a sequential file, which is not going to work!</source>
-            <translation>您正在嘗試發送順序檔，這不起作用！</translation>
-        </message>
-        <message>
-            <source>Failed to open temporary file</source>
-            <comment>Temporary file for screenshot</comment>
-            <translation>無法打開臨時檔</translation>
-        </message>
-        <message>
-            <source>OkMsg wasn't able to save the screenshot</source>
-            <translation>OkMsg 無法保存螢幕截圖</translation>
-        </message>
-        <message>
-            <source>Copy</source>
-            <translation>複製</translation>
-        </message>
-    </context>
-    <context>
         <name>module::im::ChatFormHeader</name>
         <message>
             <source>Can't start audio call</source>
@@ -1014,6 +929,14 @@ so you can save the file on windows.</source>
             <source>Unmute microphone</source>
             <translation>取消靜音麥克風</translation>
         </message>
+        <message>
+            <source>The feature unsupported in the open-source version</source>
+            <translation>開源版本不支援的功能</translation>
+        </message>
+        <message>
+            <source>The call cannot be made due participant is offline!</source>
+            <translation>由於參與者離線，無法撥打電話！</translation>
+        </message>
     </context>
     <context>
         <name>module::im::ChatInputForm</name>
@@ -1052,6 +975,14 @@ so you can save the file on windows.</source>
         <message>
             <source>You're trying to send a sequential file, which is not going to work!</source>
             <translation>您正在嘗試發送順序檔，這不起作用！</translation>
+        </message>
+        <message>
+            <source>The feature unsupported in the open-source version</source>
+            <translation>開源版本不支援的功能</translation>
+        </message>
+        <message>
+            <source>The call cannot be made due participant is offline!</source>
+            <translation>由於參與者離線，無法撥打電話！</translation>
         </message>
     </context>
     <context>
@@ -1150,24 +1081,6 @@ so you can save the file on windows.</source>
         </message>
     </context>
     <context>
-        <name>module::im::Core</name>
-        <message>
-            <source>Invalid Ok ID</source>
-            <comment>Error while sending friendship request</comment>
-            <translation>無效的Ok ID</translation>
-        </message>
-        <message>
-            <source>You need to write a message with your request</source>
-            <comment>Error while sending friendship request</comment>
-            <translation>您需要隨請求發送一條消息</translation>
-        </message>
-        <message>
-            <source>IMFriend is already added</source>
-            <comment>Error while sending friendship request</comment>
-            <translation>已添加 IMFriend</translation>
-        </message>
-    </context>
-    <context>
         <name>module::im::FileTransferWidget</name>
         <message>
             <source>Location not writable</source>
@@ -1229,6 +1142,52 @@ so you can save the file on windows.</source>
         <message>
             <source>Uploads</source>
             <translation>上傳</translation>
+        </message>
+    </context>
+    <context>
+        <name>module::im::FriendChatForm</name>
+        <message>
+            <source>Filename contained illegal characters</source>
+            <translation>檔名包含非法字元</translation>
+        </message>
+        <message>
+            <source>Illegal characters have been changed to _ 
+so you can save the file on windows.</source>
+            <translation>非法字元已變更為 _
+因此，您可以在 Windows 上保存檔。</translation>
+        </message>
+        <message>
+            <source>Calling %1</source>
+            <translation>正在呼叫 %1</translation>
+        </message>
+        <message>
+            <source>Unable to open</source>
+            <translation>無法打開</translation>
+        </message>
+        <message>
+            <source>OkMsg wasn't able to open %1</source>
+            <translation>OkMsg 無法開啟 %1</translation>
+        </message>
+        <message>
+            <source>Bad idea</source>
+            <translation>這不是個好主意</translation>
+        </message>
+        <message>
+            <source>You're trying to send a sequential file, which is not going to work!</source>
+            <translation>您正在嘗試發送順序檔，這不起作用！</translation>
+        </message>
+        <message>
+            <source>Failed to open temporary file</source>
+            <comment>Temporary file for screenshot</comment>
+            <translation>無法打開臨時檔</translation>
+        </message>
+        <message>
+            <source>OkMsg wasn't able to save the screenshot</source>
+            <translation>OkMsg 無法保存螢幕截圖</translation>
+        </message>
+        <message>
+            <source>Copy</source>
+            <translation>複製</translation>
         </message>
     </context>
     <context>
@@ -1310,6 +1269,18 @@ so you can save the file on windows.</source>
         <message>
             <source>New message</source>
             <translation>新訊息</translation>
+        </message>
+        <message>
+            <source>Calling...</source>
+            <translation>呼叫中...</translation>
+        </message>
+        <message>
+            <source>The feature unsupported in the open-source version</source>
+            <translation>開源版本不支援的功能</translation>
+        </message>
+        <message>
+            <source>The call cannot be made due participant is offline!</source>
+            <translation>由於參與者離線，無法撥打電話！</translation>
         </message>
     </context>
     <context>
@@ -1524,18 +1495,6 @@ so you can save the file on windows.</source>
         <message>
             <source>Show details</source>
             <translation>查看詳情</translation>
-        </message>
-        <message>
-            <source>Calling...</source>
-            <translation>呼叫中...</translation>
-        </message>
-        <message>
-            <source>The feature unsupported in the open-source version</source>
-            <translation>開源版本不支援的功能</translation>
-        </message>
-        <message>
-            <source>The call cannot be made due participant is offline!</source>
-            <translation>由於參與者離線，無法撥打電話！</translation>
         </message>
     </context>
     <context>
@@ -1808,13 +1767,6 @@ Please use another image.</source>
         <message>
             <source>The password doesn't match.</source>
             <translation>密碼不匹配。</translation>
-        </message>
-    </context>
-    <context>
-        <name>module::im::Settings</name>
-        <message>
-            <source>Circle #%1</source>
-            <translation>圓圈 #%1</translation>
         </message>
     </context>
     <context>

@@ -25,11 +25,10 @@
 #include "ChatReplyForm.h"
 #include "lib/storage/settings/style.h"
 #include "src/base/MessageBox.h"
-#include "src/chatlog/chatlinecontent.h"
 #include "src/chatlog/chatmessageitem.h"
 #include "src/core/core.h"
 #include "src/core/coreav.h"
-#include "src/lib/session/profile.h"
+#include "src/model/Friend.h"
 #include "src/nexus.h"
 #include "src/persistence/profile.h"
 #include "src/widget/emoticonswidget.h"
@@ -41,8 +40,10 @@
 
 #include "src/persistence/settings.h"
 #include "src/persistence/smileypack.h"
-namespace module::im {
+#include "lib/ui/gui.h"
 
+
+namespace module::im {
 
 static const short FOOT_BUTTONS_SPACING = 2;
 static const short MESSAGE_EDIT_HEIGHT = 50;
@@ -68,14 +69,14 @@ QPushButton* createButton(const QString& name, T* self, Fun onClickSlot) {
     btn->setCursor(Qt::PointingHandCursor);
     btn->setObjectName(name);
     // btn->setProperty("state", "green");
-    btn->setStyleSheet(lib::settings::Style::getStylesheet("chatForm/buttons.css"));
+    btn->setStyleSheet(lib::settings::Style::getStylesheet("callButtons.css"));
     btn->setCheckable(true);
     QObject::connect(btn, &QPushButton::clicked, self, onClickSlot);
     return btn;
 }
 
-ChatInputForm::ChatInputForm(QWidget* parent, bool isGroup)
-        : QWidget(parent), isGroup{isGroup}, reply(nullptr) {
+ChatInputForm::ChatInputForm(const ContactId& cid, QWidget* parent )
+        : QWidget(parent), cid{cid}, reply(nullptr) {
     setContentsMargins(0, 0, 0, 0);
     setObjectName("ChatInputForm");
 
@@ -84,10 +85,7 @@ ChatInputForm::ChatInputForm(QWidget* parent, bool isGroup)
         connect(form, &GenericChatForm::replyEvent, this, &ChatInputForm::onReplyEvent);
     }
 
-    if (isGroup) {
-        fileButton->setEnabled(false);
-        fileButton->setProperty("state", "disabled");
-    }
+
 
 #ifdef SPELL_CHECKING
     if (s.getSpellCheckingEnabled()) {
@@ -97,9 +95,14 @@ ChatInputForm::ChatInputForm(QWidget* parent, bool isGroup)
     encryptButton = createButton("encryptButton", this, &ChatInputForm::onEncryptButtonClicked);
 
     emoteButton = createButton("emoteButton", this, &ChatInputForm::onEmoteButtonClicked);
+
     fileButton = createButton("fileButton", this, &ChatInputForm::onAttachClicked);
+    // if (cid.isGroup()) {
+    //     fileButton->setEnabled(false);
+    //     fileButton->setProperty("state", "disabled");
+    // }
+
     screenshotButton = createButton("screenshotButton", this, &ChatInputForm::onScreenshotClicked);
-    sendButton = createButton("sendButton", this, &ChatInputForm::onSendTriggered);
 
     // connect(bodySplitter, &QSplitter::splitterMoved, this, &ChatInputForm::onSplitterMoved);
 
@@ -113,8 +116,7 @@ ChatInputForm::ChatInputForm(QWidget* parent, bool isGroup)
     ctrlLayout->addWidget(emoteButton);
     ctrlLayout->addWidget(fileButton);
     ctrlLayout->addWidget(screenshotButton);
-    ctrlLayout->addSpacerItem(
-            new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum));
+    ctrlLayout->addSpacerItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum));
 #ifdef OK_PLUGIN
     auto pm = ok::plugin::PluginManager::instance();
     connect(pm, &ok::plugin::PluginManager::pluginEnabled,  //
@@ -127,6 +129,23 @@ ChatInputForm::ChatInputForm(QWidget* parent, bool isGroup)
     }
 #endif
     ctrlLayout->addStretch(1);
+
+
+    // 控制按钮
+    callButton = createButton("callButton", this, &ChatInputForm::callTriggered);
+    ctrlLayout->addWidget(callButton);
+    connect(this, &ChatInputForm::callTriggered, this, [&](){
+        doCallTriggered(false);
+    });
+    videoButton = createButton("videoButton", this, &ChatInputForm::videoCallTriggered);
+    ctrlLayout->addWidget(videoButton);
+    connect(this, &ChatInputForm::videoCallTriggered, this, [&](){
+        doCallTriggered(true);
+    });
+
+
+    sendButton = createButton("sendButton", this, &ChatInputForm::onSendTriggered);
+
     ctrlLayout->addWidget(sendButton);
     mainLayout->addLayout(ctrlLayout);
 
@@ -328,6 +347,20 @@ void ChatInputForm::onReplyRemove() {
     reply->deleteLater();
     delete reply;
     reply = nullptr;
+}
+
+void ChatInputForm::doCallTriggered(bool video)
+{
+    auto f = Core::getInstance()->getFriend(cid);
+    if(f.has_value()){
+        auto started = f.value()->startCall(false);
+        if (!started) {
+            // 返回失败对方可能不在线，免费版本不支持离线呼叫！
+            lib::ui::GUI::showWarning(tr("The feature unsupported in the open-source version"),
+                                      tr("The call cannot be made due participant is offline!"));
+            return ;
+        }
+    }
 }
 
 void ChatInputForm::onScreenshotClicked() {
