@@ -46,7 +46,7 @@ class QTimer;
 namespace module::im {
 
 class ChatFormHeader;
-class ChatLog;
+class ChatLogView;
 class ChatTextEdit;
 class Contact;
 class ContentLayout;
@@ -93,8 +93,8 @@ public:
     QDateTime getLatestTime() const;
     QDateTime getFirstTime() const;
 
-    [[__nodiscard__]] inline ChatLog* getChatLog() const {
-        return chatLog;
+    [[__nodiscard__]] inline ChatLogView* getChatLog() const {
+        return logView;
     }
 
 
@@ -179,7 +179,7 @@ protected:
     // 分割条
     QSplitter* bodySplitter;
     // 聊天框
-    ChatLog* chatLog;
+    ChatLogView* logView;
     // 输入框
     ChatInputForm* inputForm;
 

@@ -95,8 +95,10 @@ public:
     void addStretch();
 
 signals:
-    void callTriggered();
-    void videoCallTriggered();
+    void searchTriggered();
+    void menuTriggered();
+    void moreTriggered();
+
     void micMuteToggle();
     void volMuteToggle();
 
@@ -122,8 +124,9 @@ private:
     QLabel* statusLabel = nullptr;
     QToolButton* statusIcon = nullptr;
 
-    QPushButton* callButton;
-    QPushButton* videoButton;
+    QPushButton* searchButton;
+    QPushButton* menuButton;
+    QPushButton* moreButton;
 
     CallButtonState callState;
     CallButtonState videoState;

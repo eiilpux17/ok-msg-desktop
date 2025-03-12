@@ -82,8 +82,6 @@
         <file>themes/default/fileTransferInstance/dir.svg</file>
         <file>themes/default/fileTransferInstance/arrow_white.svg</file>
         <file>themes/default/fileTransferInstance/browse.svg</file>
-        <file>themes/default/rejectCall/rejectCall.svg</file>
-        <file>themes/default/acceptCall/acceptCall.svg</file>
         <file>img/others/logout-icon.svg</file>
         <file>img/caps_lock.svg</file>
         <file>themes/default/contact/ContactWidget.css</file>
@@ -97,6 +95,7 @@
         <file alias="chatArea.css">res/styles/chatArea.css</file>
         <file alias="chatHead.css">res/styles/chatHead.css</file>
         <file alias="callButtons.css">res/styles/callButtons.css</file>
+        <file alias="chatButtons.css">res/styles/chatButtons.css</file>
     </qresource>
     <qresource prefix="/icons">
         <file alias="call/callButton.svg">res/icons/call/callButton.svg</file>
@@ -120,5 +119,8 @@
         <file alias="call/exitFullScreenButton.svg">res/icons/call/exitFullScreenButton.svg</file>
         <file alias="call/encrypt_off.svg">res/icons/call/encrypt_off.svg</file>
         <file alias="call/encrypt_on.svg">res/icons/call/encrypt_on.svg</file>
+        <file alias="chat/menu.svg">res/icons/chat/menu.svg</file>
+        <file alias="chat/search.svg">res/icons/chat/search.svg</file>
+        <file alias="chat/more.svg">res/icons/chat/more.svg</file>
     </qresource>
 </RCC>

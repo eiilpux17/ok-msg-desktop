@@ -13,7 +13,7 @@
 #include "chatmessageitem.h"
 #include <QGraphicsProxyWidget>
 
-#include "chatlog.h"
+#include "ChatLogView.h"
 #include "content/broken.h"
 #include "content/contactavatar.h"
 #include "content/simpletext.h"

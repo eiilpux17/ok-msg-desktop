@@ -14,7 +14,7 @@
 #define GROUPCHATFORM_H
 
 #include <QMap>
-#include "genericchatform.h"
+#include "GenericChatForm.h"
 #include "src/model/FriendId.h"
 
 class QTimer;

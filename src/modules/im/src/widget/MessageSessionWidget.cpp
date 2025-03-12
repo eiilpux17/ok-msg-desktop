@@ -49,7 +49,7 @@
 
 #include "form/FriendChatForm.h"
 #include "lib/ui/gui.h"
-#include "src/chatlog/chatlog.h"
+#include "src/chatlog/ChatLogView.h"
 #include "src/core/coreav.h"
 #include "src/nexus.h"
 #include "src/widget/chatformheader.h"
@@ -111,7 +111,7 @@ MessageSessionWidget::MessageSessionWidget(ContentLayout* layout, const ContactI
 
 
     auto chatForm = contentWidget->getChatForm();
-    connect(chatForm->getChatLog(), &ChatLog::readAll, this, [&]() {
+    connect(chatForm->getChatLog(), &ChatLogView::readAll, this, [&]() {
         if (contentWidget->isVisible()) {
             // 已经阅读完消息，信号灯还原
             updateStatusLight(Core::getInstance()->getFriendStatus(contactId.toString()), false);

@@ -21,7 +21,7 @@
 
 #include "Bus.h"
 #include "contentdialogmanager.h"
-#include "form/groupchatform.h"
+#include "form/GroupChatForm.h"
 #include "groupwidget.h"
 #include "lib/storage/settings/style.h"
 #include "lib/ui/gui.h"

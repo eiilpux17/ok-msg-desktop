@@ -27,7 +27,7 @@
 
 #include "lib/ui/widget/tools/CroppingLabel.h"
 #include "src/base/MessageBox.h"
-#include "src/chatlog/chatlog.h"
+#include "src/chatlog/ChatLogView.h"
 #include "src/chatlog/chatmessage.h"
 #include "src/core/core.h"
 #include "src/core/coreav.h"
@@ -75,8 +75,8 @@ FriendChatForm::FriendChatForm(const FriendId& chatFriend,
 
     auto baseFont = Nexus::getProfile()->getSettings()->getChatMessageFont();
 
-    chatLog->setTypingNotification(ChatMessage::createTypingNotification(baseFont));
-    chatLog->setMinimumHeight(CHAT_WIDGET_MIN_HEIGHT);
+    logView->setTypingNotification(ChatMessage::createTypingNotification(baseFont));
+    logView->setMinimumHeight(CHAT_WIDGET_MIN_HEIGHT);
 
     //  headWidget->addWidget(statusMessageLabel);
     //  headWidget->addStretch();
@@ -301,7 +301,7 @@ void FriendChatForm::onCopyStatusMessage() {
 
 void FriendChatForm::setFriendTyping(bool typing) {
     isTyping = typing;
-    if (chatLog) chatLog->setTypingNotificationVisible(typing);
+    if (logView) logView->setTypingNotificationVisible(typing);
     //  QString typingDiv = "<div class=typing>%1</div>";
     //  QString name = f->getDisplayedName();
     //  Text *text = static_cast<Text *>(chatLog->getTypingNotification()->centerContent());
@@ -314,7 +314,7 @@ void FriendChatForm::show(ContentLayout* contentLayout) {
 
 void FriendChatForm::reloadTheme() {
     auto s = Nexus::getProfile()->getSettings();
-    chatLog->setTypingNotification(ChatMessage::createTypingNotification(s->getChatMessageFont()));
+    logView->setTypingNotification(ChatMessage::createTypingNotification(s->getChatMessageFont()));
     GenericChatForm::reloadTheme();
 }
 

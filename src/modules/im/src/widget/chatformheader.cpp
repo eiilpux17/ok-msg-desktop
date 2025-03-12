@@ -46,7 +46,7 @@ static const short HEAD_LAYOUT_SPACING = 5;
 static const short MIC_BUTTONS_LAYOUT_SPACING = 4;
 static const short BUTTONS_LAYOUT_HOR_SPACING = 4;
 
-const QString STYLE_PATH = QStringLiteral("callButtons.css");
+
 
 const QString STATE_NAME[] = {
         QString{},
@@ -85,7 +85,7 @@ QPushButton* createButton(const QString& name, T* self, Fun onClickSlot) {
     QPushButton* btn = new QPushButton();
     btn->setAttribute(Qt::WA_LayoutUsesWidgetRect);
     btn->setObjectName(name);
-    btn->setStyleSheet(lib::settings::Style::getStylesheet(STYLE_PATH));
+    btn->setStyleSheet(lib::settings::Style::getStylesheet("chatButtons.css"));
     QObject::connect(btn, &QPushButton::clicked, self, onClickSlot);
     return btn;
 }
@@ -150,7 +150,8 @@ ChatFormHeader::ChatFormHeader(const ContactId& contactId, QWidget* parent)
     statusIcon = new QToolButton(this);
     statusIcon->setIconSize(QSize(10, 10));
     statusIcon->setStyleSheet("border:0px solid; padding:0px");
-    QHBoxLayout* status_lyt = new QHBoxLayout(this);
+
+    auto* status_lyt = new QHBoxLayout(this);
     status_lyt->addWidget(statusIcon);
     status_lyt->addWidget(statusLabel);
     status_lyt->addStretch(1);
@@ -162,28 +163,20 @@ ChatFormHeader::ChatFormHeader(const ContactId& contactId, QWidget* parent)
     headLayout->addLayout(headTextLayout, 1);
 
     // 空间
-    // headLayout->addSpacing(HEAD_LAYOUT_SPACING);
+    headLayout->addSpacing(HEAD_LAYOUT_SPACING);
+
+    buttonsLayout = new QHBoxLayout(this);
 
     // 控制按钮
-    callButton = createButton("callButton", this, &ChatFormHeader::callTriggered);
-    connect(this, &ChatFormHeader::callTriggered, this, [&, profile](){
-        auto f = Core::getInstance()->getFriend(contactId);
-        if(f.has_value()){
-            auto started = f.value()->startCall(false);
-            if (!started) {
-                // 返回失败对方可能不在线，免费版本不支持离线呼叫！
-                lib::ui::GUI::showWarning(tr("The feature unsupported in the open-source version"),
-                                          tr("The call cannot be made due participant is offline!"));
-                return ;
-            }
-        }
-    });
+    searchButton = createButton("searchButton", this, &ChatFormHeader::searchTriggered);
+    buttonsLayout->addWidget(searchButton);
+
+    menuButton = createButton("menuButton", this, &ChatFormHeader::menuTriggered);
+    buttonsLayout->addWidget(menuButton);
+    moreButton = createButton("moreButton", this, &ChatFormHeader::moreTriggered);
+    buttonsLayout->addWidget(moreButton);
 
 
-    videoButton = createButton("videoButton", this, &ChatFormHeader::videoCallTriggered);
-    buttonsLayout = new QHBoxLayout(this);
-    buttonsLayout->addWidget(callButton);
-    buttonsLayout->addWidget(videoButton);
     buttonsLayout->setSpacing(BUTTONS_LAYOUT_HOR_SPACING);
 
     headLayout->addLayout(buttonsLayout, 0);
@@ -293,15 +286,10 @@ void ChatFormHeader::setName(const QString& newName) {
 
 void ChatFormHeader::setMode(ChatFormHeader::Mode mode) {
     this->mode = mode;
-    if (mode == Mode::None) {
-        callButton->hide();
-        videoButton->hide();
-    }
+
 }
 
 void ChatFormHeader::retranslateUi() {
-    setStateToolTip(callButton, callState, CALL_TOOL_TIP);
-    setStateToolTip(videoButton, videoState, VIDEO_TOOL_TIP);
 
     if (contact && !contact->isGroup()) {
         auto f = static_cast<const Friend*>(contact);
@@ -426,8 +414,7 @@ QSize ChatFormHeader::getAvatarSize() const {
 }
 
 void ChatFormHeader::reloadTheme() {
-    callButton->setStyleSheet(lib::settings::Style::getStylesheet(STYLE_PATH));
-    videoButton->setStyleSheet(lib::settings::Style::getStylesheet(STYLE_PATH));
+
 }
 
 void ChatFormHeader::addWidget(QWidget* widget, int stretch, Qt::Alignment alignment) {

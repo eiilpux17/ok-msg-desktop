@@ -31,7 +31,7 @@ public:
                 const Settings& settings,
                 IMessageDispatcher& messageDispatcher);
 
-    ~ChatHistory();
+    ~ChatHistory() override;
 
     const ChatLogItem* at(ChatLogIdx idx) const override;
     // 最后几条
@@ -69,7 +69,7 @@ private:
     bool canUseHistory() const;
     ChatLogIdx getInitialChatLogIdx() const;
 
-    const ContactId& f;
+    ContactId cid;
     History* history;
     const Settings& settings;
     const ICoreIdHandler& coreIdHandler;

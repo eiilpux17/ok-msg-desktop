@@ -19,7 +19,7 @@
 #include <QTimer>
 
 #include "CallDurationForm.h"
-#include "genericchatform.h"
+#include "GenericChatForm.h"
 #include "src/core/core.h"
 #include "src/model/ichatlog.h"
 #include "src/model/IMessageDispatcher.h"

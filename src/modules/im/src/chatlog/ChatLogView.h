@@ -10,8 +10,8 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#ifndef CHATLOG_H
-#define CHATLOG_H
+#ifndef CHATLOGVIEW_H
+#define CHATLOGVIEW_H
 
 #include <QDateTime>
 #include <QGraphicsView>
@@ -32,11 +32,11 @@ namespace module::im {
 class ChatLineContent;
 struct File;
 
-class ChatLog : public QGraphicsView {
+class ChatLogView : public QGraphicsView {
     Q_OBJECT
 public:
-    explicit ChatLog(QWidget* parent = nullptr);
-    ~ChatLog() override;
+    explicit ChatLogView(const ContactId& cid, QWidget* parent = nullptr);
+    ~ChatLogView() override;
 
     void insertChatlineAtBottom(IChatItem::Ptr l);
     void insertChatlineOnTop(IChatItem::Ptr l);
@@ -170,6 +170,7 @@ private:
     qreal lineSpacing = 20.0f;
 
     int scrollBarValue = 0;
+    ContactId cid;
 
 signals:
     void selectionChanged();
@@ -192,4 +193,4 @@ private slots:
     void clearChat();
 };
 }  // namespace module::im
-#endif  // CHATLOG_H
+#endif  // CHATLOGVIEW_H

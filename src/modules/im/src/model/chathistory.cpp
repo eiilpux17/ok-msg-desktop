@@ -66,7 +66,7 @@ ChatHistory::ChatHistory(const ContactId& f_,                  //
                          const ICoreIdHandler& coreIdHandler,  //
                          const Settings& settings_,            //
                          IMessageDispatcher& messageDispatcher)
-        : f(f_)
+        : cid(f_)
         , history(history_)
         , settings(settings_)
         , coreIdHandler(coreIdHandler)
@@ -132,7 +132,7 @@ const ChatLogItem* ChatHistory::at(ChatLogIdx idx) const {
 QList<Message> ChatHistory::getLastTextMessage(uint size) {
     QList<Message> list;
     auto selfPk = coreIdHandler.getSelfId();
-    auto messages = history->getLastMessageForFriend(selfPk, FriendId{f}, size,
+    auto messages = history->getLastMessageForFriend(selfPk, FriendId{cid}, size,
                                                      HistMessageContentType::message);
     for (auto& i : messages) {
         Message msg = {.isAction = false,
@@ -183,10 +183,11 @@ SearchResult ChatHistory::searchBackward(SearchPos startIdx, const QString& phra
     // If the double disk access is real bad we can optimize this by adding
     // another function to history
     auto dateWherePhraseFound =
-            history->getDateWhereFindPhrase(f.toString(), earliestMessageDate, phrase, parameter);
+            history->getDateWhereFindPhrase(cid.getId(), earliestMessageDate, phrase, parameter);
 
     auto loadIdx = history->getNumMessagesForFriendBeforeDate(coreIdHandler.getSelfId(),
-                                                              FriendId{f}, dateWherePhraseFound);
+                                                              FriendId{cid},
+                                                              dateWherePhraseFound);
     loadHistoryIntoSessionChatLog(ChatLogIdx(loadIdx));
 
     // Reset search pos to the message we just loaded to avoid a double search
@@ -210,7 +211,7 @@ ChatLogIdx ChatHistory::getNextIdx() const {
 std::vector<IChatLog::DateChatLogIdxPair>  //
 ChatHistory::getDateIdxs(const QDate& startDate, size_t maxDates) const {
     if (canUseHistory()) {
-        auto counts = history->getNumMessagesForFriendBeforeDateBoundaries(FriendId(f), startDate,
+        auto counts = history->getNumMessagesForFriendBeforeDateBoundaries(FriendId(cid), startDate,
                                                                            maxDates);
 
         std::vector<IChatLog::DateChatLogIdxPair> ret;
@@ -301,7 +302,7 @@ void ChatHistory::onMessageReceived(const FriendId& sender, const Message& messa
 void ChatHistory::onMessageSent(DispatchedMessageId id, const Message& message) {
     if (canUseHistory()) {
         auto selfPk = coreIdHandler.getSelfId().toString();
-        auto friendPk = f.toString();
+        auto friendPk = cid.toString();
 
         auto content = message.content;
         if (message.isAction) {
@@ -357,6 +358,8 @@ void ChatHistory::ensureIdxInSessionChatLog(ChatLogIdx idx) const {
  * could have a less contiguous history
  */
 void ChatHistory::loadHistoryIntoSessionChatLog(ChatLogIdx start) const {
+    qDebug() << __func__ << "contact:" << cid <<  "start:" << start.get();
+
     if (!needsLoadFromHistory(start, sessionChatLog)) {
         return;
     }
@@ -370,8 +373,8 @@ void ChatHistory::loadHistoryIntoSessionChatLog(ChatLogIdx start) const {
     assert(getFirstIdx() == ChatLogIdx(0));
 
     auto messages =
-            history->getMessagesForFriend(core->getSelfId(), FriendId(f), start.get(), end.get());
-    qDebug() << "load friend:" << f.toString() << "messages:" << messages.size();
+            history->getMessagesForFriend(core->getSelfId(), FriendId(cid), start.get(), end.get());
+    qDebug() << "load friend:" << cid.getId() << "messages:" << messages.size();
 
     //  assert(messages.size() == end.get() - start.get());
     ChatLogIdx nextIdx = start;
@@ -451,7 +454,7 @@ void ChatHistory::loadHistoryIntoSessionChatLog(ChatLogIdx start) const {
  */
 void ChatHistory::dispatchUnsentMessages(IMessageDispatcher& messageDispatcher) {
     auto core = Core::getInstance();
-    auto unsentMessages = history->getUndeliveredMessagesForFriend(core->getSelfId(), FriendId(f));
+    auto unsentMessages = history->getUndeliveredMessagesForFriend(core->getSelfId(), FriendId(cid));
     for (auto& message : unsentMessages) {
         if (message.type != HistMessageContentType::message) continue;
 
@@ -523,7 +526,7 @@ bool ChatHistory::canUseHistory() const {
  */
 ChatLogIdx ChatHistory::getInitialChatLogIdx() const {
     if (canUseHistory()) {
-        return ChatLogIdx(history->getNumMessagesForFriend(coreIdHandler.getSelfId(), FriendId(f)));
+        return ChatLogIdx(history->getNumMessagesForFriend(coreIdHandler.getSelfId(), FriendId(cid)));
     }
     return ChatLogIdx(0);
 }

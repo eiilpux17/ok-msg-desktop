@@ -22,7 +22,7 @@
 #include <src/persistence/settings.h>
 #include <src/widget/chatformheader.h>
 #include <src/widget/contentdialogmanager.h>
-#include <src/widget/form/groupchatform.h>
+#include <src/widget/form/GroupChatForm.h>
 #include "src/nexus.h"
 #include "src/persistence/profile.h"
 

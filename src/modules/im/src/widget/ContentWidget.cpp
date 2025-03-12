@@ -23,7 +23,7 @@
 #include "form/FriendChatForm.h"
 #include "src/persistence/profile.h"
 #include "src/persistence/settings.h"
-#include "src/widget/form/groupchatform.h"
+#include "src/widget/form/GroupChatForm.h"
 #include "src/worker/SendWorker.h"
 #include <src/nexus.h>
 #include <src/model/chatroom/groupchatroom.h>
@@ -46,18 +46,9 @@ ContentWidget::ContentWidget(SendWorker* sendWorker, QWidget* parent) : QWidget(
 
     auto& cid = sendWorker->getContactId();
 
-    headWidget =  new ChatFormHeader(cid, this);
-    connect(headWidget, &ChatFormHeader::callTriggered, this,[this,sendWorker](){
-        emit sendWorker->onCallTriggered();
-    });
-    connect(headWidget, &ChatFormHeader::videoCallTriggered, this, [this,sendWorker](){
-        emit sendWorker->onVideoCallTriggered();
-    });
-
-
-    mainHead->layout()->addWidget(headWidget);
-
     // 头部信息
+    headWidget =  new ChatFormHeader(cid, this);
+    mainHead->layout()->addWidget(headWidget);
     layout()->addWidget(mainHead);
 
 

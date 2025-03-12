@@ -43,7 +43,7 @@
 
 #include "contentdialog.h"
 #include "contentlayout.h"
-#include "form/groupchatform.h"
+#include "form/GroupChatForm.h"
 #include "friendwidget.h"
 #include "lib/storage/settings/OkSettings.h"
 #include "lib/storage/settings/translator.h"

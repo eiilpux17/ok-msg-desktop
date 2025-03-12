@@ -10,7 +10,7 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "groupchatform.h"
+#include "GroupChatForm.h"
 
 #include <QDragEnterEvent>
 #include <QMimeData>
@@ -20,7 +20,7 @@
 
 #include "Bus.h"
 #include "lib/ui/layout/FlowLayout.h"
-#include "src/chatlog/chatlog.h"
+#include "src/chatlog/ChatLogView.h"
 #include "src/core/core.h"
 #include "src/core/coreav.h"
 #include "src/lib/storage/settings/style.h"

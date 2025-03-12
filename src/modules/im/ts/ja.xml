@@ -929,14 +929,6 @@ which may lead to problems with video calls.</source>
             <source>Unmute microphone</source>
             <translation>マイクをミュート解除</translation>
         </message>
-        <message>
-            <source>The feature unsupported in the open-source version</source>
-            <translation>オープンソース版ではこの機能はサポートされていません</translation>
-        </message>
-        <message>
-            <source>The call cannot be made due participant is offline!</source>
-            <translation>参加者がオフラインのため、通話はできません！</translation>
-        </message>
     </context>
     <context>
         <name>module::im::ChatInputForm</name>
@@ -1001,7 +993,7 @@ which may lead to problems with video calls.</source>
         </message>
     </context>
     <context>
-        <name>module::im::ChatLog</name>
+        <name>module::im::ChatLogView</name>
         <message>
             <source>Clear displayed messages</source>
             <translation>表示されたメッセージを消去</translation>

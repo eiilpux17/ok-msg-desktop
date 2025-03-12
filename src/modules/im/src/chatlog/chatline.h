@@ -26,7 +26,7 @@ class QStyleOptionGraphicsItem;
 class QFont;
 
 namespace module::im {
-class ChatLog;
+class ChatLogView;
 class ChatLineContent;
 
 enum class IChatItemType { TEXT, IMAGE };
@@ -72,12 +72,12 @@ public:
     bool isValid() { return row < 0; }
 
 protected:
-    friend class ChatLog;
+    friend class ChatLogView;
     virtual QList<ChatLineContent*> contents() { return QList<ChatLineContent*>{}; };
     QDateTime datetime;
     int row = -1;
     MsgId id;
-    ChatLog* chatLog;
+    ChatLogView* chatLog;
 
 signals:
     // 引用事件

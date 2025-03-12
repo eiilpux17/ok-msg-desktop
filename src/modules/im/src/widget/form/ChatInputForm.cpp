@@ -35,7 +35,7 @@
 #include "src/widget/tool/chattextedit.h"
 #include "src/widget/tool/screenshotgrabber.h"
 
-#include "genericchatform.h"
+#include "GenericChatForm.h"
 #include "lib/plugin/pluginmanager.h"
 
 #include "src/persistence/settings.h"

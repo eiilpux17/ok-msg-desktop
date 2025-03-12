@@ -10,7 +10,7 @@
  * See the Mulan PubL v2 for more details.
  */
 
-#include "genericchatform.h"
+#include "GenericChatForm.h"
 
 #include <base/uuid.h>
 #include <src/chatlog/chatmessageitem.h>
@@ -29,7 +29,7 @@
 #include "lib/storage/settings/OkSettings.h"
 #include "lib/ui/gui.h"
 #include "src/chatlog/chatlinecontentproxy.h"
-#include "src/chatlog/chatlog.h"
+#include "src/chatlog/ChatLogView.h"
 #include "src/chatlog/content/filetransferwidget.h"
 #include "src/chatlog/content/simpletext.h"
 #include "src/core/core.h"
@@ -188,18 +188,18 @@ GenericChatForm::GenericChatForm(const ContactId& contactId,
     bodySplitter = new QSplitter(Qt::Vertical, this);
     mainLayout->addWidget(bodySplitter);
 
-    // 聊天框
-    chatLog = new ChatLog(this);
-
-    auto s = Nexus::getProfile()->getSettings();
     // settings
+    auto s = Nexus::getProfile()->getSettings();
     connect(s, &Settings::chatMessageFontChanged, this, &GenericChatForm::onChatMessageFontChanged);
-    //    chatLog->setMinimumHeight(200);
-    chatLog->setBusyNotification(ChatMessage::createBusyNotification(s->getChatMessageFont()));
-    connect(chatLog, &ChatLog::firstVisibleLineChanged, this, &GenericChatForm::updateShowDateInfo);
-    connect(chatLog, &ChatLog::loadHistoryLower, this, &GenericChatForm::loadHistoryLower);
 
-    bodySplitter->addWidget(chatLog);
+    // 聊天框
+    logView = new ChatLogView(contactId, this);
+    logView->setMinimumHeight(200);
+    logView->setBusyNotification(ChatMessage::createBusyNotification(s->getChatMessageFont()));
+    connect(logView, &ChatLogView::firstVisibleLineChanged, this, &GenericChatForm::updateShowDateInfo);
+    connect(logView, &ChatLogView::loadHistoryLower, this, &GenericChatForm::loadHistoryLower);
+
+    bodySplitter->addWidget(logView);
 
     // 输入框
     inputForm = new ChatInputForm(contactId, this);
@@ -289,18 +289,18 @@ IChatItem::Ptr GenericChatForm::createMessage(const ChatLogItem& item,
                                                    chatLogMessage.message.timestamp, colorizeNames);
 
     connect(chatItem.get(), &IChatItem::replyEvent, this, &GenericChatForm::onReplyEvent);
-    connect(chatLog, &ChatLog::itemContextMenuRequested,
+    connect(logView, &ChatLogView::itemContextMenuRequested,
             (ChatLineContent*)chatItem.get()->centerContent(), &ChatLineContent::onContextMenu);
 
     return chatItem;
 }
 
 QDateTime GenericChatForm::getLatestTime() const {
-    return getTime(chatLog->getLatestLine());
+    return getTime(logView->getLatestLine());
 }
 
 QDateTime GenericChatForm::getFirstTime() const {
-    return getTime(chatLog->getFirstLine());
+    return getTime(logView->getFirstLine());
 }
 
 void GenericChatForm::setFriendTyping(bool typing, const QString contact)
@@ -310,8 +310,8 @@ void GenericChatForm::setFriendTyping(bool typing, const QString contact)
 
 void GenericChatForm::reloadTheme() {   
     auto css = lib::settings::Style::getStylesheet("chatArea.css");
-    chatLog->setStyleSheet(css);
-    chatLog->reloadTheme();
+    logView->setStyleSheet(css);
+    logView->reloadTheme();
 }
 
 void GenericChatForm::setContact(const Contact* contact_) {
@@ -385,11 +385,6 @@ void GenericChatForm::onReplyEvent(IChatItem* item) {
 
 void GenericChatForm::onChatContextMenuRequested(QPoint pos) {}
 
-/**
- * @brief Show, is it needed to hide message author name or not
- * @param idx ChatLogIdx of the message
- * @return True if the name should be hidden, false otherwise
- */
 bool GenericChatForm::needsToHideName(ChatLogIdx idx) const {
     // If the previous message is not rendered we should show the name
     // regardless of other constraints
@@ -411,11 +406,11 @@ bool GenericChatForm::needsToHideName(ChatLogIdx idx) const {
 
     qint64 messagesTimeDiff = prevItem->getTimestamp().secsTo(currentItem->getTimestamp());
     return currentItem->getSender() == prevItem->getSender() &&
-           messagesTimeDiff < chatLog->repNameAfter;
+           messagesTimeDiff < logView->repNameAfter;
 }
 
 void GenericChatForm::onCopyLogClicked() {
-    chatLog->copySelectedText();
+    logView->copySelectedText();
 }
 
 void GenericChatForm::focusInput() {
@@ -424,8 +419,8 @@ void GenericChatForm::focusInput() {
 
 void GenericChatForm::onChatMessageFontChanged(const QFont& font) {
     // chat log
-    chatLog->fontChanged(font);
-    chatLog->forceRelayout();
+    logView->fontChanged(font);
+    logView->forceRelayout();
 }
 
 void GenericChatForm::setColorizedNames(bool enable) {
@@ -474,7 +469,7 @@ void GenericChatForm::clearChatArea(bool confirm, bool inform) {
         }
     }
 
-    chatLog->clear();
+    logView->clear();
 
     if (inform)
         addSystemInfoMessage(tr("Cleared"), ChatMessage::INFO, QDateTime::currentDateTime());
@@ -483,11 +478,11 @@ void GenericChatForm::clearChatArea(bool confirm, bool inform) {
 }
 
 void GenericChatForm::onSelectAllClicked() {
-    chatLog->selectAll();
+    logView->selectAll();
 }
 
 void GenericChatForm::insertChatMessage(IChatItem::Ptr msg) {
-    chatLog->insertChatlineAtBottom(msg);
+    logView->insertChatlineAtBottom(msg);
     emit messageInserted();
 }
 
@@ -519,7 +514,7 @@ void GenericChatForm::onShowMessagesClicked() {
 }
 
 void GenericChatForm::quoteSelectedText() {
-    QString selectedText = chatLog->getSelectedText();
+    QString selectedText = logView->getSelectedText();
     if (selectedText.isEmpty()) return;
 
     // forming pretty quote text
@@ -536,7 +531,7 @@ void GenericChatForm::quoteSelectedText() {
 }
 
 void GenericChatForm::forwardSelectedText() {
-    QString selectedText = chatLog->getSelectedText();
+    QString selectedText = logView->getSelectedText();
     if (selectedText.isEmpty()) return;
 }
 
@@ -661,7 +656,7 @@ void GenericChatForm::handleSearchResult(SearchResult result, SearchDirection di
 
     renderMessages(searchPos.logIdx, firstRenderedIdx, [this, result] {
         auto msg = messages.at(searchPos.logIdx);
-        chatLog->scrollToLine(msg);
+        logView->scrollToLine(msg);
 
         auto text = qobject_cast<Text*>(msg->centerContent());
         text->selectText(result.exp, std::make_pair(result.start, result.len));
@@ -687,14 +682,16 @@ void GenericChatForm::renderMessages(ChatLogIdx begin, ChatLogIdx end,
         }
 
         auto chatMessage = getChatMessageForIdx(i, messages);
-        //        if(!chatMessage || !chatMessage->isValid()){
-        //            continue;
-        //        }
+        // if(!chatMessage || !chatMessage->isValid()){
+        //     qDebug() << "Invalid message!";
+        //     continue;
+        // }
+
         renderItem(*item, needsToHideName(i), colorizeNames, chatMessage);
 
         if (messages.find(i) == messages.end()) {
-            QList<IChatItem::Ptr>* lines =
-                    (messages.empty() || i > messages.rbegin()->first) ? &afterLines : &beforeLines;
+            QList<IChatItem::Ptr>* lines = (messages.empty() || i > messages.rbegin()->first) ?
+                            &afterLines : &beforeLines;
 
             messages.insert({i, chatMessage});
 
@@ -707,7 +704,7 @@ void GenericChatForm::renderMessages(ChatLogIdx begin, ChatLogIdx end,
     }
 
     for (auto const& line : afterLines) {
-        chatLog->insertChatlineAtBottom(line);
+        logView->insertChatlineAtBottom(line);
     }
 
     if (!beforeLines.empty()) {
@@ -717,13 +714,13 @@ void GenericChatForm::renderMessages(ChatLogIdx begin, ChatLogIdx end,
         if (onCompletion) {
             auto connection = std::make_shared<QMetaObject::Connection>();
             *connection =
-                    connect(chatLog, &ChatLog::workerTimeoutFinished, [onCompletion, connection] {
+                    connect(logView, &ChatLogView::workerTimeoutFinished, [onCompletion, connection] {
                         onCompletion();
                         disconnect(*connection);
                     });
         }
 
-        chatLog->insertChatlinesOnTop(beforeLines);
+        logView->insertChatlinesOnTop(beforeLines);
     } else if (onCompletion) {
         onCompletion();
     }

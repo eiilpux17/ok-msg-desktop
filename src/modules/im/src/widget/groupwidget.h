@@ -20,7 +20,7 @@
 
 #include <src/widget/form/aboutgroupform.h>
 #include "contentdialog.h"
-#include "form/groupchatform.h"
+#include "form/GroupChatForm.h"
 
 namespace module::im {
 
