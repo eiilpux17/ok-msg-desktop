@@ -75,20 +75,18 @@ ChatLogView::ChatLogView(const ContactId& cid, QWidget* parent)
     setInteractive(true);
     setAcceptDrops(false);
     setAlignment(Qt::AlignTop | Qt::AlignLeft);
-    // setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    // setDragMode(QGraphicsView::NoDrag);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setDragMode(QGraphicsView::NoDrag);
     setViewportUpdateMode(MinimalViewportUpdate);
-    // setContextMenuPolicy(Qt::CustomContextMenu);
-    setBackgroundBrush(
-            QBrush(lib::settings::Style::getColor(lib::settings::Style::ColorPalette::GroundBase),
-                   Qt::SolidPattern));
-
     setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this, &ChatLogView::customContextMenuRequested, this, &ChatLogView::onChatContextMenuRequested);
 
+    /**
+     * Menu
+     */
     menu = new QMenu(this);
     menu->addActions(actions());
     menu->addSeparator();
+
 
     clearAction = menu->addAction(QIcon::fromTheme("edit-clear"), QString(), this,
                                   &ChatLogView::clearChat, QKeySequence(Qt::CTRL + Qt::Key_L));
@@ -149,6 +147,12 @@ ChatLogView::ChatLogView(const ContactId& cid, QWidget* parent)
         copyAction->setEnabled(hasTextToBeCopied());
         copySelectedText(true);
     });
+
+    connect(this, &ChatLogView::customContextMenuRequested, this, &ChatLogView::onChatContextMenuRequested);
+
+    // setBackgroundBrush(
+    //         QBrush(lib::settings::Style::getColor(lib::settings::Style::ColorPalette::GroundBase),
+    //                Qt::SolidPattern));
 
     retranslateUi();
 

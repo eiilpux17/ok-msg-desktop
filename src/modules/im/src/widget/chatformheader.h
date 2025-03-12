@@ -84,8 +84,6 @@ public:
 
     void showCallConfirm(const PeerId& peerId, bool video, const QString& displayedName);
 
-    void setAvatar(const QPixmap& img);
-    [[nodiscard]] QSize getAvatarSize() const;
 
     void reloadTheme();
 
@@ -117,9 +115,9 @@ private:
 
     Mode mode;
     QVBoxLayout* headTextLayout;
-    // lib::ui::MaskablePixmapWidget* avatar;
+
     QHBoxLayout* buttonsLayout;
-    lib::ui::RoundedPixmapLabel* avatar;
+
     lib::ui::CroppingLabel* nameLabel;
     QLabel* statusLabel = nullptr;
     QToolButton* statusIcon = nullptr;

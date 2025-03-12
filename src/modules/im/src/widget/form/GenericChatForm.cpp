@@ -185,7 +185,16 @@ GenericChatForm::GenericChatForm(const ContactId& contactId,
     mainLayout->setMargin(0);
     mainLayout->setSpacing(0);
 
+    auto headerSplit = new QWidget(this);
+    headerSplit->setObjectName("Splitter");
+    headerSplit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    // headerSplit->setFixedWidth(width());
+    headerSplit->setFixedHeight(2);
+    headerSplit->setStyleSheet("background: white;");
+    mainLayout->addWidget(headerSplit);
+
     bodySplitter = new QSplitter(Qt::Vertical, this);
+    bodySplitter->setHandleWidth(2);
     mainLayout->addWidget(bodySplitter);
 
     // settings
@@ -236,8 +245,6 @@ GenericChatForm::GenericChatForm(const ContactId& contactId,
     // connect(this, &GenericChatForm::messageNotFoundShow, searchForm,
     //         &SearchForm::showMessageNotFound);
 
-    connect(&lib::ui::GUI::getInstance(), &lib::ui::GUI::themeApplyRequest, this,
-            &GenericChatForm::reloadTheme);
 
     auto chatLogIdxRange = iChatLog.getNextIdx() - iChatLog.getFirstIdx();
     auto firstChatLogIdx =
@@ -251,6 +258,9 @@ GenericChatForm::GenericChatForm(const ContactId& contactId,
     setLayout(mainLayout);
 
     reloadTheme();
+    connect(&lib::ui::GUI::getInstance(), &lib::ui::GUI::themeApplyRequest, this,
+            &GenericChatForm::reloadTheme);
+
     auto a = ok::Application::Instance();
     connect(a->bus(), &ok::Bus::languageChanged,this,
             [&](const QString& locale0) {
@@ -309,9 +319,9 @@ void GenericChatForm::setFriendTyping(bool typing, const QString contact)
 }
 
 void GenericChatForm::reloadTheme() {   
-    auto css = lib::settings::Style::getStylesheet("chatArea.css");
-    logView->setStyleSheet(css);
-    logView->reloadTheme();
+    // auto css = lib::settings::Style::getStylesheet("chatArea.css");
+    // logView->setStyleSheet(css);
+    // logView->reloadTheme();
 }
 
 void GenericChatForm::setContact(const Contact* contact_) {

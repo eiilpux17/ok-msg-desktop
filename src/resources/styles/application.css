@@ -111,7 +111,7 @@ QComboBox QAbstractItemView QScrollBar::sub-line:vertical {
 }
 
 
-QToolTip {
+QToolTip, QMenu {
 	/* explicit border width is required https://bugreports.qt.io/browse/QTBUG-41313 */
 	border: 0px;
 	color: @mainText;
@@ -394,3 +394,23 @@ QTabBar::tab {
 QTabBar::tab:selected {
 	font-weight: bold;
 }
+
+QMenu{
+  padding: 8px;
+}
+
+QMenu::item {
+  padding: 5px 20px;
+	background-color: transparent;
+}
+
+QMenu::item:hover, QMenu::item:selected {
+  background-color: @orange;
+	color: white;
+	font-weight: bold;
+}
+
+QGraphicsView {
+  background: transparent;
+}
+

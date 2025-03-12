@@ -85,24 +85,12 @@ ChatInputForm::ChatInputForm(const ContactId& cid, QWidget* parent )
         connect(form, &GenericChatForm::replyEvent, this, &ChatInputForm::onReplyEvent);
     }
 
-
-
 #ifdef SPELL_CHECKING
     if (s.getSpellCheckingEnabled()) {
         decorator = new Sonnet::SpellCheckDecorator(msgEdit);
     }
 #endif
     encryptButton = createButton("encryptButton", this, &ChatInputForm::onEncryptButtonClicked);
-
-    emoteButton = createButton("emoteButton", this, &ChatInputForm::onEmoteButtonClicked);
-
-    fileButton = createButton("fileButton", this, &ChatInputForm::onAttachClicked);
-    // if (cid.isGroup()) {
-    //     fileButton->setEnabled(false);
-    //     fileButton->setProperty("state", "disabled");
-    // }
-
-    screenshotButton = createButton("screenshotButton", this, &ChatInputForm::onScreenshotClicked);
 
     // connect(bodySplitter, &QSplitter::splitterMoved, this, &ChatInputForm::onSplitterMoved);
 
@@ -113,9 +101,16 @@ ChatInputForm::ChatInputForm(const ContactId& cid, QWidget* parent )
     auto* ctrlLayout = new QHBoxLayout(this);
     ctrlLayout->setContentsMargins(0,4,0,4);
     ctrlLayout->setSpacing(FOOT_BUTTONS_SPACING);
+
+    emoteButton = createButton("emoteButton", this, &ChatInputForm::onEmoteButtonClicked);
     ctrlLayout->addWidget(emoteButton);
+
+    fileButton = createButton("fileButton", this, &ChatInputForm::onAttachClicked);
     ctrlLayout->addWidget(fileButton);
+
+    screenshotButton = createButton("screenshotButton", this, &ChatInputForm::onScreenshotClicked);
     ctrlLayout->addWidget(screenshotButton);
+
     ctrlLayout->addSpacerItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum));
 #ifdef OK_PLUGIN
     auto pm = ok::plugin::PluginManager::instance();

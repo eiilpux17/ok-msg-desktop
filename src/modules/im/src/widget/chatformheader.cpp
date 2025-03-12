@@ -13,10 +13,7 @@
 #include "chatformheader.h"
 
 #include "lib/storage/settings/style.h"
-#include "lib/storage/settings/translator.h"
 #include "lib/ui/widget/tools/CroppingLabel.h"
-#include "lib/ui/widget/tools/MaskablePixmap.h"
-#include "src/model/Group.h"
 #include "src/widget/tool/callconfirmwidget.h"
 
 #include <QDebug>
@@ -111,22 +108,8 @@ ChatFormHeader::ChatFormHeader(const ContactId& contactId, QWidget* parent)
         , mProfile{nullptr} {
     auto* headLayout = new QHBoxLayout(this);
     headLayout->setContentsMargins(0, 0, 0, 0);
-    // 头像
-    avatar = new lib::ui::RoundedPixmapLabel(this);
-    avatar->setContentsSize(QSize(40, 40));
-    avatar->setRoundedType(lib::ui::RoundedPixmapLabel::MinEdgeCircle);
 
     auto profile = Nexus::getProfile();
-    auto avt = profile->loadAvatar(contactId);
-    if (!avt.isNull()) {
-        avatar->setPixmap(avt);
-    }else{
-        auto name = (contactId.getChatType() == lib::messenger::ChatType::Chat) ? "contact" : "group";
-        auto uri = QString(":img/%1_dark.svg").arg(name);
-        avatar->setPixmap(QPixmap(uri));
-    }
-
-    headLayout->addWidget(avatar);
 
     // 名称
     nameLabel = new lib::ui::CroppingLabel(this);
@@ -207,9 +190,7 @@ ChatFormHeader::ChatFormHeader(const ContactId& contactId, QWidget* parent)
                             setName(dn);
                         });
 
-                        connect(c.value(), &Friend::avatarChanged, this, [&](const QPixmap& avatar){
-                            setAvatar(avatar);
-                        });
+
                     }
                 }
 
@@ -246,10 +227,8 @@ void ChatFormHeader::setContact(const Contact* contact_) {
     }
 
     connect(contact_, &Contact::displayedNameChanged, this, &ChatFormHeader::onDisplayedNameChanged);
-    connect(contact_, &Contact::avatarChanged, this, &ChatFormHeader::setAvatar);
 
     setName(contact_->getDisplayedName());
-    setAvatar(contact_->getAvatar());
 
     if (!contact_->isGroup()) {
         auto f = static_cast<const Friend*>(contact_);
@@ -405,13 +384,13 @@ void ChatFormHeader::updateCallButtons(Status status) {
     updateCallButtons();
 }
 
-void ChatFormHeader::setAvatar(const QPixmap& img) {
-    avatar->setPixmap(img);
-}
+// void ChatFormHeader::setAvatar(const QPixmap& img) {
+//     avatar->setPixmap(img);
+// }
 
-QSize ChatFormHeader::getAvatarSize() const {
-    return QSize{avatar->width(), avatar->height()};
-}
+// QSize ChatFormHeader::getAvatarSize() const {
+//     return QSize{avatar->width(), avatar->height()};
+// }
 
 void ChatFormHeader::reloadTheme() {
 
