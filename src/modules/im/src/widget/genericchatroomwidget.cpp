@@ -21,7 +21,7 @@ namespace module::im {
 GenericChatroomWidget::GenericChatroomWidget(lib::messenger::ChatType type, const ContactId& cid, QWidget* parent)
         : GenericChatItemWidget(type, cid, parent), contactId(cid) {
     // setAutoFillBackground(true);
-    // reloadTheme();
+
 
     mainLayout = new QHBoxLayout(this);
     mainLayout->setContentsMargins(8, 8, 8, 8);
@@ -48,11 +48,7 @@ GenericChatroomWidget::GenericChatroomWidget(lib::messenger::ChatType type, cons
 
     mainLayout->activate();
     setLayout(mainLayout);
-    // setLayoutDirection(Qt::LeftToRight);  // parent might have set Qt::RightToLeft
-
-
-    // nameLabel->setFont(lib::settings::Style::getFont(lib::settings::Style::Font::Big));
-
+    reloadTheme();
 }
 
 GenericChatroomWidget::~GenericChatroomWidget() {}
