@@ -19,7 +19,7 @@
         <file>themes/default/notificationEdge/notificationEdge.css</file>
         <file>themes/default/contentDialog/contentDialog.css</file>
         <file>themes/default/tooliconsZone/tooliconsZone.css</file>
-        <file>themes/default/CallDurationForm/CallDurationForm.css</file>
+
         <file>audio/notification.s16le.pcm</file>
         <file>audio/ToxIncomingCall.s16le.pcm</file>
         <file>audio/ToxOutgoingCall.s16le.pcm</file>
@@ -87,6 +87,7 @@
         <file alias="callButtons.css">res/styles/callButtons.css</file>
         <file alias="chatButtons.css">res/styles/chatButtons.css</file>
         <file alias="profile.css">res/styles/profile.css</file>
+        <file alias="CallDurationForm.css">res/styles/CallDurationForm.css</file>
     </qresource>
     <qresource prefix="/icons">
         <file alias="call/callButton.svg">res/icons/call/callButton.svg</file>

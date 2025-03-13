@@ -40,21 +40,21 @@ QAbstractButton:focus
 
 QAbstractButton#volButton
 {
-    border-image: url("@getImagePath(chatForm/volButton.svg)");
+    border-image: url(:icons/call/volButton.svg);
 }
 
 QAbstractButton#micButton
 {
-    border-image: url("@getImagePath(chatForm/micButton.svg)");
+    border-image: url(:icons/call/micButton.svg);
 }
 
 QAbstractButton#videoButton
 {
-    background-image: url("@getImagePath(chatForm/videoButton.svg)");
+    background-image: url(:icons/call/videoButton.svg);
 }
 
 QAbstractButton#callButton
 {
-    background-image: url("@getImagePath(chatForm/callButton.svg)");
+    background-image: url(:icons/call/callButton.svg);
     background-color: red;
 }
