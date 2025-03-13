@@ -56,17 +56,18 @@ ContentWidget::ContentWidget(SendWorker* sendWorker, QWidget* parent) : QWidget(
     auto profile = Nexus::getProfile();
     auto history = profile->getHistory();
     auto settings = profile->getSettings();
+    auto chatHistory = sendWorker->getChatHistory();
+
 
     if(cid.getChatType() == lib::messenger::ChatType::Chat){
         FriendId friendId = FriendId(cid);
         chatroom = new FriendChatroom(&friendId, ContentDialogManager::getInstance(), this);
-        chatForm = new FriendChatForm(friendId, *sendWorker->getChatLog(), *sendWorker->dispacher(), this);
+        chatForm = new FriendChatForm(friendId, chatHistory->getChatLog(), *sendWorker->dispacher(), this);
     }else{
         GroupId groupId = GroupId(cid);
         chatroom = new GroupChatroom(&groupId, ContentDialogManager::getInstance(), this);
-        chatForm = new GroupChatForm(groupId, *sendWorker->getChatLog(), *sendWorker->dispacher(), *settings, this);
+        chatForm = new GroupChatForm(groupId, chatHistory->getChatLog(), *sendWorker->dispacher(), *settings, this);
     }
-
 
     // 主体内容区
     mainContent = new QWidget(this);

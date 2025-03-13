@@ -76,11 +76,10 @@ Widget::~Widget() {
 void Widget::start() {}
 
 void Widget::reloadTheme() {
-    auto style = lib::settings::Style::getStylesheet("general.css");
-    setStyleSheet(style);
-
-    auto baseStyle = lib::settings::Style::getStylesheet("Base.css");
-    startRoomWidget->setStyleSheet(baseStyle);
+    // auto style = lib::settings::Style::getStylesheet("general.css");
+    // setStyleSheet(style);
+    // auto baseStyle = lib::settings::Style::getStylesheet("Base.css");
+    // startRoomWidget->setStyleSheet(baseStyle);
 //    joinRoomWidget->setStyleSheet(style);
 }
 

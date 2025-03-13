@@ -44,15 +44,14 @@ SendWorker::SendWorker(const ContactId& cid) : contactId{cid} {
 
     chatHistory = std::make_unique<ChatHistory>(cid, history, *core, *settings, *messageDispatcher);
 
-    chatLog = std::make_unique<SessionChatLog>(*core);
+    // chatLog = std::make_unique<SessionChatLog>(*core);
 
-
-    connect(messageDispatcher.get(), &IMessageDispatcher::messageSent, chatLog.get(),
-            &SessionChatLog::onMessageSent);
-    connect(messageDispatcher.get(), &IMessageDispatcher::messageComplete, chatLog.get(),
-            &SessionChatLog::onMessageComplete);
-    connect(messageDispatcher.get(), &IMessageDispatcher::messageReceived, chatLog.get(),
-            &SessionChatLog::onMessageReceived);
+    // connect(messageDispatcher.get(), &IMessageDispatcher::messageSent, chatLog.get(),
+            // &SessionChatLog::onMessageSent);
+    // connect(messageDispatcher.get(), &IMessageDispatcher::messageComplete, chatLog.get(),
+            // &SessionChatLog::onMessageComplete);
+    // connect(messageDispatcher.get(), &IMessageDispatcher::messageReceived, chatLog.get(),
+            // &SessionChatLog::onMessageReceived);
 }
 
 

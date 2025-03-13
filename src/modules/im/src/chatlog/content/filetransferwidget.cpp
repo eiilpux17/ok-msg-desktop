@@ -91,15 +91,21 @@ FileTransferWidget::FileTransferWidget(QWidget* parent, File file)
     connect(ui->rightButton, &QPushButton::clicked, this, &FileTransferWidget::onRightButtonClicked);
     connect(ui->previewButton, &QPushButton::clicked, this, &FileTransferWidget::onPreviewButtonClicked);
 
-    ui->playButton->setIcon(QIcon(lib::settings::Style::getImagePath("fileTransferInstance/arrow_white.svg")));
+    ui->playButton->setIcon(QIcon(lib::settings::Style::getImagePath("chat/arrow_white.svg")));
     connect(ui->playButton, &QPushButton::clicked, this, &FileTransferWidget::onPlayButtonClicked);
 
     // Set lastStatus to anything but the file's current value, this forces an update
-    lastStatus =
-            file.status == FileStatus::FINISHED ? FileStatus::INITIALIZING : FileStatus::FINISHED;
+    lastStatus = file.status == FileStatus::FINISHED ? FileStatus::INITIALIZING : FileStatus::FINISHED;
     updateWidget(file);
 
     setFixedHeight(64);
+
+    auto css = lib::settings::Style::getStylesheet("chatArea.css");
+    ui->leftButton->setStyleSheet(css);
+    ui->rightButton->setStyleSheet(css);
+    ui->playButton->setStyleSheet(css);
+    ui->previewButton->setStyleSheet(css);
+
 }
 
 FileTransferWidget::~FileTransferWidget() {
@@ -306,8 +312,7 @@ void FileTransferWidget::paintEvent(QPaintEvent*) {
 
         // Draw the right button:
         painter.setBrush(QBrush(buttonColor));
-        painter.setClipRect(
-                QRect(width() - buttonFieldWidth, 0, buttonFieldWidth, buttonFieldWidth));
+        painter.setClipRect(QRect(width() - buttonFieldWidth, 0, buttonFieldWidth, buttonFieldWidth));
         painter.drawRoundedRect(geometry(), r * ratio, r, Qt::RelativeSize);
     }
 }
@@ -479,13 +484,11 @@ void FileTransferWidget::setupButtons(File const& file) {
 
     switch (file.status) {
         case FileStatus::TRANSMITTING:
-            ui->leftButton->setIcon(
-                    QIcon(lib::settings::Style::getImagePath("fileTransferInstance/pause.svg")));
+            ui->leftButton->setIcon(QIcon(lib::settings::Style::getImagePath("chat/pause.svg")));
             ui->leftButton->setObjectName("pause");
             ui->leftButton->setToolTip(tr("Pause transfer"));
 
-            ui->rightButton->setIcon(
-                    QIcon(lib::settings::Style::getImagePath("fileTransferInstance/no.svg")));
+            ui->rightButton->setIcon(QIcon(lib::settings::Style::getImagePath("chat/no.svg")));
             ui->rightButton->setObjectName("cancel");
             ui->rightButton->setToolTip(tr("Cancel transfer"));
 
@@ -505,28 +508,25 @@ void FileTransferWidget::setupButtons(File const& file) {
             //        }
 
             ui->rightButton->setIcon(
-                    QIcon(lib::settings::Style::getImagePath("fileTransferInstance/no.svg")));
+                    QIcon(lib::settings::Style::getImagePath("chat/no.svg")));
             ui->rightButton->setObjectName("cancel");
             ui->rightButton->setToolTip(tr("Cancel transfer"));
 
-            setButtonColor(lib::settings::Style::getColor(
-                    lib::settings::Style::ColorPalette::TransferMiddle));
+            setButtonColor(lib::settings::Style::getColor( lib::settings::Style::ColorPalette::TransferMiddle));
             break;
 
         case FileStatus::INITIALIZING:
-            ui->rightButton->setIcon(
-                    QIcon(lib::settings::Style::getImagePath("fileTransferInstance/no.svg")));
+            ui->rightButton->setIcon(QIcon(lib::settings::Style::getImagePath("chat/no.svg")));
             ui->rightButton->setObjectName("cancel");
             ui->rightButton->setToolTip(tr("Cancel transfer"));
 
             if (file.direction == FileDirection::SENDING) {
                 ui->leftButton->setIcon(QIcon(
-                        lib::settings::Style::getImagePath("fileTransferInstance/pause.svg")));
+                        lib::settings::Style::getImagePath("chat/pause.svg")));
                 ui->leftButton->setObjectName("pause");
                 ui->leftButton->setToolTip(tr("Pause transfer"));
             } else {
-                ui->leftButton->setIcon(
-                        QIcon(lib::settings::Style::getImagePath("fileTransferInstance/yes.svg")));
+                ui->leftButton->setIcon(QIcon(lib::settings::Style::getImagePath("chat/yes.svg")));
                 ui->leftButton->setObjectName("accept");
                 ui->leftButton->setToolTip(tr("Accept transfer"));
             }
@@ -537,17 +537,16 @@ void FileTransferWidget::setupButtons(File const& file) {
             ui->rightButton->hide();
             break;
         case FileStatus::FINISHED:
-            ui->leftButton->setIcon(
-                    QIcon(lib::settings::Style::getImagePath("fileTransferInstance/yes.svg")));
+            ui->leftButton->setIcon(QIcon(lib::settings::Style::getImagePath("chat/yes.svg")));
             ui->leftButton->setObjectName("ok");
             ui->leftButton->setToolTip(tr("Open file"));
             ui->leftButton->show();
 
-            ui->rightButton->setIcon(
-                    QIcon(lib::settings::Style::getImagePath("fileTransferInstance/dir.svg")));
+            ui->rightButton->setIcon(QIcon(lib::settings::Style::getImagePath("chat/dir.svg")));
             ui->rightButton->setObjectName("dir");
             ui->rightButton->setToolTip(tr("Open file directory"));
             ui->rightButton->show();
+
 
             break;
         default:

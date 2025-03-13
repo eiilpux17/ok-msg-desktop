@@ -77,20 +77,7 @@ FriendWidget::FriendWidget(Friend* f, QWidget* parent)
         do_widgetClicked(this);
         emit friendClicked(this);
     });
-    //  connect(friendWidget, &FriendWidget::newWindowOpened,
-    //          [this](GenericChatroomWidget *w) {
-    //            Q_UNUSED(w);
-    //            emit friendWidget->newWindowOpened(friendWidget);
-    //          });
 
-    statusPic->hide();
-
-            // Try to get the avatar from the cache
-            //  QPixmap avatar = Nexus::getProfile()->loadAvatar(friendPk);
-            //  if (!avatar.isNull()) {
-            //    sendWorker->onAvatarChanged(friendPk, avatar);
-            //    setAvatar(avatar);
-            //  }
 }
 
 FriendWidget::~FriendWidget() {

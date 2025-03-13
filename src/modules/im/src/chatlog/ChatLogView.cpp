@@ -689,11 +689,14 @@ void ChatLogView::fontChanged(const QFont& font) {
 }
 
 void ChatLogView::reloadTheme() {
-    setBackgroundBrush(
-            QBrush(lib::settings::Style::getColor(lib::settings::Style::ColorPalette::GroundBase),
-                   Qt::SolidPattern));
-    selectionRectColor =
-            lib::settings::Style::getColor(lib::settings::Style::ColorPalette::SelectText);
+    // setBackgroundBrush(
+            // QBrush(lib::settings::Style::getColor(lib::settings::Style::ColorPalette::GroundBase),
+                   // Qt::SolidPattern));
+    // selectionRectColor =
+            // lib::settings::Style::getColor(lib::settings::Style::ColorPalette::SelectText);
+
+    auto css = lib::settings::Style::getStylesheet("chatArea.css");
+    setStyleSheet(css);
 
     for (IChatItem::Ptr l : lines) {
         l->reloadTheme();
