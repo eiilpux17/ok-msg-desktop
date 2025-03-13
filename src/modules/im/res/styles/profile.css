@@ -21,9 +21,9 @@
     border: 0px solid;
 }
 
-QFrame#line{
-    background: white;
-    border:0px solid;
+QWidget#ProfileForm{
+   background: @groundBase;
+	 border-radius: 10px;
 }
 
 QToolButton#qrcodeButton{

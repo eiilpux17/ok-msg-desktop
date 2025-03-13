@@ -265,12 +265,12 @@ Widget::~Widget() {
 
 
 void Widget::showProfile(QMouseEvent *e) {
-    if(profileForm){
-        profileForm.reset();
-        return;
+    if(!profileForm){
+        profileForm = std::make_unique<ProfileForm>(this);
     }
-    profileForm = std::make_unique<ProfileForm>(this);
-    profileForm->showToolTip(e);
+    if(profileForm->isHidden()){
+        profileForm->showToolTip(e);
+    }
 }
 
 bool Widget::eventFilter(QObject* obj, QEvent* event) {

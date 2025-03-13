@@ -87,16 +87,20 @@ ProfileForm::ProfileForm(QWidget* parent)
         , qr{nullptr}
 {
     // 设置窗口属性
+    setObjectName("ProfileForm");
     setWindowFlags(Qt::ToolTip | Qt::FramelessWindowHint); // 无边框工具提示窗口
     setAttribute(Qt::WA_ShowWithoutActivating); // 显示时不抢焦点
+    setAttribute(Qt::WA_StyledBackground);  // 确保样式表生效
     setFocusPolicy(Qt::StrongFocus); // 确保控件可以获得焦点
-
+    //setup ui
     ui->setupUi(this);
 
-    this->layout()->setContentsMargins(16, 5, 16, 11);
-    ui->formLayout->setVerticalSpacing(2);
 
+    layout()->setContentsMargins(10, 10, 10, 10);
     profileInfo = new ProfileInfo(this);
+
+
+    ui->formLayout->setVerticalSpacing(2);
     ui->nickname->setText(profileInfo->getNickname());
     ui->name_value->setText(profileInfo->getFullName());
 
@@ -157,7 +161,7 @@ ProfileForm::ProfileForm(QWidget* parent)
     onSelfAvatarLoaded(profileInfo->getAvatar());
 
     // QrCode
-    ui->qrcodeButton->setIcon(QIcon(lib::settings::Style::getImagePath("window/qrcode.svg")));
+    ui->qrcodeButton->setIcon(QIcon(lib::settings::Style::getImagePath("chat/qrcode.svg")));
     ui->qrcodeButton->setCursor(Qt::PointingHandCursor);
     // bodyUI->qrcodeButton->hide();
     qr = new lib::ui::QRWidget(size, this);
@@ -166,7 +170,7 @@ ProfileForm::ProfileForm(QWidget* parent)
     qr->setQRData(profileInfo->getUsername());
     // bodyUI->publicGroup->layout()->addWidget(qr);
 
-    setStyleSheet(lib::settings::Style::getStylesheet("window/profile.css"));
+    setStyleSheet(lib::settings::Style::getStylesheet("profile.css"));
 
     retranslateUi();
     auto a = ok::Application::Instance();
@@ -177,7 +181,10 @@ ProfileForm::ProfileForm(QWidget* parent)
 
     connect(ui->qrcodeButton, &QToolButton::clicked, this, &ProfileForm::showQRCode);
 
+    // 初始时设置焦点
+    setFocus();
     qApp->installEventFilter(this);
+
 }
 
 ProfileForm::~ProfileForm() {
@@ -193,22 +200,11 @@ bool ProfileForm::isShown() const {
     return false;
 }
 
-        // 可选：安装事件过滤器捕获全局鼠标事件
-// bool eventFilter(QObject* obj, QEvent* event) override {
-//     if (event->type() == QEvent::MouseButtonPress && obj != this) {
-//         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-//         if (!geometry().contains(mapFromGlobal(mouseEvent->globalPos()))) {
-//             qDebug() << "Mouse clicked outside at global" << mouseEvent->globalPos();
-//         }
-//     }
-//     return QWidget::eventFilter(obj, event);
-// }
-
 bool ProfileForm::eventFilter(QObject* object, QEvent* event) {
     if (event->type() == QEvent::MouseButtonPress && object != this) {
         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
         if (!geometry().contains(mapFromGlobal(mouseEvent->globalPos()))) {
-            qDebug() << "Mouse clicked outside at global" << mouseEvent->globalPos();
+            // qDebug() << "Mouse clicked outside at global" << mouseEvent->globalPos();
             close();
         }
     }
@@ -250,11 +246,13 @@ void ProfileForm::contextMenuEvent(QContextMenuEvent* e) {
 
 void ProfileForm::focusInEvent(QFocusEvent *event)
 {
-
+    qDebug() <<__func__;
 }
 
 void ProfileForm::focusOutEvent(QFocusEvent *event)
 {
+
+    qDebug() <<__func__;
     close();
 }
 

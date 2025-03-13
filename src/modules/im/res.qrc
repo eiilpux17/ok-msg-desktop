@@ -12,7 +12,6 @@
         <file>themes/default/settings/mainHead.css</file>
         <file>themes/default/statusButton/statusButton.css</file>
         <file>themes/default/window/general.css</file>
-        <file>themes/default/window/profile.css</file>
         <file>themes/default/window/statusPanel.css</file>
         <file>themes/default/window/window.css</file>
         <file>themes/default/window/chat.css</file>
@@ -80,7 +79,6 @@
         <file>themes/default/contact/ContactList.css</file>
         <file>themes/default/contact/add.svg</file>
         <file>themes/default/window/aboutFriend.css</file>
-        <file>themes/default/window/qrcode.svg</file>
     </qresource>
     <qresource prefix="/styles">
         <file alias="chat.css">res/styles/chat.css</file>
@@ -88,6 +86,7 @@
         <file alias="chatHead.css">res/styles/chatHead.css</file>
         <file alias="callButtons.css">res/styles/callButtons.css</file>
         <file alias="chatButtons.css">res/styles/chatButtons.css</file>
+        <file alias="profile.css">res/styles/profile.css</file>
     </qresource>
     <qresource prefix="/icons">
         <file alias="call/callButton.svg">res/icons/call/callButton.svg</file>
@@ -120,5 +119,6 @@
         <file alias="chat/dir.svg">res/icons/chat/dir.svg</file>
         <file alias="chat/arrow_white.svg">res/icons/chat/arrow_white.svg</file>
         <file alias="chat/browse.svg">res/icons/chat/browse.svg</file>
+        <file alias="chat/qrcode.svg">res/icons/chat/qrcode.svg</file>
     </qresource>
 </RCC>
