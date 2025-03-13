@@ -12,8 +12,18 @@
 
 
 QPushButton#loginBtn {
+    font-size: 14px;
     font-weight: bold;
     border-radius: 2px;
+		background-color: @orange;
+		border: 1px solid @orange;
+		color: @groundBase;
+}
+
+QPushButton#loginBtn:hover {
+  background-color: @action;
+	/* 悬停时稍暗的绿色 */
+	border: 1px solid @action;
 }
 
 QLabel#signUp, QLabel#findPwd{

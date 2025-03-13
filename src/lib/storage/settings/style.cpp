@@ -164,7 +164,7 @@ const QString Style::getStylesheet(const QString& filename, const QFont& baseFon
 
 static QStringList existingImagesCache;
 const QString Style::getImagePath(const QString& filename) {
-    QString fullPath = getThemeFolder() + filename;
+    QString fullPath = ":icons/"+filename;
 
     // search for image in cache
     if (existingImagesCache.contains(fullPath)) {
@@ -402,6 +402,7 @@ void Style::initDictColor() {
                  {"@selectText", Style::getColor(Style::ColorPalette::SelectText).name()},
                  {"@themeMedium", Style::getColor(Style::ColorPalette::ThemeMedium).name()},
                  {"@themeMediumDark", Style::getColor(Style::ColorPalette::ThemeMediumDark).name()},
+                 {"@themeDark", Style::getColor(Style::ColorPalette::ThemeDark).name()},
                  {"@themeLight", Style::getColor(Style::ColorPalette::ThemeLight).name()},
                  {"@themeHighlight", Style::getColor(Style::ColorPalette::ThemeHighlight).name()},
     };

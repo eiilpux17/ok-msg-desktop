@@ -19,6 +19,7 @@
 #include <QObject>
 
 class Module;
+class QMouseEvent;
 
 namespace module ::im {
 class Profile;
@@ -53,6 +54,8 @@ signals:
     void themeColorChanged(int idx, const QString& color);
     //    void fontChanged(const QFont& font);
     //    void fontSizeChanged(int size);
+
+    void avatarClicked(QMouseEvent* e);
 };
 
 }  // namespace ok

@@ -39,7 +39,7 @@ public slots:
 signals:
     void editFinished(const QString& newText);
     void editRemoved();
-    void clicked();
+    void clicked(QMouseEvent* e);
 
 protected:
     void paintEvent(QPaintEvent* paintEvent) override;

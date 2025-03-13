@@ -57,7 +57,6 @@ public slots:
     void reloadTheme();
 
     void activate();
-    void compactChange(bool compact);
 
 signals:
     void chatroomWidgetClicked(GenericChatroomWidget* widget);

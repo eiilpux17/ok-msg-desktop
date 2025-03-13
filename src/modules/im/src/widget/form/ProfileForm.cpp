@@ -32,9 +32,9 @@
 #include "src/core/core.h"
 #include "src/lib/storage/settings/style.h"
 #include "src/lib/ui/widget/tools/MaskablePixmap.h"
-#include "src/model/profile/iprofileinfo.h"
 #include "src/nexus.h"
 #include "src/persistence/settings.h"
+#include "src/widget/ChatWidget.h"
 #include "src/widget/contentlayout.h"
 #include "src/widget/form/setpassworddialog.h"
 #include "src/widget/form/settings/SettingsWidget.h"
@@ -42,6 +42,7 @@
 #include "ui_ProfileForm.h"
 #include "src/application.h"
 #include "src/persistence/profile.h"
+#include "src/model/profile/profileinfo.h"
 
 namespace module::im {
 
@@ -55,13 +56,10 @@ static const QMap<IProfileInfo::SetAvatarResult, QString> SET_AVATAR_ERROR = {
 
 static const QMap<IProfileInfo::RenameResult, QPair<QString, QString>> RENAME_ERROR = {
         {IProfileInfo::RenameResult::Error,
-         {ProfileForm::tr("Failed to rename"),
-          ProfileForm::tr("Couldn't rename the profile to \"%1\"")}},
+            {ProfileForm::tr("Failed to rename"), ProfileForm::tr("Couldn't rename the profile to \"%1\"")}},
         {IProfileInfo::RenameResult::ProfileAlreadyExists,
-         {ProfileForm::tr("Profile already exists"),
-          ProfileForm::tr("A profile named \"%1\" already exists.")}},
-        {IProfileInfo::RenameResult::EmptyName,
-         {ProfileForm::tr("Empty name"), ProfileForm::tr("Empty name is unavaliable")}},
+            {ProfileForm::tr("Profile already exists"), ProfileForm::tr("A profile named \"%1\" already exists.")}},
+        {IProfileInfo::RenameResult::EmptyName, {ProfileForm::tr("Empty name"), ProfileForm::tr("Empty name is unavaliable")}},
 };
 
 static const QMap<IProfileInfo::SaveResult, QPair<QString, QString>> SAVE_ERROR = {
@@ -84,43 +82,51 @@ static const QPair<QString, QString> CAN_NOT_CHANGE_PASSWORD = {
         ProfileForm::tr("Couldn't change password on the database, "
                         "it might be corrupted or use the old password.")};
 
-ProfileForm::ProfileForm(IProfileInfo* profileInfo, QWidget* parent)
-        : QWidget{parent}, qr{nullptr}, profileInfo{profileInfo} {
-    bodyUI = new Ui::ProfileForm;
-    bodyUI->setupUi(this);
-    this->layout()->setContentsMargins(16, 5, 16, 11);
-    bodyUI->formLayout->setVerticalSpacing(2);
+ProfileForm::ProfileForm(QWidget* parent)
+        : QWidget{parent}, ui{new Ui::ProfileForm}
+        , qr{nullptr}
+{
+    // 设置窗口属性
+    setWindowFlags(Qt::ToolTip | Qt::FramelessWindowHint); // 无边框工具提示窗口
+    setAttribute(Qt::WA_ShowWithoutActivating); // 显示时不抢焦点
+    setFocusPolicy(Qt::StrongFocus); // 确保控件可以获得焦点
 
-    bodyUI->nickname->setText(profileInfo->getNickname());
-    bodyUI->name_value->setText(profileInfo->getFullName());
+    ui->setupUi(this);
+
+    this->layout()->setContentsMargins(16, 5, 16, 11);
+    ui->formLayout->setVerticalSpacing(2);
+
+    profileInfo = new ProfileInfo(this);
+    ui->nickname->setText(profileInfo->getNickname());
+    ui->name_value->setText(profileInfo->getFullName());
 
     auto& c = profileInfo->getVCard();
     if (!c.emails.isEmpty()) {
-        bodyUI->email_value->setText(c.emails.at(c.emails.size() - 1).number);
+        ui->email_value->setText(c.emails.at(c.emails.size() - 1).number);
     }
 
     if (!c.tels.isEmpty()) {
         for (auto& t : c.tels) {
             if (t.mobile) {
-                bodyUI->phone_value->setText(t.number);
+                ui->phone_value->setText(t.number);
             } else {
-                bodyUI->telephone_value->setText(t.number);
+                ui->telephone_value->setText(t.number);
             }
         }
     }
 
     profileInfo->connectTo_usernameChanged(this, [this](const QString& val) {  //
-        bodyUI->name_value->setText(val);
+        ui->name_value->setText(val);
     });
-    connect(bodyUI->nickname, &QLineEdit::editingFinished, this, &ProfileForm::onNicknameEdited);
+    connect(ui->nickname, &QLineEdit::editingFinished, this, &ProfileForm::onNicknameEdited);
     profileInfo->connectTo_vCardChanged(this, [this](const VCard& vCard) {
-        bodyUI->nickname->setText(vCard.nickname);
+        ui->nickname->setText(vCard.nickname);
         if (!vCard.emails.isEmpty())
-            bodyUI->email_value->setText(vCard.emails.at(vCard.emails.size() - 1).number);
+            ui->email_value->setText(vCard.emails.at(vCard.emails.size() - 1).number);
     });
 
-    connect(bodyUI->exitButton, &QPushButton::clicked, this, &ProfileForm::onExitClicked);
-    connect(bodyUI->logoutButton, &QPushButton::clicked, this, &ProfileForm::onLogoutClicked);
+    connect(ui->exitButton, &QPushButton::clicked, this, &ProfileForm::onExitClicked);
+    connect(ui->logoutButton, &QPushButton::clicked, this, &ProfileForm::onLogoutClicked);
 
     for (QComboBox* cb : findChildren<QComboBox*>()) {
         cb->installEventFilter(this);
@@ -146,13 +152,13 @@ ProfileForm::ProfileForm(IProfileInfo* profileInfo, QWidget* parent)
     connect(Nexus::getProfile(), &Profile::selfAvatarChanged, this,
             &ProfileForm::onSelfAvatarLoaded);
 
-    bodyUI->avatarBox->addWidget(profilePicture);
-    bodyUI->avatarBox->setAlignment(profilePicture, Qt::AlignCenter);
+    ui->avatarBox->addWidget(profilePicture);
+    ui->avatarBox->setAlignment(profilePicture, Qt::AlignCenter);
     onSelfAvatarLoaded(profileInfo->getAvatar());
 
     // QrCode
-    bodyUI->qrcodeButton->setIcon(QIcon(lib::settings::Style::getImagePath("window/qrcode.svg")));
-    bodyUI->qrcodeButton->setCursor(Qt::PointingHandCursor);
+    ui->qrcodeButton->setIcon(QIcon(lib::settings::Style::getImagePath("window/qrcode.svg")));
+    ui->qrcodeButton->setCursor(Qt::PointingHandCursor);
     // bodyUI->qrcodeButton->hide();
     qr = new lib::ui::QRWidget(size, this);
     qr->setVisible(false);
@@ -169,13 +175,13 @@ ProfileForm::ProfileForm(IProfileInfo* profileInfo, QWidget* parent)
                 retranslateUi();
             });
 
-    connect(bodyUI->qrcodeButton, &QToolButton::clicked, this, &ProfileForm::showQRCode);
+    connect(ui->qrcodeButton, &QToolButton::clicked, this, &ProfileForm::showQRCode);
 
+    qApp->installEventFilter(this);
 }
 
 ProfileForm::~ProfileForm() {
-    
-    delete bodyUI;
+    delete ui;
 }
 
 bool ProfileForm::isShown() const {
@@ -187,41 +193,47 @@ bool ProfileForm::isShown() const {
     return false;
 }
 
-void ProfileForm::showTo(ContentLayout* contentLayout) {
-    auto idx = contentLayout->indexOf(this);
-    if (idx < 0) {
-        contentLayout->addWidget(this);
-    }
-    contentLayout->setCurrentWidget(this);
-
-    QString defaultPath = Nexus::getProfile()->getDir().path();
-    QString url = QUrl::fromLocalFile(defaultPath).toString();
-
-    QString dirPrLink = tr("Current profile location: %1")
-                                .arg(QString("<a href=\"%1\">%2</a>").arg(url).arg(defaultPath));
-
-    bodyUI->dirPrLink->setText(dirPrLink);
-    bodyUI->dirPrLink->setOpenExternalLinks(true);
-    bodyUI->dirPrLink->setTextInteractionFlags(Qt::LinksAccessibleByMouse |
-                                               Qt::TextSelectableByMouse);
-    bodyUI->dirPrLink->setMaximumSize(bodyUI->dirPrLink->sizeHint());
-}
+        // 可选：安装事件过滤器捕获全局鼠标事件
+// bool eventFilter(QObject* obj, QEvent* event) override {
+//     if (event->type() == QEvent::MouseButtonPress && obj != this) {
+//         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+//         if (!geometry().contains(mapFromGlobal(mouseEvent->globalPos()))) {
+//             qDebug() << "Mouse clicked outside at global" << mouseEvent->globalPos();
+//         }
+//     }
+//     return QWidget::eventFilter(obj, event);
+// }
 
 bool ProfileForm::eventFilter(QObject* object, QEvent* event) {
-    if (object == static_cast<QObject*>(profilePicture) &&
-        event->type() == QEvent::MouseButtonPress) {
+    if (event->type() == QEvent::MouseButtonPress && object != this) {
         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-        if (mouseEvent->button() == Qt::RightButton) return true;
+        if (!geometry().contains(mapFromGlobal(mouseEvent->globalPos()))) {
+            qDebug() << "Mouse clicked outside at global" << mouseEvent->globalPos();
+            close();
+        }
     }
     return false;
 }
 
+void ProfileForm::showToolTip(QMouseEvent *e)
+{
+    // 获取绝对屏幕位置
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    QPointF globalPos = e->globalPosition(); // Qt 6: 返回QPointF
+#else
+    QPoint globalPos = e->globalPos();       // Qt 5: 返回QPoint
+#endif
+    globalPos.setX(globalPos.x()+40);
+    move(globalPos); // 设置显示位置
+    show();
+}
+
 void ProfileForm::showEvent(QShowEvent* e) {
-    bodyUI->username->setText(profileInfo->getUsername());
+    ui->username->setText(profileInfo->getUsername());
 
     auto& c = profileInfo->getVCard();
     if (!c.adrs.isEmpty()) {
-        bodyUI->location->setText(c.adrs.at(c.adrs.size() - 1).location());
+        ui->location->setText(c.adrs.at(c.adrs.size() - 1).location());
     }
 
     auto& avt = profileInfo->getAvatar();
@@ -235,6 +247,19 @@ void ProfileForm::contextMenuEvent(QContextMenuEvent* e) {
     });
     menu.exec(e->globalPos());
 }
+
+void ProfileForm::focusInEvent(QFocusEvent *event)
+{
+
+}
+
+void ProfileForm::focusOutEvent(QFocusEvent *event)
+{
+    close();
+}
+
+
+
 
 void ProfileForm::showProfilePictureContextMenu(const QPoint& point) {
     const QPoint pos = profilePicture->mapToGlobal(point);
@@ -250,7 +275,7 @@ void ProfileForm::showProfilePictureContextMenu(const QPoint& point) {
 }
 
 void ProfileForm::showQRCode() {
-    QPoint pos = bodyUI->qrcodeButton->mapToGlobal(QPoint(0, bodyUI->qrcodeButton->height() + 2));
+    QPoint pos = ui->qrcodeButton->mapToGlobal(QPoint(0, ui->qrcodeButton->height() + 2));
     qr->move(pos);
     qr->show();
 }
@@ -258,7 +283,7 @@ void ProfileForm::showQRCode() {
 void ProfileForm::copyIdClicked() {}
 
 void ProfileForm::onNicknameEdited() {
-    profileInfo->setNickname(bodyUI->nickname->text());
+    profileInfo->setNickname(ui->nickname->text());
 }
 
 void ProfileForm::onSelfAvatarLoaded(const QPixmap& pic) {
@@ -386,7 +411,7 @@ void ProfileForm::onChangePassClicked() {
 }
 
 void ProfileForm::retranslateUi() {
-    bodyUI->retranslateUi(this);
+    ui->retranslateUi(this);
     setPasswordButtonsText();
 }
 }  // namespace module::im

@@ -85,11 +85,12 @@ public:
     };
 
 protected:
-    virtual void showEvent(QShowEvent* e) override;
+    void showEvent(QShowEvent* e) override;
+
 
     bool showContextMenu;
     // 信号状态
-    QLabel* statusPic;
+    std::optional<QLabel*> statusPic = std::nullopt;
 
     // 名称
     lib::ui::CroppingLabel* nameLabel;

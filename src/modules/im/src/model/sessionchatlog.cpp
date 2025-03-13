@@ -14,12 +14,10 @@
 
 #include <QDebug>
 #include <QtGlobal>
-#include <mutex>
 
 #include "Bus.h"
 #include "application.h"
 #include "FriendList.h"
-#include "src/lib/session/profile.h"
 #include "src/model/Friend.h"
 #include "src/nexus.h"
 
@@ -461,8 +459,8 @@ void SessionChatLog::onFileUpdated(const FriendId& friendId, const File& file) {
     if (toxFileIsComplete(file.status)) {
         currentFileTransfers.erase(fileIt);
     }
-    //    qDebug() << "file messageIdx" << messageIdx.get();
-    emit this->itemUpdated(messageIdx);
+    //qDebug() << "file messageIdx" << messageIdx.get();
+    emit itemUpdated(messageIdx);
 }
 
 void SessionChatLog::onFileCanceled(const FriendId& sender, const QString& fileId) {

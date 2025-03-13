@@ -29,6 +29,7 @@ public:
     SessionChatLog(ChatLogIdx initialIdx, const ICoreIdHandler& coreIdHandler);
     ~SessionChatLog();
 
+
     const ChatLogItem* at(ChatLogIdx idx) const override;
     SearchResult searchForward(SearchPos startIdx, const QString& phrase,
                                const ParameterSearch& parameter) const override;

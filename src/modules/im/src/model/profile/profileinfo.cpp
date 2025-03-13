@@ -25,7 +25,11 @@
 
 namespace module::im {
 
-ProfileInfo::ProfileInfo(Core* core, Profile* profile) : profile{profile}, core{core} {
+ProfileInfo::ProfileInfo(QObject* parent)
+        : QObject(parent)
+{
+
+    auto core = Core::getInstance();
     connect(core, &Core::vCardSet, this, &ProfileInfo::vCardChanged);
     connect(core, &Core::usernameSet, this, &ProfileInfo::usernameChanged);
     connect(core, &Core::avatarSet, this, &ProfileInfo::avatarChanged);
@@ -38,7 +42,7 @@ ProfileInfo::ProfileInfo(Core* core, Profile* profile) : profile{profile}, core{
  * @return True on success, false otherwise.
  */
 bool ProfileInfo::setPassword(const QString& password) {
-    QString errorMsg = profile->setPassword(password);
+    QString errorMsg = Nexus::getProfile()->setPassword(password);
     return errorMsg.isEmpty();
 }
 
@@ -47,7 +51,7 @@ bool ProfileInfo::setPassword(const QString& password) {
  * @return True on success, false otherwise.
  */
 bool ProfileInfo::deletePassword() {
-    QString errorMsg = profile->setPassword("");
+    QString errorMsg = Nexus::getProfile()->setPassword("");
     return errorMsg.isEmpty();
 }
 
@@ -63,7 +67,7 @@ bool ProfileInfo::isEncrypted() const {
  * @brief Copy self ok::base::Jid to clipboard.
  */
 void ProfileInfo::copyId() const {
-    ok::base::Jid selfId = core->getSelfPeerId();
+    ok::base::Jid selfId = Core::getInstance()->getSelfPeerId();
     QString txt = selfId.toString();
     QClipboard* clip = QApplication::clipboard();
     clip->setText(txt, QClipboard::Clipboard);
@@ -77,31 +81,27 @@ void ProfileInfo::copyId() const {
  * @param name New name.
  */
 void ProfileInfo::setNickname(const QString& name) {
-    profile->setNick(name, true);
+    Nexus::getProfile()->setNick(name, true);
 }
 
 void ProfileInfo::setAvatar(const QPixmap& avatar) {
-    profile->setAvatarOnly(avatar);
+    Nexus::getProfile()->setAvatarOnly(avatar);
 }
 
 const QPixmap& ProfileInfo::getAvatar() {
-    return profile->loadAvatar();
+    return Nexus::getProfile()->loadAvatar();
 }
 
-/**
- * @brief Set self status message.
- * @param status New status message.
- */
 void ProfileInfo::setStatusMessage(const QString& status) {
-    core->setStatusMessage(status);
+    Core::getInstance()->setStatusMessage(status);
 }
 
 const VCard& ProfileInfo::getVCard() const {
-    return profile->getVCard();
+    return Nexus::getProfile()->getVCard();
 }
 
 const QString& ProfileInfo::getUsername() const {
-    return profile->getUsername();
+    return Nexus::getProfile()->getUsername();
 }
 
 /**
@@ -109,11 +109,11 @@ const QString& ProfileInfo::getUsername() const {
  * @return Profile name.
  */
 const QString& ProfileInfo::getNickname() const {
-    return profile->getVCard().nickname;
+    return Nexus::getProfile()->getVCard().nickname;
 }
 
 const QString& ProfileInfo::getFullName() const {
-    return profile->getFullName();
+    return Nexus::getProfile()->getFullName();
 }
 
 /**
@@ -217,7 +217,7 @@ void ProfileInfo::copyQr(const QImage& image) const {
  * @return Result code of save operation.
  */
 IProfileInfo::SaveResult ProfileInfo::saveQr(const QImage& image, const QString& path) const {
-    QString current = profile->getUsername() + ".png";
+    QString current = Nexus::getProfile()->getUsername() + ".png";
     if (path.isEmpty()) {
         return SaveResult::EmptyPath;
     }
@@ -269,7 +269,7 @@ IProfileInfo::SetAvatarResult ProfileInfo::setAvatar(const QString& path) {
     QByteArray avatar;
     const auto err = createAvatarFromFile(file, avatar);
     if (err == SetAvatarResult::OK) {
-        profile->setAvatar(avatar, true);
+        Nexus::getProfile()->setAvatar(avatar, true);
     }
     return err;
 }
@@ -336,6 +336,6 @@ IProfileInfo::SetAvatarResult ProfileInfo::scalePngToAvatar(QByteArray& avatar) 
     return SetAvatarResult::OK;
 }
 void ProfileInfo::removeAvatar() {
-    profile->removeAvatar(true);
+    Nexus::getProfile()->removeAvatar(true);
 }
 }  // namespace module::im

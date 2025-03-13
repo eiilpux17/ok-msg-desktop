@@ -8,6 +8,7 @@ add_subdirectory(audio)
 add_subdirectory(video)
 add_subdirectory(board)
 add_subdirectory(ui)
+add_subdirectory(thread)
 
 if(ENABLE_PLUGINS)
   add_subdirectory(plugin)

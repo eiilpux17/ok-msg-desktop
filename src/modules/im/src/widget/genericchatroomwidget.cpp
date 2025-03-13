@@ -22,61 +22,43 @@ GenericChatroomWidget::GenericChatroomWidget(lib::messenger::ChatType type, cons
         : GenericChatItemWidget(type, cid, parent), contactId(cid) {
     // setAutoFillBackground(true);
     // reloadTheme();
-    compactChange(false);
+
+    mainLayout = new QHBoxLayout(this);
+    mainLayout->setContentsMargins(8, 8, 8, 8);
+    mainLayout->setSpacing(10);
+
+
+    textLayout = new QVBoxLayout(this);
+    textLayout->setSpacing(0);
+    textLayout->setMargin(0);
+    textLayout->addStretch();
+    textLayout->addWidget(nameLabel);
+    textLayout->addWidget(lastMessageLabel);
+    textLayout->addStretch();
+
+    avatar->setContentsSize(QSize(40, 40));
+    mainLayout->addWidget(avatar);
+
+    mainLayout->addLayout(textLayout);
+
+    if (statusPic.has_value()) {
+        mainLayout->addWidget(statusPic.value());
+    }
+
+
+    mainLayout->activate();
+    setLayout(mainLayout);
+    // setLayoutDirection(Qt::LeftToRight);  // parent might have set Qt::RightToLeft
+
+
+    // nameLabel->setFont(lib::settings::Style::getFont(lib::settings::Style::Font::Big));
+
 }
 
 GenericChatroomWidget::~GenericChatroomWidget() {}
 
 bool GenericChatroomWidget::eventFilter(QObject*, QEvent*) {
     return true;  // Disable all events.
-}
-
-void GenericChatroomWidget::compactChange(bool _compact) {
-    //    if (!isCompact())
-    //        delete textLayout; // has to be first, deleted by layout
-
-    setCompact(_compact);
-
-    delete mainLayout;
-
-    mainLayout = new QHBoxLayout;
-    textLayout = new QVBoxLayout;
-
-    setLayout(mainLayout);
-    textLayout->setSpacing(0);
-    textLayout->setMargin(0);
-    setLayoutDirection(Qt::LeftToRight);  // parent might have set Qt::RightToLeft
-
-    // avatar
-    if (isCompact()) {
-        mainLayout->setContentsMargins(5, 5, 5, 5);
-        mainLayout->setSpacing(5);
-        delete textLayout;  // Not needed
-        avatar->setContentsSize(QSize(20, 20));
-        mainLayout->addWidget(avatar);
-        mainLayout->addWidget(nameLabel);
-        mainLayout->addWidget(lastMessageLabel);
-        if (statusPic) {
-            mainLayout->addWidget(statusPic);
-        }
-        mainLayout->activate();
-        nameLabel->setFont(lib::settings::Style::getFont(lib::settings::Style::Font::Medium));
-    } else {
-        mainLayout->setContentsMargins(8, 8, 8, 8);
-        mainLayout->setSpacing(10);
-        avatar->setContentsSize(QSize(40, 40));
-        textLayout->addStretch();
-        textLayout->addWidget(nameLabel);
-        textLayout->addWidget(lastMessageLabel);
-        textLayout->addStretch();
-        mainLayout->addWidget(avatar);
-        mainLayout->addLayout(textLayout);
-        if (statusPic) {
-            mainLayout->addWidget(statusPic);
-        }
-        mainLayout->activate();
-        nameLabel->setFont(lib::settings::Style::getFont(lib::settings::Style::Font::Big));
-    }
 }
 
 void GenericChatroomWidget::setName(const QString& name) {
@@ -105,31 +87,31 @@ QString GenericChatroomWidget::getTitle() const {
 void GenericChatroomWidget::reloadTheme() {
     // QPalette p;
 
-    //    p = statusMessageLabel->palette();
-    //    p.setColor(QPalette::WindowText, Style::getColor(Style::GroundExtra));       // Base color
-    //    p.setColor(QPalette::HighlightedText, Style::getColor(Style::StatusActive)); // Color when
-    //    active statusMessageLabel->setPalette(p);
+            //    p = statusMessageLabel->palette();
+            //    p.setColor(QPalette::WindowText, Style::getColor(Style::GroundExtra));       // Base color
+            //    p.setColor(QPalette::HighlightedText, Style::getColor(Style::StatusActive)); // Color when
+            //    active statusMessageLabel->setPalette(p);
 
-    // p = nameLabel->palette();
-    // p.setColor(QPalette::WindowText,
-    //            lib::settings::Style::getColor(
-    //                    lib::settings::Style::ColorPalette::MainText));  // Base color
-    // p.setColor(QPalette::HighlightedText,
-    //            lib::settings::Style::getColor(
-    //                    lib::settings::Style::ColorPalette::NameActive));  // Color when active
-    // nameLabel->setPalette(p);
+            // p = nameLabel->palette();
+            // p.setColor(QPalette::WindowText,
+            //            lib::settings::Style::getColor(
+            //                    lib::settings::Style::ColorPalette::MainText));  // Base color
+            // p.setColor(QPalette::HighlightedText,
+            //            lib::settings::Style::getColor(
+            //                    lib::settings::Style::ColorPalette::NameActive));  // Color when active
+            // nameLabel->setPalette(p);
 
-    // p = palette();
-    // p.setColor(QPalette::Window,
-    //            lib::settings::Style::getColor(
-    //                    lib::settings::Style::ColorPalette::ThemeMedium));  // Base background color
-    // p.setColor(QPalette::Highlight,
-    //            lib::settings::Style::getColor(
-    //                    lib::settings::Style::ColorPalette::ThemeHighlight));  // On mouse over
-    // p.setColor(QPalette::Light,
-    //            lib::settings::Style::getColor(
-    //                    lib::settings::Style::ColorPalette::ThemeLight));  // When active
-    // setPalette(p);
+            // p = palette();
+            // p.setColor(QPalette::Window,
+            //            lib::settings::Style::getColor(
+            //                    lib::settings::Style::ColorPalette::ThemeMedium));  // Base background color
+            // p.setColor(QPalette::Highlight,
+            //            lib::settings::Style::getColor(
+            //                    lib::settings::Style::ColorPalette::ThemeHighlight));  // On mouse over
+            // p.setColor(QPalette::Light,
+            //            lib::settings::Style::getColor(
+            //                    lib::settings::Style::ColorPalette::ThemeLight));  // When active
+            // setPalette(p);
 }
 
 void GenericChatroomWidget::activate() {
@@ -146,8 +128,9 @@ void GenericChatroomWidget::mouseReleaseEvent(QMouseEvent* event) {
     }
 }
 
-void GenericChatroomWidget::enterEvent(QEvent*) {
+void GenericChatroomWidget::enterEvent(QEvent* event) {
     if (!active) setBackgroundRole(QPalette::Light);
+    QWidget::enterEvent(event);
 }
 
 void GenericChatroomWidget::leaveEvent(QEvent* event) {

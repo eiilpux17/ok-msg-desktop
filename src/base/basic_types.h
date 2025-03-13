@@ -15,6 +15,7 @@
 #include <functional>
 #include <string>
 #include <utility>
+
 namespace ok::base {
 
 template <typename Signature> using Fn = std::function<Signature>;

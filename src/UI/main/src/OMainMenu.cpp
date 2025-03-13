@@ -69,7 +69,10 @@ static QList<MenuItem> MenuItemList = {
 constexpr QSize ICON_SIZE(28,28);
 
 
-OMainMenu::OMainMenu(QWidget* parent) : QFrame(parent), ui(new Ui::OMainMenu) {
+OMainMenu::OMainMenu(QWidget* parent) : QFrame(parent)
+        , ui(new Ui::OMainMenu)
+        , delayCaller_(new base::DelayedCallTimer(this)){
+
     qDebug() << __func__;
 
     OK_RESOURCE_INIT(UIMainWindow);
@@ -89,23 +92,26 @@ OMainMenu::OMainMenu(QWidget* parent) : QFrame(parent), ui(new Ui::OMainMenu) {
         group->addButton(item, static_cast<int>(i.menu));
     }
     //settings
+    ui->settingBtn->setFixedSize(ICON_SIZE);
     group->addButton(ui->settingBtn, static_cast<int>(SystemMenu::setting));
 
-    ui->settingBtn->setFixedSize(ICON_SIZE);
+
+    auto profile = ok::Application::Instance()->getProfile();
+    ui->label_avatar->setCursor(Qt::PointingHandCursor);
+    setAvatar(profile->getAvatar());
+    connect(ui->label_avatar, &lib::ui::CroppingLabel::clicked, this, [](QMouseEvent* e){
+        auto bus = ok::Application::Instance()->bus();
+        emit bus->avatarClicked(e);
+    });
+
+    connect(profile, &lib::session::Profile::selfAvatarChanged, this, &OMainMenu::setAvatar);
 
     // 设置样式
-    QString qss = ok::base::Files::readStringAll(":/qss/menu.css");
+    auto qss = ok::base::Files::readStringAll(":/qss/menu.css");
     setStyleSheet(qss);
 
     retranslateUi();
 
-    auto profile = ok::Application::Instance()->getProfile();
-    // auto bus = ok::Application::Instance()->bus();
-
-    setAvatar(profile->getAvatar());
-    connect(profile, &lib::session::Profile::selfAvatarChanged, this, &OMainMenu::setAvatar);
-
-    delayCaller_ = new base::DelayedCallTimer(this);
     delayCaller_->call(100, [&]() { check(SystemMenu::chat); });
 }
 

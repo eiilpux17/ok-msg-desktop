@@ -11,7 +11,6 @@
  */
 
 #include <QObject>
-#include "base/jid.h"
 #include "iprofileinfo.h"
 #include "src/base/interface.h"
 
@@ -26,7 +25,7 @@ class Profile;
 class ProfileInfo : public QObject, public IProfileInfo {
     Q_OBJECT
 public:
-    ProfileInfo(Core* core, Profile* profile);
+    explicit ProfileInfo(QObject* parent = nullptr);
 
     bool setPassword(const QString& password) override;
     bool deletePassword() override;
@@ -67,8 +66,6 @@ private:
     IProfileInfo::SetAvatarResult createAvatarFromFile(QFile& file, QByteArray& avatar);
     IProfileInfo::SetAvatarResult byteArrayToPng(QByteArray inData, QByteArray& outPng);
     IProfileInfo::SetAvatarResult scalePngToAvatar(QByteArray& avatar);
-    Profile* const profile;
-    Core* const core;
 
 signals:
     void logouted();

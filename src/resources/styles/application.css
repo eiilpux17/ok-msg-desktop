@@ -79,7 +79,7 @@ QComboBox QAbstractItemView::item:hover {
 
 /* 垂直滚动条样式 */
 QComboBox QAbstractItemView QScrollBar:vertical {
-	background-color: #f0f0f0;
+	background-color: transparent;
 	/* 滚动条背景 */
 	width: 10px;
 	/* 宽度 */
@@ -89,7 +89,7 @@ QComboBox QAbstractItemView QScrollBar:vertical {
 
 /* 滑块 */
 QComboBox QAbstractItemView QScrollBar::handle:vertical {
-	background-color: #666666;
+	background-color: @themeHighlight;
 	/* 滑块颜色 */
 	border-radius: 5px;
 	/* 圆角 */
@@ -99,7 +99,7 @@ QComboBox QAbstractItemView QScrollBar::handle:vertical {
 
 /* 轨道 */
 QComboBox QAbstractItemView QScrollBar::groove:vertical {
-	background-color: #e0e0e0;
+	background-color: transparent;
 }
 
 /* 上下箭头按钮（可选） */
@@ -178,30 +178,30 @@ QCheckBox::indicator:hover {
 	/* 悬停时边框变蓝色 */
 }
 
-QPushButton {
-	background-color: @orange;
+/*QPushButton {
+/*	background-color: @orange;*/
 	/* 绿色背景 */
-	border: 1px solid @orange;
-	border-radius: 4px;
+/*	border: 1px solid @orange;*/
+/*	border-radius: 4px;*/
 	/* 圆角 */
-	padding: 0 6px;
+/*	padding: 0 6px;*/
 	/* 内边距 */
-	color: white;
+/*	color: white;*/
 	/* 白色文字 */
-	font-size: 14px;
+/*	font-size: 14px;*/
 	/* 文字大小 */
-}
+/*}*/
 
-QPushButton:hover {
-	background-color: @action;
+/*QPushButton:hover {*/
+/*	background-color: @action;*/
 	/* 悬停时稍暗的绿色 */
-	border: 1px solid @action;
-}
+/*	border: 1px solid @action;*/
+/*}*/
 
 QPushButton:pressed {
-	background-color: @action;
+/*	background-color: @action;*/
 	/* 按下时更暗 */
-	border: 1px solid @action;
+/*	border: 1px solid @action;*/
 }
 
 QPushButton:disabled {
@@ -267,7 +267,7 @@ QScrollBar:horizontal {
 
 
 QScrollBar::handle {
-	background-color: @themeMedium;
+	background-color: @themeHighlight;
 	border-radius: 4px;
 }
 
@@ -332,22 +332,6 @@ QScrollBar::handle:horizontal:pressed {
 	/* background-color: #b1b1b1; */
 }
 
-/*QScrollBar::add-line:horizontal
-{
-    background-color: white;
-		width: 0px;
-		subcontrol-position: right;
-		subcontrol-origin: margin;
-}
-
-QScrollBar::sub-line:horizontal
-{
-    background-color: white;
-		width: 0px;
-		subcontrol-position: left;
-		subcontrol-origin: margin;
-}*/
-
 QScrollBar::right-arrow:horizontal {
 	width: 0px;
 	height: 0px;
@@ -358,12 +342,6 @@ QScrollBar::left-arrow:horizontal {
 	width: 0px;
 	height: 0px;
 	background-color: transparent;
-}
-
-/* 导轨颜色 */
-QScrollBar::groove:vertical {
-	background-color: red;
-	/* 导轨为中灰色 */
 }
 
 

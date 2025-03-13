@@ -57,7 +57,11 @@ module--im--MessageSessionWidget QLabel#nameLabel{
     color: @mainText;
 }
 
-module--im--MessageSessionWidget QLabel#lastMessageLabel:!active{
+module--im--MessageSessionWidget:selected QLabel#nameLabel{
+    color: @mainText;
+}
+
+module--im--MessageSessionWidget QLabel#lastMessageLabel{
     color: #b3b1b3;
 }
 module--im--MessageSessionWidget QLabel#lastMessageLabel:active{
@@ -80,7 +84,7 @@ QScrollArea#sessionList{
 QGraphicsView
 {
     border: none;
-		background: @groundExtra;
+	background: @groundExtra;
 }
 
 

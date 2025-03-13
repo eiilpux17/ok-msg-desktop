@@ -87,6 +87,9 @@ Widget::Widget(QWidget* parent)  //
         , eventIcon(false)
         , delayCaller(std::make_unique<base::DelayedCallTimer>())  //
 {
+    // style sheet will make content margins
+    setAttribute(Qt::WA_LayoutOnEntireRect, false);
+
     instance = this;
     layout = new QVBoxLayout(this);
     layout->setSpacing(0);
@@ -153,10 +156,6 @@ Widget::Widget(QWidget* parent)  //
             lib::settings::Style::getImagePath("rejectCall/rejectCall.svg"), icon_size, icon_size));
     connect(actionQuit, &QAction::triggered, qApp, &QApplication::quit);
 
-    //  layout()->setContentsMargins(0, 0, 0, 0);
-    setAttribute(Qt::WA_LayoutOnEntireRect, false);  // style sheet will make content margins
-    //  setContentsMargins(0,0,0,0);
-    //  setAutoFillBackground(true);
 
     //  profilePicture =
     //      new MaskablePixmapWidget(this, QSize(40, 40), ":/img/avatar_mask.svg");
@@ -252,6 +251,9 @@ Widget::Widget(QWidget* parent)  //
     connect(a->bus(), &ok::Bus::themeColorChanged, this,
             [&]() { reloadTheme(); });
 
+    connect(a->bus(), &ok::Bus::avatarClicked, this, [&](QMouseEvent *e){
+        showProfile(e);
+    });
 }
 
 Widget::~Widget() {
@@ -259,6 +261,16 @@ Widget::~Widget() {
     
     delete timer;
 
+}
+
+
+void Widget::showProfile(QMouseEvent *e) {
+    if(profileForm){
+        profileForm.reset();
+        return;
+    }
+    profileForm = std::make_unique<ProfileForm>(this);
+    profileForm->showToolTip(e);
 }
 
 bool Widget::eventFilter(QObject* obj, QEvent* event) {

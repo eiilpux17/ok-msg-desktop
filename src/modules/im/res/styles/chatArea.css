@@ -21,3 +21,36 @@ QTextEdit
     color: black;
 }
 
+[fontColor="white"] QLabel {
+    color: white;
+    font: @big;
+}
+
+[fontColor="black"] QLabel {
+    color: @statusActive;
+    font: @big;
+}
+
+QPushButton {
+    margin:0;
+    border: none;
+		background: transparent;
+}
+
+QPushButton:hover {
+  border: none;
+	background: transparent;
+}
+
+
+QProgressBar {
+    border: 2px solid @statusActive;
+    border-radius: 0px;
+    background-color: @statusActive;
+}
+
+QProgressBar::chunk {
+    background-color: @transferMiddle;
+    width: 1px;
+}
+

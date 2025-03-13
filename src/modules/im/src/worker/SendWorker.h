@@ -60,9 +60,9 @@ public:
         return chatHistory->getLastTextMessage(1);
     }
 
-    IChatLog* getChatLog() const {
-        return chatLog.get();
-    }
+    // IChatLog* getChatLog() const {
+    //     return chatLog.get();
+    // }
 
     const ContactId& getContactId() const {
         return contactId;
@@ -72,13 +72,17 @@ public:
         return lastCallIsVideo;
     }
 
+    ChatHistory* getChatHistory() const {
+        return chatHistory.get();
+    }
+
 private:
 
     MessageProcessor::SharedParams sharedParams;
     std::unique_ptr<IMessageDispatcher> messageDispatcher;
     std::unique_ptr<ChatHistory> chatHistory;
 
-    std::unique_ptr<SessionChatLog> chatLog;
+    // std::unique_ptr<SessionChatLog> chatLog;
 
     std::unique_ptr<Chatroom> chatRoom;
     std::unique_ptr<ChatFormHeader> headWidget;

@@ -157,6 +157,7 @@ public slots:
 
     void showForwardMessageDialog(const MsgId& msgId);
     void showAddMemberDialog(const ContactId& groupId);
+    void showProfile(QMouseEvent *e);
 
 signals:
     void friendAdded(const Friend* f);
@@ -246,6 +247,7 @@ private:
     ChatWidget* chatWidget;
     ContactWidget* contactWidget;
     SettingsWidget* settingsWidget;
+    std::unique_ptr<ProfileForm> profileForm;
 
     Core* core;
 
@@ -262,17 +264,6 @@ private:
     DesktopNotify notifier;
 #endif
 
-// #ifdef Q_OS_MAC
-//     QAction* fileMenu;
-//     QAction* editMenu;
-//     QAction* contactMenu;
-//     QMenu* changeStatusMenu;
-//     QAction* editProfileAction;
-//     QAction* logoutAction;
-//     QAction* addContactAction;
-//     QAction* nextConversationAction;
-//     QAction* previousConversationAction;
-// #endif
 
     std::shared_ptr<base::DelayedCallTimer> delayCaller;
 };

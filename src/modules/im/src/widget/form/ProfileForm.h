@@ -30,7 +30,6 @@ class QRWidget;
 
 namespace module::im {
 
-class ContentLayout;
 
 class IProfileInfo;
 
@@ -53,21 +52,25 @@ protected:
 class ProfileForm : public QWidget {
     Q_OBJECT
 public:
-    ProfileForm(IProfileInfo* profileInfo, QWidget* parent = nullptr);
-    ~ProfileForm();
+    explicit ProfileForm(QWidget* parent = nullptr);
+    ~ProfileForm() override;
 
-    void showTo(ContentLayout* contentLayout);
+
     bool isShown() const;
 
 public slots:
     void onSelfAvatarLoaded(const QPixmap& pic);
     void onLogoutClicked();
     void onExitClicked();
+    void showToolTip(QMouseEvent *e);
 
 protected:
-    virtual bool eventFilter(QObject* object, QEvent* event) override;
-    virtual void showEvent(QShowEvent* e) override;
-    void contextMenuEvent(QContextMenuEvent* e);
+    bool eventFilter(QObject* object, QEvent* event) override;
+    void showEvent(QShowEvent* e) override;
+    void contextMenuEvent(QContextMenuEvent* e) override;
+    void focusInEvent(QFocusEvent* event) override;
+    void focusOutEvent(QFocusEvent* event) override;
+
 
 private slots:
     void setPasswordButtonsText();
@@ -84,6 +87,7 @@ private slots:
     void showProfilePictureContextMenu(const QPoint& point);
     void showQRCode();
 
+
 private:
     void retranslateUi();
 
@@ -91,7 +95,7 @@ private:
     static QString getSupportedImageFilter();
 
 private:
-    Ui::ProfileForm* bodyUI;
+    Ui::ProfileForm* ui;
     lib::ui::MaskablePixmapWidget* profilePicture;
     lib::ui::QRWidget* qr;
     IProfileInfo* profileInfo;

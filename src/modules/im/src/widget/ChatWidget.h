@@ -56,7 +56,7 @@ public:
     AddFriendForm* openFriendAddForm();
     void reloadTheme();
     void retranslateUi();
-    void showProfile();
+
     void clearAllReceipts();
 
 protected:
@@ -86,9 +86,6 @@ private:
 
     std::unique_ptr<AddFriendForm> addFriendForm;
 
-    ProfileInfo* profileInfo;
-    ProfileForm* profileForm;
-
     void init();
     void deinit();
     void updateIcons();
@@ -105,7 +102,7 @@ private:
     void groupInvitesClear();
 
 public slots:
-    void on_nameClicked();
+
     void onProfileChanged(Profile* profile);
 
     void onConnecting();

@@ -21,21 +21,15 @@
 #include "lib/audio/audio.h"
 #include "lib/storage/settings/OkSettings.h"
 #include "lib/storage/settings/translator.h"
-#include "lib/video/camerasource.h"
 #include "persistence/settings.h"
 #include "src/core/core.h"
 #include "src/core/coreav.h"
 #include "src/model/groupinvite.h"
 #include "src/model/Status.h"
 #include "src/persistence/profile.h"
+#include "src/widget/form/ProfileForm.h"
 #include "src/widget/widget.h"
 
-// #ifdef Q_OS_MAC
-// #include <QActionGroup>
-// #include <QMenuBar>
-// #include <QSignalMapper>
-// #include <QWindow>
-// #endif
 
 /**
  * @class Nexus
@@ -145,7 +139,6 @@ void Nexus::start(std::shared_ptr<lib::session::AuthSession> session) {
 
     // Connections
     connect(profile.get(), &Profile::selfAvatarChanged, m_widget, &Widget::onSelfAvatarLoaded);
-
     connect(profile.get(), &Profile::coreChanged,
             [&, bus](Core& core) {
                 emit bus->coreChanged(&core);
@@ -184,6 +177,7 @@ void Nexus::start(std::shared_ptr<lib::session::AuthSession> session) {
             stopNotification();
         });
     });
+
 
 
     profile->start();

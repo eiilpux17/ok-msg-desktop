@@ -32,12 +32,13 @@ GenericChatItemWidget::GenericChatItemWidget(lib::messenger::ChatType type,
                                              const ContactId& cid,
                                              QWidget* parent)
         : QFrame(parent)
-        , statusPic{nullptr}
+        , statusPic{std::nullopt}
         , contactId{cid}
         , contact{nullptr}
         , prevStatus{Status::None}
         , active{false}
         , showContextMenu{true} {
+
     nameLabel = new lib::ui::CroppingLabel(this);
     nameLabel->setObjectName("nameLabel");
     nameLabel->setTextFormat(Qt::PlainText);
@@ -49,8 +50,7 @@ GenericChatItemWidget::GenericChatItemWidget(lib::messenger::ChatType type,
     lastMessageLabel->setText("");
 
     auto p = lastMessageLabel->palette();
-    p.setColor(QPalette::WindowText,
-               lib::settings::Style::getColor(lib::settings::Style::ColorPalette::GroundExtra));
+    p.setColor(QPalette::WindowText, lib::settings::Style::getColor(lib::settings::Style::ColorPalette::GroundExtra));
 
     auto newFont = lastMessageLabel->font();
     newFont.setPixelSize(newFont.pixelSize() * .7);
@@ -59,9 +59,11 @@ GenericChatItemWidget::GenericChatItemWidget(lib::messenger::ChatType type,
     lastMessageLabel->setPalette(p);
     //  lastMessageLabel->setForegroundRole(QPalette::WindowText);
 
-    statusPic = new QLabel(this);
-    statusPic->setContentsMargins(1, 1, 1, 1);
+
+
     if (type == lib::messenger::ChatType::Chat) {
+        statusPic = std::make_optional(new QLabel(this));
+        statusPic.value()->setContentsMargins(1, 1, 1, 1);
         updateStatusLight(Status::Offline, false);
     } else {
         clearStatusLight();
@@ -124,7 +126,7 @@ void GenericChatItemWidget::updateLastMessage(const Message& m) {
 }
 
 void GenericChatItemWidget::updateStatusLight(Status status, bool event) {
-    if (!statusPic) return;
+    if (!statusPic.has_value()) return;
 
     auto pix = getIconPath(status, event);
     if (pix.isEmpty()) return;
@@ -132,11 +134,12 @@ void GenericChatItemWidget::updateStatusLight(Status status, bool event) {
     // 图片是svg格式，按照原有逻辑先获取默认尺寸
     QSvgRenderer svgrender(pix);
     QSize s = svgrender.defaultSize();
-    statusPic->setPixmap(QIcon(pix).pixmap(this->window()->windowHandle(), s));
+    statusPic.value()->setPixmap(QIcon(pix).pixmap(this->window()->windowHandle(), s));
 }
 
 void GenericChatItemWidget::clearStatusLight() {
-    statusPic->clear();
+     if (!statusPic.has_value()) return;
+    statusPic.value()->clear();
 }
 
 bool GenericChatItemWidget::isActive() {

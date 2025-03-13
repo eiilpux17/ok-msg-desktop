@@ -71,7 +71,7 @@ ChatHistory::ChatHistory(const ContactId& f_,                  //
         , settings(settings_)
         , coreIdHandler(coreIdHandler)
         , sessionChatLog(getInitialChatLogIdx(), coreIdHandler) {
-    qDebug() << __func__ << "Creating...";
+    qDebug() << __func__ << "Creating for:" << f_.getId();
 
     // 消息发送成功
     connect(&messageDispatcher, &IMessageDispatcher::messageComplete, this,
@@ -83,12 +83,6 @@ ChatHistory::ChatHistory(const ContactId& f_,                  //
     // 消息接受
     connect(&messageDispatcher, &IMessageDispatcher::messageReceived, this,
             &ChatHistory::onMessageReceived);
-
-    if (canUseHistory()) {
-        // Defer messageSent callback until we finish firing off all our unsent messages.
-        // If it was connected all our unsent messages would be re-added ot history again
-        dispatchUnsentMessages(messageDispatcher);
-    }
 
     // Now that we've fired off our unsent messages we can connect the message
     connect(&messageDispatcher, &IMessageDispatcher::messageSent, this,
@@ -110,6 +104,10 @@ ChatHistory::ChatHistory(const ContactId& f_,                  //
                                        : sessionChatLog.getFirstIdx() - defaultNumMessagesToLoad;
 
         loadHistoryIntoSessionChatLog(firstChatLogIdx);
+
+        // Defer messageSent callback until we finish firing off all our unsent messages.
+        // If it was connected all our unsent messages would be re-added ot history again
+        dispatchUnsentMessages(messageDispatcher);
     }
 
     // We don't manage any of the item updates ourselves, we just forward along
@@ -372,8 +370,7 @@ void ChatHistory::loadHistoryIntoSessionChatLog(ChatLogIdx start) const {
     // conversion should be safe
     assert(getFirstIdx() == ChatLogIdx(0));
 
-    auto messages =
-            history->getMessagesForFriend(core->getSelfId(), FriendId(cid), start.get(), end.get());
+    auto messages = history->getMessagesForFriend(core->getSelfId(), FriendId(cid), start.get(), end.get());
     qDebug() << "load friend:" << cid.getId() << "messages:" << messages.size();
 
     //  assert(messages.size() == end.get() - start.get());
@@ -384,8 +381,6 @@ void ChatHistory::loadHistoryIntoSessionChatLog(ChatLogIdx start) const {
         // global id not a per-chat id like the ChatLogIdx
         auto currentIdx = nextIdx++;
 
-        //        auto frnd =
-        //        Nexus::getCore()->getFriendList().findFriend(ContactId{message.sender});
         auto sender = FriendId(hisMsg.sender);
         auto dispName = sender.username;
         const auto date = hisMsg.timestamp;

@@ -87,10 +87,10 @@ void acceptFileTransfer(File& file, const QString& path) {
 ChatWidget::ChatWidget(QWidget* parent)
         : MainLayout(parent)
         , ui(new Ui::ChatWidget)
-        , unreadGroupInvites{0}
-        , profileInfo{nullptr}
-        , profileForm{nullptr} {
+        , unreadGroupInvites(0){
+
     ui->setupUi(this);
+
     layout()->setMargin(0);
     layout()->setSpacing(0);
 
@@ -152,9 +152,6 @@ void ChatWidget::init() {
 
 void ChatWidget::deinit() {
 
-
-    // disconnect(ui->nameLabel, &lib::ui::CroppingLabel::clicked, this, &ChatWidget::on_nameClicked);
-
     auto widget = Widget::getInstance();
 
     disconnect(widget, &Widget::toSendMessage, this, &ChatWidget::doSendMessage);
@@ -162,9 +159,6 @@ void ChatWidget::deinit() {
     disconnect(widget, &Widget::friendRemoved, this, &ChatWidget::onFriendRemoved);
     disconnect(widget, &Widget::groupAdded, this, &ChatWidget::onGroupAdded);
     disconnect(widget, &Widget::groupRemoved, this, &ChatWidget::onGroupRemoved);
-
-    delete profileForm;
-    delete profileInfo;
 }
 
 void ChatWidget::connectToCore(Core* core) {
@@ -449,25 +443,8 @@ void ChatWidget::groupInvitesClear() {
     groupInvitesUpdate();
 }
 
-void ChatWidget::showProfile() {
-    auto profile = Nexus::getProfile();
-    if (!profileForm) {
-        profileInfo = new ProfileInfo(Nexus::getCore(), profile);
-        profileForm = new ProfileForm(profileInfo);
-    }
-
-    if (!profileForm->isShown()) {
-        profileForm->showTo(getContentLayout());
-    }
-}
-
 void ChatWidget::clearAllReceipts() {
     sessionListWidget->clearAllReceipts();
-}
-
-void ChatWidget::on_nameClicked() {
-    // qDebug() << __func__;
-    showProfile();
 }
 
 void ChatWidget::onProfileChanged(Profile* profile) {

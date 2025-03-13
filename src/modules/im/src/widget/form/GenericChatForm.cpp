@@ -46,6 +46,7 @@
 #include "src/widget/widget.h"
 #include "src/application.h"
 
+
 /**
  * @class GenericChatForm
  * @brief Parent class for all chatforms. It's provide the minimum required UI
@@ -57,6 +58,121 @@ static const QSize FILE_FLYOUT_SIZE{24, 24};
 static const short MAIN_FOOT_MARGIN = 8;
 static const short EDIT_SEND_SPACING = 5;
 static constexpr int TYPING_NOTIFICATION_DURATION = 3000;
+
+namespace {
+const QString STYLE_PATH = QStringLiteral("chatForm/buttons.css");
+}
+
+
+GenericChatForm::GenericChatForm(const ContactId& contactId,
+                                 IChatLog& iChatLog_,
+                                 IMessageDispatcher& messageDispatcher,
+                                 QWidget* parent)
+        : QWidget(parent, Qt::Window)
+        , contactId(contactId)
+        , contact(nullptr)
+        , audioInputFlag(false)
+        , audioOutputFlag(false)
+        , iChatLog(iChatLog_)
+        , messageDispatcher(messageDispatcher)
+        , isTyping{false} {
+    qDebug() << __func__ << "contact:" << contactId;
+
+    setContentsMargins(0, 0, 0, 0);
+
+    mainLayout = new QVBoxLayout(this);
+    mainLayout->setMargin(0);
+    mainLayout->setSpacing(0);
+
+    auto headerSplit = new QWidget(this);
+    headerSplit->setObjectName("Splitter");
+    headerSplit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    // headerSplit->setFixedWidth(width());
+    headerSplit->setFixedHeight(2);
+    headerSplit->setStyleSheet("background: white;");
+    mainLayout->addWidget(headerSplit);
+
+    bodySplitter = new QSplitter(Qt::Vertical, this);
+    bodySplitter->setHandleWidth(2);
+    mainLayout->addWidget(bodySplitter);
+
+    // settings
+    auto s = Nexus::getProfile()->getSettings();
+    connect(s, &Settings::chatMessageFontChanged, this, &GenericChatForm::onChatMessageFontChanged);
+
+    // 聊天框
+    logView = new ChatLogView(contactId, this);
+    logView->setMinimumHeight(200);
+    logView->setBusyNotification(ChatMessage::createBusyNotification(s->getChatMessageFont()));
+    connect(logView, &ChatLogView::firstVisibleLineChanged, this, &GenericChatForm::updateShowDateInfo);
+    connect(logView, &ChatLogView::loadHistoryLower, this, &GenericChatForm::loadHistoryLower);
+
+    bodySplitter->addWidget(logView);
+
+    // 输入框
+    inputForm = new ChatInputForm(contactId, this);
+    connect(inputForm, &ChatInputForm::inputText, this, &GenericChatForm::onTextSend);
+    connect(inputForm, &ChatInputForm::inputTextChanged, this, &GenericChatForm::onTextEditChanged);
+    connect(inputForm, &ChatInputForm::inputFile, this, &GenericChatForm::onFileSend);
+    connect(inputForm, &ChatInputForm::inputScreenCapture, this, &GenericChatForm::onImageSend);
+    bodySplitter->addWidget(inputForm);
+
+    bodySplitter->setSizes({120, 120});
+    bodySplitter->setStretchFactor(0, 1);
+    bodySplitter->setStretchFactor(1, 0);
+    bodySplitter->setChildrenCollapsible(false);
+
+    //  dateInfo = new QLabel(this);
+    //  dateInfo->setAlignment(Qt::AlignHCenter);
+    //  dateInfo->setVisible(false);
+
+    // menu.addSeparator();
+
+    // searchAction = menu.addAction(QIcon(), QString(), this,
+    // SLOT(searchFormShow()),QKeySequence(Qt::CTRL + Qt::Key_F)); addAction(searchAction);
+
+    connect(&iChatLog, &IChatLog::itemUpdated, this, &GenericChatForm::renderMessage0);
+
+    // connect(searchForm, &SearchForm::searchInBegin, this,
+    //         &GenericChatForm::searchInBegin);
+    // connect(searchForm, &SearchForm::searchUp, this,
+    //         &GenericChatForm::onSearchUp);
+    // connect(searchForm, &SearchForm::searchDown, this,
+    //         &GenericChatForm::onSearchDown);
+    // connect(searchForm, &SearchForm::visibleChanged, this,
+    //         &GenericChatForm::onSearchTriggered);
+    // connect(this, &GenericChatForm::messageNotFoundShow, searchForm,
+    //         &SearchForm::showMessageNotFound);
+
+
+    auto chatLogIdxRange = iChatLog.getNextIdx() - iChatLog.getFirstIdx();
+    auto firstChatLogIdx = chatLogIdxRange < 100 ? iChatLog.getFirstIdx() : iChatLog.getNextIdx() - 100;
+
+    renderMessages(firstChatLogIdx, iChatLog.getNextIdx());
+
+    typingTimer = new QTimer(this);
+    typingTimer->setSingleShot(true);
+
+    setLayout(mainLayout);
+
+    reloadTheme();
+    connect(&lib::ui::GUI::getInstance(), &lib::ui::GUI::themeApplyRequest, this,
+            &GenericChatForm::reloadTheme);
+
+    auto a = ok::Application::Instance();
+    connect(a->bus(), &ok::Bus::languageChanged,this,
+            [&](const QString& locale0) {
+                retranslateUi();
+            });
+    retranslateUi();
+}
+
+GenericChatForm::~GenericChatForm() {
+    qDebug() << __func__;
+    
+    //  delete searchForm;
+}
+
 
 /**
  * @brief Searches for name (possibly alias) of someone with specified public
@@ -73,9 +189,6 @@ QString GenericChatForm::resolveToxPk(const FriendId& pk) {
     return pk.toString();
 }
 
-namespace {
-const QString STYLE_PATH = QStringLiteral("chatForm/buttons.css");
-}
 
 IChatItem::Ptr GenericChatForm::getChatMessageForIdx(
         ChatLogIdx idx, const std::map<ChatLogIdx, IChatItem::Ptr>& messages) {
@@ -165,116 +278,6 @@ ChatLogIdx GenericChatForm::firstItemAfterDate(QDate date, const IChatLog& chatL
     }
 }
 
-GenericChatForm::GenericChatForm(const ContactId& contactId,
-                                 IChatLog& iChatLog_,
-                                 IMessageDispatcher& messageDispatcher,
-                                 QWidget* parent)
-        : QWidget(parent, Qt::Window)
-        , contactId(contactId)
-        , contact(nullptr)
-        , audioInputFlag(false)
-        , audioOutputFlag(false)
-        , iChatLog(iChatLog_)
-        , messageDispatcher(messageDispatcher)
-        , isTyping{false} {
-    qDebug() << __func__ << "contact:" << contactId;
-
-    setContentsMargins(0, 0, 0, 0);
-
-    mainLayout = new QVBoxLayout(this);
-    mainLayout->setMargin(0);
-    mainLayout->setSpacing(0);
-
-    auto headerSplit = new QWidget(this);
-    headerSplit->setObjectName("Splitter");
-    headerSplit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    // headerSplit->setFixedWidth(width());
-    headerSplit->setFixedHeight(2);
-    headerSplit->setStyleSheet("background: white;");
-    mainLayout->addWidget(headerSplit);
-
-    bodySplitter = new QSplitter(Qt::Vertical, this);
-    bodySplitter->setHandleWidth(2);
-    mainLayout->addWidget(bodySplitter);
-
-    // settings
-    auto s = Nexus::getProfile()->getSettings();
-    connect(s, &Settings::chatMessageFontChanged, this, &GenericChatForm::onChatMessageFontChanged);
-
-    // 聊天框
-    logView = new ChatLogView(contactId, this);
-    logView->setMinimumHeight(200);
-    logView->setBusyNotification(ChatMessage::createBusyNotification(s->getChatMessageFont()));
-    connect(logView, &ChatLogView::firstVisibleLineChanged, this, &GenericChatForm::updateShowDateInfo);
-    connect(logView, &ChatLogView::loadHistoryLower, this, &GenericChatForm::loadHistoryLower);
-
-    bodySplitter->addWidget(logView);
-
-    // 输入框
-    inputForm = new ChatInputForm(contactId, this);
-    connect(inputForm, &ChatInputForm::inputText, this, &GenericChatForm::onTextSend);
-    connect(inputForm, &ChatInputForm::inputTextChanged, this, &GenericChatForm::onTextEditChanged);
-    connect(inputForm, &ChatInputForm::inputFile, this, &GenericChatForm::onFileSend);
-    connect(inputForm, &ChatInputForm::inputScreenCapture, this, &GenericChatForm::onImageSend);
-    bodySplitter->addWidget(inputForm);
-
-    bodySplitter->setSizes({120, 120});
-    bodySplitter->setStretchFactor(0, 1);
-    bodySplitter->setStretchFactor(1, 0);
-    bodySplitter->setChildrenCollapsible(false);
-
-    //  dateInfo = new QLabel(this);
-    //  dateInfo->setAlignment(Qt::AlignHCenter);
-    //  dateInfo->setVisible(false);
-
-    // menu.addSeparator();
-
-    // searchAction = menu.addAction(QIcon(), QString(), this,
-    // SLOT(searchFormShow()),QKeySequence(Qt::CTRL + Qt::Key_F)); addAction(searchAction);
-
-    connect(&iChatLog, &IChatLog::itemUpdated, this, &GenericChatForm::renderMessage0);
-
-    // connect(searchForm, &SearchForm::searchInBegin, this,
-    //         &GenericChatForm::searchInBegin);
-    // connect(searchForm, &SearchForm::searchUp, this,
-    //         &GenericChatForm::onSearchUp);
-    // connect(searchForm, &SearchForm::searchDown, this,
-    //         &GenericChatForm::onSearchDown);
-    // connect(searchForm, &SearchForm::visibleChanged, this,
-    //         &GenericChatForm::onSearchTriggered);
-    // connect(this, &GenericChatForm::messageNotFoundShow, searchForm,
-    //         &SearchForm::showMessageNotFound);
-
-
-    auto chatLogIdxRange = iChatLog.getNextIdx() - iChatLog.getFirstIdx();
-    auto firstChatLogIdx =
-            chatLogIdxRange < 100 ? iChatLog.getFirstIdx() : iChatLog.getNextIdx() - 100;
-
-    renderMessages(firstChatLogIdx, iChatLog.getNextIdx());
-
-    typingTimer = new QTimer(this);
-    typingTimer->setSingleShot(true);
-
-    setLayout(mainLayout);
-
-    reloadTheme();
-    connect(&lib::ui::GUI::getInstance(), &lib::ui::GUI::themeApplyRequest, this,
-            &GenericChatForm::reloadTheme);
-
-    auto a = ok::Application::Instance();
-    connect(a->bus(), &ok::Bus::languageChanged,this,
-            [&](const QString& locale0) {
-                retranslateUi();
-            });
-    retranslateUi();
-}
-
-GenericChatForm::~GenericChatForm() {
-    qDebug() << __func__;
-    
-    //  delete searchForm;
-}
-
 IChatItem::Ptr GenericChatForm::createMessage(const ChatLogItem& item,
                                               bool isSelf,
                                               bool colorizeNames,
@@ -318,10 +321,8 @@ void GenericChatForm::setFriendTyping(bool typing, const QString contact)
 
 }
 
-void GenericChatForm::reloadTheme() {   
-    // auto css = lib::settings::Style::getStylesheet("chatArea.css");
-    // logView->setStyleSheet(css);
-    // logView->reloadTheme();
+void GenericChatForm::reloadTheme() {
+
 }
 
 void GenericChatForm::setContact(const Contact* contact_) {
@@ -679,8 +680,7 @@ void GenericChatForm::renderMessage0(ChatLogIdx idx) {
     renderMessages(idx, idx + 1);
 }
 
-void GenericChatForm::renderMessages(ChatLogIdx begin, ChatLogIdx end,
-                                     std::function<void(void)> onCompletion) {
+void GenericChatForm::renderMessages(ChatLogIdx begin, ChatLogIdx end, std::function<void(void)> onCompletion) {
     QList<IChatItem::Ptr> beforeLines;
     QList<IChatItem::Ptr> afterLines;
 

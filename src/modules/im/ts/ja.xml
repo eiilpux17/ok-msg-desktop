@@ -1587,10 +1587,6 @@ Please use another image.</source>
             <translation>データベースのパスワードを変更できませんでした。データベースが破損しているか、古いパスワードを使用している可能性があります。</translation>
         </message>
         <message>
-            <source>Current profile location: %1</source>
-            <translation>現在のプロファイル保存先: %1</translation>
-        </message>
-        <message>
             <source>Remove</source>
             <translation>削除</translation>
         </message>

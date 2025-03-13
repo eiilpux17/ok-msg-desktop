@@ -48,7 +48,6 @@
 #include <cassert>
 
 #include "form/FriendChatForm.h"
-#include "lib/ui/gui.h"
 #include "src/chatlog/ChatLogView.h"
 #include "src/core/coreav.h"
 #include "src/nexus.h"
@@ -143,15 +142,11 @@ void MessageSessionWidget::doDelete()
 }
 
 void MessageSessionWidget::do_widgetClicked() {
-    //    qDebug() << __func__ << "contactId:" << contactId.toString();
-
     auto w = contentWidget.get();
     if(!contentLayout->existWidget(w)){
         contentLayout->addWidget(w);
     }
     contentWidget->showTo(contentLayout);
-
-
 }
 
 void MessageSessionWidget::showEvent(QShowEvent* e) {
@@ -181,18 +176,7 @@ void MessageSessionWidget::showEvent(QShowEvent* e) {
         }
     }
 
-    //    auto chatForm = sendWorker->getChatForm();
-    //    auto cl= chatForm->getChatLog();
-    //    auto vbv = cl->getVScrollBarValue();
-    //    if(vbv<=0){
-    //        //无滚动条，设置用户默认信号灯
-    //        updateStatusLight(Core::getInstance()->getFriendStatus(contactId.toString()), false);
-    //    }
-    //    QScrollBar *sb = cl->verticalScrollBar();
-    //    auto sbv=   sb->value();
-    //    qDebug() << sbv;
-
-       GenericChatroomWidget::showEvent(e);
+    GenericChatroomWidget::showEvent(e);
 }
 
 /**
@@ -510,33 +494,20 @@ void MessageSessionWidget::resetEventFlags() {
 }
 
 void MessageSessionWidget::onAvatarSet(const FriendId& friendPk, const QPixmap& pic) {
-    //  const auto frnd =  getFriend();;
-    //  if (friendPk != frnd->getPublicKey()) {
-    //    return;
-    //  }
     qDebug() << __func__ << "onAvatarSet:" << friendPk.toString() << "pic:" << pic.size();
-
     if (!pic.isNull()) {
         setAvatar(pic);
     }
-    //  auto c = getContact();
-    //  if(c){
-    //      c->setAvatar(pic);
-    //  }
 }
 
-void MessageSessionWidget::onAvatarRemoved(const FriendId& friendPk) {
-    qDebug() << __func__ << friendPk.toString();
-    // 清空联系人头像
-    //  auto c = getContact();
-    //  c->clearAvatar();
+void MessageSessionWidget::onAvatarRemoved(const FriendId& fid) {
+    qDebug() << __func__ << fid.toString();
 }
 
 void MessageSessionWidget::mousePressEvent(QMouseEvent* ev) {
     if (ev->button() == Qt::LeftButton) {
         dragStartPos = ev->pos();
     }
-
     GenericChatroomWidget::mousePressEvent(ev);
 }
 

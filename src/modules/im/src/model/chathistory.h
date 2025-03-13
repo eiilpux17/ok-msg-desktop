@@ -46,6 +46,10 @@ public:
     std::vector<DateChatLogIdxPair> getDateIdxs(const QDate& startDate,
                                                 size_t maxDates) const override;
 
+    IChatLog& getChatLog() const {
+        return sessionChatLog;
+    };
+
 public slots:
     void onFileUpdated(const FriendId& sender, const File& file);
     void onFileCanceled(const FriendId& sender, const QString& fileId);
@@ -70,6 +74,7 @@ private:
     ChatLogIdx getInitialChatLogIdx() const;
 
     ContactId cid;
+
     History* history;
     const Settings& settings;
     const ICoreIdHandler& coreIdHandler;

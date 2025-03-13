@@ -43,11 +43,11 @@ class IAudioControl;
 }
 
 namespace module::im {
-class Profile;
 class Widget;
 class Settings;
 class Core;
-
+class Profile;
+class ProfileForm;
 
 
 /**
@@ -78,6 +78,7 @@ public:
     void incomingNotification(const QString& friendId);
     void outgoingNotification();
     void stopNotification();
+
 
 
 

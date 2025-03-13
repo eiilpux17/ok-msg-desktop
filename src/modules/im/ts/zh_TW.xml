@@ -1587,10 +1587,6 @@ Please use another image.</source>
             <translation>無法更改資料庫的密碼，它可能已損壞或使用舊密碼。</translation>
         </message>
         <message>
-            <source>Current profile location: %1</source>
-            <translation>目前的帳戶的位置： %1</translation>
-        </message>
-        <message>
             <source>Remove</source>
             <translation>移除</translation>
         </message>

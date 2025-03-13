@@ -93,7 +93,7 @@ QSize CroppingLabel::minimumSizeHint() const {
 void CroppingLabel::mouseReleaseEvent(QMouseEvent* e) {
     if (editable) showTextEdit();
 
-    emit clicked();
+    emit clicked(e);
 
     QLabel::mouseReleaseEvent(e);
 }
