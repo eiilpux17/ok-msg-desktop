@@ -39,7 +39,8 @@ using namespace ok::base;
  * @param bootstrap
  * @param parent
  */
-LoginWidget::LoginWidget(std::shared_ptr<lib::session::AuthSession> session, bool bootstrap,
+LoginWidget::LoginWidget(std::shared_ptr<lib::session::AuthSession> session,
+                         bool bootstrap,
                          QWidget* parent)
         : QWidget(parent)
         , ui(new Ui::LoginWidget)
@@ -60,7 +61,6 @@ LoginWidget::LoginWidget(std::shared_ptr<lib::session::AuthSession> session, boo
     //  ui->settings->hide();
     ui->settings->setCursor(Qt::PointingHandCursor);
     ui->settings->installEventFilter(this);
-    // ui->loginBtn->setStyleSheet("background: red");
 
     // timer for login #TODO need to refactor
     if (bootstrap) {
@@ -74,6 +74,7 @@ LoginWidget::LoginWidget(std::shared_ptr<lib::session::AuthSession> session, boo
     connect(session.get(),                            //
             &lib::session::AuthSession::loginResult,  //
             this, &LoginWidget::onLoginResult);
+
     init();
 
     // translator
@@ -256,6 +257,7 @@ void LoginWidget::on_language_currentIndexChanged(int index) {
 
     settings::Translator::translate(OK_UILoginWindow_MODULE, locale);
     qDebug() << "Translated locale:" << locale;
+    retranslateUi();
 }
 
 /**
@@ -281,11 +283,13 @@ void LoginWidget::on_providers_currentIndexChanged(int index) {
     setting->setProvider(provider);
     setting->saveGlobal();
     qDebug() << "change to provider:" << provider;
+
 }
 
 void LoginWidget::retranslateUi() {
     ui->retranslateUi(this);
-    QString translatedMessage = tr(m_currentOriginalMsg.toUtf8().constData());
+
+    auto translatedMessage = tr(m_currentOriginalMsg.toUtf8().constData());
     setMsg(translatedMessage);
 }
 

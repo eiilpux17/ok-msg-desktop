@@ -39,8 +39,14 @@ namespace UI {
 
 static OMainWindow* instance = nullptr;
 
+/**
+ * 主功能界面
+ * @brief OMainWindow::OMainWindow
+ * @param session
+ * @param parent
+ */
 OMainWindow::OMainWindow(std::shared_ptr<lib::session::AuthSession> session, QWidget* parent)
-        : QMainWindow(parent)
+        : lib::ui::OWindow(ICON_PATH, parent)
         , ui(new Ui::OMainWindow)
         , delayCaller(std::make_unique<base::DelayedCallTimer>())
         , session(session)
@@ -49,11 +55,7 @@ OMainWindow::OMainWindow(std::shared_ptr<lib::session::AuthSession> session, QWi
 
     ui->setupUi(this);
 
-
-    // setAutoFillBackground(true);
-
-
-    setWindowTitle(APPLICATION_NAME);
+    setWindowTitle(APPLICATION_ALIAS);
     setMinimumSize(WindowSize());
     setAttribute(Qt::WA_QuitOnClose, true);
 
@@ -71,26 +73,6 @@ OMainWindow::OMainWindow(std::shared_ptr<lib::session::AuthSession> session, QWi
         restoreGeometry(wg);
     }
 
-    int icon_size = 15;
-
-    actionQuit = new QAction(this);
-#ifndef Q_OS_OSX
-    actionQuit->setMenuRole(QAction::QuitRole);
-#endif
-
-    actionQuit->setIcon(prepareIcon(lib::settings::Style::getImagePath("rejectCall/rejectCall.svg"),
-                                    icon_size, icon_size));
-    actionQuit->setText(tr("Exit", "Tray action menu to exit tox"));
-
-    connect(actionQuit, &QAction::triggered, [&]() {
-        saveWindowGeometry();
-        qApp->quit();
-    });
-
-    actionShow = new QAction(this);
-    actionShow->setText(tr("Show", "Tray action menu to show window"));
-    connect(actionShow, &QAction::triggered, this, &OMainWindow::forceShow);
-
     instance = this;
 
     // 启动桌面图标
@@ -104,10 +86,6 @@ OMainWindow::OMainWindow(std::shared_ptr<lib::session::AuthSession> session, QWi
     connect(a->bus(), &ok::Bus::languageChanged,this, [&](const QString& locale0) {
         retranslateUi();
     });
-
-
-    //auto css = lib::settings::Style::getStylesheet("application.css");
-    //qDebug() << css;
 
     qDebug() << __func__ << " has be created.";
 }
@@ -214,21 +192,39 @@ void OMainWindow::createSystemTrayIcon() {
     auto* settings = lib::settings::OkSettings::getInstance();
     if (!settings->getShowSystemTray()) return;
 
-    sysTrayIcon = new QSystemTrayIcon(this);
-    updateIcons();
+    int icon_size = 15;
+
 
     trayMenu = new QMenu(this);
 
-    // adding activate to the top, avoids accidentally clicking quit
+    //show
+    actionShow = new QAction(this);
+    actionShow->setText(tr("Show", "Tray action menu to show window"));
+    connect(actionShow, &QAction::triggered, this, &OMainWindow::forceShow);
     trayMenu->addAction(actionShow);
+
     //      trayMenu->addSeparator();
     //      trayMenu->addAction(statusOnline);
     //      trayMenu->addAction(statusAway);
     //      trayMenu->addAction(statusBusy);
     //      trayMenu->addSeparator();
     //      trayMenu->addAction(actionLogout);
+
+    actionQuit = new QAction(this);
+#ifndef Q_OS_OSX
+    actionQuit->setMenuRole(QAction::QuitRole);
+#endif
+    // quit
+    actionQuit->setIcon(prepareIcon(lib::settings::Style::getImagePath("rejectCall/rejectCall.svg"), icon_size, icon_size));
+    actionQuit->setText(tr("Exit", "Tray action menu to exit tox"));
+    connect(actionQuit, &QAction::triggered, [&]() {
+        saveWindowGeometry();
+        qApp->quit();
+    });
+
     trayMenu->addAction(actionQuit);
 
+    sysTrayIcon = new QSystemTrayIcon(this);
     sysTrayIcon->setContextMenu(trayMenu);
     connect(sysTrayIcon, &QSystemTrayIcon::activated, this, &OMainWindow::onIconClick);
 
@@ -293,9 +289,9 @@ void OMainWindow::updateIcons() {
     image.fill(Qt::transparent);
     QPainter painter(&image);
     renderer.render(&painter);
-    QIcon ico = QIcon(QPixmap::fromImage(image));
-
+    auto ico = QIcon(QPixmap::fromImage(image));
     setWindowIcon(ico);
+
     if (sysTrayIcon) {
         sysTrayIcon->setIcon(ico);
     }

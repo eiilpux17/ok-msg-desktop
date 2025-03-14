@@ -37,14 +37,14 @@
     <context>
         <name>UI::OMainWindow</name>
         <message>
-            <source>Exit</source>
-            <comment>Tray action menu to exit tox</comment>
-            <translation>退出</translation>
-        </message>
-        <message>
             <source>Show</source>
             <comment>Tray action menu to show window</comment>
             <translation>顯示</translation>
+        </message>
+        <message>
+            <source>Exit</source>
+            <comment>Tray action menu to exit tox</comment>
+            <translation>退出</translation>
         </message>
     </context>
 </TS>

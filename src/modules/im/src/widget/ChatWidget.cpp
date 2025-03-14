@@ -114,6 +114,17 @@ ChatWidget::ChatWidget(QWidget* parent)
 
     setupStatus();
     setupSearch();
+
+
+    // 添加搜索图标
+    // QAction* searchAction = new QAction(this);
+    // searchAction->setIcon(QIcon::fromTheme("edit-find")); // 使用主题图标（放大镜）
+    // 如果没有主题图标，可以指定本地图片
+    // searchAction->setIcon(QIcon(":/icons/search.png"));
+
+    // 将图标添加到输入框左侧
+    // ui->searchContact->addAction(searchAction, QLineEdit::TrailingPosition);
+
     init();
     retranslateUi();
 }

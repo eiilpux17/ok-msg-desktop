@@ -14,6 +14,7 @@
 
 #include <QApplication>
 #include <QObject>
+#include <QStringLiteral>
 #include <memory>
 
 #include "UI/login/src/LoginWindow.h"
@@ -38,6 +39,7 @@ namespace lib::audio{
 class Player;
 }
 
+static QString ICON_PATH = (":/img/taskbar/light/taskbar_online.svg");
 
 namespace ok {
 

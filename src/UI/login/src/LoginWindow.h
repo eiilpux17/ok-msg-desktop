@@ -17,6 +17,7 @@
 
 #include "base/resources.h"
 #include "lib/session/AuthSession.h"
+#include "lib/ui/OWindow.h"
 
 // 初始化资源加载器
 OK_RESOURCE_LOADER(UILoginWindow)
@@ -33,7 +34,7 @@ class BannerWidget;
 /**
  * 登录窗口
  */
-class LoginWindow : public QMainWindow {
+class LoginWindow : public lib::ui::OWindow {
     Q_OBJECT
 public:
     explicit LoginWindow(std::shared_ptr<lib::session::AuthSession> session,  //

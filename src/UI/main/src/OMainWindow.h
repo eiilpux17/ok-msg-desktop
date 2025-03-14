@@ -20,6 +20,7 @@
 
 #include "OMainMenu.h"
 #include "lib/session/AuthSession.h"
+#include "lib/ui/OWindow.h"
 
 namespace Ui {
 class OMainWindow;
@@ -32,7 +33,7 @@ class OMenuWidget;
 /**
  * 主窗口
  */
-class OMainWindow : public QMainWindow {
+class OMainWindow : public lib::ui::OWindow {
     Q_OBJECT
 public:
     explicit OMainWindow(std::shared_ptr<lib::session::AuthSession> session,
