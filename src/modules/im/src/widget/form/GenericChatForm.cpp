@@ -70,7 +70,6 @@ GenericChatForm::GenericChatForm(const ContactId& contactId,
                                  QWidget* parent)
         : QWidget(parent, Qt::Window)
         , contactId(contactId)
-        , contact(nullptr)
         , audioInputFlag(false)
         , audioOutputFlag(false)
         , iChatLog(iChatLog_)
@@ -154,6 +153,19 @@ GenericChatForm::GenericChatForm(const ContactId& contactId,
     typingTimer->setSingleShot(true);
 
     setLayout(mainLayout);
+
+    auto core = Core::getInstance();
+    auto f = core->getFriend(contactId);
+    if(f.has_value()){
+        connect(f.value(), &Friend::displayedNameChanged, this, [&](const QString& name){
+            for (auto msg : messages) {
+                auto p = (ChatMessageBox*)msg.second.get();
+                if (p && p->nickname())
+                    p->nickname()->setText(name);
+            }
+        });
+    }
+
 
     reloadTheme();
     connect(&lib::ui::GUI::getInstance(), &lib::ui::GUI::themeApplyRequest, this,
@@ -325,39 +337,13 @@ void GenericChatForm::reloadTheme() {
 
 }
 
-void GenericChatForm::setContact(const Contact* contact_) {
-    //    qDebug()<<__func__<<contact_;
-    contact = contact_;
-    connect(contact, &Contact::displayedNameChanged, this,
-            &GenericChatForm::onDisplayedNameChanged);
 
-    if (contact->isGroup()) {
-    } else {
-        const Friend* f = static_cast<const Friend*>(contact);
-        for (auto msg : messages) {
-            auto p = (ChatMessageBox*)msg.second.get();
-            if (p->nickname()) p->nickname()->setText(f->getDisplayedName());
-        }
-    }
-}
-
-void GenericChatForm::removeContact() {
-    qDebug() << __func__;
-    contact = nullptr;
-}
 
 void GenericChatForm::show(ContentLayout* contentLayout) {}
 
 void GenericChatForm::showEvent(QShowEvent*) {
     inputForm->setFocus();
-    if (contact) {
-        if (!contact->isGroup()) {
-            auto f = Nexus::getCore()->getFriend(contactId);
-            if (f.has_value()) {
-                setContact(f.value());
-            }
-        }
-    }
+
 }
 
 bool GenericChatForm::event(QEvent* e) {
@@ -834,7 +820,12 @@ void GenericChatForm::onImageSend(const QPixmap& pix) {
 
 void GenericChatForm::sendFile(const QFile& file) {
     qDebug() << "Sending image:" << file.fileName();
-    auto sent = Nexus::getProfile()->getCoreFile()->sendFile(contact->getIdAsString(), file);
+    auto f = Core::getInstance()->getFriend(contactId);
+    if(!f.has_value()){
+        return;
+    }
+
+    auto sent = f.value()->sendFile(file);
     if (!sent) {
         ok::base::MessageBox::warning(
                 this,

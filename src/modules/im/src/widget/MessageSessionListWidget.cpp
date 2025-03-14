@@ -482,16 +482,7 @@ void MessageSessionListWidget::addGroup(const Group* g) {
         qWarning() << "Unable to find message session" << g->getIdAsString();
         return;
     }
-    ms->setGroup(g);
-}
-
-void MessageSessionListWidget::removeGroup(const Group* g) {
-    auto ms = getMessageSession(g->getIdAsString());
-    if (!ms) {
-        qWarning() << "Unable to find message session" << g->getIdAsString();
-        return;
-    }
-    ms->removeGroup();
+    ms->connectGroup(g);
 }
 
 void MessageSessionListWidget::clearAllReceipts() {
@@ -522,7 +513,7 @@ void MessageSessionListWidget::setFriend(const Friend* f) {
         qWarning() << "Unable to find message session" << f->getId();
         return;
     }
-    ms->setFriend(f);
+    ms->connectFriend(f);
 }
 
 void MessageSessionListWidget::removeFriend(const Friend* f) {
@@ -531,7 +522,7 @@ void MessageSessionListWidget::removeFriend(const Friend* f) {
         qWarning() << "Unable to find message session" << f->getId();
         return;
     }
-    ms->removeFriend();
+    ms->setFriendRemoved();
 }
 
 void MessageSessionListWidget::slot_sessionClicked(MessageSessionWidget* actived) {

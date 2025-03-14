@@ -297,7 +297,9 @@
           </property>
           <property name="icon">
            <iconset>
-            <normaloff>:themes/default/fileTransferInstance/no.svg</normaloff>:themes/default/fileTransferInstance/no.svg</iconset>
+            <normaloff>:icons/chat/no.svg</normaloff>
+            :icons/chat/no.svg
+            </iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -383,7 +385,7 @@
            </property>
            <property name="icon">
             <iconset>
-             <normaloff>:themes/default/fileTransferInstance/no.svg</normaloff>:themes/default/fileTransferInstance/no.svg</iconset>
+             <normaloff>:icons/chat/no.svg</normaloff>:icons/chat/no.svg</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -421,7 +423,7 @@
            </property>
            <property name="icon">
             <iconset>
-             <normaloff>:themes/default/fileTransferInstance/no.svg</normaloff>:themes/default/fileTransferInstance/no.svg</iconset>
+             <normaloff>:icons/chat/no.svg</normaloff>:icons/chat/no.svg</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -459,7 +461,7 @@
            </property>
            <property name="icon">
             <iconset>
-             <normaloff>:themes/default/fileTransferInstance/no.svg</normaloff>:themes/default/fileTransferInstance/no.svg</iconset>
+             <normaloff>:icons/chat/no.svg</normaloff>:icons/chat/no.svg</iconset>
            </property>
            <property name="iconSize">
             <size>

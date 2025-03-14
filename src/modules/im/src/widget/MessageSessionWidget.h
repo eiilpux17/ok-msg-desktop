@@ -72,56 +72,23 @@ public:
 
     void clearHistory();
 
-    void setFriend(const Friend* f);
-    void removeFriend();
+    void connectFriend(const Friend* f);
+    void connectGroup(const Group* g);
 
-
-
-    void setGroup(const Group* g);
-    void removeGroup();
 
     void clearReceipts();
 
     void doForwardMessage(const ContactId& cid, const MsgId& msgId);
-
-
-signals:
-    void removeFriend(const FriendId& friendPk);
-    void copyFriendIdToClipboard(const FriendId& friendPk);
-    void contextMenuCalled(QContextMenuEvent* event);
-    void friendHistoryRemoved();
-    void widgetClicked(MessageSessionWidget* widget);
-    void widgetRenamed(MessageSessionWidget* widget);
-    void searchCircle(CircleWidget& circleWidget);
-    void updateFriendActivity(Friend& frnd);
-    //    void setActive(bool active);
-    void deleteSession(const QString& contactId);
-
-public slots:
-    void onAvatarSet(const FriendId& friendPk, const QPixmap& pic);
-    void onAvatarRemoved(const FriendId& friendPk);
-    void onContextMenuCalled(QContextMenuEvent* event);
-    void do_widgetClicked();
-    void showEvent(QShowEvent*) override;
-
-private slots:
-    void removeChat();
-    void moveToNewCircle();
-    void removeFromCircle();
-    void moveToCircle(int circleId);
-    void changeAutoAccept(bool enable);
-    void showDetails();
-    void onMessageSent(DispatchedMessageId id, const Message& message);
-
-
-
+    void setFriendRemoved();
 
 protected:
-    virtual void mousePressEvent(QMouseEvent* ev) override;
-    virtual void mouseMoveEvent(QMouseEvent* ev) override;
+    void mousePressEvent(QMouseEvent* ev) override;
+    void mouseMoveEvent(QMouseEvent* ev) override;
     void setFriendAlias();
     void onActiveSet(bool active) override;
     void paintEvent(QPaintEvent* e) override;
+    void showEvent(QShowEvent*) override;
+
 
 private:
     ContentLayout* contentLayout;
@@ -133,6 +100,34 @@ private:
     ContactId contactId;
     FriendId friendId;
     GroupId groupId;
+    bool friendRemoved = false;
+
+
+signals:
+
+    void copyFriendIdToClipboard(const FriendId& friendPk);
+    void contextMenuCalled(QContextMenuEvent* event);
+    void friendHistoryRemoved();
+    void widgetClicked(MessageSessionWidget* widget);
+    void widgetRenamed(MessageSessionWidget* widget);
+    void searchCircle(CircleWidget& circleWidget);
+    void updateFriendActivity(Friend& frnd);
+    void deleteSession(const QString& contactId);
+
+public slots:
+    void onAvatarSet(const FriendId& friendPk, const QPixmap& pic);
+    void onAvatarRemoved(const FriendId& friendPk);
+    void onContextMenuCalled(QContextMenuEvent* event);
+    void do_widgetClicked();
+
+private slots:
+    void removeChat();
+    void moveToNewCircle();
+    void removeFromCircle();
+    void moveToCircle(int circleId);
+    void changeAutoAccept(bool enable);
+    void showDetails();
+    void onMessageSent(DispatchedMessageId id, const Message& message);
 };
 }  // namespace module::im
 #endif  // FRIENDWIDGET_H

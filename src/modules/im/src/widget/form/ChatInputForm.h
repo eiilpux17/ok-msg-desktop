@@ -22,12 +22,16 @@
 class QHBoxLayout;
 class QVBoxLayout;
 class QFile;
+class QShortcut;
+
+
 namespace module::im {
 
 class EmoticonsWidget;
 class ChatTextEdit;
 class IChatItem;
 class ChatReplyForm;
+class ScreenshotGrabber;
 /**
  * 聊天输入框
  */
@@ -77,7 +81,9 @@ private:
 
     EmoticonsWidget* emoticonsWidget = nullptr;
 
+    std::unique_ptr<ScreenshotGrabber> grabber;
     void doScreenshot();
+    QShortcut* shortcut;
 
 protected slots:
 #ifdef OK_PLUGIN
@@ -91,7 +97,7 @@ protected slots:
     void onSendTriggered();
     void onAttachClicked();
     void onScreenshotClicked();
-    void onScreenCaptured(const QPixmap& pixmap);
+    void onScreenCaptured(QPixmap pixmap);
     void onTextEditChanged();
     void onReplyEvent(IChatItem* item);
     void onReplyRemove();

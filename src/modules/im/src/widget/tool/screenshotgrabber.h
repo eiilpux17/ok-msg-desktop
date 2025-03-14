@@ -45,7 +45,7 @@ public slots:
     void reInit();
 
 signals:
-    void screenshotTaken(const QPixmap& pixmap);
+    void screenshotTaken(QPixmap pixmap);
     void regionChosen(QRect region);
     void rejected();
 

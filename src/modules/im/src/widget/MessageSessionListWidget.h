@@ -101,19 +101,13 @@ public:
     void setFriendAvEnd(const FriendId& friendId, bool error);
 
     void addGroup(const Group* f);
-    void removeGroup(const Group* f);
 
     void clearAllReceipts();
 
 signals:
     void sessionAdded(MessageSessionWidget* widget);
-    void onCompactChanged(bool compact);
-    //  void connectCircleWidget(CircleWidget &circleWidget);
-    //  void searchCircle(CircleWidget &circleWidget);
-public slots:
-    //  void renameGroupWidget(GroupWidget *groupWidget, const QString &newName);
 
-    //  void renameCircleWidget(CircleWidget *circleWidget, const QString &newName);
+public slots:
     void onFriendWidgetRenamed(FriendWidget* friendWidget);
 
     void slot_sessionClicked(MessageSessionWidget* w);

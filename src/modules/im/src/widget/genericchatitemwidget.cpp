@@ -178,10 +178,10 @@ void GenericChatItemWidget::clearAvatar() {
 }
 
 void GenericChatItemWidget::setDefaultAvatar() {
-    qDebug() << __func__;
-    auto name = (getChatType() == lib::messenger::ChatType::Chat) ? "contact" : "group";
-    auto uri = QString(":img/%1_dark.svg").arg(name);
-    avatar->setPixmap(QPixmap(uri));
+    auto name = (getChatType() == lib::messenger::ChatType::Chat)
+                        ? ":icons/chat/contact_dark.svg"
+                        : ":icons/chat/group_dark.svg";
+    avatar->setPixmap(QPixmap(name));
 }
 
 void GenericChatItemWidget::setContact(const Contact& contact_) {

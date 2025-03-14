@@ -31,6 +31,7 @@ namespace module::im {
 
 ScreenshotGrabber::ScreenshotGrabber()
         : QObject(), mKeysBlocked(false), scene(nullptr), mQToxVisible(true) {
+
     qDebug() << __func__ << "...";
     window = new QGraphicsView(scene);  // Top-level widget
     window->setWindowFlags(Qt::FramelessWindowHint | Qt::BypassWindowManagerHint);
@@ -39,6 +40,7 @@ ScreenshotGrabber::ScreenshotGrabber()
     window->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     window->setFrameShape(QFrame::NoFrame);
     window->installEventFilter(this);
+
     pixRatio = QApplication::primaryScreen()->devicePixelRatio();
 
     setupScene();
@@ -107,43 +109,46 @@ void ScreenshotGrabber::acceptRegion() {
     QRect rect = this->chooserRect->chosenRect();
     if (rect.width() < 1 || rect.height() < 1) return;
 
+    restoreHiddenWindows();
+
     // Scale the accepted region from DIPs to actual pixels
-    rect.setRect(rect.x() * pixRatio, rect.y() * pixRatio, rect.width() * pixRatio,
+    rect.setRect(rect.x() * pixRatio,
+                 rect.y() * pixRatio,
+                 rect.width() * pixRatio,
                  rect.height() * pixRatio);
 
     emit regionChosen(rect);
     qDebug() << "Screenshot accepted, chosen region" << rect;
-    QPixmap pixmap = this->screenGrab.copy(rect);
-    restoreHiddenWindows();
+
+    auto pixmap = this->screenGrab.copy(rect);
     emit screenshotTaken(pixmap);
 
-    deleteLater();
 }
 
 void ScreenshotGrabber::setupScene() {
-    delete scene;
-    scene = new QGraphicsScene;
+
+    scene = new QGraphicsScene(this);
     window->setScene(scene);
 
-    this->overlay = new ScreenGrabberOverlayItem(this);
-    this->helperToolbox = new ToolBoxGraphicsItem;
+    overlay = new ScreenGrabberOverlayItem(this);
 
-    this->screenGrabDisplay = scene->addPixmap(this->screenGrab);
-    this->helperTooltip = scene->addText(QString());
+    screenGrabDisplay = scene->addPixmap(this->screenGrab);
+    helperTooltip = scene->addText(QString());
 
     scene->addItem(this->overlay);
-    this->chooserRect = new ScreenGrabberChooserRectItem(scene);
-    scene->addItem(this->helperToolbox);
+    chooserRect = new ScreenGrabberChooserRectItem(scene);
 
-    this->helperToolbox->addToGroup(this->helperTooltip);
-    this->helperTooltip->setDefaultTextColor(Qt::black);
+    helperToolbox = new ToolBoxGraphicsItem;
+    helperToolbox->addToGroup(this->helperTooltip);
+    helperTooltip->setDefaultTextColor(Qt::black);
+    scene->addItem(helperToolbox);
     useNothingSelectedTooltip();
 
-    connect(this->chooserRect, &ScreenGrabberChooserRectItem::doubleClicked, this,
+    connect(chooserRect, &ScreenGrabberChooserRectItem::doubleClicked, this,
             &ScreenshotGrabber::acceptRegion);
-    connect(this->chooserRect, &ScreenGrabberChooserRectItem::regionChosen, this,
+    connect(chooserRect, &ScreenGrabberChooserRectItem::regionChosen, this,
             &ScreenshotGrabber::chooseHelperTooltipText);
-    connect(this->chooserRect, &ScreenGrabberChooserRectItem::regionChosen, this->overlay,
+    connect(chooserRect, &ScreenGrabberChooserRectItem::regionChosen, overlay,
             &ScreenGrabberOverlayItem::setChosenRect);
 }
 

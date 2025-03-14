@@ -80,8 +80,8 @@ public:
                                         const std::map<ChatLogIdx, IChatItem::Ptr>& messages);
     bool shouldRenderDate(ChatLogIdx idxToRender, const IChatLog& chatLog);
 
-    void setContact(const Contact* contact);
-    void removeContact();
+    // void setContact(const Contact* contact);
+    // void removeContact();
 
     virtual void show(ContentLayout* contentLayout);
     virtual void reloadTheme();
@@ -170,7 +170,6 @@ protected:
     void sendFile(const QFile& file);
 
     ContactId contactId;
-    const Contact* contact = nullptr;
 
     bool audioInputFlag;
     bool audioOutputFlag;

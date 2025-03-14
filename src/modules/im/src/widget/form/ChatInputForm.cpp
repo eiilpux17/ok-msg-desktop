@@ -18,6 +18,7 @@
 
 #include <QDebug>
 #include <QFileDialog>
+#include <QShortcut>
 #include <QSizePolicy>
 #include <QSpacerItem>
 #include <QVBoxLayout>
@@ -151,6 +152,11 @@ ChatInputForm::ChatInputForm(const ContactId& cid, QWidget* parent )
 
     connect(msgEdit, &ChatTextEdit::textChanged, this, &ChatInputForm::onTextEditChanged);
     connect(msgEdit, &ChatTextEdit::enterPressed, this, &ChatInputForm::onSendTriggered);
+
+    shortcut = new QShortcut(QKeySequence(Qt::Key_Alt + Qt::Key_A), this);
+    connect(shortcut, SIGNAL(activated()), this, SLOT(doScreenshot()));
+
+
     // 添加输入框
     sendLayout->addWidget(msgEdit);
 
@@ -362,18 +368,21 @@ void ChatInputForm::onScreenshotClicked() {
     doScreenshot();
 }
 
-void ChatInputForm::onScreenCaptured(const QPixmap& pixmap) {
+void ChatInputForm::onScreenCaptured(QPixmap pixmap) {
+    grabber.reset();
+
     if (pixmap.isNull()) {
         qWarning() << "Empty picture captured!";
         return;
     }
+
     emit inputScreenCapture(pixmap);
 }
 
 void ChatInputForm::doScreenshot() {
     // note: grabber is self-managed and will destroy itself when done
-    ScreenshotGrabber* grabber = new ScreenshotGrabber;
-    connect(grabber, &ScreenshotGrabber::screenshotTaken, this, &ChatInputForm::onScreenCaptured);
+    grabber = std::make_unique<ScreenshotGrabber>();
+    connect(grabber.get(), &ScreenshotGrabber::screenshotTaken, this, &ChatInputForm::onScreenCaptured);
     grabber->showGrabber();
 }
 

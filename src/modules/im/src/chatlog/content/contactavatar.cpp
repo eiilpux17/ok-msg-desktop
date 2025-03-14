@@ -33,7 +33,7 @@ void ContactAvatar::onCopyEvent() {}
 QIcon ContactAvatar::invalidAvatar() {
     static QIcon icon;
     if (icon.isNull()) {
-        icon.addFile(":/img/contact_dark.svg");
+        icon.addFile(":/icons/chat/contact_dark.svg");
     }
     return icon;
 }

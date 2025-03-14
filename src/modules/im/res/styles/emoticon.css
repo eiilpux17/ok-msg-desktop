@@ -9,11 +9,10 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PubL v2 for more details.
  */
- 
- #PageIndexContainer
- {
-      background: transparent;
- }
+#PageIndexContainer
+{
+     background: transparent;
+}
 
 QRadioButton{
      background: transparent;
@@ -27,38 +26,39 @@ QRadioButton::indicator
 
 QRadioButton::indicator:unchecked
 {
-     image: url(@getImagePath(emoticonWidget/dot_page.svg));
+     image: url(":icons/emoticon/dot_page.svg");
 }
 
 QRadioButton::indicator:unchecked:hover
 {
-     image: url(@getImagePath(emoticonWidget/dot_page_hover.svg));
+     image: url(":icons/emoticon/dot_page_hover.svg");
 }
 
 QRadioButton::indicator:unchecked:pressed
 {
-     image: url(@getImagePath(emoticonWidget/dot_page_hover.svg));
+     image: url(":icons/emoticon/dot_page_hover.svg");
 }
 
 QRadioButton::indicator:checked
 {
-     image: url(@getImagePath(emoticonWidget/dot_page_current.svg));
+     image: url(":icons/emoticon/dot_page_current.svg");
 }
 
 QMenu
 {
-     background-color: #363434; /* sets background of the menu */
+/* sets background of the menu */
+     background-color: @statusActive;
      border: 0px solid;
 }
 
 EmoticonsPageView
 {
-     background: transparent;
+/*     background: transparent;*/
 }
 
 EmoticonsPageView #emoticonsItem
 {
-     border: 0px;
+     border: 0px solid;
      border-radius: 4px;
      background: transparent;
      padding: 0px;
@@ -68,4 +68,3 @@ EmoticonsPageView #emoticonsItem:hover
 {
      background:rgba(255, 255, 255, 20%)
 }
-

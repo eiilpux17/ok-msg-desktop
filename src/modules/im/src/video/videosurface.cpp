@@ -164,7 +164,7 @@ void VideoSurface::paintEvent(QPaintEvent*) {
 
         if (drawnAvatar.isNull())
             drawnAvatar = ok::base::SvgUtils::scaleSvgImage(
-                    ":/img/contact_dark.svg", boundingRect.width(), boundingRect.height());
+                    ":/icons/chat/contact_dark.svg", boundingRect.width(), boundingRect.height());
 
         painter.drawPixmap(boundingRect, drawnAvatar, drawnAvatar.rect());
     }

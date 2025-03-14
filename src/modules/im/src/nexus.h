@@ -20,12 +20,12 @@
 #include "modules/module.h"
 #include "src/base/compatiblerecursivemutex.h"
 
-class QCommandLineParser;
+
 
 OK_RESOURCE_LOADER(res);
+OK_RESOURCE_LOADER(IM);
 OK_RESOURCE_LOADER(emojione);
 OK_RESOURCE_LOADER(smileys);
-OK_RESOURCE_LOADER(IM);
 
 class QMenuBar;
 class QMenu;
@@ -33,6 +33,7 @@ class QAction;
 class QWindow;
 class QActionGroup;
 class QSignalMapper;
+class QCommandLineParser;
 
 namespace lib::session {
 class Profile;
@@ -103,14 +104,12 @@ private:
     // 某些异常情况下widget会被提前释放
     QPointer<Widget> m_widget;
 
-
-
     CompatibleRecursiveMutex mutex;
 
     OK_RESOURCE_PTR(res);
+    OK_RESOURCE_PTR(IM);
     OK_RESOURCE_PTR(emojione);
     OK_RESOURCE_PTR(smileys);
-    OK_RESOURCE_PTR(IM);
 
 signals:
     void currentProfileChanged(lib::session::Profile* Profile);

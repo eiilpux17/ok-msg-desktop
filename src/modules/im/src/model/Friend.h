@@ -20,6 +20,8 @@
 #include "src/model/Contact.h"
 #include "src/model/Status.h"
 
+class QFile;
+
 namespace lib::messenger {
 class IMFriend;
 }
@@ -72,7 +74,15 @@ public:
     }
 
 
+    /**
+     * @brief startCall
+     * @param video
+     * @return
+     */
     bool startCall(bool video) override;
+
+
+    bool sendFile(const QFile& file);
 
 signals:
 

@@ -39,7 +39,7 @@ namespace lib::audio{
 class Player;
 }
 
-static QString ICON_PATH = (":/img/taskbar/light/taskbar_online.svg");
+static QString ICON_PATH = (":/icons/taskbar/taskbar_online.svg");
 
 namespace ok {
 

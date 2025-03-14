@@ -47,9 +47,9 @@ Nexus::Nexus(QObject* parent)
     qDebug() << __func__;
 
     OK_RESOURCE_INIT(res);
+    OK_RESOURCE_INIT(IM);
     OK_RESOURCE_INIT(emojione);
     OK_RESOURCE_INIT(smileys);
-    OK_RESOURCE_INIT(IM);
 
     // Setup the environment
     qRegisterMetaType<Status>("Status");

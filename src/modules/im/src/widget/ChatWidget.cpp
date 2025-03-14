@@ -259,11 +259,11 @@ void ChatWidget::onFriendTypingChanged(const FriendId& friendId, bool isTyping) 
 }
 
 void ChatWidget::onGroupAdded(const Group* g) {
-    sessionListWidget->addGroup(g);
+
 }
 
 void ChatWidget::onGroupRemoved(const Group* g) {
-    sessionListWidget->removeGroup(g);
+
 }
 
 void ChatWidget::showEvent(QShowEvent* e) {}

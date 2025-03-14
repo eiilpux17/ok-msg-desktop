@@ -86,8 +86,12 @@ MessageSessionWidget::MessageSessionWidget(ContentLayout* layout, const ContactI
         contentWidget = std::make_unique<ContentWidget>(sendWorker.get(), this);
 
         auto f = core->getFriend(friendId);
-        if(f.has_value())
-            setFriend(f.value());
+        if(f.has_value()){
+            friendRemoved = false;
+            connectFriend(f.value());
+        }else{
+            friendRemoved = true;
+        }
 
     } else if (chatType == lib::messenger::ChatType::GroupChat) {
         auto nick = core->getNick();
@@ -103,7 +107,7 @@ MessageSessionWidget::MessageSessionWidget(ContentLayout* layout, const ContactI
 
         auto& gl = core->getGroupList();
         auto* g = gl.findGroup(groupId);
-        setGroup(g);
+        connectGroup(g);
         core->requestRoomInfo(contactId.toString());
     }
 
@@ -156,15 +160,12 @@ void MessageSessionWidget::showEvent(QShowEvent* e) {
         auto group = core->getGroup(contactId);
         if (group.has_value()) {
             setContact(*group.value());
-
-            contentWidget->getChatForm()->setContact(contact);
             core->requestRoomInfo(contactId.toString());
         }
     } else {
         auto f = core->getFriend(contactId);
         if (f.has_value()) {
             setContact(*f.value());
-            contentWidget->getChatForm()->setContact(contact);
         }
 
         updateStatusLight(core->getFriendStatus(contactId.toString()), false);
@@ -365,7 +366,7 @@ void MessageSessionWidget::onMessageSent(DispatchedMessageId id, const Message& 
     updateLastMessage(message);
 }
 
-void MessageSessionWidget::setFriend(const Friend* f) {
+void MessageSessionWidget::connectFriend(const Friend* f) {
     if (!f) {
         return;
     }
@@ -376,37 +377,15 @@ void MessageSessionWidget::setFriend(const Friend* f) {
     connect(f, &Friend::avatarChanged, this, [this](const QPixmap& avatar) { setAvatar(avatar); });
     connect(f, &Friend::statusChanged, this,
             [this](Status status, bool event) { setStatus(status, event); });
-
-    setContact(*f);
-
-    contentWidget->getChatForm()->setContact(f);
-
 }
 
-void MessageSessionWidget::removeFriend() {
-    removeContact();
-
-    contentWidget->getChatForm()->removeContact();
-
-}
-
-
-void MessageSessionWidget::setGroup(const Group* g) {
+void MessageSessionWidget::connectGroup(const Group* g) {
     qDebug() << __func__ << g;
     if (!g) {
         return;
     }
-
     connect(g, &Group::displayedNameChanged, this, [&](const QString& name) { setName(name); });
     connect(g, &Group::avatarChanged, this, [this](const QPixmap& avatar) { setAvatar(avatar); });
-
-    setContact(*g);
-
-    contentWidget->getChatForm()->setContact(g);
-}
-
-void MessageSessionWidget::removeGroup() {
-    contentWidget->getChatForm()->removeContact();
 }
 
 void MessageSessionWidget::clearReceipts() {
@@ -424,6 +403,11 @@ void MessageSessionWidget::doForwardMessage(const ContactId& cid, const MsgId& m
 
     auto& msg = msgs.at(0);
     sendWorker->dispacher()->sendMessage(false, msg.asMessage(), false);
+}
+
+void MessageSessionWidget::setFriendRemoved()
+{
+    friendRemoved = true;
 }
 
 void MessageSessionWidget::setAsActiveChatroom() {

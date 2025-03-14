@@ -15,6 +15,7 @@
 
 #include <src/core/core.h>
 #include <src/core/coreav.h>
+#include <src/core/corefile.h>
 
 namespace module::im {
 
@@ -84,6 +85,12 @@ bool Friend::startCall(bool video)
     }
 
     return av->createCall(id, false);
+}
+
+bool Friend::sendFile(const QFile &file)
+{
+    auto cf = CoreFile::getInstance();
+    return cf->sendFile(id.getId(), file);
 }
 
 

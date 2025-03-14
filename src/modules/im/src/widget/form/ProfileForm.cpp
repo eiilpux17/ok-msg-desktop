@@ -141,7 +141,7 @@ ProfileForm::ProfileForm(QWidget* parent)
 
     QSize size(100, 100);
     profilePicture = new lib::ui::MaskablePixmapWidget(this, size, ":/img/avatar_mask.svg");
-    profilePicture->setPixmap(QPixmap(":/img/contact_dark.svg"));
+    profilePicture->setPixmap(QPixmap(":/icons/chat/contact_dark.svg"));
     profilePicture->setContextMenuPolicy(Qt::CustomContextMenu);
     profilePicture->setClickable(true);
     profilePicture->setObjectName("selfAvatar");

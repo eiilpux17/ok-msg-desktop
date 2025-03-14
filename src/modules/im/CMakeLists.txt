@@ -74,20 +74,15 @@ execute_process(
 		${RESOURCE_NAME}
 		${PROJECT_BINARY_DIR}/${PROJECT_NAME}.qrc)
 
-set(SMILEY_RESOURCES
-		${PROJECT_SOURCE_DIR}/smileys/emojione.qrc
-		${PROJECT_SOURCE_DIR}/smileys/smileys.qrc)
-
-qt5_add_resources(
-		${PROJECT_NAME}_RESOURCES
-		res.qrc
-		${PROJECT_BINARY_DIR}/${PROJECT_NAME}.qrc
-		${SMILEY_RESOURCES}
-		# DEPENDS ${${PROJECT_NAME}_QM_FILES} # OPTIONS ${RCC_OPTIONS}
-	)
+qt5_add_resources(${PROJECT_NAME}_RESOURCES
+	${PROJECT_BINARY_DIR}/${PROJECT_NAME}.qrc
+	${PROJECT_SOURCE_DIR}/res/res.qrc
+	${PROJECT_SOURCE_DIR}/res/smileys/emojione.qrc
+	${PROJECT_SOURCE_DIR}/res/smileys/smileys.qrc
+)
 
 add_library(${PROJECT_NAME} STATIC
-	${${PROJECT_NAME}_FORMS}
+		${${PROJECT_NAME}_FORMS}
 		${${PROJECT_NAME}_SOURCES}
 		${${PROJECT_NAME}_QM_FILES}
 		${${PROJECT_NAME}_RESOURCES}
