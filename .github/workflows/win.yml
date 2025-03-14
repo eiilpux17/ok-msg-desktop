@@ -78,6 +78,10 @@ jobs:
     - name: Install pkg-conf
       run: |
         choco install strawberryperl --pre
+    
+    - name: Install Openpyxl
+      run: |
+        pip3 install openpyxl --break-system-packages
 
     - name: Install ok-rtc
       shell: powershell

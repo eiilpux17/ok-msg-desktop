@@ -74,6 +74,10 @@ jobs:
         sudo apt install -y libsqlite3-dev
         # ffmpeg vpx qrencode 
         sudo apt install -y libvpx-dev libjpeg-dev libexif-dev libtiff-dev libpng16-16 libpng-dev libavcodec-dev libavdevice-dev libqrencode-dev
+    
+    - name: Install Openpyxl
+      run: |
+        sudo pip3 install openpyxl --break-system-packages
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v3

@@ -57,11 +57,10 @@ jobs:
         run: |
           sudo chown -R `whoami`:admin /usr/local/share
           brew install automake
-
           # Disable spotlight.
           sudo mdutil -a -i off
-
           sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+          sudo pip3 install openpyxl --break-system-packages
 
       - name: Prepare
         run: |

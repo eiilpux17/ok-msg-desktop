@@ -56,8 +56,10 @@ jobs:
 
           # Disable spotlight.
           sudo mdutil -a -i off
-
           sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+          
+          # openpyxl
+          sudo pip3 install openpyxl --break-system-packages
 
       - name: Prepare
         run: |
