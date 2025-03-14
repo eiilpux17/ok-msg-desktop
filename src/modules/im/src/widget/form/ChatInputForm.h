@@ -107,7 +107,7 @@ signals:
     void inputText(const QString& text);
     void inputTextChanged(const QString& text);
     void inputFile(const QFile& file);
-    void inputScreenCapture(const QPixmap& pixmap);
+    void inputScreenCapture(QPixmap pixmap);
 
     void callTriggered();
     void videoCallTriggered();

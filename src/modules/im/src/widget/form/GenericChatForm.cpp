@@ -819,7 +819,7 @@ void GenericChatForm::onImageSend(const QPixmap& pix) {
 }
 
 void GenericChatForm::sendFile(const QFile& file) {
-    qDebug() << "Sending image:" << file.fileName();
+    qDebug() << __func__ << file.fileName();
     auto f = Core::getInstance()->getFriend(contactId);
     if(!f.has_value()){
         return;

@@ -9,6 +9,7 @@
         <file>styles/profile.css</file>
         <file>styles/CallDurationForm.css</file>
         <file>styles/emoticon.css</file>
+        <file>styles/contact.css</file>
         <file>icons/call/callButton.svg</file>
         <file>icons/call/micButton.svg</file>
         <file>icons/call/micButtonRed.svg</file>
@@ -73,5 +74,6 @@
         <file>icons/chat/group.svg</file>
         <file>icons/chat/settings.svg</file>
         <file>icons/chat/transfer.svg</file>
+        <file>icons/contact/add.svg</file>
     </qresource>
 </RCC>

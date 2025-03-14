@@ -25,15 +25,22 @@
 
 #include "screengrabberchooserrectitem.h"
 #include "screengrabberoverlayitem.h"
-#include "src/widget/widget.h"
 #include "toolboxgraphicsitem.h"
+
+
 namespace module::im {
 
 ScreenshotGrabber::ScreenshotGrabber()
-        : QObject(), mKeysBlocked(false), scene(nullptr), mQToxVisible(true) {
+        : QObject(), mKeysBlocked(false), scene(nullptr) {
 
-    qDebug() << __func__ << "...";
-    window = new QGraphicsView(scene);  // Top-level widget
+    qDebug() << __func__;
+
+    scene = new QGraphicsScene(this);
+
+    // Top-level widget
+    window = new QGraphicsView(scene);
+    window->setScene(scene);
+
     window->setWindowFlags(Qt::FramelessWindowHint | Qt::BypassWindowManagerHint);
     window->setContentsMargins(0, 0, 0, 0);
     window->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -43,7 +50,13 @@ ScreenshotGrabber::ScreenshotGrabber()
 
     pixRatio = QApplication::primaryScreen()->devicePixelRatio();
 
-    setupScene();
+    reInit();
+}
+
+ScreenshotGrabber::~ScreenshotGrabber() {
+    qDebug() << __func__;
+    delete scene;
+    delete window;
 }
 
 void ScreenshotGrabber::reInit() {
@@ -53,15 +66,9 @@ void ScreenshotGrabber::reInit() {
     mKeysBlocked = false;
 }
 
-ScreenshotGrabber::~ScreenshotGrabber() {
-    qDebug() << __func__ << "...";
-    delete scene;
-    delete window;
-}
-
 bool ScreenshotGrabber::eventFilter(QObject* object, QEvent* event) {
-    if (event->type() == QEvent::KeyPress) return handleKeyPress(static_cast<QKeyEvent*>(event));
-
+    if (event->type() == QEvent::KeyPress)
+        return handleKeyPress(static_cast<QKeyEvent*>(event));
     return QObject::eventFilter(object, event);
 }
 
@@ -92,13 +99,13 @@ bool ScreenshotGrabber::handleKeyPress(QKeyEvent* event) {
     else if (event->key() == Qt::Key_Space) {
         mKeysBlocked = true;
 
-        if (mQToxVisible)
-            hideVisibleWindows();
-        else
-            restoreHiddenWindows();
+        // if (mQToxVisible)
+        //     hideVisibleWindows();
+        // else
+        //     restoreHiddenWindows();
 
-        window->hide();
-        QTimer::singleShot(350, this, SLOT(reInit()));
+        // window->hide();
+        // QTimer::singleShot(350, this, SLOT(reInit()));
     } else
         return false;
 
@@ -109,7 +116,7 @@ void ScreenshotGrabber::acceptRegion() {
     QRect rect = this->chooserRect->chosenRect();
     if (rect.width() < 1 || rect.height() < 1) return;
 
-    restoreHiddenWindows();
+    // restoreHiddenWindows();
 
     // Scale the accepted region from DIPs to actual pixels
     rect.setRect(rect.x() * pixRatio,
@@ -126,9 +133,6 @@ void ScreenshotGrabber::acceptRegion() {
 }
 
 void ScreenshotGrabber::setupScene() {
-
-    scene = new QGraphicsScene(this);
-    window->setScene(scene);
 
     overlay = new ScreenGrabberOverlayItem(this);
 
@@ -201,7 +205,6 @@ void ScreenshotGrabber::adjustTooltipPosition() {
 
 void ScreenshotGrabber::reject() {
     restoreHiddenWindows();
-    deleteLater();
 }
 
 QPixmap ScreenshotGrabber::grabScreen() {
@@ -214,23 +217,23 @@ QPixmap ScreenshotGrabber::grabScreen() {
 }
 
 void ScreenshotGrabber::hideVisibleWindows() {
-    foreach (QWidget* w, qApp->topLevelWidgets()) {
-        if (w != window && w->isVisible()) {
-            mHiddenWindows << w;
-            w->setVisible(false);
-        }
-    }
+    // foreach (QWidget* w, qApp->topLevelWidgets()) {
+    //     if (w != window && w->isVisible()) {
+    //         mHiddenWindows << w;
+    //         w->setVisible(false);
+    //     }
+    // }
 
-    mQToxVisible = false;
+    // mQToxVisible = false;
 }
 
 void ScreenshotGrabber::restoreHiddenWindows() {
-    foreach (QWidget* w, mHiddenWindows) {
-        if (w) w->setVisible(true);
-    }
+    // foreach (QWidget* w, mHiddenWindows) {
+    //     if (w) w->setVisible(true);
+    // }
 
-    mHiddenWindows.clear();
-    mQToxVisible = true;
+    // mHiddenWindows.clear();
+    // mQToxVisible = true;
 }
 
 void ScreenshotGrabber::beginRectChooser(QGraphicsSceneMouseEvent* event) {

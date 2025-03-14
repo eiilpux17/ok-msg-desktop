@@ -369,18 +369,12 @@ void ChatInputForm::onScreenshotClicked() {
 }
 
 void ChatInputForm::onScreenCaptured(QPixmap pixmap) {
+    disconnect(grabber.get(), &ScreenshotGrabber::screenshotTaken, this, &ChatInputForm::onScreenCaptured);
     grabber.reset();
-
-    if (pixmap.isNull()) {
-        qWarning() << "Empty picture captured!";
-        return;
-    }
-
-    emit inputScreenCapture(pixmap);
+    // emit inputScreenCapture(pixmap);
 }
 
 void ChatInputForm::doScreenshot() {
-    // note: grabber is self-managed and will destroy itself when done
     grabber = std::make_unique<ScreenshotGrabber>();
     connect(grabber.get(), &ScreenshotGrabber::screenshotTaken, this, &ChatInputForm::onScreenCaptured);
     grabber->showGrabber();

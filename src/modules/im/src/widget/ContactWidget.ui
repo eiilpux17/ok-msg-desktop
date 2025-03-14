@@ -87,7 +87,7 @@
        <property name="childrenCollapsible">
         <bool>false</bool>
        </property>
-       <widget class="lib::ui::RoundedMaskContainer" name="statusPanel">
+       <widget class="lib::ui::RoundedMaskContainer" name="contactPanel">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -205,15 +205,15 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>module::im::NotificationScrollArea</class>
+   <extends>QWidget</extends>
+   <header>src/modules/im/src/widget/notificationscrollarea.h</header>
+  </customwidget>
+  <customwidget>
    <class>lib::ui::RoundedMaskContainer</class>
    <extends>QFrame</extends>
    <header location="global">lib/ui/widget/tools/RoundedMaskContainer.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>module::im::NotificationScrollArea</class>
-   <extends>QWidget</extends>
-   <header>src/modules/im/src/widget/notificationscrollarea.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

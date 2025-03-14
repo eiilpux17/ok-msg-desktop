@@ -50,11 +50,7 @@ ContactWidget::ContactWidget(QWidget* parent)
     layout()->setSpacing(0);
 
 
-            // 右侧内容容器
-    contentWidget = new QWidget(this);
-    contentWidget->setObjectName("ContactContentWidget");
-    contentWidget->setContentsMargins(8, 8, 8, 8);
-    contentLayout = new ContentLayout(contentWidget);
+
 
             // 左侧朋友列表
     contactListWidget = new ContactListWidget(this, false);
@@ -71,6 +67,11 @@ ContactWidget::ContactWidget(QWidget* parent)
         showGroupDetails(w->getGroup());
     });
 
+            // 右侧内容容器
+    contentWidget = new QWidget(this);
+    contentWidget->setObjectName("contactContentWidget");
+    contentWidget->setContentsMargins(8, 8, 8, 8);
+    contentLayout = new ContentLayout(contentWidget);
     ui->mainSplitter->addWidget(contentWidget);
     ui->mainSplitter->setSizes(QList<int>() << 240 << 500);
     ui->mainSplitter->setStretchFactor(1, 1);
@@ -105,7 +106,7 @@ ContactWidget::~ContactWidget() {
 }
 
 void ContactWidget::reloadTheme() {
-    auto css = lib::settings::Style::getStylesheet("contact/ContactWidget.css");
+    auto css = lib::settings::Style::getStylesheet("contact.css");
     // qDebug() << css;
     setStyleSheet(css);
     // contactListWidget->setStyleSheet(css);

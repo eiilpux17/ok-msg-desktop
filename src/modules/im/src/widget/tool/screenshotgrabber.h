@@ -82,8 +82,8 @@ private:
 
     qreal pixRatio = 1.0;
 
-    bool mQToxVisible;
-    QVector<QPointer<QWidget>> mHiddenWindows;
+    // bool mQToxVisible;
+    // QVector<QPointer<QWidget>> mHiddenWindows;
 };
 }  // namespace module::im
 
