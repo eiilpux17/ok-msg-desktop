@@ -215,7 +215,7 @@ void OMainWindow::createSystemTrayIcon() {
     actionQuit->setMenuRole(QAction::QuitRole);
 #endif
     // quit
-    actionQuit->setIcon(prepareIcon(lib::settings::Style::getImagePath("rejectCall/rejectCall.svg"), icon_size, icon_size));
+    actionQuit->setIcon(prepareIcon(lib::settings::Style::getImagePath("call/rejectCall.svg"), icon_size, icon_size));
     actionQuit->setText(tr("Exit", "Tray action menu to exit tox"));
     connect(actionQuit, &QAction::triggered, [&]() {
         saveWindowGeometry();
@@ -317,7 +317,7 @@ OMenuWidget* OMainWindow::initMenuWindow(SystemMenu menu) {
     delayCaller->call(1, [=, this]() {
         assert(session);
         qDebug() << "Start module:" << m->getName();
-        m->start(session);
+        m->start(session.get());
     });
 
     menuMap.insert(menu, w);

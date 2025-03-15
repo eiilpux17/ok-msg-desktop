@@ -17,6 +17,7 @@
 #pragma once
 
 #include "Widget.h"
+#include "base/compatiblerecursivemutex.h"
 #include "modules/module.h"
 
 namespace module::platform {
@@ -31,9 +32,9 @@ class Platform : public QObject, public Module {
 public:
     explicit Platform();
     ~Platform() override;
-    void init(lib::session::Profile* p) override;
+    void init(lib::session::Profile* p, QWidget* parent = nullptr) override;
     [[nodiscard]] const QString& getName() const override;
-    void start(std::shared_ptr<lib::session::AuthSession> session) override;
+    void start(lib::session::AuthSession* session) override;
     void stop() override;
     bool isStarted() override;
     void onSave(SavedInfo&) override;
@@ -42,14 +43,17 @@ public:
     PlatformPageContainer* getPageContainer();
 
     QWidget* widget() override {
-        return m_widget.get();
+        return m_widget;
     }
     void hide() override;
+    void show() override;
 
 private:
-    std::unique_ptr<Widget> m_widget;
+    Widget* m_widget;
     PlatformPageContainer* pageContainer = nullptr;
     QString name;
+    bool started;
+    CompatibleRecursiveMutex mutex;
 };
 
 }  // namespace module::platform

@@ -15,12 +15,10 @@
 
 #include <QObject>
 #include <QPointer>
-#include "base/resources.h"
 
+#include "base/resources.h"
 #include "modules/module.h"
 #include "src/base/compatiblerecursivemutex.h"
-
-
 
 OK_RESOURCE_LOADER(res);
 OK_RESOURCE_LOADER(IM);
@@ -49,6 +47,8 @@ class Settings;
 class Core;
 class Profile;
 class ProfileForm;
+class Nexus;
+
 
 
 /**
@@ -57,7 +57,7 @@ class ProfileForm;
 class Nexus : public QObject, public Module {
     Q_OBJECT
 public:
-    explicit Nexus(QObject* parent = nullptr);
+
     ~Nexus() override;
 
     static Module* Create();
@@ -69,7 +69,8 @@ public:
     static Widget* getDesktopGUI();
     const QString& getName() const override;
     QWidget* widget() override;
-    void init(lib::session::Profile*) override;
+
+    void init(lib::session::Profile* profile, QWidget* parent=nullptr) override;
 
     void showMainGUI();
 
@@ -80,30 +81,31 @@ public:
     void outgoingNotification();
     void stopNotification();
 
-
-
-
 protected:
-    void start(std::shared_ptr<lib::session::AuthSession> session) override;
+    void start(lib::session::AuthSession* session) override;
     void stop() override;
     bool isStarted() override {
-        return stared;
+        return started;
     }
+    void show() override;
     void hide() override;
     void onSave(SavedInfo&) override;
     void cleanup() override;
 
-private:
-    void setProfile(lib::session::Profile* p);
 
 private:
+    void setProfile(lib::session::Profile* p);
+    explicit Nexus();
+
+    // static std::mutex mtx; // 互斥锁
+
     QString name;
-    bool stared;
     std::unique_ptr<Profile> profile;
 
     // 某些异常情况下widget会被提前释放
     QPointer<Widget> m_widget;
 
+    bool started;
     CompatibleRecursiveMutex mutex;
 
     OK_RESOURCE_PTR(res);

@@ -243,17 +243,17 @@ void OMainMenu::onButtonToggled(int id, bool toggle) {
  */
 std::unique_ptr<OMenuWidget> OMainMenu::createChatModule() {
     qDebug() << "Creating chat module...";
+    auto a = ok::Application::Instance();
+    auto profile = a->getProfile();
 
     auto m = module::im::Nexus::Create();
-    auto nexus = static_cast<module::im::Nexus*>(m);
+    connect(static_cast<module::im::Nexus*>(m), &module::im::Nexus::destroyProfile,  //
+            a, &ok::Application::on_logout);
 
-            // connect(nexus, &Nexus::updateAvatar,
-            // ok::Application::Instance(), &ok::Application::onAvatar);
+    auto ww = parentWidget();
 
-    connect(nexus, &module::im::Nexus::destroyProfile,  //
-            ok::Application::Instance(), &ok::Application::on_logout);
-    // connect(nexus, &Nexus::exit,
-    // ok::Application::Instance(), &ok::Application::on_exit);
+    m->init(profile, ww);
+    m->start(a->getSession());
 
     auto w = new OMenuWidget(this);
     w->setModule(m);
@@ -264,13 +264,19 @@ std::unique_ptr<OMenuWidget> OMainMenu::createChatModule() {
 }
 
 #ifdef ENABLE_Meet
+
 /**
  * 创建会议模块
  * @return
  */
 std::unique_ptr<OMenuWidget> OMainMenu::createMeetingModule()
 {
+    auto a = ok::Application::Instance();
+
     auto m = new module::meet::Meet();
+    m->init(a->getProfile(), parentWidget());
+    m->start(a->getSession());
+
     auto w = new OMenuWidget(this);
     w->setModule(m);
     w->setLayout(new QGridLayout());
@@ -286,7 +292,11 @@ std::unique_ptr<OMenuWidget> OMainMenu::createMeetingModule()
  * @return
  */
 std::unique_ptr<OMenuWidget> OMainMenu::createClassroomModule() {
+    auto a = ok::Application::Instance();
     auto m = new module::classroom::Classroom();
+    m->init(a->getProfile(), parentWidget());
+    m->start(a->getSession());
+
     auto w = new OMenuWidget(this);
     w->setModule(m);
     w->setLayout(new QGridLayout());
@@ -301,8 +311,13 @@ std::unique_ptr<OMenuWidget> OMainMenu::createClassroomModule() {
  * @return
  */
 std::unique_ptr<OMenuWidget> OMainMenu::createConfigModule() {
+    auto a = ok::Application::Instance();
     auto m = new module::config::Config();
+    m->init(a->getProfile(), parentWidget());
+    m->start(a->getSession());
+
     auto w = new OMenuWidget(this);
+
     w->setModule(m);
     w->setLayout(new QGridLayout());
     w->layout()->setContentsMargins(0, 0, 0, 0);
@@ -316,7 +331,10 @@ std::unique_ptr<OMenuWidget> OMainMenu::createConfigModule() {
  * @return
  */
 std::unique_ptr<OMenuWidget> OMainMenu::createDocumentModule() {
+    auto a = ok::Application::Instance();
     auto m = new module::doc::Document();
+    m->init(a->getProfile(), parentWidget());
+    m->start(a->getSession());
     auto w = new OMenuWidget(this);
     w->setModule(m);
     w->setLayout(new QGridLayout());
@@ -333,7 +351,10 @@ std::unique_ptr<OMenuWidget> OMainMenu::createDocumentModule() {
  * @return
  */
 std::unique_ptr<OMenuWidget> OMainMenu::createPlatformModule() {
+    auto a = ok::Application::Instance();
     auto m = new module::platform::Platform();
+    m->init(a->getProfile(), parentWidget());
+    m->start(a->getSession());
     auto w = new OMenuWidget(this);
     w->setModule(m);
     w->setLayout(new QGridLayout());

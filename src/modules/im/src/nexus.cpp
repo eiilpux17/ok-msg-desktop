@@ -27,7 +27,6 @@
 #include "src/model/groupinvite.h"
 #include "src/model/Status.h"
 #include "src/persistence/profile.h"
-#include "src/widget/form/ProfileForm.h"
 #include "src/widget/widget.h"
 
 
@@ -40,10 +39,9 @@
  */
 namespace module::im {
 
-static Nexus* m_self;
+static Nexus* m_self = nullptr;
 
-Nexus::Nexus(QObject* parent)
-        : name{OK_IM_MODULE}, stared(false), profile{nullptr}, m_widget{nullptr} {
+Nexus::Nexus() : name{OK_IM_MODULE}, started(false), profile{nullptr}, m_widget{nullptr} {
     qDebug() << __func__;
 
     OK_RESOURCE_INIT(res);
@@ -74,25 +72,18 @@ Nexus::Nexus(QObject* parent)
     qRegisterMetaType<GroupInvite>("GroupInvite");
     qRegisterMetaType<MsgId>("MsgId");
     qRegisterMetaType<RowId>("RowId");
-
-    // Create GUI
-    m_widget = new Widget();
-
-    // connect(this, &Nexus::destroyProfile, this, &Nexus::do_logout);
 }
 
 Nexus::~Nexus() {
     qDebug() << __func__;
-    if (m_widget) m_widget->deleteLater();
-
     emit saveGlobal();
-// #ifdef Q_OS_MAC
-//     delete globalMenuBar;
-// #endif
 }
 
-void Nexus::init(lib::session::Profile* p) {
+void Nexus::init(lib::session::Profile* p, QWidget* parent) {
     assert(p);
+    assert(parent);
+    // Create GUI
+    m_widget = new Widget(parent);
 }
 
 void Nexus::onSave(SavedInfo& savedInfo) {
@@ -108,14 +99,16 @@ void Nexus::onSave(SavedInfo& savedInfo) {
  * Hides the login screen and shows the GUI for the given profile.
  * Will delete the current GUI, if it exists.
  */
-void Nexus::start(std::shared_ptr<lib::session::AuthSession> session) {
-    auto& signInInfo = session->getSignInInfo();
-    qDebug() << __func__ << "for user:" << signInInfo.username;
+void Nexus::start(lib::session::AuthSession* session) {
+    QMutexLocker locker(&mutex);
 
-    if (stared) {
+    if (started) {
         qWarning("This module is already started.");
         return;
     }
+
+    auto& signInInfo = session->getSignInInfo();
+    qDebug() << __func__ << "for user:" << signInInfo.username;
 
     profile = Profile::createProfile(signInInfo.host, signInInfo.username, signInInfo.password);
     if (!profile) {
@@ -124,16 +117,13 @@ void Nexus::start(std::shared_ptr<lib::session::AuthSession> session) {
         return;
     }
 
-    qDebug() << "Starting up";
-    stared = true;
-
     auto* s = lib::settings::OkSettings::getInstance();
     QString locale = s->getTranslation();
     qDebug() << "locale" << locale;
 
     settings::Translator::translate(OK_IM_MODULE, locale);
 
-    qApp->setQuitOnLastWindowClosed(false);
+    // qApp->setQuitOnLastWindowClosed(false);
 
     auto bus = ok::Application::Instance()->bus();
 
@@ -177,15 +167,23 @@ void Nexus::start(std::shared_ptr<lib::session::AuthSession> session) {
             stopNotification();
         });
     });
-
-
-
     profile->start();
-
+    started = true;
+    qDebug() <<__func__<< "Starting up";
 }
 
 void Nexus::stop() {
+    QMutexLocker locker(&mutex);
+    if(!started)
+        return;
     profile->stop();
+    started = false;
+
+}
+
+void Nexus::show()
+{
+    m_widget->show();
 }
 
 void Nexus::hide() {
@@ -223,7 +221,10 @@ lib::audio::IAudioControl *Nexus::audio() const
 }
 
 Module* Nexus::Create() {
-    m_self = new Nexus();
+    if(!m_self){
+        // std::lock_guard<std::mutex> lock(mtx); // 加锁
+        m_self = new Nexus();
+    }
     return m_self;
 }
 
@@ -233,13 +234,9 @@ Nexus* Nexus::getInstance() {
 }
 
 void Nexus::cleanup() {
-    qDebug() << __func__ << "...";
-
+    qDebug() << __func__;
+    m_widget->deleteLater();
     profile->quit();
-
-    Settings::destroyInstance();
-
-    qDebug() << __func__ << ".";
 }
 
 /**

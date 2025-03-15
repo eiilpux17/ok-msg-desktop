@@ -21,14 +21,9 @@
 namespace module::platform {
 
 Platform::Platform() : name{OK_Platform_MODULE}, m_widget{nullptr} {
-    m_widget = std::make_unique<Widget>();
 
-    // todo: 如果后期需要支持页签弹出，看如何重构了
-    pageContainer = new PlatformPageContainer(this, m_widget.get());
 
-    auto* page = new AppCenterPage(pageContainer);
-    page->createContent(m_widget.get());
-    pageContainer->addPage(page);
+
 }
 
 Platform::~Platform() {
@@ -41,27 +36,57 @@ Platform::~Platform() {
     }
 }
 
-void Platform::init(lib::session::Profile* p) {}
+void Platform::init(lib::session::Profile* p, QWidget* parent) {
+    m_widget = new Widget(parent);
+    pageContainer = new PlatformPageContainer(this, m_widget);
+    auto* page = new AppCenterPage(pageContainer);
+    page->createContent(m_widget);
+    pageContainer->addPage(page);
+}
 
 const QString& Platform::getName() const {
     return name;
 }
 
-void Platform::start(std::shared_ptr<lib::session::AuthSession> session) {
+void Platform::start(lib::session::AuthSession* session) {
+    QMutexLocker locker(&mutex);
+
+    if (started) {
+        qWarning("This module is already started.");
+        return;
+    }
     m_widget->start();
+    started = true;
+    qDebug() <<__func__<< "Starting up";
 }
 
 void Platform::stop() {
-    // TODO 一些停止操作
+    QMutexLocker locker(&mutex);
+    if(!started)
+        return;
+    started = false;
 };
 
 bool Platform::isStarted() {
-    return false;
+    QMutexLocker locker(&mutex);
+    return started;
 }
 void Platform::onSave(SavedInfo&) {}
-void Platform::cleanup() {}
+
+void Platform::cleanup() {
+    m_widget->deleteLater();
+}
+
 PlatformPageContainer* Platform::getPageContainer() {
     return pageContainer;
 }
-void Platform::hide() {}
+
+void Platform::hide() {
+    m_widget->hide();
+}
+
+void Platform::show()
+{
+    m_widget->show();
+}
 }  // namespace module::platform

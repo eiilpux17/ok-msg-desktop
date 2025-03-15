@@ -85,7 +85,7 @@ Widget::Widget(QWidget* parent)  //
         : lib::ui::OWidget(parent)
         , eventFlag(false)
         , eventIcon(false)
-        , delayCaller(std::make_unique<base::DelayedCallTimer>())  //
+        , delayCaller(std::make_unique<base::DelayedCallTimer>())
 {
     // style sheet will make content margins
     setAttribute(Qt::WA_LayoutOnEntireRect, false);
@@ -152,8 +152,7 @@ Widget::Widget(QWidget* parent)  //
     actionQuit->setMenuRole(QAction::QuitRole);
 #endif
 
-    actionQuit->setIcon(ok::base::SvgUtils::prepareIcon(
-            lib::settings::Style::getImagePath("rejectCall/rejectCall.svg"), icon_size, icon_size));
+    actionQuit->setIcon(ok::base::SvgUtils::prepareIcon(lib::settings::Style::getImagePath("call/rejectCall.svg"), icon_size, icon_size));
     connect(actionQuit, &QAction::triggered, qApp, &QApplication::quit);
 
 
@@ -231,14 +230,13 @@ Widget::Widget(QWidget* parent)  //
             // 添加好友到群聊
     connect(this, &Widget::toAddMember, this, &Widget::showAddMemberDialog);
 
-#if UPDATE_CHECK_ENABLED
-    updateCheck = std::unique_ptr<UpdateCheck>(new UpdateCheck(settings));
-    connect(updateCheck.get(), &UpdateCheck::updateAvailable, this, &Widget::onUpdateAvailable);
-    updateCheck->checkForUpdate();
-#endif
+// #if UPDATE_CHECK_ENABLED
+//     updateCheck = std::unique_ptr<UpdateCheck>(new UpdateCheck(settings));
+//     connect(updateCheck.get(), &UpdateCheck::updateAvailable, this, &Widget::onUpdateAvailable);
+//     updateCheck->checkForUpdate();
+// #endif
 
 
-    updateIcons();
     reloadTheme();
 
     retranslateUi();
@@ -257,19 +255,16 @@ Widget::Widget(QWidget* parent)  //
 }
 
 Widget::~Widget() {
-    qDebug() << __func__;
-    
     delete timer;
-
 }
 
-
-void Widget::showProfile(QMouseEvent *e) {
-    if(!profileForm){
-        profileForm = std::make_unique<ProfileForm>(this);
-    }
-    if(profileForm->isHidden()){
-        profileForm->showToolTip(e);
+void Widget::showProfile(QMouseEvent *) {
+    if(profileForm.isNull()){
+        profileForm = new ProfileForm(this);
+        profileForm->show();
+    }else{
+        profileForm->deleteLater();
+        profileForm = nullptr;
     }
 }
 
@@ -287,9 +282,6 @@ bool Widget::eventFilter(QObject* obj, QEvent* event) {
             if (state.testFlag(Qt::WindowMinimized) && obj) {
                 wasMaximized = ce->oldState().testFlag(Qt::WindowMaximized);
             }
-// #ifdef Q_OS_MAC
-//             emit windowStateChanged(windowState());
-// #endif
             break;
         default:
             break;
@@ -297,8 +289,6 @@ bool Widget::eventFilter(QObject* obj, QEvent* event) {
 
     return false;
 }
-
-void Widget::updateIcons() {}
 
 /**
  * @brief Switches to the About settings page.
@@ -876,7 +866,6 @@ void Widget::onGroupPeerAudioPlaying(QString groupnumber, FriendId peerPk) {
 void Widget::resetIcon() {
     eventIcon = false;
     eventFlag = false;
-    updateIcons();
 }
 
 void Widget::showForwardMessageDialog(const MsgId& msgId) {
@@ -944,7 +933,6 @@ void Widget::onUserAwayCheck() {
 void Widget::onEventIconTick() {
     if (eventFlag) {
         eventIcon ^= true;
-        updateIcons();
     }
 }
 

@@ -17,6 +17,7 @@
 #pragma once
 
 #include "ConfigWindow.h"
+#include "base/compatiblerecursivemutex.h"
 #include "base/resources.h"
 #include "modules/module.h"
 
@@ -33,11 +34,12 @@ public:
     explicit Config();
     ~Config();
 
-    void init(lib::session::Profile* p) override;
+    void init(lib::session::Profile* p, QWidget* parent=nullptr) override;
     const QString& getName() const override;
-    void start(std::shared_ptr<lib::session::AuthSession> session) override;
+    void start(lib::session::AuthSession* session) override;
     [[nodiscard]] bool isStarted() override;
     void stop() override;
+    void show() override;
     void hide() override;
 
     void onSave(SavedInfo&) override;
@@ -49,6 +51,10 @@ private:
 
     QString m_name;
     ConfigWindow* m_widget;
+
+    bool started;
+    CompatibleRecursiveMutex mutex;
+
 };
 
 }  // namespace module::config

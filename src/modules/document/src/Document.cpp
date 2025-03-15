@@ -18,32 +18,58 @@
 
 namespace module::doc {
 
-Document::Document() : name{OK_Document_MODULE}, m_widget(std::make_unique<Widget>()) {}
+Document::Document() : name{OK_Document_MODULE}, m_widget(nullptr) {}
 
 Document::~Document() {}
 
-void Document::init(lib::session::Profile* p) {}
+void Document::init(lib::session::Profile* p, QWidget *parent) {
+    m_widget = new Widget(parent);
+}
 
 QWidget* Document::widget() {
-    return m_widget.get();
+    return m_widget;
 }
 
 const QString& Document::getName() const {
     return name;
 }
 
-void Document::start(std::shared_ptr<lib::session::AuthSession> session) {}
+void Document::start(lib::session::AuthSession* session) {
+    QMutexLocker locker(&mutex);
 
-void Document::stop() {}
+    if (started) {
+        qWarning("This module is already started.");
+        return;
+    }
+    started = true;
+    qDebug() <<__func__<< "Starting up";
+}
+
+void Document::stop() {
+    QMutexLocker locker(&mutex);
+    if(!started)
+        return;
+    started = false;
+}
 
 bool Document::isStarted() {
-    return false;
+    QMutexLocker locker(&mutex);
+    return true;
 }
 
 void Document::onSave(SavedInfo&) {}
 
-void Document::cleanup() {}
+void Document::cleanup() {
+    m_widget->deleteLater();
+}
 
-void Document::hide() {}
+void Document::show()
+{
+    m_widget->show();
+}
+
+void Document::hide() {
+    m_widget->hide();
+}
 
 }  // namespace module::doc

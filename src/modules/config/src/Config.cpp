@@ -18,31 +18,58 @@
 
 namespace module::config {
 
-Config::Config() : m_widget(new ConfigWindow()), m_name(OK_Config_MODULE) {
+Config::Config() : m_widget(nullptr), m_name(OK_Config_MODULE) {
     OK_RESOURCE_INIT(Config);
 }
 
 Config::~Config() {}
 
-void Config::init(lib::session::Profile* p) {}
+void Config::init(lib::session::Profile* p, QWidget* parent) {
+    m_widget = new ConfigWindow();
+}
 
 const QString& Config::getName() const {
     return m_name;
 }
 
-void Config::start(std::shared_ptr<lib::session::AuthSession> session) {}
+void Config::start(lib::session::AuthSession* session) {
+    QMutexLocker locker(&mutex);
 
-bool Config::isStarted() {
-    return true;
+    if (started) {
+        qWarning("This module is already started.");
+        return;
+    }
 }
 
-void Config::stop() {}
+bool Config::isStarted() {
+    QMutexLocker locker(&mutex);
+    return started;
+}
 
-void Config::hide() {}
+void Config::stop() {
+    QMutexLocker locker(&mutex);
+    if(!started)
+        return;
 
-void Config::onSave(SavedInfo&) {}
+    started = false;
+}
 
-void Config::cleanup() {}
+void Config::show()
+{
+    m_widget->show();
+}
+
+void Config::hide() {
+    m_widget->hide();
+}
+
+void Config::onSave(SavedInfo&) {
+
+}
+
+void Config::cleanup() {
+    m_widget->deleteLater();
+}
 
 QWidget* Config::widget() {
     return m_widget;

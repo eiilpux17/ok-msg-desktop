@@ -17,6 +17,7 @@
 #pragma once
 
 #include "Widget.h"
+#include "base/compatiblerecursivemutex.h"
 #include "modules/module.h"
 
 namespace module::meet {
@@ -30,9 +31,9 @@ public:
     explicit Meet();
     ~Meet() override;
     // 初始化
-    void init(lib::session::Profile* p) override;
+    void init(lib::session::Profile* p, QWidget* parent = nullptr) override;
     const QString& getName() const override;
-    void start(std::shared_ptr<lib::session::AuthSession> session) override;
+    void start(lib::session::AuthSession* session) override;
     void stop() override;
     bool isStarted() override;
     void onSave(SavedInfo&) override;
@@ -40,13 +41,15 @@ public:
     void activate() override;
 
     QWidget* widget() override {
-        return m_widget.get();
+        return m_widget;
     }
     void hide() override;
-
+    void show() override;
 private:
-    std::unique_ptr<Widget> m_widget;
+    Widget* m_widget;
     QString name;
+    CompatibleRecursiveMutex mutex;
+    bool started;
 };
 
 }  // namespace module::meet

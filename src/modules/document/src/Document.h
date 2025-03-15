@@ -15,6 +15,7 @@
 //
 #include <QObject>
 #include "Widget.h"
+#include "base/compatiblerecursivemutex.h"
 #include "modules/module.h"
 
 namespace module::doc {
@@ -24,19 +25,22 @@ class Document : public QObject, public Module {
 public:
     explicit Document();
     ~Document() override;
-    void init(lib::session::Profile* p) override;
+    void init(lib::session::Profile* p, QWidget *parent = nullptr) override;
     QWidget* widget() override;
     [[nodiscard]] const QString& getName() const override;
-    void start(std::shared_ptr<lib::session::AuthSession> session) override;
+    void start(lib::session::AuthSession* session) override;
     void stop() override;
     bool isStarted() override;
     void onSave(SavedInfo&) override;
     void cleanup() override;
+    void show() override;
     void hide() override;
 
 private:
     QString name;
-    std::unique_ptr<Widget> m_widget;
+    Widget* m_widget;
+    bool started;
+    CompatibleRecursiveMutex mutex;
 };
 
 }  // namespace module::doc

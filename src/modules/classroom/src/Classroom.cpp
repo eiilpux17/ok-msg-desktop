@@ -17,11 +17,15 @@
 #include "Classroom.h"
 #include "Widget.h"
 
+#include <QWriteLocker>
+
 namespace module::classroom {
 
 static Classroom* Instance;
 
-Classroom::Classroom() : m_widget(new Widget()), m_name(OK_Classroom_MODULE) {}
+Classroom::Classroom() :
+        m_widget(nullptr),
+        m_name(OK_Classroom_MODULE) {}
 
 Classroom::~Classroom() {
     qDebug() << __func__;
@@ -31,18 +35,50 @@ const QString& Classroom::getName() const {
     return m_name;
 }
 
-void Classroom::init(lib::session::Profile* p) {}
-
-void Classroom::start(std::shared_ptr<lib::session::AuthSession> session) {}
-
-bool Classroom::isStarted() {
-    return true;
+void Classroom::init(lib::session::Profile* p, QWidget* parent) {
+    m_widget = new Widget(parent);
 }
 
-void Classroom::hide() {}
-void Classroom::onSave(SavedInfo&) {}
-void Classroom::cleanup() {}
-void Classroom::stop() {}
+void Classroom::start(lib::session::AuthSession* session) {
+    QMutexLocker locker(&mutex);
+    if (started) {
+        qWarning("This module is already started.");
+        return;
+    }
+
+    started = true;
+}
+
+
+bool Classroom::isStarted() {
+    QMutexLocker locker(&mutex);
+    return started;
+}
+
+void Classroom::stop() {
+    QMutexLocker locker(&mutex);
+    if(!started)
+        return;
+    started = false;
+}
+
+void Classroom::show()
+{
+    m_widget->show();
+}
+
+void Classroom::hide() {
+    m_widget->hide();
+}
+
+void Classroom::cleanup() {
+    m_widget->deleteLater();
+}
+
+
+void Classroom::onSave(SavedInfo&) {
+
+}
 
 QWidget* Classroom::widget() {
     return m_widget;

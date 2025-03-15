@@ -35,7 +35,6 @@
 #include "src/nexus.h"
 #include "src/persistence/settings.h"
 #include "src/widget/ChatWidget.h"
-#include "src/widget/contentlayout.h"
 #include "src/widget/form/setpassworddialog.h"
 #include "src/widget/form/settings/SettingsWidget.h"
 #include "src/widget/widget.h"
@@ -83,18 +82,20 @@ static const QPair<QString, QString> CAN_NOT_CHANGE_PASSWORD = {
                         "it might be corrupted or use the old password.")};
 
 ProfileForm::ProfileForm(QWidget* parent)
-        : QWidget{parent}, ui{new Ui::ProfileForm}
+        : lib::ui::OFrame{parent}, ui{new Ui::ProfileForm}
         , qr{nullptr}
 {
     // 设置窗口属性
     setObjectName("ProfileForm");
-    setWindowFlags(Qt::ToolTip | Qt::FramelessWindowHint); // 无边框工具提示窗口
-    setAttribute(Qt::WA_ShowWithoutActivating); // 显示时不抢焦点
+    setWindowFlags(Qt::FramelessWindowHint); // 无边框工具提示窗口
     setAttribute(Qt::WA_StyledBackground);  // 确保样式表生效
+    setAttribute(Qt::WA_DeleteOnClose, true);
     setFocusPolicy(Qt::StrongFocus); // 确保控件可以获得焦点
+
+
+    setMouseTracking(true);
     //setup ui
     ui->setupUi(this);
-
 
     layout()->setContentsMargins(10, 10, 10, 10);
     profileInfo = new ProfileInfo(this);
@@ -102,6 +103,8 @@ ProfileForm::ProfileForm(QWidget* parent)
 
     ui->formLayout->setVerticalSpacing(2);
     ui->nickname->setText(profileInfo->getNickname());
+    connect(ui->nickname, &QLineEdit::editingFinished, this, &ProfileForm::onNicknameEdited);
+
     ui->name_value->setText(profileInfo->getFullName());
 
     auto& c = profileInfo->getVCard();
@@ -122,12 +125,13 @@ ProfileForm::ProfileForm(QWidget* parent)
     profileInfo->connectTo_usernameChanged(this, [this](const QString& val) {  //
         ui->name_value->setText(val);
     });
-    connect(ui->nickname, &QLineEdit::editingFinished, this, &ProfileForm::onNicknameEdited);
+
     profileInfo->connectTo_vCardChanged(this, [this](const VCard& vCard) {
         ui->nickname->setText(vCard.nickname);
         if (!vCard.emails.isEmpty())
             ui->email_value->setText(vCard.emails.at(vCard.emails.size() - 1).number);
     });
+
 
     connect(ui->exitButton, &QPushButton::clicked, this, &ProfileForm::onExitClicked);
     connect(ui->logoutButton, &QPushButton::clicked, this, &ProfileForm::onLogoutClicked);
@@ -138,9 +142,8 @@ ProfileForm::ProfileForm(QWidget* parent)
     }
 
     // avatar
-
     QSize size(100, 100);
-    profilePicture = new lib::ui::MaskablePixmapWidget(this, size, ":/img/avatar_mask.svg");
+    profilePicture = new lib::ui::MaskablePixmapWidget(this, size, ":/icons/chat/avatar_mask.svg");
     profilePicture->setPixmap(QPixmap(":/icons/chat/contact_dark.svg"));
     profilePicture->setContextMenuPolicy(Qt::CustomContextMenu);
     profilePicture->setClickable(true);
@@ -163,7 +166,9 @@ ProfileForm::ProfileForm(QWidget* parent)
     // QrCode
     ui->qrcodeButton->setIcon(QIcon(lib::settings::Style::getImagePath("chat/qrcode.svg")));
     ui->qrcodeButton->setCursor(Qt::PointingHandCursor);
-    // bodyUI->qrcodeButton->hide();
+    connect(ui->qrcodeButton, &QToolButton::clicked, this, &ProfileForm::showQRCode);
+
+            // bodyUI->qrcodeButton->hide();
     qr = new lib::ui::QRWidget(size, this);
     qr->setVisible(false);
     qr->setWindowFlags(Qt::Popup);
@@ -179,11 +184,10 @@ ProfileForm::ProfileForm(QWidget* parent)
                 retranslateUi();
             });
 
-    connect(ui->qrcodeButton, &QToolButton::clicked, this, &ProfileForm::showQRCode);
-
     // 初始时设置焦点
     setFocus();
-    qApp->installEventFilter(this);
+
+    // qApp->installEventFilter(this);
 
 }
 
@@ -191,13 +195,23 @@ ProfileForm::~ProfileForm() {
     delete ui;
 }
 
-bool ProfileForm::isShown() const {
-    if (profilePicture->isVisible()) {
-        window()->windowHandle()->alert(0);
-        return true;
+bool ProfileForm::event(QEvent *e)
+{
+    if (e->type() == QEvent::Leave)
+    {
+        QPoint view_pos(x(), y());
+        QPoint view_pos_global = mapToGlobal(view_pos);
+        QPoint mouse_global = QCursor::pos();
+        if (mouse_global.x() < view_pos_global.x() || mouse_global.x() > view_pos_global.x() + width())
+        {
+            close();
+        }
+        else if (mouse_global.y() < view_pos_global.y() || mouse_global.y() > view_pos_global.y() + height())
+        {
+            close();
+        }
     }
-
-    return false;
+    return QWidget::event(e);
 }
 
 bool ProfileForm::eventFilter(QObject* object, QEvent* event) {
@@ -205,22 +219,17 @@ bool ProfileForm::eventFilter(QObject* object, QEvent* event) {
         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
         if (!geometry().contains(mapFromGlobal(mouseEvent->globalPos()))) {
             // qDebug() << "Mouse clicked outside at global" << mouseEvent->globalPos();
-            close();
+            // close();
         }
     }
     return false;
 }
 
-void ProfileForm::showToolTip(QMouseEvent *e)
+void ProfileForm::showToolTip(const QPoint &pos)
 {
-    // 获取绝对屏幕位置
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    QPointF globalPos = e->globalPosition(); // Qt 6: 返回QPointF
-#else
-    QPoint globalPos = e->globalPos();       // Qt 5: 返回QPoint
-#endif
-    globalPos.setX(globalPos.x()+40);
-    move(globalPos); // 设置显示位置
+    if(!pos.isNull()){
+        move(pos); // 设置显示位置
+    }
     show();
 }
 
@@ -237,26 +246,27 @@ void ProfileForm::showEvent(QShowEvent* e) {
 }
 
 void ProfileForm::contextMenuEvent(QContextMenuEvent* e) {
-    QMenu menu(this);
-    menu.addAction("Refresh", [this]() {
-        setStyleSheet(lib::settings::Style::getStylesheet("window/profile.css"));
-    });
-    menu.exec(e->globalPos());
+    // QMenu menu(this);
+    // menu.addAction("Refresh", [this]() {
+    //     setStyleSheet(lib::settings::Style::getStylesheet("window/profile.css"));
+    // });
+    // menu.exec(e->globalPos());
 }
 
 void ProfileForm::focusInEvent(QFocusEvent *event)
 {
-    qDebug() <<__func__;
+
 }
 
 void ProfileForm::focusOutEvent(QFocusEvent *event)
 {
-
-    qDebug() <<__func__;
-    close();
+    // close();
 }
 
+void ProfileForm::reloadTheme()
+{
 
+}
 
 
 void ProfileForm::showProfilePictureContextMenu(const QPoint& point) {

@@ -89,7 +89,7 @@ CallConfirmWidget::CallConfirmWidget(const FriendId& from, bool video, QWidget* 
     auto* reject = new QPushButton(this);
     reject->setFlat(true);
     reject->setStyleSheet("QPushButton{border:none;}");
-    reject->setIcon(QIcon(lib::settings::Style::getImagePath("rejectCall/rejectCall.svg")));
+    reject->setIcon(QIcon(lib::settings::Style::getImagePath("call/rejectCall.svg")));
     reject->setIconSize(reject->size());
 
     buttonBox->addButton(reject, QDialogButtonBox::RejectRole);

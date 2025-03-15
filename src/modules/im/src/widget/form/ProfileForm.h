@@ -17,6 +17,9 @@
 #include <QTimer>
 #include <QVBoxLayout>
 
+#include <lib/ui/widget/OFrame.h>
+
+#include "lib/ui/widget/OWidget.h"
 
 namespace Ui {
 class ProfileForm;
@@ -49,28 +52,27 @@ protected:
 /**
  * 个人信息表单界面
  */
-class ProfileForm : public QWidget {
+class ProfileForm : public lib::ui::OFrame {
     Q_OBJECT
 public:
     explicit ProfileForm(QWidget* parent = nullptr);
     ~ProfileForm() override;
 
 
-    bool isShown() const;
-
 public slots:
     void onSelfAvatarLoaded(const QPixmap& pic);
     void onLogoutClicked();
     void onExitClicked();
-    void showToolTip(QMouseEvent *e);
+    void showToolTip(const QPoint &pos = {});
 
 protected:
+    bool event(QEvent *e) override;
     bool eventFilter(QObject* object, QEvent* event) override;
     void showEvent(QShowEvent* e) override;
     void contextMenuEvent(QContextMenuEvent* e) override;
     void focusInEvent(QFocusEvent* event) override;
     void focusOutEvent(QFocusEvent* event) override;
-
+    void reloadTheme() override;
 
 private slots:
     void setPasswordButtonsText();

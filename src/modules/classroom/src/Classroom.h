@@ -15,7 +15,7 @@
 //
 #pragma once
 
-#include "base/resources.h"
+#include "base/compatiblerecursivemutex.h"
 #include "modules/module.h"
 
 namespace module::classroom {
@@ -27,11 +27,12 @@ public:
     Classroom();
     ~Classroom();
 
-    void init(lib::session::Profile* p) override;
+    void init(lib::session::Profile* p, QWidget* parent=nullptr) override;
     const QString& getName() const override;
-    void start(std::shared_ptr<lib::session::AuthSession> session) override;
+    void start(lib::session::AuthSession* session) override;
     [[nodiscard]] bool isStarted() override;
     void stop() override;
+    void show() override;
     void hide() override;
 
     void onSave(SavedInfo&) override;
@@ -41,5 +42,8 @@ public:
 private:
     QString m_name;
     Widget* m_widget;
+
+    bool started;
+    CompatibleRecursiveMutex mutex;
 };
 }  // namespace module::classroom

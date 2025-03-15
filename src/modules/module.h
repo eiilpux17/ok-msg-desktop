@@ -35,7 +35,7 @@ class Module {
 public:
     static Module* Create();
 
-    virtual void init(lib::session::Profile* p) = 0;
+    virtual void init(lib::session::Profile* p, QWidget* parent=nullptr) = 0;
     virtual const QString& getName() const = 0;
     virtual QWidget* widget() = 0;
 
@@ -43,10 +43,10 @@ public:
      * 启动模块
      * @param session
      */
-    virtual void start(std::shared_ptr<lib::session::AuthSession> session) = 0;
+    virtual void start(lib::session::AuthSession* session) = 0;
 
     /**
-     * 停止模块（退出应用程序之前被调用）
+     * 停止模块（退出应用程序之前被调用），与start对应
      */
     virtual void stop() = 0;
 
@@ -57,12 +57,17 @@ public:
     virtual bool isStarted() = 0;
 
     /**
-     * 隐藏
+     * 显示
+     */
+    virtual void show() = 0;
+    /**
+     * 隐藏，与show对应
      */
     virtual void hide() = 0;
 
+
     /**
-     * 用户登出时（但未退出应用），一些清理操作
+     * 用户登出时（但未退出应用），一些清理操作，与init对应
      */
     virtual void cleanup() = 0;
 

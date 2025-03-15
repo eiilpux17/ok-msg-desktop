@@ -109,7 +109,7 @@ public:
     bool newGroupMessageAlert(const GroupId& groupId, const FriendId& authorPk,
                               const QString& message, bool notify);
     bool getIsWindowMinimized();
-    void updateIcons();
+
 
     static QString fromDialogType(DialogType type);
     ContentDialog* createContentDialog() const;
@@ -247,7 +247,7 @@ private:
     ChatWidget* chatWidget;
     ContactWidget* contactWidget;
     SettingsWidget* settingsWidget;
-    std::unique_ptr<ProfileForm> profileForm;
+    QPointer<ProfileForm> profileForm;
 
     Core* core;
 

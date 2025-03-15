@@ -18,32 +18,58 @@
 
 namespace module::meet {
 
-Meet::Meet() : name(OK_Meet_MODULE), m_widget{std::make_unique<Widget>()} {}
+Meet::Meet() : name(OK_Meet_MODULE), m_widget{nullptr} {}
 
 Meet::~Meet() = default;
 
-void Meet::init(lib::session::Profile* p) {}
+void Meet::init(lib::session::Profile* p, QWidget* parent) {
+    m_widget = new Widget(parent);
+}
 
 const QString& Meet::getName() const {
     return name;
 }
 
-void Meet::start(std::shared_ptr<lib::session::AuthSession> session) {
+void Meet::start(lib::session::AuthSession* session) {
+
+    QMutexLocker locker(&mutex);
+    if(started)
+          return;
+
     m_widget->start();
+    started = true;
+    qDebug() <<__func__<< "Starting up";
 }
+
 void Meet::stop() {
-    // TODO 一些停止操作
+
+    QMutexLocker locker(&mutex);
+    if(!started)
+        return;
+    started = false;
 }
+
 bool Meet::isStarted() {
-    return false;
+    QMutexLocker locker(&mutex);
+    return true;
 }
+
 void Meet::onSave(SavedInfo&) {}
 
-void Meet::cleanup() {}
+void Meet::cleanup() {
+    m_widget->deleteLater();
+}
 
 void Meet::activate() {
     m_widget->activate();
 }
 
-void Meet::hide() {}
+void Meet::hide() {
+    m_widget->hide();
+}
+
+void Meet::show()
+{
+    m_widget->show();
+}
 }  // namespace module::meet
