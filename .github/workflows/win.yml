@@ -79,8 +79,16 @@ jobs:
       run: |
         choco install strawberryperl --pre
     
-    - name: Install Openpyxl
+    # 设置 Python 环境
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11' # 指定 Python 版本，可以根据需要调整
+
+    # 安装依赖（包括 openpyxl）
+    - name: Install dependencies
       run: |
+        python -m pip install --upgrade pip
         pip install openpyxl
 
     - name: Install ok-rtc

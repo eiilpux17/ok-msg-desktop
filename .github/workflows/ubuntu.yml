@@ -75,9 +75,17 @@ jobs:
         # ffmpeg vpx qrencode 
         sudo apt install -y libvpx-dev libjpeg-dev libexif-dev libtiff-dev libpng16-16 libpng-dev libavcodec-dev libavdevice-dev libqrencode-dev
     
-    - name: Install Openpyxl
+    # 设置 Python 环境
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11' # 指定 Python 版本，可以根据需要调整
+
+    # 安装依赖（包括 openpyxl）
+    - name: Install dependencies
       run: |
-        sudo pip3 install openpyxl --break-system-packages
+        python -m pip install --upgrade pip
+        pip install openpyxl
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
