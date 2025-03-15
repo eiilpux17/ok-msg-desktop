@@ -81,7 +81,7 @@ jobs:
     
     - name: Install Openpyxl
       run: |
-        pip3 install openpyxl --break-system-packages
+        pip install openpyxl
 
     - name: Install ok-rtc
       shell: powershell
