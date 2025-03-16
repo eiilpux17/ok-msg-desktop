@@ -198,13 +198,6 @@ ProfileForm::ProfileForm(QWidget* parent)
     auto shadowBack = new ok::base::ShadowBackground(this);
     shadowBack->setShadowRadius(10);
 
-    auto css = lib::settings::Style::getStylesheet("profile.css");
-    setStyleSheet(css);
-    ui->scrollArea->setStyleSheet(css);
-    ui->exitButton->setStyleSheet(css);
-    ui->logoutButton->setStyleSheet(css);
-
-
     retranslateUi();
     auto a = ok::Application::Instance();
     connect(a->bus(), &ok::Bus::languageChanged,this,
@@ -215,6 +208,7 @@ ProfileForm::ProfileForm(QWidget* parent)
     // 初始时设置焦点
     setFocus();
 
+    reloadTheme();
     // qApp->installEventFilter(this);
 
 }
@@ -285,7 +279,11 @@ void ProfileForm::focusOutEvent(QFocusEvent *event)
 
 void ProfileForm::reloadTheme()
 {
-
+    auto css = lib::settings::Style::getStylesheet("profile.css");
+    setStyleSheet(css);
+    ui->scrollArea->setStyleSheet(css);
+    ui->exitButton->setStyleSheet(css);
+    ui->logoutButton->setStyleSheet(css);
 }
 
 

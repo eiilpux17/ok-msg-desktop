@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>550</width>
+    <width>309</width>
     <height>475</height>
    </rect>
   </property>
@@ -139,10 +139,16 @@
               <item>
                <widget class="QLineEdit" name="searchContact">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>30</height>
+                 </size>
                 </property>
                 <property name="accessibleName">
                  <string>Contact search</string>
@@ -155,13 +161,32 @@
                 </property>
                </widget>
               </item>
+              <item>
+               <widget class="QPushButton" name="addBtn">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>30</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
              </layout>
             </item>
            </layout>
           </widget>
          </item>
          <item>
-          <widget class="QScrollArea" name="sessionList" native="true">
+          <widget class="QScrollArea" name="sessionList">
            <property name="enabled">
             <bool>true</bool>
            </property>
@@ -183,7 +208,7 @@
            <property name="autoFillBackground">
             <bool>true</bool>
            </property>
-           <property name="widgetResizable" stdset="0">
+           <property name="widgetResizable">
             <bool>true</bool>
            </property>
           </widget>
@@ -196,13 +221,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>module::im::NotificationScrollArea</class>
-   <extends>QWidget</extends>
-   <header>src/modules/im/src/widget/notificationscrollarea.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

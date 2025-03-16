@@ -109,8 +109,8 @@ void ContactWidget::reloadTheme() {
     auto css = lib::settings::Style::getStylesheet("contact.css");
     // qDebug() << css;
     setStyleSheet(css);
-    // contactListWidget->setStyleSheet(css);
     contactListWidget->reloadTheme();
+    // contactListWidget->setStyleSheet(css);
     // contentLayout->reloadTheme();
     // ui->friendList->setStyleSheet(css);
 }

@@ -23,67 +23,58 @@ QWidget#ContentSeperator{
     background: #474747;
 }
 
+
 QLineEdit#searchContact{
     color: @mainText;
-    border: 1px solid @groundBase;
-    background-color: @groundBase;
-    border-radius: 5px;
-    padding: 3px;
-    min-height: 30px;
+		border: 1px solid @groundBase;
+		background-color: @groundBase;
+		border-radius: 4px;
+		padding: 4px;
 }
 
+QPushButton#addBtn
+{
+    border: 1px solid transparent;
+		padding: 5px 5px;
+		border-radius: 5px;
+		background-color: white;
+		qproperty-icon: url(:/icons/contact/add.svg);
+}
 
-QWidget#sessionPanel{
-    background: @groundExtra;
+#sessionPanel{
+  background: @groundExtra;
 	border-radius: 10px;
-    border: 0px solid;
+	border: 0px solid;
 }
 
-
-module--im--MessageSessionWidget{
+#messageSessionWidget{
     border: 0;
     border-radius: 5px;
 }
 
-module--im--MessageSessionWidget:hover{
+#messageSessionWidget:hover{
     background-color:@themeLight;
 }
 
-module--im--MessageSessionWidget:selected{
+#messageSessionWidget:selected{
     background-color:@themeLight;
 }
 
-module--im--MessageSessionWidget QLabel#nameLabel{
-    color: @mainText;
-}
-
-module--im--MessageSessionWidget:selected QLabel#nameLabel{
-    color: @mainText;
-}
-
-module--im--MessageSessionWidget QLabel#lastMessageLabel{
-    color: #b3b1b3;
-}
-module--im--MessageSessionWidget QLabel#lastMessageLabel:active{
-    color: #b3b1b3;
-}
-
-
-QWidget#contentContainer
+#contentContainer
 {
     background: @groundExtra;
 		border: 0;
     border-radius: 10px;
 }
 
-QScrollArea#sessionList{
+#sessionList{
     background: @groundExtra;
 }
 
 /* 聊天区 */
 QGraphicsView
 {
-    border: none;
+  border: none;
 	background: @groundExtra;
 }
 

@@ -13,6 +13,9 @@
 #include "genericchatroomwidget.h"
 #include <QBoxLayout>
 #include <QMouseEvent>
+#include <QPainter>
+#include <QStyle>
+#include <QStyleOptionFrame>
 #include "lib/storage/settings/style.h"
 #include "lib/ui/widget/tools/CroppingLabel.h"
 #include "lib/ui/widget/tools/RoundedPixmapLabel.h"
@@ -125,12 +128,21 @@ void GenericChatroomWidget::mouseReleaseEvent(QMouseEvent* event) {
 }
 
 void GenericChatroomWidget::enterEvent(QEvent* event) {
-    if (!active) setBackgroundRole(QPalette::Light);
     QWidget::enterEvent(event);
 }
 
 void GenericChatroomWidget::leaveEvent(QEvent* event) {
-    if (!active) setBackgroundRole(QPalette::Window);
     QWidget::leaveEvent(event);
+}
+
+void GenericChatroomWidget::paintEvent(QPaintEvent *e)
+{
+    QPainter painter(this);
+    QStyleOptionFrame opt;
+    initStyleOption(&opt);
+    if (active) {
+        opt.state |= QStyle::State_Selected;
+    }
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
 }
 }  // namespace module::im

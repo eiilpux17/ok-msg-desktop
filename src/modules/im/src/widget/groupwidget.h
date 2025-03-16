@@ -57,6 +57,7 @@ signals:
     void destroyGroup(const GroupId& groupId);
 
 protected:
+    void paintEvent(QPaintEvent* e) override;
     void contextMenuEvent(QContextMenuEvent* event) final override;
     void mousePressEvent(QMouseEvent* event) final override;
     void mouseMoveEvent(QMouseEvent* event) final override;

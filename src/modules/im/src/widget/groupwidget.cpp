@@ -17,7 +17,10 @@
 #include <QDrag>
 #include <QMenu>
 #include <QMimeData>
+#include <QPainter>
 #include <QPalette>
+#include <QStyle>
+#include <QStyleOptionFrame>
 
 #include "Bus.h"
 #include "contentdialogmanager.h"
@@ -38,8 +41,8 @@ namespace module::im {
 GroupWidget::GroupWidget(const GroupId& groupId, const QString& groupName)
         : GenericChatroomWidget(lib::messenger::ChatType::GroupChat, groupId) {
     setHidden(true);
+    setObjectName("groupWidget");
     setCursor(Qt::PointingHandCursor);
-
     connect(this, &GroupWidget::removeGroup, this, &GroupWidget::do_removeGroup);
     connect(this, &GroupWidget::destroyGroup, this, &GroupWidget::do_destroyGroup);
 
@@ -183,10 +186,7 @@ void GroupWidget::updateTitle(const QString& author, const QString& newName) {
 }
 
 void GroupWidget::contextMenuEvent(QContextMenuEvent* event) {
-    if (!active) {
-        setBackgroundRole(QPalette::Highlight);
-    }
-
+ 
     // Disable leave event.
     installEventFilter(this);
 
@@ -211,10 +211,6 @@ void GroupWidget::contextMenuEvent(QContextMenuEvent* event) {
 
     QAction* selectedItem = menu.exec(event->globalPos());
     removeEventFilter(this);
-
-    if (!active) {
-        setBackgroundRole(QPalette::Window);
-    }
 
     if (!selectedItem) {
         return;
@@ -298,7 +294,6 @@ void GroupWidget::setAsInactiveChatroom() {
 }
 
 void GroupWidget::onActiveSet(bool active) {
-    //    setBackgroundRole(QPalette::Window);
     //  const auto uri = active ? ":img/group_dark.svg" : ":img/group.svg";
     //  avatar->setPixmap(Style::scaleSvgImage(uri, avatar->width(), avatar->height()));
 }
@@ -335,15 +330,10 @@ void GroupWidget::dragEnterEvent(QDragEnterEvent* ev) {
     //    ev->acceptProposedAction();
     //  }
 
-    //  if (!active) {
-    //    setBackgroundRole(QPalette::Highlight);
-    //  }
 }
 
 void GroupWidget::dragLeaveEvent(QDragLeaveEvent*) {
-    if (!active) {
-        setBackgroundRole(QPalette::Window);
-    }
+
 }
 
 void GroupWidget::dropEvent(QDropEvent* ev) {
@@ -357,9 +347,6 @@ void GroupWidget::dropEvent(QDropEvent* ev) {
 
     //  chatroom->inviteFriend(pk);
 
-    //  if (!active) {
-    //    setBackgroundRole(QPalette::Window);
-    //  }
 }
 
 void GroupWidget::retranslateUi() {
@@ -367,4 +354,15 @@ void GroupWidget::retranslateUi() {
 }
 
 void GroupWidget::reloadTheme() {}
+
+void GroupWidget::paintEvent(QPaintEvent *e)
+{
+    QPainter painter(this);
+    QStyleOptionFrame opt;
+    initStyleOption(&opt);
+    if (active) {
+        opt.state |= QStyle::State_Selected;
+    }
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
+}
 }  // namespace module::im

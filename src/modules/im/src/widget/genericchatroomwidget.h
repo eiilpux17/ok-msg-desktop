@@ -67,6 +67,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent* event) override;
     void enterEvent(QEvent* e) override;
     void leaveEvent(QEvent* e) override;
+    void paintEvent(QPaintEvent *e) override;
 
 protected:
     QPoint dragStartPos;

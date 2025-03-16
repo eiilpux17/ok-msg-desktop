@@ -70,6 +70,7 @@ MessageSessionWidget::MessageSessionWidget(ContentLayout* layout, const ContactI
         , sendWorker{nullptr}
         , contactId(cId) {
     qDebug() << __func__ << "contactId:" << cId.toString();
+    setObjectName("messageSessionWidget");
     setCursor(Qt::PointingHandCursor);
     setHidden(true);
     setAutoFillBackground(false);
@@ -419,7 +420,7 @@ void MessageSessionWidget::setAsInactiveChatroom() {
 }
 
 void MessageSessionWidget::onActiveSet(bool active) {
-    setBackgroundRole(QPalette::Window);
+
 }
 
 void MessageSessionWidget::paintEvent(QPaintEvent* e) {

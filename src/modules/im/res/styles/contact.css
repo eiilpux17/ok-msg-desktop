@@ -33,13 +33,13 @@ module--im--ContactListWidget
     border-radius: 10px;
 }
 
-/*#searchContact{
-    color: #19171b;
-    border: 1px solid @themeMedium;
+QLineEdit#searchContact{
+    color: @mainText;
+		border: 1px solid @groundBase;
 		background-color: @groundBase;
-    border-radius: 5px;
-    padding: 6px;
-}*/
+		border-radius: 4px;
+		padding: 4px;
+}
 
 QPushButton#addBtn
 {
@@ -47,26 +47,7 @@ QPushButton#addBtn
     padding: 5px 5px;
     border-radius: 5px;
     background-color: white;
-    qproperty-icon: url(:/res/contact/add.svg);
-}
-
-QPushButton#addBtn:hover
-{
-    background-color: #f3f5f7;
-}
-
-module--im--FriendWidget, module--im--GroupWidget {
-    border: 1px solid @groundBase;
-		border-radius: 5px;
-		background: @groundBase;
-}
-
-module--im--FriendWidget:hover, module--im--GroupWidget:hover {
-    background-color:@themeLight;
-}
-
-module--im--FriendWidget:selected, module--im--GroupWidget:selected {
-    background-color:@themeLight;
+		qproperty-icon: url(:/icons/contact/add.svg);
 }
 
 #contactPanel{
@@ -79,28 +60,20 @@ module--im--FriendWidget:selected, module--im--GroupWidget:selected {
     border-radius: 10px;
 }
 
-module--im--FriendWidget, module--im--GroupWidget {
+#friendList{
+    background: @groundExtra;
+}
+
+#friendWidget, #groupWidget {
     border: 0;
     border-radius: 5px;
     background: transparent;
 }
 
-module--im--FriendWidget:hover, module--im--GroupWidget:hover {
+#friendWidget:hover, #groupWidget:hover {
     background-color: @groundBase;
 }
 
-module--im--FriendWidget:selected, module--im--GroupWidget:selected {
+#friendWidget:selected, #groupWidget:selected {
     background-color: @groundBase;
-}
-
-module--im--FriendWidget QLabel#nameLabel{
-    color: #19171b;
-}
-
-module--im--FriendWidget QLabel#lastMessageLabel:!active{
-    color: #b3b1b3;
-}
-
-module--im--FriendWidget QLabel#lastMessageLabel:active{
-    color: #b3b1b3;
 }

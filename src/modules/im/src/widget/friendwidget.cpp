@@ -52,7 +52,7 @@ namespace module::im {
 FriendWidget::FriendWidget(Friend* f, QWidget* parent)
         : GenericChatroomWidget(lib::messenger::ChatType::Chat, f->getId(), parent)
         , about{nullptr}, m_friend{f} {
-
+    setObjectName("friendWidget");
     setHidden(true);
     setCursor(Qt::PointingHandCursor);
     nameLabel->setText(m_friend->getDisplayedName());
@@ -173,10 +173,6 @@ void FriendWidget::onContextMenuCalled(QContextMenuEvent* event) {
         return;
     }
 
-    if (!active) {
-        setBackgroundRole(QPalette::Highlight);
-    }
-
     installEventFilter(this);  // Disable leave event.
 
             //  const auto newGroupAction = inviteMenu->addAction(tr("To new group"));
@@ -247,10 +243,6 @@ void FriendWidget::onContextMenuCalled(QContextMenuEvent* event) {
 
     removeEventFilter(this);
 
-    if (!active) {
-        setBackgroundRole(QPalette::Window);
-    }
-
     if (selected == removeAct) {
         const bool yes = lib::ui::GUI::askQuestion(tr("Confirmation"),
                                                    tr("Are you sure to remove %1 ?").arg(getName()),
@@ -309,7 +301,7 @@ void FriendWidget::setAsInactiveChatroom() {
 }
 
 void FriendWidget::onActiveSet(bool active) {
-    //    setBackgroundRole(QPalette::Window);
+
 }
 
 void FriendWidget::enterEvent(QEvent *e)
