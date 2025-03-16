@@ -75,7 +75,6 @@ ShadowBackground::ShadowBackground(QWidget* parent) : QObject(parent) {
 }
 
 ShadowBackground::~ShadowBackground() {
-    qDebug() << __func__;
 }
 
 void ShadowBackground::setShadowColor(const QColor& color) {

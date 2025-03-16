@@ -26,6 +26,7 @@
 #include <QMouseEvent>
 #include <QWindow>
 
+#include "base/shadowbackground.h"
 #include "lib/ui/gui.h"
 #include "lib/ui/widget/QRWidget.h"
 #include "lib/ui/widget/tools/CroppingLabel.h"
@@ -91,27 +92,38 @@ ProfileForm::ProfileForm(QWidget* parent)
     setAttribute(Qt::WA_StyledBackground);  // 确保样式表生效
     setAttribute(Qt::WA_DeleteOnClose, true);
     setFocusPolicy(Qt::StrongFocus); // 确保控件可以获得焦点
-
-
+    setContentsMargins(10,10,10,10);
+    setFixedSize(QSize(520, 520));
     setMouseTracking(true);
+
+
     //setup ui
     ui->setupUi(this);
+    ui->formLayout->setVerticalSpacing(2);
 
-    layout()->setContentsMargins(10, 10, 10, 10);
+    // layout()->setContentsMargins(10, 10, 10, 10);
     profileInfo = new ProfileInfo(this);
 
-
-    ui->formLayout->setVerticalSpacing(2);
+    ui->username->setText(profileInfo->getUsername());
     ui->nickname->setText(profileInfo->getNickname());
     connect(ui->nickname, &QLineEdit::editingFinished, this, &ProfileForm::onNicknameEdited);
 
-    ui->name_value->setText(profileInfo->getFullName());
 
+
+    //个人信息
+    ui->name_value->setText(profileInfo->getFullName());
+    profileInfo->connectTo_usernameChanged(this, [this](const QString& val) {  //
+        ui->name_value->setText(val);
+    });
+    profileInfo->connectTo_vCardChanged(this, [this](const VCard& vCard) {
+        ui->nickname->setText(vCard.nickname);
+        if (!vCard.emails.isEmpty())
+            ui->email_value->setText(vCard.emails.at(vCard.emails.size() - 1).number);
+    });
     auto& c = profileInfo->getVCard();
     if (!c.emails.isEmpty()) {
         ui->email_value->setText(c.emails.at(c.emails.size() - 1).number);
     }
-
     if (!c.tels.isEmpty()) {
         for (auto& t : c.tels) {
             if (t.mobile) {
@@ -122,35 +134,30 @@ ProfileForm::ProfileForm(QWidget* parent)
         }
     }
 
-    profileInfo->connectTo_usernameChanged(this, [this](const QString& val) {  //
-        ui->name_value->setText(val);
-    });
+    auto& v = profileInfo->getVCard();
 
-    profileInfo->connectTo_vCardChanged(this, [this](const VCard& vCard) {
-        ui->nickname->setText(vCard.nickname);
-        if (!vCard.emails.isEmpty())
-            ui->email_value->setText(vCard.emails.at(vCard.emails.size() - 1).number);
-    });
-
-
-    connect(ui->exitButton, &QPushButton::clicked, this, &ProfileForm::onExitClicked);
-    connect(ui->logoutButton, &QPushButton::clicked, this, &ProfileForm::onLogoutClicked);
-
-    for (QComboBox* cb : findChildren<QComboBox*>()) {
-        cb->installEventFilter(this);
-        cb->setFocusPolicy(Qt::StrongFocus);
+    for(auto& adr : v.adrs){
+        if(!adr.location().isEmpty())
+            ui->location->setText(adr.location());
     }
 
     // avatar
     QSize size(100, 100);
     profilePicture = new lib::ui::MaskablePixmapWidget(this, size, ":/icons/chat/avatar_mask.svg");
     profilePicture->setPixmap(QPixmap(":/icons/chat/contact_dark.svg"));
+
+    auto& avt = profileInfo->getAvatar();
+    if(!avt.isNull())
+        profilePicture->setPixmap(avt);
+
     profilePicture->setContextMenuPolicy(Qt::CustomContextMenu);
     profilePicture->setClickable(true);
     profilePicture->setObjectName("selfAvatar");
     profilePicture->installEventFilter(this);
     profilePicture->setAccessibleName("Profile avatar");
     profilePicture->setAccessibleDescription("Set a profile avatar shown to all contacts");
+
+
     connect(profilePicture, &lib::ui::MaskablePixmapWidget::clicked, this,
             &ProfileForm::onAvatarClicked);
     connect(profilePicture, &lib::ui::MaskablePixmapWidget::customContextMenuRequested, this,
@@ -175,7 +182,28 @@ ProfileForm::ProfileForm(QWidget* parent)
     qr->setQRData(profileInfo->getUsername());
     // bodyUI->publicGroup->layout()->addWidget(qr);
 
-    setStyleSheet(lib::settings::Style::getStylesheet("profile.css"));
+    QString defaultPath = Nexus::getProfile()->getDir().path();
+    QString url = QUrl::fromLocalFile(defaultPath).toString();
+
+    QString dirPrLink = tr("Current profile location: %1").arg(QString("<a href=\"%1\">%2</a>").arg(url).arg(defaultPath));
+    ui->dirPrLink->setText(dirPrLink);
+    ui->dirPrLink->setOpenExternalLinks(true);
+    ui->dirPrLink->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::TextSelectableByMouse);
+    ui->dirPrLink->setMaximumSize(ui->dirPrLink->sizeHint());
+
+
+    connect(ui->exitButton, &QPushButton::clicked, this, &ProfileForm::onExitClicked);
+    connect(ui->logoutButton, &QPushButton::clicked, this, &ProfileForm::onLogoutClicked);
+
+    auto shadowBack = new ok::base::ShadowBackground(this);
+    shadowBack->setShadowRadius(10);
+
+    auto css = lib::settings::Style::getStylesheet("profile.css");
+    setStyleSheet(css);
+    ui->scrollArea->setStyleSheet(css);
+    ui->exitButton->setStyleSheet(css);
+    ui->logoutButton->setStyleSheet(css);
+
 
     retranslateUi();
     auto a = ok::Application::Instance();
@@ -234,15 +262,7 @@ void ProfileForm::showToolTip(const QPoint &pos)
 }
 
 void ProfileForm::showEvent(QShowEvent* e) {
-    ui->username->setText(profileInfo->getUsername());
 
-    auto& c = profileInfo->getVCard();
-    if (!c.adrs.isEmpty()) {
-        ui->location->setText(c.adrs.at(c.adrs.size() - 1).location());
-    }
-
-    auto& avt = profileInfo->getAvatar();
-    profilePicture->setPixmap(avt);
 }
 
 void ProfileForm::contextMenuEvent(QContextMenuEvent* e) {

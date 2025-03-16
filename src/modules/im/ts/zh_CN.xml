@@ -1587,6 +1587,10 @@ Please use another image.</source>
             <translation>无法更改数据库的密码，它可能已损坏或使用旧密码。</translation>
         </message>
         <message>
+            <source>Current profile location: %1</source>
+            <translation>当前账户的位置: %1</translation>
+        </message>
+        <message>
             <source>Remove</source>
             <translation>移除</translation>
         </message>

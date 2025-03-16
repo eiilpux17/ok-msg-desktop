@@ -24,12 +24,16 @@ namespace module::im {
 struct VCard {
     struct Adr {
         QString street;
+        //city
         QString locality;
         QString region;
         QString country;
 
-        [[nodiscard]] QString location() const {
-            return region + locality;
+        [[nodiscard]] inline QString location() const {
+            if(country.isEmpty()){
+                return locality;
+            }
+            return country + " " + locality;
         }
     };
 
