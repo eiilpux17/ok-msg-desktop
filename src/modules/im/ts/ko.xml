@@ -99,24 +99,24 @@ which may lead to problems with video calls.</source>
             <translation>상태 메시지</translation>
         </message>
         <message>
-            <source>Alias:</source>
-            <translation>별명:</translation>
-        </message>
-        <message>
-            <source>Account:</source>
-            <translation>계좌:</translation>
-        </message>
-        <message>
-            <source>Clear</source>
-            <translation>맑다</translation>
+            <source>Send message</source>
+            <translation>메시지 보내기</translation>
         </message>
         <message>
             <source>Clear history:</source>
             <translation>기록 지우기:</translation>
         </message>
         <message>
-            <source>Send message</source>
-            <translation>메시지 보내기</translation>
+            <source>Alias:</source>
+            <translation>별명:</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>맑다</translation>
+        </message>
+        <message>
+            <source>Account:</source>
+            <translation>계좌:</translation>
         </message>
     </context>
     <context>
@@ -336,8 +336,8 @@ which may lead to problems with video calls.</source>
             <translation>잡담</translation>
         </message>
         <message>
-            <source>Base font:</source>
-            <translation>기본폰트:</translation>
+            <source>Font size:</source>
+            <translation type="unfinished"/>
         </message>
         <message>
             <source>px</source>
@@ -348,32 +348,8 @@ which may lead to problems with video calls.</source>
             <translation>크기:</translation>
         </message>
         <message>
-            <source>New text styling preference may not load until OkMsg restarts.</source>
-            <translation>OkMsg가 다시 시작될 때까지 새 텍스트 스타일 기본 설정이 로드되지 않을 수 있습니다.</translation>
-        </message>
-        <message>
-            <source>Text Style format:</source>
-            <translation>텍스트 스타일 형식:</translation>
-        </message>
-        <message>
-            <source>Select text styling preference.</source>
-            <translation>텍스트 스타일 기본 설정을 선택합니다.</translation>
-        </message>
-        <message>
-            <source>Plaintext</source>
-            <translation>평문</translation>
-        </message>
-        <message>
-            <source>Show formatting characters</source>
-            <translation>서식 문자 표시</translation>
-        </message>
-        <message>
-            <source>Don't show formatting characters</source>
-            <translation>서식 문자 숨기기</translation>
-        </message>
-        <message>
-            <source>Use colored nicknames in chats</source>
-            <translation>채팅에서 색깔 있는 닉네임 사용</translation>
+            <source>Base font:</source>
+            <translation>기본폰트:</translation>
         </message>
         <message>
             <source>New message</source>
@@ -412,10 +388,6 @@ which may lead to problems with video calls.</source>
         <message>
             <source>Play sound</source>
             <translation>소리재생</translation>
-        </message>
-        <message>
-            <source>Play sound while Busy</source>
-            <translation>바쁜 동안 소리 재생</translation>
         </message>
         <message>
             <source>Notify via desktop notifications</source>
@@ -1588,7 +1560,7 @@ Please use another image.</source>
         </message>
         <message>
             <source>Current profile location: %1</source>
-            <translation>현재 프로필 위치: %1</translation>
+            <translation type="unfinished"/>
         </message>
         <message>
             <source>Remove</source>

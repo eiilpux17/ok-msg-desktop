@@ -50,7 +50,7 @@ QString Contact::getDisplayedName() const {
 
 const QPixmap& Contact::setDefaultAvatar() {
     auto name = !group ? "contact" : "group";
-    auto uri = QString(":img/%1_dark.svg").arg(name);
+    auto uri = QString(":/icons/chat/%1_dark.svg").arg(name);
     avatar = QPixmap(uri);
     avatarSetStatus = AvatarSet::DefaultSet;
     return avatar;

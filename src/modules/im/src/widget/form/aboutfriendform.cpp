@@ -58,12 +58,12 @@ AboutFriendForm::AboutFriendForm(const Friend* fw, QWidget* parent)
     ui->id->setText(about->getPublicKey().toString());
     ui->statusMessage->setText(about->getStatusMessage());
 
-    realAvatar = new lib::ui::RoundedPixmapLabel(this);
+    realAvatar = new lib::ui::RoundedPixmapLabel(ui->avatar);
     realAvatar->setFixedSize(QSize(60, 60));
     realAvatar->setPixmap(about->getAvatar());
-    ui->avatarLayout->replaceWidget(ui->avatar, realAvatar);
-    ui->avatar->deleteLater();
-    ui->avatar = nullptr;
+
+    ui->avatar->setPixmap(realAvatar->getOutPixmap());
+    ui->avatar->setAlignment(Qt::AlignHCenter);
 
     auto f = about->getFriend();
     connect(f, &Friend::avatarChanged, this,

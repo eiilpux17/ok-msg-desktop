@@ -46,9 +46,6 @@ private slots:
 
     void on_notify_stateChanged();
     void on_desktopNotify_stateChanged();
-    // void on_notifySound_stateChanged();
-    // void on_notifyHide_stateChanged(int);
-    void on_busySound_stateChanged();
 
     void on_groupOnlyNotfiyWhenMentioned_stateChanged();
 

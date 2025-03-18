@@ -10,6 +10,7 @@
         <file>styles/CallDurationForm.css</file>
         <file>styles/emoticon.css</file>
         <file>styles/contact.css</file>
+        <file>styles/settings.css</file>
         <file>icons/call/callButton.svg</file>
         <file>icons/call/micButton.svg</file>
         <file>icons/call/micButtonRed.svg</file>

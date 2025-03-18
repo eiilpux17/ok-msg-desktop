@@ -10,29 +10,26 @@
  * See the Mulan PubL v2 for more details.
  */
 
-QPushButton
-{
-    background-color: #6bc260;
-    background-image: url("@getImagePath(emoteButton/emoteButton.svg)");
-    background-repeat: none;
-    background-position: center;
-    border-top-right-radius: 5px;
+/*#subTab 二级菜单*/
+QTabWidget#subTab>QTabBar::tab {
     border: none;
-    width: 24px;
-    height: 24px;
+    margin-left: 10px;
 }
 
-QPushButton:hover
-{
-    background-color: #79c76f;
+QTabWidget#subTab>QTabBar::tab:selected {
+    background: @groundExtra;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
-QPushButton:pressed
-{
-    background-color: #51b244;
+QTabWidget#subTab:pane {
+    border: none;
+    background: @groundExtra;
+    border-radius: 10px;
 }
 
-QPushButton:focus
-{
-    outline: none;
+QLineEdit,QComboBox,QSpinBox {
+    background: @groundBase;
+    min-height: 30px;
+    border: 1px solid @themeMedium;
 }

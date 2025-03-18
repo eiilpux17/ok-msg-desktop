@@ -46,12 +46,15 @@ CompatibleRecursiveMutex Settings::bigLock;
 // QThread* Settings::settingsThread{nullptr};
 
 Settings::Settings(QSettings* s_) : s(s_), loaded(false) {
-    // settingsThread = new QThread();
-    // settingsThread->setObjectName("IM-Settings");
-    // settingsThread->start(QThread::LowPriority);
-    // moveToThread(settingsThread);
+    settingsThread = new QThread();
+    settingsThread->setObjectName("IM-Settings");
+    settingsThread->start(QThread::LowPriority);
+    moveToThread(settingsThread);
 
     loadGlobal();
+
+     connect(this, &Settings::chatMessageFontChanged, this, &Settings::saveGlobal);
+
 }
 
 Settings::~Settings() {
@@ -389,8 +392,8 @@ void Settings::resetToDefault() {
  * @brief Asynchronous, saves the global settings.
  */
 void Settings::saveGlobal() {
-    // if (QThread::currentThread() != settingsThread)
-        // return (void)QMetaObject::invokeMethod(this, "saveGlobal");
+    if (QThread::currentThread() != settingsThread)
+        return (void)QMetaObject::invokeMethod(this, "saveGlobal");
 
     qDebug() << __func__;
 
@@ -436,11 +439,11 @@ void Settings::saveGlobal() {
 
     s->beginGroup("GUI");
     {
-        s->setValue("showWindow", showWindow);
+
         s->setValue("notify", notify);
         s->setValue("desktopNotify", desktopNotify);
         s->setValue("groupAlwaysNotify", groupAlwaysNotify);
-        s->setValue("separateWindow", separateWindow);
+
         s->setValue("dontGroupWindows", dontGroupWindows);
         s->setValue("groupchatPosition", groupchatPosition);
         s->setValue("showIdenticons", showIdenticons);
@@ -449,13 +452,12 @@ void Settings::saveGlobal() {
         s->setValue("emojiFontPointSize", emojiFontPointSize);
         s->setValue("firstColumnHandlePos", firstColumnHandlePos);
         s->setValue("secondColumnHandlePosFromRight", secondColumnHandlePosFromRight);
-        s->setValue("timestampFormat", timestampFormat);
-        s->setValue("dateFormat", dateFormat);
+
         s->setValue("lightTrayIcon", lightTrayIcon);
         s->setValue("useEmoticons", useEmoticons);
-        s->setValue("themeColor", themeColor);
+
         s->setValue("style", style);
-        s->setValue("nameColors", nameColors);
+
         s->setValue("statusChangeNotificationEnabled", statusChangeNotificationEnabled);
         s->setValue("showGroupJoinLeaveMessages", showGroupJoinLeaveMessages);
         s->setValue("spellCheckingEnabled", spellCheckingEnabled);

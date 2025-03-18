@@ -56,8 +56,20 @@
        <property name="topMargin">
         <number>6</number>
        </property>
-       <item>
+       <item alignment="Qt::AlignHCenter">
         <widget class="QGroupBox" name="chatGroupBox">
+         <property name="minimumSize">
+          <size>
+           <width>300</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>300</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="title">
           <string>Chat</string>
          </property>
@@ -65,19 +77,60 @@
           <set>Qt::AlignHCenter|Qt::AlignTop</set>
          </property>
          <layout class="QFormLayout" name="formLayout_2">
+          <property name="horizontalSpacing">
+           <number>10</number>
+          </property>
+          <property name="verticalSpacing">
+           <number>10</number>
+          </property>
           <property name="leftMargin">
-           <number>9</number>
+           <number>10</number>
           </property>
           <property name="topMargin">
            <number>30</number>
           </property>
           <property name="rightMargin">
-           <number>9</number>
+           <number>10</number>
           </property>
           <property name="bottomMargin">
-           <number>9</number>
+           <number>10</number>
           </property>
-          <item row="0" column="0">
+          <item row="1" column="0">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Font size:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="txtChatFontSize">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>150</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>150</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="suffix">
+             <string>px</string>
+            </property>
+            <property name="prefix">
+             <string>Size:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
            <widget class="QLabel" name="label_2">
             <property name="text">
              <string>Base font:</string>
@@ -87,89 +140,42 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <layout class="QHBoxLayout" name="horizontalLayout_5">
-            <item>
-             <widget class="QFontComboBox" name="txtChatFont">
-              <property name="editable">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="txtChatFontSize">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="suffix">
-               <string>px</string>
-              </property>
-              <property name="prefix">
-               <string>Size:</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="textStyleLabel">
-            <property name="toolTip">
-             <string>New text styling preference may not load until OkMsg restarts.</string>
-            </property>
-            <property name="text">
-             <string>Text Style format:</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QComboBox" name="textStyleComboBox">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>Select text styling preference.</string>
-            </property>
-            <property name="currentIndex">
-             <number>1</number>
-            </property>
-            <item>
-             <property name="text">
-              <string>Plaintext</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Show formatting characters</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Don't show formatting characters</string>
-             </property>
-            </item>
-           </widget>
-          </item>
           <item row="2" column="1">
-           <widget class="QCheckBox" name="useNameColors">
-            <property name="text">
-             <string>Use colored nicknames in chats</string>
+           <widget class="QFontComboBox" name="txtChatFont">
+            <property name="minimumSize">
+             <size>
+              <width>150</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>150</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="editable">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
          </layout>
         </widget>
        </item>
-       <item>
+       <item alignment="Qt::AlignHCenter">
         <widget class="QGroupBox" name="newMessageGroup">
+         <property name="minimumSize">
+          <size>
+           <width>300</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>300</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="title">
           <string>New message</string>
          </property>
@@ -177,8 +183,17 @@
           <set>Qt::AlignHCenter|Qt::AlignTop</set>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_10">
+          <property name="leftMargin">
+           <number>10</number>
+          </property>
           <property name="topMargin">
-           <number>6</number>
+           <number>10</number>
+          </property>
+          <property name="rightMargin">
+           <number>10</number>
+          </property>
+          <property name="bottomMargin">
+           <number>10</number>
           </property>
           <item>
            <layout class="QVBoxLayout" name="newMessageLayout">
@@ -258,20 +273,6 @@
              </widget>
             </item>
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout">
-              <property name="leftMargin">
-               <number>40</number>
-              </property>
-              <item>
-               <widget class="QCheckBox" name="busySound">
-                <property name="text">
-                 <string>Play sound while Busy</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
              <widget class="QCheckBox" name="desktopNotify">
               <property name="text">
                <string>Notify via desktop notifications</string>
@@ -290,8 +291,20 @@
          </layout>
         </widget>
        </item>
-       <item>
+       <item alignment="Qt::AlignHCenter">
         <widget class="QGroupBox" name="verticalGroupBox">
+         <property name="minimumSize">
+          <size>
+           <width>300</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>300</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="title">
           <string>Privacy</string>
          </property>

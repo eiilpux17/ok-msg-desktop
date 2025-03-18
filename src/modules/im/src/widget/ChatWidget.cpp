@@ -506,20 +506,6 @@ void ChatWidget::reloadTheme() {
     auto chat = lib::settings::Style::getStylesheet("chat.css");
     setStyleSheet(chat);
 
-    // auto statusPanelStyle = lib::settings::Style::getStylesheet("window/statusPanel.css");
-    // ui->statusHead->setStyleSheet(statusPanelStyle);
-
-    // auto statusButton = lib::settings::Style::getStylesheet("statusButton/statusButton.css");
-    // ui->statusButton->setStyleSheet(statusButton);
-
-    // auto friendList = lib::settings::Style::getStylesheet("friendList/friendList.css");
-    // ui->sessionList->setStyleSheet(friendList);
-    // ui->sessionList->setAutoFillBackground(false);
-    // ui->sessionList->viewport()->setAutoFillBackground(false);
-
-    // sessionListWidget->reDraw();
-    // sessionListWidget->reloadTheme();
-
     if (contentLayout != nullptr) {
         contentLayout->reloadTheme();
     }

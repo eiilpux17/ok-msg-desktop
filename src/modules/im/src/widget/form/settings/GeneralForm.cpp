@@ -73,24 +73,12 @@ void GeneralForm::on_notify_stateChanged() {
     Nexus::getProfile()->getSettings()->setNotify(notify);
     bodyUI->groupOnlyNotfiyWhenMentioned->setEnabled(notify);
     bodyUI->notifySound->setEnabled(notify);
-    bodyUI->busySound->setEnabled(notify && bodyUI->notifySound->isChecked());
     bodyUI->desktopNotify->setEnabled(notify);
 }
-/*
-void GeneralForm::on_notifySound_stateChanged()
-{
-    const bool notify = bodyUI->notifySound->isChecked();
-    Nexus::getProfile()->getSettings()->setNotifySound(notify);
-    bodyUI->busySound->setEnabled(notify);
-}
-*/
+
 void GeneralForm::on_desktopNotify_stateChanged() {
     const bool notify = bodyUI->desktopNotify->isChecked();
     Nexus::getProfile()->getSettings()->setDesktopNotify(notify);
-}
-
-void GeneralForm::on_busySound_stateChanged() {
-    Nexus::getProfile()->getSettings()->setBusySound(bodyUI->busySound->isChecked());
 }
 
 void GeneralForm::on_groupOnlyNotfiyWhenMentioned_stateChanged() {
@@ -98,10 +86,6 @@ void GeneralForm::on_groupOnlyNotfiyWhenMentioned_stateChanged() {
     Nexus::getProfile()->getSettings()->setGroupAlwaysNotify(
             !bodyUI->groupOnlyNotfiyWhenMentioned->isChecked());
 }
-
-/**
- * @brief Retranslate all elements in the form.
- */
 
 void GeneralForm::retranslateUi() {
     bodyUI->retranslateUi(this);
@@ -113,9 +97,7 @@ void GeneralForm::onProfileChanged(Profile* profile) {
     const QFont chatBaseFont = s->getChatMessageFont();
     bodyUI->txtChatFontSize->setValue(QFontInfo(chatBaseFont).pixelSize());
     bodyUI->txtChatFont->setCurrentFont(chatBaseFont);
-    int index = static_cast<int>(s->getStylePreference());
-    bodyUI->textStyleComboBox->setCurrentIndex(index);
-    bodyUI->useNameColors->setChecked(s->getEnableGroupChatsColor());
+
 
     bodyUI->notify->setChecked(s->getNotify());
     // Note: UI is boolean inversed from settings to maintain setting file backwards compatibility
@@ -124,8 +106,6 @@ void GeneralForm::onProfileChanged(Profile* profile) {
     bodyUI->notifySound->setChecked(s->getNotifySound());
     bodyUI->notifyHide->setChecked(s->getNotifyHide());
     bodyUI->notifySound->setEnabled(s->getNotify());
-    bodyUI->busySound->setChecked(s->getBusySound());
-    bodyUI->busySound->setEnabled(s->getNotifySound() && s->getNotify());
 #if DESKTOP_NOTIFICATIONS
     bodyUI->desktopNotify->setChecked(s->getDesktopNotify());
     bodyUI->desktopNotify->setEnabled(s->getNotify());

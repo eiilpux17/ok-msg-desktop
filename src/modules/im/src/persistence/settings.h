@@ -457,6 +457,7 @@ private:
 
     // ChatView 用户界面
     QFont chatMessageFont;
+
     StyleType stylePreference;
     int firstColumnHandlePos;
     int secondColumnHandlePosFromRight;
@@ -473,7 +474,7 @@ private:
     int themeColor;
 
     static CompatibleRecursiveMutex bigLock;
-    // static QThread* settingsThread;
+    QThread* settingsThread;
 };
 }  // namespace module::im
 #endif  // SETTINGS_HPP

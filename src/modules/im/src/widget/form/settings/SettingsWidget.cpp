@@ -28,13 +28,18 @@
 #include "src/widget/widget.h"
 #include "lib/storage/settings/translator.h"
 
+#include <lib/storage/settings/style.h>
+
 namespace module::im {
 
 /**
  * @brief IM Settings widget
  * @param parent
  */
-SettingsWidget::SettingsWidget(QWidget* parent) : QWidget(parent, Qt::Window) {
+SettingsWidget::SettingsWidget(QWidget* parent)
+        : lib::ui::OFrame(parent) {
+
+    setObjectName("settingsWidget");
 
     bodyLayout = new QVBoxLayout(this);
     bodyLayout->setContentsMargins(0, 0, 0, 0);
@@ -74,12 +79,16 @@ SettingsWidget::SettingsWidget(QWidget* parent) : QWidget(parent, Qt::Window) {
     bodyLayout->addWidget(tab);
     setLayout(bodyLayout);
 
+
+    reloadTheme();
+
     retranslateUi();
     auto a = ok::Application::Instance();
     connect(a->bus(), &ok::Bus::languageChanged,this,
             [&](const QString& locale0) {
                 retranslateUi();
             });
+
 }
 
 SettingsWidget::~SettingsWidget() {
@@ -94,17 +103,21 @@ void SettingsWidget::showAbout() {
     onTabChanged(tab->count() - 1);
 }
 
+void SettingsWidget::reloadTheme()
+{
+    auto css = lib::settings::Style::getStylesheet("settings.css");
+    setStyleSheet(css);
+}
+
 bool SettingsWidget::isShown() const {
     if (tab->isVisible()) {
         tab->window()->windowHandle()->alert(0);
         return true;
     }
-
     return false;
 }
 
 void SettingsWidget::show(ContentLayout* contentLayout) {
-    //    contentLayout->mainContent->layout()->addWidget(settingsWidgets.get());
     tab->show();
     onTabChanged(tab->currentIndex());
 }
@@ -124,7 +137,7 @@ void SettingsWidget::retranslateUi() {
     auto locale = settings->getTranslation();
     settings::Translator::translate(OK_IM_MODULE, locale);
 
-    for (size_t i = 0; i < cfgForms.size(); ++i){
+    for (int i = 0; i < cfgForms.size(); ++i){
         auto n = cfgForms[i]->getFormName();
         tab->setTabText(i, n);
     }

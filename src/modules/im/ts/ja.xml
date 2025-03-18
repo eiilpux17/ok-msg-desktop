@@ -99,24 +99,24 @@ which may lead to problems with video calls.</source>
             <translation>ステータスメッセージ</translation>
         </message>
         <message>
-            <source>Alias:</source>
-            <translation>別名：</translation>
-        </message>
-        <message>
-            <source>Account:</source>
-            <translation>銀行口座:</translation>
-        </message>
-        <message>
-            <source>Clear</source>
-            <translation>クリア</translation>
+            <source>Send message</source>
+            <translation>メッセージを送信</translation>
         </message>
         <message>
             <source>Clear history:</source>
             <translation>履歴のクリア:</translation>
         </message>
         <message>
-            <source>Send message</source>
-            <translation>メッセージを送信</translation>
+            <source>Alias:</source>
+            <translation>別名：</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>クリア</translation>
+        </message>
+        <message>
+            <source>Account:</source>
+            <translation>銀行口座:</translation>
         </message>
     </context>
     <context>
@@ -336,8 +336,8 @@ which may lead to problems with video calls.</source>
             <translation>チャット</translation>
         </message>
         <message>
-            <source>Base font:</source>
-            <translation>基本のフォント:</translation>
+            <source>Font size:</source>
+            <translation type="unfinished"/>
         </message>
         <message>
             <source>px</source>
@@ -348,32 +348,8 @@ which may lead to problems with video calls.</source>
             <translation>サイズ:</translation>
         </message>
         <message>
-            <source>New text styling preference may not load until OkMsg restarts.</source>
-            <translation>新しいテキストスタイルの設定は、OkMsgが再起動するまで読み込まれない場合があります。</translation>
-        </message>
-        <message>
-            <source>Text Style format:</source>
-            <translation>テキストスタイルの書式:</translation>
-        </message>
-        <message>
-            <source>Select text styling preference.</source>
-            <translation>テキストスタイル設定を選択します。</translation>
-        </message>
-        <message>
-            <source>Plaintext</source>
-            <translation>プレーンテキスト</translation>
-        </message>
-        <message>
-            <source>Show formatting characters</source>
-            <translation>書式付きの文字を表示</translation>
-        </message>
-        <message>
-            <source>Don't show formatting characters</source>
-            <translation>書式付きの文字を表示しない</translation>
-        </message>
-        <message>
-            <source>Use colored nicknames in chats</source>
-            <translation>チャットで色付きのニックネームを使用する</translation>
+            <source>Base font:</source>
+            <translation>基本のフォント:</translation>
         </message>
         <message>
             <source>New message</source>
@@ -412,10 +388,6 @@ which may lead to problems with video calls.</source>
         <message>
             <source>Play sound</source>
             <translation>音を再生</translation>
-        </message>
-        <message>
-            <source>Play sound while Busy</source>
-            <translation>多忙の際に音声を再生</translation>
         </message>
         <message>
             <source>Notify via desktop notifications</source>
@@ -1588,7 +1560,7 @@ Please use another image.</source>
         </message>
         <message>
             <source>Current profile location: %1</source>
-            <translation>現在のプロファイル保存先: %1</translation>
+            <translation type="unfinished"/>
         </message>
         <message>
             <source>Remove</source>

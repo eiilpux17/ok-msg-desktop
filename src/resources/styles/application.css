@@ -31,6 +31,7 @@ QTabWidget {
 	background-color: transparent;
 }
 
+QSpinBox,
 QLineEdit,
 QComboBox {
 	border: 1px solid @themeMedium;
@@ -392,4 +393,3 @@ QMenu::item:hover, QMenu::item:selected {
 QGraphicsView {
   background: transparent;
 }
-

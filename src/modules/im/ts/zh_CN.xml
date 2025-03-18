@@ -99,24 +99,24 @@ which may lead to problems with video calls.</source>
             <translation>状态消息</translation>
         </message>
         <message>
-            <source>Alias:</source>
-            <translation>备注名：</translation>
-        </message>
-        <message>
-            <source>Account:</source>
-            <translation>帐号：</translation>
-        </message>
-        <message>
-            <source>Clear</source>
-            <translation>清空</translation>
+            <source>Send message</source>
+            <translation>发送消息</translation>
         </message>
         <message>
             <source>Clear history:</source>
             <translation>清空历史记录：</translation>
         </message>
         <message>
-            <source>Send message</source>
-            <translation>发送消息</translation>
+            <source>Alias:</source>
+            <translation>备注名：</translation>
+        </message>
+        <message>
+            <source>Clear</source>
+            <translation>清空</translation>
+        </message>
+        <message>
+            <source>Account:</source>
+            <translation>帐号：</translation>
         </message>
     </context>
     <context>
@@ -336,8 +336,8 @@ which may lead to problems with video calls.</source>
             <translation>消息</translation>
         </message>
         <message>
-            <source>Base font:</source>
-            <translation>基础字体：</translation>
+            <source>Font size:</source>
+            <translation>字体大小：</translation>
         </message>
         <message>
             <source>px</source>
@@ -348,32 +348,8 @@ which may lead to problems with video calls.</source>
             <translation>尺寸：</translation>
         </message>
         <message>
-            <source>New text styling preference may not load until OkMsg restarts.</source>
-            <translation>在 OkMsg 重新启动之前，新的文本样式首选项可能不会加载。</translation>
-        </message>
-        <message>
-            <source>Text Style format:</source>
-            <translation>文本样式格式：</translation>
-        </message>
-        <message>
-            <source>Select text styling preference.</source>
-            <translation>选择文本样式首选项。</translation>
-        </message>
-        <message>
-            <source>Plaintext</source>
-            <translation>纯文本</translation>
-        </message>
-        <message>
-            <source>Show formatting characters</source>
-            <translation>显示格式字符</translation>
-        </message>
-        <message>
-            <source>Don't show formatting characters</source>
-            <translation>不显示格式字符</translation>
-        </message>
-        <message>
-            <source>Use colored nicknames in chats</source>
-            <translation>在交谈中使用彩色昵称</translation>
+            <source>Base font:</source>
+            <translation>基础字体：</translation>
         </message>
         <message>
             <source>New message</source>
@@ -412,10 +388,6 @@ which may lead to problems with video calls.</source>
         <message>
             <source>Play sound</source>
             <translation>播放声音</translation>
-        </message>
-        <message>
-            <source>Play sound while Busy</source>
-            <translation>忙碌状态时仍播放提示音</translation>
         </message>
         <message>
             <source>Notify via desktop notifications</source>
@@ -1588,7 +1560,7 @@ Please use another image.</source>
         </message>
         <message>
             <source>Current profile location: %1</source>
-            <translation>当前账户的位置: %1</translation>
+            <translation type="unfinished"/>
         </message>
         <message>
             <source>Remove</source>

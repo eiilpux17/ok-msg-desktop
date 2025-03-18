@@ -16,6 +16,7 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QStyleFactory>
+#include "lib/ui/widget/OFrame.h"
 
 
 class QLabel;
@@ -36,7 +37,7 @@ class Widget;
 /**
  * 设置界面
  */
-class SettingsWidget : public QWidget {
+class SettingsWidget : public lib::ui::OFrame {
     Q_OBJECT
 public:
     explicit SettingsWidget(QWidget* parent = nullptr);
@@ -48,16 +49,12 @@ public:
 
     void showAbout();
 
-public slots:
-    void onUpdateAvailable(void);
-
-private slots:
-    void onTabChanged(int);
+protected:
+    void reloadTheme() override;
 
 private:
     void retranslateUi();
 
-private:
     QVBoxLayout* bodyLayout;
     QTabWidget* tab;
 
@@ -67,6 +64,12 @@ private:
 
     std::vector<BaseSettingsForm*> cfgForms;
     int currentIndex;
+
+public slots:
+    void onUpdateAvailable(void);
+
+private slots:
+    void onTabChanged(int);
 };
 }  // namespace module::im
 #endif  // SETTINGSWIDGET_H
