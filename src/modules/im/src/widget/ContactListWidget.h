@@ -50,8 +50,6 @@ public:
 
     void setFriendStatus(const ContactId& friendPk, Status status);
     void setFriendStatusMsg(const FriendId& friendPk, const QString& statusMsg);
-    void setFriendName(const FriendId& friendPk, const QString& name);
-    void setFriendAlias(const FriendId& friendPk, const QString& alias);
     void setFriendAvatar(const FriendId& friendPk, const QByteArray& avatar);
     void setFriendTyping(const FriendId& pk, bool typing);
 

@@ -55,9 +55,12 @@ FriendWidget::FriendWidget(Friend* f, QWidget* parent)
     setObjectName("friendWidget");
     setHidden(true);
     setCursor(Qt::PointingHandCursor);
-    nameLabel->setText(m_friend->getDisplayedName());
+
     // update alias when edited
-    connect(nameLabel, &lib::ui::CroppingLabel::editFinished, m_friend, &Friend::setAlias);
+    nameLabel->setText(m_friend->getDisplayedName());
+    connect(nameLabel, &lib::ui::CroppingLabel::editFinished, m_friend, [&](const QString& txt){
+        f->setAlias(txt, true);
+    });
 
     connect(m_friend, &Friend::avatarChanged, [&](const QPixmap& pixmap) { setAvatar(pixmap); });
     connect(m_friend, &Friend::displayedNameChanged, nameLabel, &lib::ui::CroppingLabel::setText);
@@ -65,8 +68,6 @@ FriendWidget::FriendWidget(Friend* f, QWidget* parent)
         Q_UNUSED(newName);
         emit friendWidgetRenamed(this);
     });
-
-
 
     connect(f, &Friend::avInvite, this, &FriendWidget::setAvInvite);
     connect(f, &Friend::avEnd, this, &FriendWidget::setAvEnd);

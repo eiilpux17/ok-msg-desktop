@@ -169,9 +169,7 @@ void ContactWidget::connectToCore(Core* core) {
             // 好友请求
     connect(core, &Core::friendRequestReceived, this, &ContactWidget::onFriendRequest);
     connect(core, &Core::friendAdded, this, &ContactWidget::onFriendAdded);
-    connect(core, &Core::friendNicknameChanged, this, &ContactWidget::onFriendNickChanged);
-    connect(core, &Core::friendAvatarChanged, this, &ContactWidget::onFriendAvatarChanged);
-    connect(core, &Core::friendAliasChanged, this, &ContactWidget::onFriendAliasChanged);
+
     connect(core, &Core::friendStatusChanged, this, &ContactWidget::onFriendStatusChanged);
     connect(core,
             &Core::friendStatusMessageChanged,
@@ -202,21 +200,6 @@ void ContactWidget::onFriendAdded(const Friend* frnd) {
 
 void ContactWidget::onFriendRemoved(Friend* f) {
     removeFriendDetails(f);
-}
-
-void ContactWidget::onFriendAvatarChanged(const FriendId& friendnumber, const QByteArray& avatar) {
-    qDebug() << __func__ << "friend:" << friendnumber.toString() << "size:" << avatar.size();
-    contactListWidget->setFriendAvatar(friendnumber, avatar);
-}
-
-void ContactWidget::onFriendAliasChanged(const FriendId& friendPk, const QString& alias) {
-    qDebug() << __func__ << "friend:" << friendPk.toString() << "alias:" << alias;
-    contactListWidget->setFriendAlias(friendPk, alias);
-}
-
-void ContactWidget::onFriendNickChanged(const FriendId& friendPk, const QString& nick) {
-    qDebug() << __func__ << "friend:" << friendPk.toString() << "nick:" << nick;
-    contactListWidget->setFriendName(friendPk, nick);
 }
 
 void ContactWidget::onFriendStatusChanged(const FriendId& friendPk, Status status) {

@@ -429,24 +429,7 @@ void ContactListWidget::setFriendStatusMsg(const FriendId& friendPk, const QStri
     fw->setStatusMsg(statusMsg);
 }
 
-void ContactListWidget::setFriendName(const FriendId& friendPk, const QString& name) {
-    auto f = Nexus::getCore()->getFriendList().findFriend(friendPk);
-    if (!f.has_value()) {
-        qWarning() << "friend is no existing.";
-        return;
-    }
-    f.value()->setName(name);
-}
 
-void ContactListWidget::setFriendAlias(const FriendId& friendPk, const QString& alias) {
-    qDebug() << __func__ << friendPk.toString() << alias;
-    auto f = Nexus::getCore()->getFriendList().findFriend(friendPk);
-    if (!f.has_value()) {
-        qWarning() << "friend is no existing.";
-        return;
-    }
-    f.value()->setAlias(alias);
-}
 
 void ContactListWidget::setFriendAvatar(const FriendId& friendPk, const QByteArray& avatar) {
     auto fw = getFriend(friendPk);

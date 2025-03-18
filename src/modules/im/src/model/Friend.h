@@ -16,6 +16,7 @@
 #include <QObject>
 #include <QString>
 
+#include "src/core/ICallSender.h"
 #include "src/model/FriendId.h"
 #include "src/model/Contact.h"
 #include "src/model/Status.h"
@@ -27,7 +28,7 @@ class IMFriend;
 }
 namespace module::im {
 
-class Friend : public Contact , public ICallSender{
+class Friend : public Contact , public ICallSender {
     Q_OBJECT
 public:
     // 朋友关系

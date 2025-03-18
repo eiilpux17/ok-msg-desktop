@@ -77,8 +77,10 @@ AboutFriendForm::AboutFriendForm(const Friend* fw, QWidget* parent)
 
     ui->alias->setText(about->getAlias());
     ui->alias->setPlaceholderText(about->getName());
-    connect(f, &Contact::aliasChanged, this,
-            [&](const auto& alias) { ui->alias->setText(alias); });
+
+    connect(f, &Contact::aliasChanged, this, [&](const auto& alias) {
+        ui->alias->setText(alias);
+    });
 
     connect(ui->alias, &QLineEdit::textChanged, this, &AboutFriendForm::onAliasChanged);
 
@@ -139,8 +141,7 @@ void AboutFriendForm::onAliasChanged(const QString& text) {
         return;
     }
 
-    f.value()->setAlias(text);
-    Core::getInstance()->setFriendAlias(fid, text);
+    f.value()->setAlias(text, true);
 }
 
 const ContactId& AboutFriendForm::getId() {

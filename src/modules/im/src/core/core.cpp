@@ -344,22 +344,38 @@ void Core::onFriendChatState(const std::string& friendId, int state) {
 
 void Core::onFriendNickChanged(const std::string& friendId, const std::string& nick) {
     qDebug() << __func__ << friendId.c_str() << "nick:" << nick.c_str();
+
+    auto fid = FriendId(qstring(friendId));
+    auto f = getFriend(fid);
+    if(f.has_value()){
+        f.value()->setName(qstring(nick));
+    }
     emit friendNicknameChanged(getFriendPublicKey(friendId.c_str()), nick.c_str());
 }
 
 void Core::onFriendAvatarChanged(const std::string& friendId, const std::string& avatar) {
     qDebug() << __func__ << friendId.c_str() << "avatar size" << avatar.size();
-    if (avatar.empty()) return;
 
-    auto pic = QByteArray::fromStdString(avatar);
+    auto fid = FriendId(qstring(friendId));
+    auto avt = avatar.empty() ? QByteArray() :(QByteArray::fromStdString(avatar));
 
-    auto p = Nexus::getProfile();
-    p->setFriendAvatar(getFriendPublicKey(friendId.c_str()), pic);
-    emit friendAvatarChanged(getFriendPublicKey(friendId.c_str()), pic);
+    auto f = getFriend(fid);
+    if(f.has_value()){
+        f.value()->setAvatar(avt);
+    }
+    emit friendAvatarChanged(fid, avt);
 }
 
-void Core::onFriendAliasChanged(const lib::messenger::IMContactId& fId, const std::string& alias) {
-    emit friendAliasChanged(FriendId{fId}, qstring(alias));
+void Core::onFriendAliasChanged(const lib::messenger::IMContactId& cId, const std::string& alias) {
+    qDebug() << __func__ << alias.c_str();
+
+    auto alias_ = qstring(alias);
+    auto fid = FriendId{cId};
+    auto f = getFriend(fid);
+    if(f.has_value()){
+        f.value()->setAlias(alias_);
+    }
+    // emit friendAliasChanged(fid, alias_);
 }
 
 void Core::onGroup(const std::string& groupId_, const std::string& name) {

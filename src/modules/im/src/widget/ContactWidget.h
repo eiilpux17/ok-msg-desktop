@@ -77,13 +77,9 @@ public slots:
     void onCoreStarted();
     void onFriendAdded(const Friend* frnd);
     void onFriendRemoved(  Friend* f);
-    void onFriendNickChanged(const FriendId& friendPk, const QString& nick);
 
     void onFriendStatusChanged(const FriendId& friendPk, Status status);
     void onFriendStatusMessageChanged(const FriendId& friendPk, const QString& message);
-
-    void onFriendAvatarChanged(const FriendId& friendPk, const QByteArray& avatar);
-    void onFriendAliasChanged(const FriendId& friendPk, const QString& alias);
 
     void onFriendRequest(const FriendId& friendId, const QString& message);
 

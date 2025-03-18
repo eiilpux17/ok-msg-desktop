@@ -16,9 +16,10 @@
 #include <QObject>
 #include <QPixmap>
 #include <QString>
-#include "src/core/ICallSender.h"
+
 #include "src/model/ContactId.h"
 #include "src/model/Status.h"
+
 namespace module::im {
 
 /**
@@ -41,10 +42,12 @@ public:
         return name;
     }
 
-    void setAlias(const QString& name);
+
+
     const QString& getAlias() const {
         return alias;
     }
+
     bool hasAlias() const {
         return !alias.isEmpty();
     }
@@ -69,15 +72,6 @@ public:
     virtual bool getEventFlag() const;
 
 
-signals:
-    // 用户名称
-    void nameChanged(const QString& name);
-    // 备注名称
-    void aliasChanged(const QString& alias);
-    // 显示名称（备注名》用户姓名》用户名）
-    void displayedNameChanged(const QString& newName);
-    // 头像
-    void avatarChanged(const QPixmap& avatar);
 
 protected:
     // 是否群聊
@@ -89,10 +83,23 @@ protected:
     QString name;
     // 别名(自己备注，即书签名称)https://xmpp.org/extensions/xep-0048.html
     QString alias;
-
     // 头像
     QPixmap avatar;
     module::im::AvatarSet avatarSetStatus;
+
+signals:
+    // 用户名称
+    void nameChanged(const QString& name);
+    // 备注名称
+    void aliasChanged(const QString& alias);
+    // 显示名称（备注名》用户姓名》用户名）
+    void displayedNameChanged(const QString& newName);
+    // 头像
+    void avatarChanged(const QPixmap& avatar);
+
+public slots:
+    void setAlias(const QString& name, bool core = false);
+
 };
 }  // namespace module::im
 

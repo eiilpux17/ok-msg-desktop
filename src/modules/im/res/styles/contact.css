@@ -10,21 +10,11 @@
  * See the Mulan PubL v2 for more details.
  */
  
-
-/*module--im--NotificationScrollArea,
-module--im--AdjustingScrollArea,
-#friendList
-{
+QLineEdit,QComboBox,QSpinBox {
     background: @groundBase;
-		border: 0px solid;
+		/* min-height: 30px; */
+		border: 1px solid @themeMedium;
 }
-
-
-module--im--ContactListWidget
-{
-    background: @groundBase;
-    border: 0px solid;
-}*/
 
 #ContactContentWidget
 {
@@ -33,7 +23,7 @@ module--im--ContactListWidget
     border-radius: 10px;
 }
 
-QLineEdit#searchContact{
+#searchContact{
     color: @mainText;
 		border: 1px solid @groundBase;
 		background-color: @groundBase;

@@ -185,8 +185,8 @@ void ChatWidget::connectToCore(Core* core) {
     connect(core, &Core::statusSet, this, &ChatWidget::onStatusSet);
     connect(core, &Core::statusMessageSet, this, &ChatWidget::onStatusMessageSet);
     connect(core, &Core::messageSessionReceived, this, &ChatWidget::onMessageSessionReceived);
-    connect(core, &Core::friendNicknameChanged, this, &ChatWidget::onFriendNickChanged);
-    connect(core, &Core::friendAvatarChanged, this, &ChatWidget::onFriendAvatarChanged);
+    // connect(core, &Core::friendNicknameChanged, this, &ChatWidget::onFriendNickChanged);
+    // connect(core, &Core::friendAvatarChanged, this, &ChatWidget::onFriendAvatarChanged);
     connect(core, &Core::friendMessageReceived, this, &ChatWidget::onFriendMessageReceived);
     connect(core, &Core::friendStatusChanged, this, &ChatWidget::onFriendStatusChanged);
     connect(core, &Core::friendStatusMessageChanged, this,

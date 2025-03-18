@@ -113,19 +113,23 @@ void Contact::setName(const QString& _name) {
     }
 }
 
-void Contact::setAlias(const QString& alias_) {
+void Contact::setAlias(const QString& alias_, bool core) {
     qDebug() << __func__ << alias_;
 
     if (alias_.isEmpty()) {
         alias = QString();
         emit displayedNameChanged(getDisplayedName());
     } else {
-        if (alias_ != getDisplayedName()) emit displayedNameChanged(alias_);
+        if (alias_ != getDisplayedName()){
+            emit displayedNameChanged(alias_);
+        }
     }
 
     if (alias_ != alias) {
         alias = alias_;
         emit aliasChanged(alias);
+        if(core)
+            Core::getInstance()->setFriendAlias(id.getId(), alias_);
     }
 }
 

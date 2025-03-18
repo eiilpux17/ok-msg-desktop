@@ -308,11 +308,26 @@ signals:
     void connected();
     void disconnected(int err);
 
+
+    void friendAdded(Friend* frnd);
+    void friendRemoved(QString friendId);
+
+    void friendStatusChanged(const FriendId& friendId, Status status);
+    void friendStatusMessageChanged(const FriendId& friendId, const QString& message);
+    void friendUsernameChanged(const FriendId& friendPk, const QString& username);
+    void friendNicknameChanged(const FriendId& friendPk, const QString& nickname);
+    void friendTypingChanged(const FriendId& friendId, bool isTyping);
     void friendRequestReceived(const FriendId& friendPk, const QString& message);
     void friendAvatarChanged(const FriendId& friendPk, const QByteArray& avatar);
     void friendAliasChanged(const FriendId& fId, const QString& alias);
     void friendAvatarRemoved(const FriendId& fId);
     void friendVCardSet(const FriendId& fId, const VCard& imvCard);
+
+    void friendMessageReceived(const FriendId friendId,      //
+                               const FriendMessage message,  //
+                               bool isAction);
+    void friendLastSeenChanged(QString friendId, const QDateTime& dateTime);
+
 
     void requestSent(const FriendId& friendPk, const QString& message);
     void failedToAddFriend(const FriendId& friendPk, const QString& errorInfo = QString());
@@ -339,22 +354,7 @@ signals:
 
     void messageSessionReceived(const ContactId& cId, const QString& sid);
 
-    void friendMessageReceived(const FriendId friendId,      //
-                               const FriendMessage message,  //
-                               bool isAction);
-
-    void friendAdded(Friend* frnd);
-
-    void friendStatusChanged(const FriendId& friendId, Status status);
-    void friendStatusMessageChanged(const FriendId& friendId, const QString& message);
-    void friendUsernameChanged(const FriendId& friendPk, const QString& username);
-    void friendNicknameChanged(const FriendId& friendPk, const QString& nickname);
-    void friendTypingChanged(const FriendId& friendId, bool isTyping);
-
-    void friendRemoved(QString friendId);
-    void friendLastSeenChanged(QString friendId, const QDateTime& dateTime);
-
-    void emptyGroupCreated(QString groupnumber, const GroupId groupId,
+    void emptyGroupCreated(QString groupnumber, GroupId groupId,
                            const QString& title = QString());
     void groupInviteReceived(const GroupInvite& inviteInfo);
 
@@ -366,7 +366,7 @@ signals:
 
     void groupPeerlistChanged(QString groupnumber);
 
-    void groupPeerSizeChanged(QString groupnumber, const uint size);
+    void groupPeerSizeChanged(QString groupnumber, size_t size);
 
     void groupPeerStatusChanged(QString groupnumber, GroupOccupant go);
 
