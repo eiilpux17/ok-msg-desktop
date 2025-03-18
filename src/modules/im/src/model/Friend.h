@@ -19,6 +19,7 @@
 #include "src/core/ICallSender.h"
 #include "src/model/FriendId.h"
 #include "src/model/Contact.h"
+#include "src/model/Message.h"
 #include "src/model/Status.h"
 
 class QFile;
@@ -82,27 +83,19 @@ public:
      */
     bool startCall(bool video) override;
 
-
     bool sendFile(const QFile& file);
 
-signals:
+    /**
+     * 删除关系
+     * @brief remove
+     * @param rs
+     */
+    void removeRelation(RelationStatus rs);
 
-    void statusChanged(Status status, bool event);
-    void onlineOfflineChanged(bool isOnline);
-    void statusMessageChanged(const QString& message);
-    void loadChatHistory();
-    void relationStatusChanged(RelationStatus rs);
+    inline bool isFriend() const {
+        return mRelationStatus == RelationStatus::both;
+    }
 
-
-    void avCreating(bool video);
-    void avAccept(bool video);
-    void avInvite(PeerId pid, bool video);
-    void avStart(bool video);
-    void avPeerConnectionState(lib::ortc::PeerConnectionState state);
-    void avEnd(bool error = false);
-
-
-public slots:
 
 private:
     FriendId id;
@@ -112,7 +105,7 @@ private:
     QString name;
     QString nick;
     QString alias;
-    bool is_friend;
+
     bool is_online;
     QStringList groups;
 
@@ -122,6 +115,63 @@ private:
      */
     RelationStatus mRelationStatus;
     QList<QString> ends;  // 终端列表
+
+signals:
+
+    void statusChanged(Status status);
+
+    void onlineOfflineChanged(bool isOnline);
+    void statusMessageChanged(const QString& message);
+    void relationStatusChanged(RelationStatus rs);
+    void loadChatHistory();
+
+    /**
+     * 朋友被删除
+     * @brief removed
+     */
+    void removed();
+
+    void avCreating(bool video);
+    void avAccept(bool video);
+    void avInvite(PeerId pid, bool video);
+    void avStart(bool video);
+    void avPeerConnectionState(lib::ortc::PeerConnectionState state);
+    void avEnd(bool error = false);
+
+    /**
+     * 对方输入状态
+     * @brief typingChanged
+     * @param isTyping
+     */
+    void typingChanged(bool isTyping);
+
+    /**
+     * 消息被对方接收(消息回执)
+     * @brief messageReceipt
+     * @param msgId
+     */
+    void messageReceipt(QString msgId);
+
+    /**
+     * 消息被对方阅读
+     */
+    void messageRead(QString msgId);
+
+    /**
+     * 消息会话到来
+     */
+    void messageSessionReceived(QString msId);
+
+    /**
+     * 接收到对方消息
+     * @brief messageReceived
+     * @param msg
+     */
+    void messageReceived(FriendMessage msg);
+
+public slots:
+
+
 };
 }  // namespace module::im
 #endif  // FRIEND_H

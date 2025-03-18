@@ -235,7 +235,7 @@ void ChatFormHeader::setContact(const Contact* contact_) {
         updateCallButtons(f->getStatus());
         updateContactStatus(f->getStatus());
 
-        connect(f, &Friend::statusChanged, this, [this](Status status, bool event) {
+        connect(f, &Friend::statusChanged, this, [this](Status status) {
             updateCallButtons(status);
             updateContactStatus(status);
         });

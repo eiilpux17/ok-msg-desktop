@@ -63,7 +63,7 @@ void Friend::setStatus(Status s) {
     if (friendStatus != s) {
         auto oldStatus = friendStatus;
         friendStatus = s;
-        emit statusChanged(friendStatus, hasNewEvents);
+        emit statusChanged(friendStatus);
         if (!isOnline(oldStatus) && isOnline(friendStatus)) {
             emit onlineOfflineChanged(true);
         } else if (isOnline(oldStatus) && !isOnline(friendStatus)) {
@@ -91,6 +91,31 @@ bool Friend::sendFile(const QFile &file)
 {
     auto cf = CoreFile::getInstance();
     return cf->sendFile(id.getId(), file);
+}
+
+void Friend::removeRelation(RelationStatus status)
+{
+
+    //朋友关系指向对方
+    if(mRelationStatus != status){
+        return;
+    }
+
+    switch (status) {
+        case RelationStatus::to:
+            //删除指向对方的关系(即保留对方指向自己的关系)
+            mRelationStatus = RelationStatus::from;
+            Core::getInstance()->removeFriend(id.getId());
+            break;
+        case RelationStatus::from:
+            //删除指向自己的关系（即保留自己指向对方的关系）
+            mRelationStatus = RelationStatus::to;
+            break;
+        default:
+            break;
+    }
+
+    emit removed();
 }
 
 

@@ -377,7 +377,7 @@ void MessageSessionWidget::connectFriend(const Friend* f) {
     connect(f, &Friend::displayedNameChanged, this, [&](const QString& name) { setName(name); });
     connect(f, &Friend::avatarChanged, this, [this](const QPixmap& avatar) { setAvatar(avatar); });
     connect(f, &Friend::statusChanged, this,
-            [this](Status status, bool event) { setStatus(status, event); });
+            [this](Status status) { setStatus(status); });
 }
 
 void MessageSessionWidget::connectGroup(const Group* g) {
@@ -588,8 +588,8 @@ void MessageSessionWidget::clearHistory() {
     sendWorker->clearHistory();
 }
 
-void MessageSessionWidget::setStatus(Status status, bool event) {
-    updateStatusLight(status, event);
+void MessageSessionWidget::setStatus(Status status) {
+    updateStatusLight(status, false);
     auto f = Nexus::getCore()->getFriendList().findFriend(contactId);
     if (!f.has_value()) {
         qWarning() << "friend is no existing.";

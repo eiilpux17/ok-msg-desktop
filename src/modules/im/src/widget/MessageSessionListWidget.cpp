@@ -583,7 +583,7 @@ void MessageSessionListWidget::setFriendStatus(const FriendId& friendPk, Status 
         qWarning() << "friend widget is no existing.";
         return;
     }
-    fw->setStatus(status, false);
+    fw->setStatus(status);
 }
 
 void MessageSessionListWidget::setFriendStatusMsg(const FriendId& friendPk,

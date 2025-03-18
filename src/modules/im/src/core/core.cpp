@@ -293,14 +293,26 @@ void Core::onFriendRequest(const std::string& friendId, const std::string& msg) 
 }
 
 void Core::onFriendRemoved(const std::string& friendId) {
-    const QString& id = qstring(friendId);
-    qDebug() << __func__ << id;
-    emit friendRemoved(id);
+    qDebug() << __func__ << friendId.c_str() ;
+    auto fid = FriendId(qstring(friendId));
+    qDebug() << __func__ << fid;
+    auto f = getFriend(fid);
+    if(f.has_value()){
+        //删除来源关系
+        f.value()->removeRelation(Friend::RelationStatus::from);
+    }
+    emit friendRemoved(fid);
 }
 
 void Core::onFriendStatus(const std::string& friendId, lib::messenger::IMStatus status) {
+    qDebug() << __func__ << friendId.c_str() << "status: " <<(int)status;
     Status status0 = fromToxStatus(status);
-    emit friendStatusChanged(getFriendPublicKey(friendId.c_str()), status0);
+    auto fid = FriendId(qstring(friendId));
+    auto f = getFriend(fid);
+    if(f.has_value()){
+        emit f.value()->statusChanged(status0);
+    }
+    emit friendStatusChanged(fid, status0);
 }
 
 void Core::onMessageSession(const std::string& contactId, const std::string& sid_) {
@@ -308,13 +320,22 @@ void Core::onMessageSession(const std::string& contactId, const std::string& sid
     auto sid = qstring(sid_);
     qDebug() << __func__ << "contact:" << cId << "sid:" << sid;
     // emit messageSessionReceived(ContactId(cId), sid);
+
+    auto fid = FriendId(qstring(contactId));
+    auto f = getFriend(fid);
+
+    if(f.has_value()){
+        emit f.value()->messageSessionReceived(sid);
+    }
+
+    emit friendMessageSessionReceived(fid, sid);
 }
 
 void Core::onFriendMessage(const std::string& friendId_, const lib::messenger::IMMessage& message) {
     auto friendId = qstring(friendId_);
     qDebug() << __func__ << "friend:" << friendId;
 
-            // 接收标志
+    // 接收标志
     sendReceiptReceived(friendId, qstring(message.id));
 
     auto peerId = PeerId(qstring(message.from));
@@ -329,17 +350,40 @@ void Core::onFriendMessage(const std::string& friendId_, const lib::messenger::I
     msg.timestamp = QDateTime::fromSecsSinceEpoch(message.timestamp);
     msg.displayName = peerId.username;
 
-    emit friendMessageReceived(FriendId(friendId), msg, false);
+    auto fid = FriendId(friendId);
+    auto f = getFriend(fid);
+
+    if(f.has_value()){
+        emit f.value()->messageReceived(msg);
+    }
+
+    emit friendMessageReceived(fid, msg, false);
 }
 
-void Core::onFriendMessageReceipt(const std::string& friendId, const std::string& msgId) {}
+void Core::onFriendMessageReceipt(const std::string& friendId, const std::string& msgId) {
+    auto fid = FriendId(qstring(friendId));
+    auto f = getFriend(fid);
+
+    if(f.has_value()){
+        emit f.value()->messageReceipt(qstring(msgId));
+    }
+}
 
 /**
  * 实现ChatState
  */
 void Core::onFriendChatState(const std::string& friendId, int state) {
     qDebug() << "onFriendChatState:" << friendId.c_str() << "state:" << state;
-    emit friendTypingChanged(getFriendPublicKey(friendId.c_str()), state == 2);
+
+    auto fid = FriendId(qstring(friendId));
+    auto f = getFriend(fid);
+    auto is = state == 2;
+
+    if(f.has_value()){
+        emit f.value()->typingChanged(is);
+    }
+
+    emit friendTypingChanged(getFriendPublicKey(friendId.c_str()), is);
 }
 
 void Core::onFriendNickChanged(const std::string& friendId, const std::string& nick) {
@@ -620,20 +664,12 @@ std::optional<Contact *> Core::getContact(const ContactId &cid) const
 bool Core::removeFriend(QString friendId) {
     qDebug() << __func__ << friendId;
     QMutexLocker ml{&mutex};
-    bool success = messenger->removeFriend(friendId.toStdString());
-    if (success) {
-        emit saveRequest();
-        emit friendRemoved(friendId);
-    }
-    return success;
+    return messenger->removeFriend(friendId.toStdString());
 }
 
-void Core::leaveGroup(QString groupId) {
-    bool success = messenger->leaveGroup(groupId.toStdString());
-    if (success) {
-        emit saveRequest();
-        //    av->leaveGroupCall(groupId);
-    }
+bool Core::leaveGroup(QString groupId) {
+    qDebug() << __func__ << groupId;
+    return messenger->leaveGroup(groupId.toStdString());
 }
 
 void Core::destroyGroup(QString groupId) {

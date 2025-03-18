@@ -41,9 +41,9 @@ class MessageSessionWidget : public GenericChatroomWidget {
     Q_OBJECT
 
 public:
-    MessageSessionWidget(ContentLayout* layout, const ContactId& cid, lib::messenger::ChatType);
+    explicit MessageSessionWidget(ContentLayout* layout, const ContactId& cid, lib::messenger::ChatType);
 
-    ~MessageSessionWidget();
+    ~MessageSessionWidget() override;
 
     void doDelete();
 
@@ -51,7 +51,7 @@ public:
     void setAsActiveChatroom() override final;
     void setAsInactiveChatroom() override final;
     void setAvatar(const QPixmap& avatar) override final;
-    void setStatus(Status status, bool event);
+    void setStatus(Status status);
     void setStatusMsg(const QString& msg);
     void setTyping(bool typing);
     void setName(const QString& name);

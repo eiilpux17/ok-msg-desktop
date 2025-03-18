@@ -136,7 +136,7 @@ public:
 
     GroupId createGroup(const QString& name = "");
     void inviteToGroup(const ContactId& friendId, const GroupId& groupId);
-    void leaveGroup(QString groupId);
+    bool leaveGroup(QString groupId);
     void destroyGroup(QString groupId);
 
     const GroupList& loadGroupList();
@@ -310,7 +310,7 @@ signals:
 
 
     void friendAdded(Friend* frnd);
-    void friendRemoved(QString friendId);
+    void friendRemoved(FriendId friendId);
 
     void friendStatusChanged(const FriendId& friendId, Status status);
     void friendStatusMessageChanged(const FriendId& friendId, const QString& message);
@@ -323,8 +323,9 @@ signals:
     void friendAvatarRemoved(const FriendId& fId);
     void friendVCardSet(const FriendId& fId, const VCard& imvCard);
 
-    void friendMessageReceived(const FriendId friendId,      //
-                               const FriendMessage message,  //
+    void friendMessageSessionReceived(FriendId friendId, QString msId);
+    void friendMessageReceived(FriendId friendId,      //
+                               FriendMessage message,  //
                                bool isAction);
     void friendLastSeenChanged(QString friendId, const QDateTime& dateTime);
 

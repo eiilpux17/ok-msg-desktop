@@ -33,10 +33,11 @@ QString getTitle(Status status) {
             return QObject::tr("offline", "contact status");
         case Status::Blocked:
             return QObject::tr("blocked", "contact status");
+        default:
+            return {};
     }
-
     //        assert(false);
-    return QStringLiteral("");
+    return QStringLiteral();
 }
 
 QString getAssetSuffix(Status status) {
