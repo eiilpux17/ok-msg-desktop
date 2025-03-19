@@ -7,6 +7,7 @@ OkMSG 是注重数据安全与保护的企业通讯协同工具，支持独立�
 OkMSG is an enterprise communication collaboration tool
 that focuses on data security and protection.
 
+- OkMSG，企业私有化IM！
 - OkMSG，一种企业协作方式！
 - Respect privacy and be useful 好用且尊重隐私
 
@@ -211,4 +212,4 @@ Please contact me in the following two ways.
 # Blacklist（黑名单）
 公司|公司编号|姓 名 | 手机号 |社交帐号| 拉黑时间 |期限  | 拉黑理由
 -----------------------|-----|-------|-----|--------|------|--------|-------
-北京京航数智科技有限公司|91110114MA00D1AG5L|高小虎|18612077340 | 微信：gxh219gxh，qq：2368884948，邮箱：gxh319@163.com|2025-02-23|永久| 忽悠、欺骗、白嫖
+北京京航数智科技有限公司|91110114MA00D1AG5L|高小虎|1861207734* | 微信：gxh219gx*，qq：236888494*，邮箱：gxh31*@163.com|2025-02-23|永久| 忽悠、欺骗、白嫖
