@@ -639,13 +639,13 @@ void MessageSessionListWidget::setFriendFileCancelled(const ContactId& f, const 
 void MessageSessionListWidget::reloadTheme() {
     auto p = palette();
     p.setColor(QPalette::Window,
-               lib::settings::Style::getColor(
+               lib::settings::Style::getInstance()->getColor(
                        lib::settings::Style::ColorPalette::ThemeMedium));  // Base background color
     p.setColor(QPalette::Highlight,
-               lib::settings::Style::getColor(
+               lib::settings::Style::getInstance()->getColor(
                        lib::settings::Style::ColorPalette::ThemeHighlight));  // On mouse over
     p.setColor(QPalette::Light,
-               lib::settings::Style::getColor(
+               lib::settings::Style::getInstance()->getColor(
                        lib::settings::Style::ColorPalette::ThemeLight));  // When active
     setPalette(p);
 

@@ -358,11 +358,11 @@ void MeetingVideosLayout::updateButtonGeo() {
 
 void MeetingVideosLayout::updateButtonIcon() {
     if (_type == MeetingVideosLayout::LayoutType::Vertical) {
-        nextPageButton->setIcon(QIcon(":/meet/image/arrow_down.svg"));
-        prevPageButton->setIcon(QIcon(":/meet/image/arrow_up.svg"));
+        nextPageButton->setIcon(QIcon(":Meet/icons/arrow_down.svg"));
+        prevPageButton->setIcon(QIcon(":Meet/icons/arrow_up.svg"));
     } else {
-        nextPageButton->setIcon(QIcon(":/meet/image/arrow_right.svg"));
-        prevPageButton->setIcon(QIcon(":/meet/image/arrow_left.svg"));
+        nextPageButton->setIcon(QIcon(":Meet/icons/arrow_right.svg"));
+        prevPageButton->setIcon(QIcon(":Meet/icons/arrow_left.svg"));
     }
     updateButtonGeo();
 }

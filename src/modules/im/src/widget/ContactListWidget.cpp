@@ -64,7 +64,7 @@ ContactListWidget::ContactListWidget(QWidget* parent, bool groupsOnTop)
     new QShortcut(QKeySequence(Qt::Key_Up), this, [this]() { cycleContacts(true); });
     new QShortcut(QKeySequence(Qt::Key_Down), this, [this]() { cycleContacts(false); });
 
-    // auto css = lib::settings::Style::getStylesheet("contact/ContactWidget.css");
+    // auto css = lib::settings::Style::getInstance()->getStylesheet("contact/ContactWidget.css");
     // qDebug() << css;
 
     // setStyleSheet(css);

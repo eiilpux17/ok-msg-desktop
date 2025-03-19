@@ -20,6 +20,9 @@
 #include "base/compatiblerecursivemutex.h"
 #include "modules/module.h"
 
+OK_RESOURCE_LOADER(Meet)
+OK_RESOURCE_LOADER(MeetRes)
+
 namespace module::meet {
 
 /**
@@ -45,7 +48,12 @@ public:
     }
     void hide() override;
     void show() override;
+
 private:
+    OK_RESOURCE_PTR(Meet);
+    OK_RESOURCE_PTR(MeetRes);
+    void initTranslate();
+
     Widget* m_widget;
     QString name;
     CompatibleRecursiveMutex mutex;

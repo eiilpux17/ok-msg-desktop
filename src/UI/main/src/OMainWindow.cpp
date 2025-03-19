@@ -22,6 +22,7 @@
 #include <QLabel>
 #include <QMenu>
 #include <QPainter>
+#include <QShortcut>
 #include <QSvgRenderer>
 #include <QSystemTrayIcon>
 #include <QTimer>
@@ -78,6 +79,7 @@ OMainWindow::OMainWindow(std::shared_ptr<lib::session::AuthSession> session, QWi
     // 启动桌面图标
     createSystemTrayIcon();
 
+    initShortcut();
 
     auto locale = okSettings->getTranslation();
     settings::Translator::translate(OK_UIMainWindow_MODULE, locale);
@@ -135,11 +137,26 @@ inline QIcon OMainWindow::prepareIcon(QString path, int w, int h) {
             QPainter painter(&pm);
             renderer.render(&painter, pm.rect());
 
-            return QIcon(pm);
+            return QIcon{pm};
         }
     }
 #endif
     return QIcon(path);
+}
+
+void OMainWindow::initShortcut()
+{
+    // keyboard shortcuts
+    new QShortcut(QKeySequence(Qt::CTRL, Qt::Key_Q), this, SLOT(close()));
+    new QShortcut(Qt::Key_F11, this, SLOT(toggleFullscreen()));
+}
+
+void OMainWindow::toggleFullscreen() {
+    if (windowState().testFlag(Qt::WindowFullScreen)) {
+        setWindowState(windowState() & ~Qt::WindowFullScreen);
+    } else {
+        setWindowState(windowState() | Qt::WindowFullScreen);
+    }
 }
 
 void OMainWindow::saveWindowGeometry() {
@@ -215,7 +232,7 @@ void OMainWindow::createSystemTrayIcon() {
     actionQuit->setMenuRole(QAction::QuitRole);
 #endif
     // quit
-    actionQuit->setIcon(prepareIcon(lib::settings::Style::getImagePath("call/rejectCall.svg"), icon_size, icon_size));
+    actionQuit->setIcon(prepareIcon(lib::settings::Style::getInstance()->getImagePath("call/rejectCall.svg"), icon_size, icon_size));
     actionQuit->setText(tr("Exit", "Tray action menu to exit tox"));
     connect(actionQuit, &QAction::triggered, [&]() {
         saveWindowGeometry();

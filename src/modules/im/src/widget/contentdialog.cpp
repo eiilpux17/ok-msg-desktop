@@ -55,7 +55,7 @@ ContentDialog::ContentDialog(QWidget* parent)
         , videoSurfaceSize(QSize())
         , videoCount(0) {
     auto s = Nexus::getProfile()->getSettings();
-    setStyleSheet(lib::settings::Style::getStylesheet("contentDialog/contentDialog.css"));
+    setStyleSheet(lib::settings::Style::getInstance()->getStylesheet("contentDialog/contentDialog.css"));
 
     friendLayout->setMargin(0);
     friendLayout->setSpacing(0);
@@ -82,7 +82,7 @@ ContentDialog::ContentDialog(QWidget* parent)
     friendScroll->setFrameStyle(QFrame::NoFrame);
     friendScroll->setLayoutDirection(Qt::RightToLeft);
     friendScroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    // friendScroll->setStyleSheet(lib::settings::Style::getStylesheet("friendList/friendList.css"));
+    // friendScroll->setStyleSheet(lib::settings::Style::getInstance()->getStylesheet("friendList/friendList.css"));
     friendScroll->setWidgetResizable(true);
     friendScroll->setWidget(friendWidget);
 
@@ -122,7 +122,6 @@ ContentDialog::ContentDialog(QWidget* parent)
 
     setAcceptDrops(true);
 
-    new QShortcut(QKeySequence(Qt::CTRL, Qt::Key_Q), this, SLOT(close()));
     new QShortcut(QKeySequence(Qt::CTRL, Qt::SHIFT, Qt::Key_Tab), this, SLOT(previousContact()));
     new QShortcut(QKeySequence(Qt::CTRL, Qt::Key_Tab), this, SLOT(nextContact()));
     new QShortcut(QKeySequence(Qt::CTRL, Qt::Key_PageUp), this, SLOT(previousContact()));

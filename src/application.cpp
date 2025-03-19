@@ -33,6 +33,7 @@
 #include "lib/storage/StorageManager.h"
 #include "lib/storage/settings/OkSettings.h"
 #include "lib/audio/audio.h"
+#include "lib/ui/ui.h"
 
 #include <lib/storage/settings/style.h>
 
@@ -117,6 +118,11 @@ Application::Application(int& argc, char* argv[]) : QApplication(argc, argv) {
     QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath());
     addLibraryPath("platforms");
 
+
+    // 初始化UI
+    auto ui = new lib::ui::OkUI;
+    ui->init();
+
     // 初始化IPC
     ipc = new IPC(0, this);
 
@@ -143,7 +149,7 @@ Application::Application(int& argc, char* argv[]) : QApplication(argc, argv) {
             });
 
     // 样式
-    auto css = lib::settings::Style::getStylesheet("application.css");
+    auto css = lib::settings::Style::getInstance()->getStylesheet("application.css");
     qDebug() << css;
     setStyleSheet(css);
 

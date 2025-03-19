@@ -17,7 +17,7 @@ namespace module::im {
 
 SimpleText::SimpleText(const QString& txt, const QFont& font)
         : ChatLineContent(ContentType::CHAT_TEXT), text(txt), defFont(font) {
-    color = lib::settings::Style::getColor(colorRole);
+    color = lib::settings::Style::getInstance()->getColor(colorRole);
     updateBoundingRect();
 }
 
@@ -52,7 +52,7 @@ void SimpleText::setWidth(qreal width) {
 void SimpleText::setColor(lib::settings::Style::ColorPalette role) {
     customColor = false;
     colorRole = role;
-    color = lib::settings::Style::getColor(colorRole);
+    color = lib::settings::Style::getInstance()->getColor(colorRole);
 }
 
 void SimpleText::setColor(const QColor& color) {
@@ -72,7 +72,7 @@ void SimpleText::updateBoundingRect() {
 }
 
 void SimpleText::reloadTheme() {
-    if (!customColor) color = lib::settings::Style::getColor(colorRole);
+    if (!customColor) color = lib::settings::Style::getInstance()->getColor(colorRole);
 }
 const void* SimpleText::getContent() { return &text; }
 }  // namespace module::im

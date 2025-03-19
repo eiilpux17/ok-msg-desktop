@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/font"/>
+
     <qresource prefix="/">
         <file>styles/chat.css</file>
         <file>styles/chatArea.css</file>

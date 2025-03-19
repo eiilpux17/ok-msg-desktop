@@ -105,7 +105,7 @@ void SettingsWidget::showAbout() {
 
 void SettingsWidget::reloadTheme()
 {
-    auto css = lib::settings::Style::getStylesheet("settings.css");
+    auto css = lib::settings::Style::getInstance()->getStylesheet("settings.css");
     setStyleSheet(css);
 }
 
@@ -133,10 +133,6 @@ void SettingsWidget::onUpdateAvailable() {
 }
 
 void SettingsWidget::retranslateUi() {
-    auto* settings = lib::settings::OkSettings::getInstance();
-    auto locale = settings->getTranslation();
-    settings::Translator::translate(OK_IM_MODULE, locale);
-
     for (int i = 0; i < cfgForms.size(); ++i){
         auto n = cfgForms[i]->getFormName();
         tab->setTabText(i, n);

@@ -10,38 +10,13 @@
  * See the Mulan PubL v2 for more details.
  */
 
-QWidget#ChatContentWidget
+#include "ui.h"
+
+namespace lib::ui {
+
+void OkUI::init()
 {
-    background: @groundBase;
-    border: 0px solid;
-    border-radius: 10px;
+    OK_RESOURCE_INIT(uiRes);
 }
 
-QWidget#searchContactsContainer
-{
-    background: @groundBase; 
-}
-
-
-QWidget#ContentSeperator{
-    background: white;
-}
-
-QLineEdit#searchContact{
-    color: #19171b;
-    border: 1px solid @themeMedium;
-    background-color: @themeMedium;
-    border-radius: 5px;
-    padding: 6px;
-}
-
-QSplitter::handle
-{
-    background: white;
-}
-
-lib--ui--RoundedMaskContainer#statusPanel{
-    background: @groundBase;
-		qproperty-radius: 10;
-		border: 0px solid;
 }

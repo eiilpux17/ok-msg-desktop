@@ -151,7 +151,7 @@ ChatLogView::ChatLogView(const ContactId& cid, QWidget* parent)
     connect(this, &ChatLogView::customContextMenuRequested, this, &ChatLogView::onChatContextMenuRequested);
 
     // setBackgroundBrush(
-    //         QBrush(lib::settings::Style::getColor(lib::settings::Style::ColorPalette::GroundBase),
+    //         QBrush(lib::settings::Style::getInstance()->getColor(lib::settings::Style::ColorPalette::GroundBase),
     //                Qt::SolidPattern));
 
     retranslateUi();
@@ -690,12 +690,12 @@ void ChatLogView::fontChanged(const QFont& font) {
 
 void ChatLogView::reloadTheme() {
     // setBackgroundBrush(
-            // QBrush(lib::settings::Style::getColor(lib::settings::Style::ColorPalette::GroundBase),
+            // QBrush(lib::settings::Style::getInstance()->getColor(lib::settings::Style::ColorPalette::GroundBase),
                    // Qt::SolidPattern));
     // selectionRectColor =
-            // lib::settings::Style::getColor(lib::settings::Style::ColorPalette::SelectText);
+            // lib::settings::Style::getInstance()->getColor(lib::settings::Style::ColorPalette::SelectText);
 
-    auto css = lib::settings::Style::getStylesheet("chatArea.css");
+    auto css = lib::settings::Style::getInstance()->getStylesheet("chatArea.css");
     setStyleSheet(css);
 
     for (IChatItem::Ptr l : lines) {

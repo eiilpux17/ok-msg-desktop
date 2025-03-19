@@ -18,15 +18,11 @@
 #include "ui_Widget.h"
 
 #include <QTabBar>
-#include "BookMeetingWidget.h"
-#include "Bus.h"
+
 #include "JoinMeetingWidget.h"
 #include "MeetingSettingWidget.h"
 #include "StartMeetingWidget.h"
-#include "application.h"
-#include "lib/storage/settings/OkSettings.h"
 #include "lib/storage/settings/style.h"
-#include "lib/storage/settings/translator.h"
 #include "meetingview/MeetingVideoFrame.h"
 
 #include <QAbstractButton>
@@ -36,6 +32,7 @@
 
 #include <QContextMenuEvent>
 #include <QMenu>
+#include <QDebug>
 
 namespace module::meet {
 
@@ -44,8 +41,6 @@ Widget::Widget(QWidget* parent)
         , ui(new Ui::WorkPlatform)
         , view{nullptr}
         , state{MeetingState::NoMeeting} {
-    OK_RESOURCE_INIT(Meet);
-    OK_RESOURCE_INIT(MeetRes);
 
     qRegisterMetaType<ok::base::Jid>("ok::base::Jid");
     qRegisterMetaType<lib::messenger::Participant>("lib::messenger::Participant");
@@ -76,8 +71,6 @@ Widget::Widget(QWidget* parent)
     // ui->tabWidget->addTab(setting, tr("Setting"));
 
 
-
-    initTranslate();
     reloadTheme();
 }
 
@@ -88,30 +81,16 @@ Widget::~Widget() {
 void Widget::start() {}
 
 void Widget::reloadTheme() {
-    QString style = lib::settings::Style::getStylesheet("general.css");
-    setStyleSheet(style);
-
-    auto mStyle = lib::settings::Style::getStylesheet("MeetingBase.css");
-    startMeetWidget->setStyleSheet(mStyle);
-
-    // joinMeetWidget->setStyleSheet(mStyle);
+    auto css = lib::settings::Style::getInstance()->getModuleStylesheet(OK_Meet_MODULE, "meet.css");
+    setStyleSheet(css);
+    startMeetWidget->setStyleSheet(css);
 }
 
 void Widget::doStart() {}
 
-void Widget::initTranslate() {
-    retranslateUi();
-    connect(ok::Application::Instance()->bus(), &ok::Bus::languageChanged,
-            [&](const QString& locale0) {
-                retranslateUi();
-                settings::Translator::translate(OK_Meet_MODULE, locale0);
-            });
-}
+
 
 void Widget::retranslateUi() {
-    QString locale = lib::settings::OkSettings::getInstance()->getTranslation();
-    settings::Translator::translate(OK_Meet_MODULE, locale);
-
     ui->retranslateUi(this);
 
     if (ui->tabWidget->count() >= 4) {
@@ -239,6 +218,7 @@ void Widget::activate() {
     //  joinMeetWidget->focusInput();
     // }
 }
+
 
 /**
  * 分享会议

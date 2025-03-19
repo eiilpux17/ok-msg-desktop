@@ -19,6 +19,7 @@
 #include <QComboBox>
 #include <QEvent>
 #include <QSpinBox>
+
 namespace module::im {
 
 /**

@@ -309,7 +309,7 @@ void FriendWidget::enterEvent(QEvent *e)
 {
    // auto shadowEffect = new QGraphicsDropShadowEffect(this);
    // shadowEffect->setOffset(1, 1);
-   // shadowEffect->setColor(lib::settings::Style::getColor(lib::settings::Style::ColorPalette::ThemeLight));
+   // shadowEffect->setColor(lib::settings::Style::getInstance()->getColor(lib::settings::Style::ColorPalette::ThemeLight));
    // shadowEffect->setBlurRadius(6);
    // this->setGraphicsEffect(shadowEffect);
 }

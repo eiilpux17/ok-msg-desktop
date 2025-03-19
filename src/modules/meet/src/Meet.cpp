@@ -15,12 +15,34 @@
 //
 
 #include "Meet.h"
+#include "application.h"
+#include "lib/storage/settings/translator.h"
+#include "lib/storage/settings/OkSettings.h"
 
 namespace module::meet {
 
-Meet::Meet() : name(OK_Meet_MODULE), m_widget{nullptr} {}
+Meet::Meet() : name(OK_Meet_MODULE), m_widget{nullptr} {
+    OK_RESOURCE_INIT(Meet);
+    OK_RESOURCE_INIT(MeetRes);
+
+    qDebug() << "Meet Resource:"<< _okMeet_ptr.get();
+    initTranslate();
+}
 
 Meet::~Meet() = default;
+
+
+void Meet::initTranslate()
+{
+    auto locale = lib::settings::OkSettings::getInstance()->getTranslation();
+    settings::Translator::translate(OK_Meet_MODULE, locale);
+
+    connect(ok::Application::Instance()->bus(), &ok::Bus::languageChanged,
+            [](const QString& locale0) {
+                settings::Translator::translate(OK_Meet_MODULE, locale0);
+            });
+
+}
 
 void Meet::init(lib::session::Profile* p, QWidget* parent) {
     m_widget = new Widget(parent);

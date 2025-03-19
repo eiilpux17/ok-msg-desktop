@@ -50,7 +50,7 @@ GenericChatItemWidget::GenericChatItemWidget(lib::messenger::ChatType type,
     lastMessageLabel->setText("");
 
     auto p = lastMessageLabel->palette();
-    p.setColor(QPalette::WindowText, lib::settings::Style::getColor(lib::settings::Style::ColorPalette::GroundExtra));
+    p.setColor(QPalette::WindowText, lib::settings::Style::getInstance()->getColor(lib::settings::Style::ColorPalette::GroundExtra));
 
     auto newFont = lastMessageLabel->font();
     newFont.setPixelSize(newFont.pixelSize() * .7);

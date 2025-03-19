@@ -22,7 +22,7 @@ namespace module::im {
 
 FilesForm::FilesForm()
         : QObject()
-        , doneIcon(lib::settings::Style::getImagePath("fileTransferWidget/fileDone.svg")) {
+        , doneIcon(lib::settings::Style::getInstance()->getImagePath("fileTransferWidget/fileDone.svg")) {
     head = new QWidget();
     QFont bold;
     bold.setBold(true);

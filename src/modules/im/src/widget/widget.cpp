@@ -152,7 +152,7 @@ Widget::Widget(QWidget* parent)  //
     actionQuit->setMenuRole(QAction::QuitRole);
 #endif
 
-    actionQuit->setIcon(ok::base::SvgUtils::prepareIcon(lib::settings::Style::getImagePath("call/rejectCall.svg"), icon_size, icon_size));
+    actionQuit->setIcon(ok::base::SvgUtils::prepareIcon(lib::settings::Style::getInstance()->getImagePath("call/rejectCall.svg"), icon_size, icon_size));
     connect(actionQuit, &QAction::triggered, qApp, &QApplication::quit);
 
 
@@ -177,57 +177,13 @@ Widget::Widget(QWidget* parent)  //
     // Disable some widgets until we're connected to the DHT
     //  ui->statusButton->setEnabled(false);
 
-    auto* settings = lib::settings::OkSettings::getInstance();
-    lib::settings::Style::setThemeColor(settings->getThemeColor());
-
     onStatusSet(Status::Offline);
-
-    // NOTE: We intentionally do not connect the fileUploadFinished and
-    // fileDownloadFinished signals because they are duplicates of
-    // fileTransferFinished NOTE: We don't hook up the fileNameChanged signal
-    // since it is only emitted before a fileReceiveRequest. We get the initial
-    // request with the sanitized name so there is no work for us to do
-
-    // keyboard shortcuts
-    new QShortcut(QKeySequence(Qt::CTRL, Qt::Key_Q), this, SLOT(close()));
-    new QShortcut(QKeySequence(Qt::CTRL, Qt::Key_PageUp), this, SLOT(previousContact()));
-    new QShortcut(QKeySequence(Qt::CTRL, Qt::SHIFT, Qt::Key_Tab), this, SLOT(previousContact()));
-    new QShortcut(QKeySequence(Qt::CTRL, Qt::Key_Tab), this, SLOT(nextContact()));
-    new QShortcut(QKeySequence(Qt::CTRL, Qt::Key_PageDown), this, SLOT(nextContact()));
-    new QShortcut(Qt::Key_F11, this, SLOT(toggleFullscreen()));
-
-    //    onSeparateWindowChanged(settings.getSeparateWindow(), false);
-
-    //  ui->addButton->setCheckable(true);
-    //  ui->groupButton->setCheckable(true);
-    //  ui->transferButton->setCheckable(true);
-    //  ui->settingsButton->setCheckable(true);
-    //
-    //  if (contentLayout) {
-    ////    onAddClicked();
-    //  }
-
-    // restore window state
-    //  restoreGeometry(settings.getWindowGeometry());
-    //  restoreState(settings.getWindowState());
-    //  SplitterRestorer restorer(ui->mainSplitter);
-    //  restorer.restore(settings.getSplitterState(), size());
-
-    //    friendRequestsButton = nullptr;
-    //    groupInvitesButton = nullptr;
-    //    unreadGroupInvites = 0;
-    //
-    //    connect(groupInviteForm, &GroupInviteForm::groupInvitesSeen, this,
-    //            &Widget::groupInvitesClear);
-    //    connect(groupInviteForm, &GroupInviteForm::groupInviteAccepted, this,
-    //            &Widget::onGroupInviteAccepted);
 
     connect(this, &Widget::toSendMessage, [&]() { tabWidget->setCurrentIndex(0); });
     connect(this, &Widget::toShowDetails, [&]() { tabWidget->setCurrentIndex(1); });
     // 显示转发消息对话框
     connect(this, &Widget::toForwardMessage, this, &Widget::showForwardMessageDialog);
-
-            // 添加好友到群聊
+    // 添加好友到群聊
     connect(this, &Widget::toAddMember, this, &Widget::showAddMemberDialog);
 
 // #if UPDATE_CHECK_ENABLED
@@ -744,13 +700,7 @@ void Widget::onGroupDialogShown(const Group* g) {
     //  onDialogShown(groupWidgets[groupId]);
 }
 
-void Widget::toggleFullscreen() {
-    if (windowState().testFlag(Qt::WindowFullScreen)) {
-        setWindowState(windowState() & ~Qt::WindowFullScreen);
-    } else {
-        setWindowState(windowState() | Qt::WindowFullScreen);
-    }
-}
+
 
 void Widget::onUpdateAvailable() {
     //  ui->settingsButton->setProperty("update-available", true);
@@ -784,7 +734,7 @@ ContentLayout* Widget::createContentDialog(DialogType type) const {
             restoreGeometry(settings.getDialogSettingsGeometry());
 
             setWindowIcon(QIcon(":/img/icons/qtox.svg"));
-            setStyleSheet(lib::settings::Style::getStylesheet("window/general.css"));
+            setStyleSheet(lib::settings::Style::getInstance()->getStylesheet("window/general.css"));
             connect(core, &Core::usernameSet, this, &Dialog::retranslateUi);
 
             auto a = ok::Application::Instance();
@@ -988,18 +938,13 @@ void Widget::clearAllReceipts() {
 }
 
 void Widget::reloadTheme() {
-    auto& style = lib::settings::Style::getStylesheet("window/general.css");
+    auto& style = lib::settings::Style::getInstance()->getStylesheet("window/general.css");
     this->setStyleSheet(style);
     chatWidget->reloadTheme();
     contactWidget->reloadTheme();
 }
 
 void Widget::retranslateUi() {
-    auto* settings = lib::settings::OkSettings::getInstance();
-    auto locale = settings->getTranslation();
-    settings::Translator::translate(OK_IM_MODULE, locale);
-
-
     tabWidget->setTabText(0, tr("Chat"));
     tabWidget->setTabText(1, tr("Contacts"));
     tabWidget->setTabText(2, tr("Settings"));

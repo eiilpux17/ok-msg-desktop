@@ -1,16 +1,23 @@
 project(OkUI)
 
 file(GLOB_RECURSE ${PROJECT_NAME}_SOURCES *.h *.cpp)
+qt5_add_resources(${PROJECT_NAME}_RESOURCES res/uiRes.qrc)
 
-add_library(${PROJECT_NAME} STATIC ${${PROJECT_NAME}_SOURCES})
+find_package(Qt5 COMPONENTS
+	Core Gui Widgets
+	WebChannel WebSockets WebEngine WebEngineWidgets
+	REQUIRED)
+
+add_library(${PROJECT_NAME} STATIC 
+	${${PROJECT_NAME}_SOURCES}
+	${${PROJECT_NAME}_RESOURCES}
+)
 
 pkg_check_modules(QRENCODE REQUIRED libqrencode)
 include_directories(${QRENCODE_INCLUDE_DIRS})
 
-find_package(Qt5 COMPONENTS Core Gui Widgets WebChannel WebSockets WebEngine WebEngineWidgets REQUIRED)
-
 target_link_libraries(${PROJECT_NAME}
-		PRIVATE ${Qt5WebEngineWidgets_LIBRARIES}
+	  PRIVATE ${Qt5WebEngineWidgets_LIBRARIES}
 		PRIVATE ${Qt5WebEngine_LIBRARIES}
 		PRIVATE ${Qt5WebChannel_LIBRARIES}
 		PRIVATE ${Qt5WebSockets_LIBRARIES}

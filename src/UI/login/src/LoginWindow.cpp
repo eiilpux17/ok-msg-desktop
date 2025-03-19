@@ -43,7 +43,7 @@ LoginWindow::LoginWindow(std::shared_ptr<lib::session::AuthSession> session, boo
     ui->hBoxLayout->addWidget(loginWidget);
 
     // 设置样式
-    auto qss = lib::settings::Style::getStylesheet("login.css");
+    auto qss = lib::settings::Style::getInstance()->getStylesheet("login.css");
     setStyleSheet(qss);
 }
 

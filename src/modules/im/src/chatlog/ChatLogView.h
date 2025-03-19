@@ -147,7 +147,7 @@ private:
     int selFirstRow = -1;
     int selLastRow = -1;
     QColor selectionRectColor =
-            lib::settings::Style::getColor(lib::settings::Style::ColorPalette::SelectText);
+            lib::settings::Style::getInstance()->getColor(lib::settings::Style::ColorPalette::SelectText);
     SelectionMode selectionMode = SelectionMode::None;
     QPointF clickPos;
     QGraphicsRectItem* selGraphItem = nullptr;

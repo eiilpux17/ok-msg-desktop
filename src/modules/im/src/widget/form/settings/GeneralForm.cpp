@@ -57,7 +57,7 @@ GeneralForm::GeneralForm(SettingsWidget* parent)
     connect(bus, &ok::Bus::profileChanged, this, &GeneralForm::onProfileChanged);
 
 
-    auto css = lib::settings::Style::getStylesheet("settings/mainHead.css");
+    auto css = lib::settings::Style::getInstance()->getStylesheet("settings/mainHead.css");
     setStyleSheet(css);
     bodyUI->scrollArea->setStyleSheet(css);
 

@@ -105,7 +105,7 @@ OPainterToolBox::OPainterToolBox(QWidget* parent)
 
     setLayout(vBox);
 
-    auto qss = lib::settings::Style::getStylesheet("toolbox.css");
+    auto qss = lib::settings::Style::getInstance()->getStylesheet("toolbox.css");
     setStyleSheet(qss);
 }
 

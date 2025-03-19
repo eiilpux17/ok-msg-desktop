@@ -82,7 +82,7 @@ QPushButton* createButton(const QString& name, T* self, Fun onClickSlot) {
     QPushButton* btn = new QPushButton();
     btn->setAttribute(Qt::WA_LayoutUsesWidgetRect);
     btn->setObjectName(name);
-    btn->setStyleSheet(lib::settings::Style::getStylesheet("chatButtons.css"));
+    btn->setStyleSheet(lib::settings::Style::getInstance()->getStylesheet("chatButtons.css"));
     QObject::connect(btn, &QPushButton::clicked, self, onClickSlot);
     return btn;
 }

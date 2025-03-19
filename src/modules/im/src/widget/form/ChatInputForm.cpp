@@ -70,7 +70,7 @@ QPushButton* createButton(const QString& name, T* self, Fun onClickSlot) {
     btn->setCursor(Qt::PointingHandCursor);
     btn->setObjectName(name);
     // btn->setProperty("state", "green");
-    btn->setStyleSheet(lib::settings::Style::getStylesheet("callButtons.css"));
+    btn->setStyleSheet(lib::settings::Style::getInstance()->getStylesheet("callButtons.css"));
     btn->setCheckable(true);
     QObject::connect(btn, &QPushButton::clicked, self, onClickSlot);
     return btn;
@@ -169,7 +169,7 @@ ChatInputForm::ChatInputForm(const ContactId& cid, QWidget* parent )
 
 void ChatInputForm::reloadTheme() {
     auto s = Nexus::getProfile()->getSettings();
-    msgEdit->setStyleSheet(lib::settings::Style::getStylesheet("msgEdit/msgEdit.css") +
+    msgEdit->setStyleSheet(lib::settings::Style::getInstance()->getStylesheet("msgEdit/msgEdit.css") +
                            fontToCss(s->getChatMessageFont(),
                             "QTextEdit"));
 }
@@ -199,7 +199,7 @@ void ChatInputForm::setFocus() {
 
 void ChatInputForm::updateFont(const QFont& font) {
     // message editor
-    msgEdit->setStyleSheet(lib::settings::Style::getStylesheet("msgEdit/msgEdit.css") +
+    msgEdit->setStyleSheet(lib::settings::Style::getInstance()->getStylesheet("msgEdit/msgEdit.css") +
                            fontToCss(font, "QTextEdit"));
 }
 

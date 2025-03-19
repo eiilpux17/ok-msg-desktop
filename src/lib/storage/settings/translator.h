@@ -13,22 +13,17 @@
 #ifndef TRANSLATOR_H
 #define TRANSLATOR_H
 
-#include <QMap>
+#include <QString>
 #include <QMutex>
-#include <QPair>
-#include <QVector>
-#include <functional>
 
 class QTranslator;
 
 namespace settings {
 
-using Callback = QPair<void*, std::function<void()>>;
-static QMutex lock;
-
 class Translator {
 public:
     static void translate(const QString& moduleName, const QString& localeName);
+    static void remove(const QString& moduleName);
 private:
 
 };

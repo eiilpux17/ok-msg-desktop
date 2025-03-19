@@ -30,7 +30,7 @@ PluginManagerForm::PluginManagerForm(QWidget* parent)
         , ui(new Ui::PluginManagerForm) {
     ui->setupUi(this);
 
-    auto qss = lib::settings::Style::getStylesheet(":/qss/Config/plugin.css");
+    auto qss = lib::settings::Style::getInstance()->getStylesheet(":/qss/Config/plugin.css");
     setStyleSheet(qss);
 
     if (parent) {

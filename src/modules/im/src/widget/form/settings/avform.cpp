@@ -119,7 +119,7 @@ AVForm::AVForm( QWidget* parent)
             });
     connect(a->bus(), &ok::Bus::profileChanged, this, &AVForm::onProfileChanged);
 
-    auto css = lib::settings::Style::getStylesheet("settings/mainHead.css");
+    auto css = lib::settings::Style::getInstance()->getStylesheet("settings/mainHead.css");
     setStyleSheet(css);
     scrollArea->setStyleSheet(css);
 }

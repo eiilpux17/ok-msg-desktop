@@ -34,12 +34,6 @@ PrivacyForm::PrivacyForm()
     // const ok::base::RecursiveSignalBlocker signalBlocker(this);
 
     eventsInit();
-
-    auto a = ok::Application::Instance();
-    connect(a->bus(), &ok::Bus::languageChanged,this,
-            [&](const QString& locale0) {
-                retranslateUi();
-            });
 }
 
 PrivacyForm::~PrivacyForm() {
@@ -50,7 +44,5 @@ PrivacyForm::~PrivacyForm() {
 void PrivacyForm::showEvent(QShowEvent*) {
 
 }
-void PrivacyForm::retranslateUi() {
-    //    bodyUI->retranslateUi(this);
-}
+
 }  // namespace module::im

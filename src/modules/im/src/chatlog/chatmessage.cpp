@@ -61,13 +61,13 @@ IChatItem::Ptr ChatMessage::createChatInfoMessage(const QString& rawMessage,
     QString img;
     switch (type) {
         case INFO:
-            img = lib::settings::Style::getImagePath("chatArea/info.svg");
+            img = lib::settings::Style::getInstance()->getImagePath("chatArea/info.svg");
             break;
         case ERROR:
-            img = lib::settings::Style::getImagePath("chatArea/error.svg");
+            img = lib::settings::Style::getInstance()->getImagePath("chatArea/error.svg");
             break;
         case TYPING:
-            img = lib::settings::Style::getImagePath("chatArea/typing.svg");
+            img = lib::settings::Style::getInstance()->getImagePath("chatArea/typing.svg");
             break;
     }
 

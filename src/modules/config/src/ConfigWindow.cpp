@@ -68,7 +68,7 @@ ConfigWindow::~ConfigWindow() {
 }
 
 void ConfigWindow::reloadTheme() {
-    auto& style = lib::settings::Style::getStylesheet("general.css");
+    auto& style = lib::settings::Style::getInstance()->getStylesheet("general.css");
 
     setStyleSheet(style);
 }
