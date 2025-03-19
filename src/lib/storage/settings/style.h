@@ -67,7 +67,11 @@ public:
 
     QString getThemeFolder();
 
+<<<<<<< HEAD
     [[nodiscard]] const QString& getTheme() const {
+=======
+    const QString& getTheme() const {
+>>>>>>> 12f93ea562bfb59520e3f0161626a3b20352220f
         return theme;
     };
     void setTheme(MainTheme theme);
