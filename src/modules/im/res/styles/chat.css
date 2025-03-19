@@ -60,6 +60,11 @@ QPushButton#addBtn
     background-color:@themeLight;
 }
 
+#messageSessionWidget QLabel#lastMessageLabel{
+  color: @themeHighlight;
+}
+
+
 #contentContainer
 {
     background: @groundExtra;

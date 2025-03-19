@@ -93,7 +93,7 @@ EmoticonsWidget::EmoticonsWidget(QWidget* parent) : QMenu(parent) {
         }
     }
     buttonLayout->addStretch();
-    setStyleSheet(lib::settings::Style::getStylesheet("emoticon.css"));
+    setStyleSheet(lib::settings::Style::getInstance()->getStylesheet("emoticon.css"));
 
     // calculates sizeHint
     layout.activate();

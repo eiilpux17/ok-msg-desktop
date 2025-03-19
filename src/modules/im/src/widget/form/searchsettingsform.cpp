@@ -94,9 +94,9 @@ ParameterSearch SearchSettingsForm::getParameterSearch() {
 
 void SearchSettingsForm::reloadTheme() {
     ui->choiceDateButton->setStyleSheet(
-            lib::settings::Style::getStylesheet(QStringLiteral("chatForm/buttons.css")));
+            lib::settings::Style::getInstance()->getStylesheet(QStringLiteral("chatForm/buttons.css")));
     ui->startDateLabel->setStyleSheet(
-            lib::settings::Style::getStylesheet(QStringLiteral("chatForm/labels.css")));
+            lib::settings::Style::getInstance()->getStylesheet(QStringLiteral("chatForm/labels.css")));
 }
 
 void SearchSettingsForm::updateStartDateLabel() {
@@ -115,7 +115,7 @@ void SearchSettingsForm::onStartSearchSelected(const int index) {
 
         ui->choiceDateButton->setProperty("state", QStringLiteral("green"));
         ui->choiceDateButton->setStyleSheet(
-                lib::settings::Style::getStylesheet(QStringLiteral("chatForm/buttons.css")));
+                lib::settings::Style::getInstance()->getStylesheet(QStringLiteral("chatForm/buttons.css")));
 
         if (startDate.isNull()) {
             startDate = QDate::currentDate();
@@ -128,7 +128,7 @@ void SearchSettingsForm::onStartSearchSelected(const int index) {
 
         ui->choiceDateButton->setProperty("state", QString());
         ui->choiceDateButton->setStyleSheet(
-                lib::settings::Style::getStylesheet(QStringLiteral("chatForm/buttons.css")));
+                lib::settings::Style::getInstance()->getStylesheet(QStringLiteral("chatForm/buttons.css")));
     }
 
     setUpdate(true);

@@ -503,7 +503,7 @@ void ChatWidget::onError(QString msgId, QString error)
 void ChatWidget::onGroupClicked() {}
 
 void ChatWidget::reloadTheme() {
-    auto chat = lib::settings::Style::getStylesheet("chat.css");
+    auto chat = lib::settings::Style::getInstance()->getStylesheet("chat.css");
     setStyleSheet(chat);
 
     if (contentLayout != nullptr) {

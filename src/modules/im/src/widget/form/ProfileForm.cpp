@@ -171,7 +171,7 @@ ProfileForm::ProfileForm(QWidget* parent)
     onSelfAvatarLoaded(profileInfo->getAvatar());
 
     // QrCode
-    ui->qrcodeButton->setIcon(QIcon(lib::settings::Style::getImagePath("chat/qrcode.svg")));
+    ui->qrcodeButton->setIcon(QIcon(lib::settings::Style::getInstance()->getImagePath("chat/qrcode.svg")));
     ui->qrcodeButton->setCursor(Qt::PointingHandCursor);
     connect(ui->qrcodeButton, &QToolButton::clicked, this, &ProfileForm::showQRCode);
 
@@ -262,7 +262,7 @@ void ProfileForm::showEvent(QShowEvent* e) {
 void ProfileForm::contextMenuEvent(QContextMenuEvent* e) {
     // QMenu menu(this);
     // menu.addAction("Refresh", [this]() {
-    //     setStyleSheet(lib::settings::Style::getStylesheet("window/profile.css"));
+    //     setStyleSheet(lib::settings::Style::getInstance()->getStylesheet("window/profile.css"));
     // });
     // menu.exec(e->globalPos());
 }
@@ -279,7 +279,7 @@ void ProfileForm::focusOutEvent(QFocusEvent *event)
 
 void ProfileForm::reloadTheme()
 {
-    auto css = lib::settings::Style::getStylesheet("profile.css");
+    auto css = lib::settings::Style::getInstance()->getStylesheet("profile.css");
     setStyleSheet(css);
     ui->scrollArea->setStyleSheet(css);
     ui->exitButton->setStyleSheet(css);

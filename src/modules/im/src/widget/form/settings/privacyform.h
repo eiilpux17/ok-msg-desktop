@@ -24,22 +24,20 @@ class PrivacyForm : public BaseSettingsForm {
     Q_OBJECT
 public:
     PrivacyForm();
-    ~PrivacyForm();
-    virtual QString getFormName() final override {
+    ~PrivacyForm() override;
+    
+    QString getFormName() override {
         return tr("Privacy");
     }
 
-signals:
-    void clearAllReceipts();
-
-private slots:
-    virtual void showEvent(QShowEvent*) final override;
-
-private:
-    void retranslateUi();
+protected:
+  void showEvent(QShowEvent*) override;
 
 private:
     Ui::PrivacySettings* bodyUI;
+
+signals:
+    void clearAllReceipts();
 };
 }  // namespace module::im
 #endif

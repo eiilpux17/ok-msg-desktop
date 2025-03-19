@@ -49,6 +49,9 @@ Nexus::Nexus() : name{OK_IM_MODULE}, started(false), profile{nullptr}, m_widget{
     OK_RESOURCE_INIT(emojione);
     OK_RESOURCE_INIT(smileys);
 
+    auto imptr = _okIM_ptr.get();
+    qDebug() << "IM Resource is:" << imptr;
+
     // Setup the environment
     qRegisterMetaType<Status>("Status");
 
@@ -72,6 +75,9 @@ Nexus::Nexus() : name{OK_IM_MODULE}, started(false), profile{nullptr}, m_widget{
     qRegisterMetaType<GroupInvite>("GroupInvite");
     qRegisterMetaType<MsgId>("MsgId");
     qRegisterMetaType<RowId>("RowId");
+
+    //初始化翻译
+    initTranslate();
 }
 
 Nexus::~Nexus() {
@@ -117,13 +123,6 @@ void Nexus::start(lib::session::AuthSession* session) {
         return;
     }
 
-    auto* s = lib::settings::OkSettings::getInstance();
-    QString locale = s->getTranslation();
-    qDebug() << "locale" << locale;
-
-    settings::Translator::translate(OK_IM_MODULE, locale);
-
-    // qApp->setQuitOnLastWindowClosed(false);
 
     auto bus = ok::Application::Instance()->bus();
 
@@ -168,6 +167,7 @@ void Nexus::start(lib::session::AuthSession* session) {
         });
     });
     profile->start();
+    
     started = true;
     qDebug() <<__func__<< "Starting up";
 }
@@ -178,7 +178,6 @@ void Nexus::stop() {
         return;
     profile->stop();
     started = false;
-
 }
 
 void Nexus::show()
@@ -196,23 +195,6 @@ const QString& Nexus::getName() const {
 
 void Nexus::do_logout(const QString& profileName) {
     //    Nexus::getProfile()->getSettings()->saveGlobal();
-}
-
-void Nexus::showMainGUI() {
-    assert(profile);
-
-    // Connections
-    // connect(profile.get(), &Profile::selfAvatarChanged, m_widget, &Widget::onSelfAvatarLoaded);
-    // connect(profile.get(), &Profile::coreChanged, [&](Core& core) { emit coreChanged(core); });
-    // connect(profile.get(), &Profile::coreChanged, m_widget, &Widget::onCoreChanged);
-
-    // connect(profile.get(), &Profile::failedToStart, m_widget, &Widget::onFailedToStartCore,
-    // Qt::BlockingQueuedConnection);
-
-    // connect(profile.get(), &Profile::badProxy, m_widget, &Widget::onBadProxyCore,
-    // Qt::BlockingQueuedConnection);
-
-    profile->start();
 }
 
 lib::audio::IAudioControl *Nexus::audio() const
@@ -293,6 +275,16 @@ void Nexus::stopNotification()
 
 QWidget* Nexus::widget() {
     return m_widget->getInstance();
+}
+
+void Nexus::initTranslate() {
+    QString locale = lib::settings::OkSettings::getInstance()->getTranslation();
+    settings::Translator::translate(OK_IM_MODULE, locale);
+
+    connect(ok::Application::Instance()->bus(), &ok::Bus::languageChanged,
+            [](const QString& locale0) {
+                settings::Translator::translate(OK_IM_MODULE, locale0);
+            });
 }
 
 // #ifdef Q_OS_MAC

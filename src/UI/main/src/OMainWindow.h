@@ -54,6 +54,7 @@ public:
     }
     QWidget* getContainer(SystemMenu menu);
 
+
 protected:
     void showEvent(QShowEvent* event) override;
     void closeEvent(QCloseEvent* event) override;
@@ -81,6 +82,8 @@ private:
 
     static inline QIcon prepareIcon(QString path, int w = 0, int h = 0);
 
+    void initShortcut();
+
 signals:
     void toClose();
 
@@ -92,6 +95,8 @@ private slots:
     void onSetShowSystemTray(bool newValue);
 
     void forceShow();
+
+    void toggleFullscreen();
 };
 
 }  // namespace UI

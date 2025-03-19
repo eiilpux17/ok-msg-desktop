@@ -14,6 +14,8 @@
 #define STYLE_H
 
 #include <QColor>
+#include <QDir>
+#include <QFile>
 #include <QFont>
 
 class QString;
@@ -30,7 +32,8 @@ struct ThemeNameColor {
     QColor color;
 };
 
-class Style {
+class Style : public QObject {
+    Q_OBJECT
 public:
     enum class Font { ExtraBig, Big, BigBold, Medium, MediumBold, Small, SmallLight };
 
@@ -57,33 +60,47 @@ public:
         SelectText
     };
     static QStringList getThemeColorNames();
-    static const QString getStylesheet(const QString& filename, const QFont& baseFont = QFont());
-    static const QString getImagePath(const QString& filename);
+    const QString getStylesheet(const QString& filename, const QFont& baseFont = QFont());
+    const QString getModuleStylesheet( const QString& module, const QString& filename);
+    const QIcon getModuleIcon(const QString& module, const QString& filename);
+    QString getImagePath(const QString& filename);
 
-    static QString getThemeFolder();
-    static QString getThemeName();
-    static QColor getColor(ColorPalette entry);
+    QString getThemeFolder();
+
+    const QString& getTheme() const {
+        return theme;
+    };
+    void setTheme(MainTheme theme);
+
+    QColor getColor(ColorPalette entry);
     static QColor getExtColor(const QString& key);
     static QFont getFont(Font font);
-    static const QString resolve(const QString& filename, const QFont& baseFont = QFont());
 
-    static void setThemeColor(MainTheme color);
-    static void setThemeColor(const QColor& color);
+
     static void applyTheme();
-    static void initPalette();
+    static void initPalette(const QString &path);
     static void initDictColor();
-    static QString getThemePath();
 
-signals:
-    void themeChanged();
+    QString getThemePath();
+    QString getThemeFile();
+
+    static Style* getInstance();
 
 private:
     Style();
+    const QString resolve(const QString& fullPath, const QFont& baseFont = QFont());
 
 private:
     static QList<ThemeNameColor> themeNameColors;
     static std::map<std::pair<const QString, const QFont>, const QString> stylesheetsCache;
     static QMap<ColorPalette, QString> aliasColors;
+
+    QString theme;
+    QDir dir;
+
+signals:
+    void themeChanged();
+
 };
 
 

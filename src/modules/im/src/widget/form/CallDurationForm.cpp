@@ -73,7 +73,7 @@ void CallDurationForm::setContact(const Contact* c) {
 }
 
 void CallDurationForm::reloadTheme() {
-    setStyleSheet(lib::settings::Style::getStylesheet(QStringLiteral("CallDurationForm.css")));
+    setStyleSheet(lib::settings::Style::getInstance()->getStylesheet(QStringLiteral("CallDurationForm.css")));
 }
 
 void CallDurationForm::closeEvent(QCloseEvent* e) {}

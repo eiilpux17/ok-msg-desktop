@@ -46,7 +46,7 @@ SettingsForm::SettingsForm(QWidget* parent)
     connect(tab, &QTabWidget::currentChanged, this,
             &SettingsForm::onTabChanged);
 
-    auto& style = lib::settings::Style::getStylesheet("general.css");
+    auto& style = lib::settings::Style::getInstance()->getStylesheet("general.css");
     setStyleSheet(style);
 
     retranslateUi();

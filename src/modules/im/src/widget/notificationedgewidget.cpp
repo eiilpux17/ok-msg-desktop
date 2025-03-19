@@ -21,7 +21,7 @@ namespace module::im {
 NotificationEdgeWidget::NotificationEdgeWidget(Position position, QWidget* parent)
         : QWidget(parent) {
     setAttribute(Qt::WA_StyledBackground);  // Show background.
-    setStyleSheet(lib::settings::Style::getStylesheet("notificationEdge/notificationEdge.css"));
+    setStyleSheet(lib::settings::Style::getInstance()->getStylesheet("notificationEdge/notificationEdge.css"));
     QHBoxLayout* layout = new QHBoxLayout(this);
     layout->addStretch();
 
@@ -33,10 +33,10 @@ NotificationEdgeWidget::NotificationEdgeWidget(Position position, QWidget* paren
 
     if (position == Top)
         arrowLabel->setPixmap(
-                QPixmap(lib::settings::Style::getImagePath("chatArea/scrollBarUpArrow.svg")));
+                QPixmap(lib::settings::Style::getInstance()->getImagePath("chatArea/scrollBarUpArrow.svg")));
     else
         arrowLabel->setPixmap(
-                QPixmap(lib::settings::Style::getImagePath("chatArea/scrollBarDownArrow.svg")));
+                QPixmap(lib::settings::Style::getInstance()->getImagePath("chatArea/scrollBarDownArrow.svg")));
 
     layout->addWidget(arrowLabel);
     layout->addStretch();

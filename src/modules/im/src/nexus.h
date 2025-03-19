@@ -72,10 +72,7 @@ public:
 
     void init(lib::session::Profile* profile, QWidget* parent=nullptr) override;
 
-    void showMainGUI();
-
     [[nodiscard]] lib::audio::IAudioControl* audio() const ;
-
 
     void incomingNotification(const QString& friendId);
     void outgoingNotification();
@@ -96,7 +93,7 @@ protected:
 private:
     void setProfile(lib::session::Profile* p);
     explicit Nexus();
-
+    void initTranslate();
     // static std::mutex mtx; // 互斥锁
 
     QString name;

@@ -183,24 +183,24 @@ void OMediaConfigWidget::initDeviceInfo() {
 void OMediaConfigWidget::updateAudioVideoIcon(bool audio, bool video, bool speaker) {
     if (audio) {
         if (ctrlState.enableMic) {
-            micSpeakSetting->iconButton()->setIcon(QIcon(":/meet/image/micphone.svg"));
+            micSpeakSetting->iconButton()->setIcon(QIcon(":/ui/icons/micphone.svg"));
         } else {
-            micSpeakSetting->iconButton()->setIcon(QIcon(":/meet/image/micphone_mute.svg"));
+            micSpeakSetting->iconButton()->setIcon(QIcon(":/ui/icons/micphone_mute.svg"));
         }
     }
     if (video) {
         if (ctrlState.enableCam) {
-            cameraSetting->iconButton()->setIcon(QIcon(":/meet/image/videocam.svg"));
+            cameraSetting->iconButton()->setIcon(QIcon(":/ui/icons/videocam.svg"));
         } else {
-            cameraSetting->iconButton()->setIcon(QIcon(":/meet/image/videocam_stop.svg"));
+            cameraSetting->iconButton()->setIcon(QIcon(":/ui/icons/videocam_stop.svg"));
         }
     }
 
     if (speaker) {
         if (ctrlState.enableSpk) {
-            volumnSetting->iconButton()->setIcon(QIcon(":/meet/image/speaker.svg"));
+            volumnSetting->iconButton()->setIcon(QIcon(":/ui/icons/speaker.svg"));
         } else {
-            volumnSetting->iconButton()->setIcon(QIcon(":/meet/image/speaker_stop.svg"));
+            volumnSetting->iconButton()->setIcon(QIcon(":/ui/icons/speaker_stop.svg"));
         }
     }
 }

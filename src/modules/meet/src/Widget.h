@@ -27,8 +27,7 @@
 
 #include <QPointer>
 
-OK_RESOURCE_LOADER(Meet)
-OK_RESOURCE_LOADER(MeetRes)
+
 
 namespace Ui {
 class WorkPlatform;
@@ -48,6 +47,7 @@ class Widget : public lib::ui::OFrame {
 public:
     explicit Widget(QWidget* parent = nullptr);
     ~Widget() override;
+
     void start();
     void reloadTheme();
 
@@ -60,7 +60,7 @@ public:
     void activate();
 
 protected:
-    void initTranslate();
+
     void retranslateUi();
 
 private:
@@ -96,8 +96,7 @@ private:
     void shareMeeting();
 
 private:
-    OK_RESOURCE_PTR(Meet);
-    OK_RESOURCE_PTR(MeetRes);
+
 
     Ui::WorkPlatform* ui;
     StartMeetingWidget* startMeetWidget = nullptr;

@@ -93,22 +93,22 @@ void GenericChatroomWidget::reloadTheme() {
 
             // p = nameLabel->palette();
             // p.setColor(QPalette::WindowText,
-            //            lib::settings::Style::getColor(
+            //            lib::settings::Style::getInstance()->getColor(
             //                    lib::settings::Style::ColorPalette::MainText));  // Base color
             // p.setColor(QPalette::HighlightedText,
-            //            lib::settings::Style::getColor(
+            //            lib::settings::Style::getInstance()->getColor(
             //                    lib::settings::Style::ColorPalette::NameActive));  // Color when active
             // nameLabel->setPalette(p);
 
             // p = palette();
             // p.setColor(QPalette::Window,
-            //            lib::settings::Style::getColor(
+            //            lib::settings::Style::getInstance()->getColor(
             //                    lib::settings::Style::ColorPalette::ThemeMedium));  // Base background color
             // p.setColor(QPalette::Highlight,
-            //            lib::settings::Style::getColor(
+            //            lib::settings::Style::getInstance()->getColor(
             //                    lib::settings::Style::ColorPalette::ThemeHighlight));  // On mouse over
             // p.setColor(QPalette::Light,
-            //            lib::settings::Style::getColor(
+            //            lib::settings::Style::getInstance()->getColor(
             //                    lib::settings::Style::ColorPalette::ThemeLight));  // When active
             // setPalette(p);
 }

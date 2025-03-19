@@ -11,5 +11,23 @@
  */
 #ifndef LIB_UI_H
 #define LIB_UI_H
-namespace lib::ui {}
+
+
+#include "base/resources.h"
+
+#include <QObject>
+
+OK_RESOURCE_LOADER(uiRes)
+
+namespace lib::ui{
+
+class OkUI  : public QObject{
+Q_OBJECT
+public:
+    void init();
+private:
+    OK_RESOURCE_PTR(uiRes);
+};
+
+}
 #endif  // UI_H

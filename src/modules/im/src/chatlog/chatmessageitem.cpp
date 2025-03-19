@@ -83,11 +83,11 @@ void ChatMessageBox::setMessageState(MessageState state) {
     }
     switch (state) {
         case MessageState::pending: {
-            stateItem = new Spinner(lib::settings::Style::getImagePath("chatArea/spinner.svg"), QSize(16, 16),
+            stateItem = new Spinner(lib::settings::Style::getInstance()->getImagePath("chatArea/spinner.svg"), QSize(16, 16),
                                     360.0 / 1.6);
         } break;
         case MessageState::broken: {
-            stateItem = new Broken(lib::settings::Style::getImagePath("chatArea/error.svg"), QSize(16, 16));
+            stateItem = new Broken(lib::settings::Style::getInstance()->getImagePath("chatArea/error.svg"), QSize(16, 16));
         } break;
         default:
             break;

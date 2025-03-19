@@ -53,7 +53,7 @@ StorageSettingsForm::StorageSettingsForm(SettingsWidget* myParent)
 
     eventsInit();
 
-    auto css = lib::settings::Style::getStylesheet("settings/mainHead.css");
+    auto css = lib::settings::Style::getInstance()->getStylesheet("settings/mainHead.css");
     setStyleSheet(css);
     bodyUI->scrollArea->setStyleSheet(css);
 

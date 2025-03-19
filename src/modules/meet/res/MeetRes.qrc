@@ -11,36 +11,34 @@
   -->
 
 <RCC>
-    <qresource prefix="/">
-        <file>themes/default/MeetingBase.css</file>
-        <file>themes/default/MeetingVideo.css</file>
-        <file alias="meet/image/micphone.svg">image/micphone.svg</file>
-        <file alias="meet/image/micphone_mute.svg">image/micphone_mute.svg</file>
-        <file alias="meet/image/videocam.svg">image/videocam.svg</file>
-        <file alias="meet/image/videocam_stop.svg">image/videocam_stop.svg</file>
-        <file alias="meet/image/speaker.svg">image/speaker.svg</file>
-        <file alias="meet/image/speaker_stop.svg">image/speaker_stop.svg</file>
-        <file alias="meet/image/arrow_up.svg">image/arrow_up.svg</file>
-        <file alias="meet/image/arrow_down.svg">image/arrow_down.svg</file>
-        <file alias="meet/image/arrow_left.svg">image/arrow_left.svg</file>
-        <file alias="meet/image/arrow_right.svg">image/arrow_right.svg</file>
-        <file alias="meet/image/share.svg">image/share.svg</file>
-        <file alias="meet/image/network_s4.svg">image/network_s4.svg</file>
-        <file alias="meet/image/layout_grid.svg">image/layout_grid.svg</file>
-        <file alias="meet/image/fullscreen.svg">image/fullscreen.svg</file>
-        <file alias="meet/image/exit_fullscreen.svg">image/exit_fullscreen.svg</file>
-        <file alias="meet/image/emoji.svg">image/emoji.svg</file>
-        <file alias="meet/image/message.svg">image/message.svg</file>
-        <file alias="meet/image/phone.svg">image/phone.svg</file>
-        <file alias="meet/image/security.svg">image/security.svg</file>
-        <file alias="meet/image/more.svg">image/more.svg</file>
-        <file alias="meet/image/share_screen.svg">image/share_screen.svg</file>
-        <file alias="meet/image/record.svg">image/record.svg</file>
-        <file alias="meet/image/stop_record.svg">image/stop_record.svg</file>
-        <file alias="meet/image/invite_user.svg">image/invite_user.svg</file>
-        <file alias="meet/image/layout_gridview.svg">image/layout_gridview.svg</file>
-        <file alias="meet/image/layout_toplist.svg">image/layout_toplist.svg</file>
-        <file alias="meet/image/layout_rightlist.svg">image/layout_rightlist.svg</file>
-
+    <qresource prefix="/Meet">
+        <file>styles/meet.css</file>
+        <file>icons/micphone.svg</file>
+        <file>icons/micphone_mute.svg</file>
+        <file>icons/videocam.svg</file>
+        <file>icons/videocam_stop.svg</file>
+        <file>icons/speaker.svg</file>
+        <file>icons/speaker_stop.svg</file>
+        <file>icons/arrow_up.svg</file>
+        <file>icons/arrow_down.svg</file>
+        <file>icons/arrow_left.svg</file>
+        <file>icons/arrow_right.svg</file>
+        <file>icons/share.svg</file>
+        <file>icons/network_s4.svg</file>
+        <file>icons/layout_grid.svg</file>
+        <file>icons/fullscreen.svg</file>
+        <file>icons/exit_fullscreen.svg</file>
+        <file>icons/emoji.svg</file>
+        <file>icons/message.svg</file>
+        <file>icons/phone.svg</file>
+        <file>icons/security.svg</file>
+        <file>icons/more.svg</file>
+        <file>icons/share_screen.svg</file>
+        <file>icons/record.svg</file>
+        <file>icons/stop_record.svg</file>
+        <file>icons/invite_user.svg</file>
+        <file>icons/layout_gridview.svg</file>
+        <file>icons/layout_toplist.svg</file>
+        <file>icons/layout_rightlist.svg</file>
     </qresource>
 </RCC>

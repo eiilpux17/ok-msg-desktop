@@ -56,12 +56,12 @@ VideoLayoutPicker::VideoLayoutPicker(QWidget* parent)
     typeGroup = new QButtonGroup(this);
     typeGroup->setExclusive(true);
 
-    QPushButton* button = appendItem(tr("Grid View"), ":/meet/image/layout_gridview.svg");
+    QPushButton* button = appendItem(tr("Grid View"), ":Meet/image/layout_gridview.svg");
     typeGroup->addButton(button, module::meet::GridView);
     button->setChecked(true);
-    button = appendItem(tr("List on Top"), ":/meet/image/layout_toplist.svg");
+    button = appendItem(tr("List on Top"), ":Meet/image/layout_toplist.svg");
     typeGroup->addButton(button, module::meet::TopList);
-    button = appendItem(tr("List on Right"), ":/meet/image/layout_rightlist.svg");
+    button = appendItem(tr("List on Right"), ":Meet/image/layout_rightlist.svg");
     typeGroup->addButton(button, module::meet::RightList);
 
     connect(typeGroup, &QButtonGroup::idToggled, this, &VideoLayoutPicker::onTypeChanged);

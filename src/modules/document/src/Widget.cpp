@@ -51,9 +51,7 @@ Widget::Widget(QWidget* parent) : lib::ui::OFrame(parent) {
 Widget::~Widget() {}
 
 void Widget::reloadTheme() {
-    auto style = lib::settings::Style::getStylesheet("general.css");
-
-    qDebug() << style;
+    auto style = lib::settings::Style::getInstance()->getStylesheet("general.css");
     setStyleSheet(style);
 }
 

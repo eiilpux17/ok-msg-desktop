@@ -110,8 +110,8 @@ MeetingVideoFrame::~MeetingVideoFrame() {
 
 void MeetingVideoFrame::reloadTheme() {
     // 手动拼接一下
-    QString style = lib::settings::Style::getStylesheet("MeetingBase.css");
-    QString style2 = lib::settings::Style::getStylesheet("MeetingVideo.css");
+    QString style = lib::settings::Style::getInstance()->getStylesheet("MeetingBase.css");
+    QString style2 = lib::settings::Style::getInstance()->getStylesheet("MeetingVideo.css");
     this->setStyleSheet(style + "\n" + style2);
     QCoreApplication::postEvent(this->topToolBar, new QEvent(QEvent::StyleChange));
 }
@@ -123,7 +123,7 @@ void MeetingVideoFrame::creatTopToolBar() {
     infoAction = topToolBar->addAction(tr("Meeting Info"));
 
     // 网络图标
-    netInfoAction = topToolBar->addAction(QIcon(":/meet/image/network_s4.svg"), QString());
+    netInfoAction = topToolBar->addAction(lib::settings::Style::getInstance()->getModuleIcon(OK_Meet_MODULE, "network_s4.svg"), QString());
     topToolBar->addSeparator();
 
     // 时长
@@ -135,9 +135,9 @@ void MeetingVideoFrame::creatTopToolBar() {
     stretch->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     topToolBar->addWidget(stretch);
 
-    sharedAction = topToolBar->addAction(QIcon(":/meet/image/share.svg"), QString());
-    layoutAction = topToolBar->addAction(QIcon(":/meet/image/layout_grid.svg"), QString());
-    fullScreenAction = topToolBar->addAction(QIcon(":/meet/image/fullscreen.svg"), QString());
+    sharedAction = topToolBar->addAction(QIcon(":Meet/icons/share.svg"), QString());
+    layoutAction = topToolBar->addAction(QIcon(":Meet/icons/layout_grid.svg"), QString());
+    fullScreenAction = topToolBar->addAction(QIcon(":Meet/icons/fullscreen.svg"), QString());
 
     connect(fullScreenAction, &QAction::triggered, this, &MeetingVideoFrame::toggleFullScreen);
     connect(layoutAction, &QAction::triggered, this, &MeetingVideoFrame::showLayoutPicker);
@@ -150,7 +150,7 @@ void MeetingVideoFrame::creatBottomBar(const lib::ortc::DeviceConfig& conf) {
     // 左侧部分
     auto* leftLayout = new QHBoxLayout();
     msgButton = new QToolButton(bottomBar);
-    msgButton->setIcon(QIcon(":/meet/image/message.svg"));
+    msgButton->setIcon(QIcon(":Meet/icons/message.svg"));
     leftLayout->addWidget(msgButton);
     leftLayout->addStretch(1);
 
@@ -184,7 +184,7 @@ void MeetingVideoFrame::creatBottomBar(const lib::ortc::DeviceConfig& conf) {
 
 
     videoSettingButton = new lib::ui::PopupMenuComboBox(bottomBar);
-    // videoSettingButton->iconButton()->setIcon(QIcon(":/meet/image/videocam.svg"));
+    // videoSettingButton->iconButton()->setIcon(QIcon(":Meet/icons/videocam.svg"));
     videoSettingButton->setCursor(Qt::PointingHandCursor);
 
     connect(videoSettingButton->iconButton(), &QToolButton::clicked, [&](bool checked) {
@@ -215,18 +215,18 @@ void MeetingVideoFrame::creatBottomBar(const lib::ortc::DeviceConfig& conf) {
     }
 
     sharedDeskButton = new lib::ui::PopupMenuComboBox(bottomBar);
-    sharedDeskButton->iconButton()->setIcon(QIcon(":/meet/image/share_screen.svg"));
+    sharedDeskButton->iconButton()->setIcon(QIcon(":Meet/icons/share_screen.svg"));
     sharedDeskButton->iconButton()->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
     recoardButton = new lib::ui::PopupMenuComboBox(bottomBar);
-    recoardButton->iconButton()->setIcon(QIcon(":/meet/image/record.svg"));
+    recoardButton->iconButton()->setIcon(QIcon(":Meet/icons/record.svg"));
 
     inviteButton = new lib::ui::PopupMenuComboBox(bottomBar);
-    inviteButton->iconButton()->setIcon(QIcon(":/meet/image/invite_user.svg"));
+    inviteButton->iconButton()->setIcon(QIcon(":Meet/icons/invite_user.svg"));
 
     leaveButton = new QToolButton(bottomBar);
     leaveButton->setObjectName("leaveMeeting");
-    leaveButton->setIcon(QIcon(":/meet/image/phone.svg"));
+    leaveButton->setIcon(QIcon(":Meet/icons/phone.svg"));
     connect(leaveButton, &QToolButton::clicked, this, &MeetingVideoFrame::doLeaveMeet);
 
     middleLayout->addWidget(audioSettingButton);
@@ -239,9 +239,9 @@ void MeetingVideoFrame::creatBottomBar(const lib::ortc::DeviceConfig& conf) {
     // 右侧部分
     auto* rightLayout = new QHBoxLayout();
     securityButton = new QToolButton(bottomBar);
-    securityButton->setIcon(QIcon(":/meet/image/security.svg"));
+    securityButton->setIcon(QIcon(":Meet/icons/security.svg"));
     moreOptionButon = new QToolButton(bottomBar);
-    moreOptionButon->setIcon(QIcon(":/meet/image/more.svg"));
+    moreOptionButon->setIcon(QIcon(":Meet/icons/more.svg"));
     rightLayout->addStretch(1);
     rightLayout->addWidget(securityButton);
     rightLayout->addWidget(moreOptionButon);
@@ -294,9 +294,9 @@ void MeetingVideoFrame::changeEvent(QEvent* event) {
     // 最大化状态变化，更新图标
     if (event->type() == QEvent::WindowStateChange && fullScreenAction) {
         if (this->windowState() == Qt::WindowFullScreen)
-            fullScreenAction->setIcon(QIcon(":/meet/image/exit_fullscreen.svg"));
+            fullScreenAction->setIcon(QIcon(":Meet/icons/exit_fullscreen.svg"));
         else
-            fullScreenAction->setIcon(QIcon(":/meet/image/fullscreen.svg"));
+            fullScreenAction->setIcon(QIcon(":Meet/icons/fullscreen.svg"));
     }
 }
 
@@ -428,15 +428,15 @@ void MeetingVideoFrame::removeParticipant(const QString& name, const QString& re
 
 void MeetingVideoFrame::syncAudioVideoState() {
     if (ctrlState.enableMic) {
-        audioSettingButton->iconButton()->setIcon(QIcon(":/meet/image/micphone.svg"));
+        audioSettingButton->iconButton()->setIcon(QIcon(":Meet/icons/micphone.svg"));
     } else {
-        audioSettingButton->iconButton()->setIcon(QIcon(":/meet/image/micphone_mute.svg"));
+        audioSettingButton->iconButton()->setIcon(QIcon(":Meet/icons/micphone_mute.svg"));
     }
 
     if (ctrlState.enableCam) {
-        videoSettingButton->iconButton()->setIcon(QIcon(":/meet/image/videocam.svg"));
+        videoSettingButton->iconButton()->setIcon(QIcon(":Meet/icons/videocam.svg"));
     } else {
-        videoSettingButton->iconButton()->setIcon(QIcon(":/meet/image/videocam_stop.svg"));
+        videoSettingButton->iconButton()->setIcon(QIcon(":Meet/icons/videocam_stop.svg"));
     }
 
     //修改渲染界面

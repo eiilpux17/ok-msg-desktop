@@ -250,7 +250,7 @@ void GroupChatForm::peerAudioPlaying(QString peerPk) {
     }
 
     peerLabels[peerPk]->setStyleSheet(
-            lib::settings::Style::getStylesheet(PEER_LABEL_STYLE_SHEET_PATH));
+            lib::settings::Style::getInstance()->getStylesheet(PEER_LABEL_STYLE_SHEET_PATH));
     peerAudioTimers[peerPk]->start(500);
 }
 
@@ -384,7 +384,7 @@ void GroupChatForm::onLabelContextMenuRequested(const QPoint& localPos) {
     contextMenu->addSeparator();
 
     const QAction* toggleMuteAction = contextMenu->addAction(muteString);
-    contextMenu->setStyleSheet(lib::settings::Style::getStylesheet(PEER_LABEL_STYLE_SHEET_PATH));
+    contextMenu->setStyleSheet(lib::settings::Style::getInstance()->getStylesheet(PEER_LABEL_STYLE_SHEET_PATH));
 }
 
 void GroupChatForm::joinGroupCall() {

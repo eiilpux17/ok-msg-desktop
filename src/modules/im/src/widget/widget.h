@@ -151,7 +151,6 @@ public slots:
 
     void onFriendDialogShown(const Friend* f);
     void onGroupDialogShown(const Group* g);
-    void toggleFullscreen();
     void onUpdateAvailable();
     void onCoreChanged(Core& core);
 

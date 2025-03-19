@@ -32,7 +32,7 @@ Text::Text(const QString& txt, const QFont& font, bool enableElide, const QStrin
         , selectable(true)
         , elide(enableElide)
         , defFont(font)
-        , defStyleSheet(lib::settings::Style::getStylesheet(QStringLiteral("chatArea/innerStyle.css"), font)) {
+        , defStyleSheet(lib::settings::Style::getInstance()->getStylesheet(QStringLiteral("chatArea/innerStyle.css"), font)) {
     color = textColor();
     setText(txt);
     setAcceptedMouseButtons(Qt::LeftButton);
@@ -222,7 +222,7 @@ void Text::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
         sel.cursor.setPosition(getSelectionEnd(), QTextCursor::KeepAnchor);
     }
 
-    const QColor selectionColor = lib::settings::Style::getColor(lib::settings::Style::ColorPalette::SelectText);
+    const QColor selectionColor = lib::settings::Style::getInstance()->getColor(lib::settings::Style::ColorPalette::SelectText);
     sel.format.setBackground(selectionColor.lighter(selectionHasFocus ? 100 : 160));
     sel.format.setForeground(selectionHasFocus ? Qt::white : Qt::black);
 
@@ -243,7 +243,7 @@ void Text::visibilityChanged(bool visible) {
 }
 
 void Text::reloadTheme() {
-    defStyleSheet = lib::settings::Style::getStylesheet(QStringLiteral("chatArea/innerStyle.css"), defFont);
+    defStyleSheet = lib::settings::Style::getInstance()->getStylesheet(QStringLiteral("chatArea/innerStyle.css"), defFont);
     color = textColor();
     dirty = true;
     regenerate();
@@ -496,7 +496,7 @@ void Text::selectText(QTextCursor& cursor, const std::pair<int, int>& point) {
         cursor.endEditBlock();
 
         QTextCharFormat format;
-        format.setBackground(QBrush(lib::settings::Style::getColor(lib::settings::Style::ColorPalette::SearchHighlighted)));
+        format.setBackground(QBrush(lib::settings::Style::getInstance()->getColor(lib::settings::Style::ColorPalette::SearchHighlighted)));
         cursor.mergeCharFormat(format);
 
         regenerate();
@@ -504,6 +504,6 @@ void Text::selectText(QTextCursor& cursor, const std::pair<int, int>& point) {
     }
 }
 
-QColor Text::textColor() const { return isCustomColor ? color : lib::settings::Style::getColor(colorRole); }
+QColor Text::textColor() const { return isCustomColor ? color : lib::settings::Style::getInstance()->getColor(colorRole); }
 const void* Text::getContent() { return (void*)(&text); }
 }  // namespace module::im
