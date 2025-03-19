@@ -7,6 +7,7 @@ OkMSG 是注重数据安全与保护的企业通讯协同工具，支持独立�
 OkMSG is an enterprise communication collaboration tool
 that focuses on data security and protection.
 
+- OkMSG，企业私有化IM！
 - OkMSG，一种企业协作方式！
 - Respect privacy and be useful 好用且尊重隐私
 
