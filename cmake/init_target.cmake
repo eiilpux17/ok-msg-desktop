@@ -66,7 +66,7 @@ add_custom_target(PreBuild
 		# COMMAND bash ${CMAKE_SOURCE_DIR}/prebuild.sh # Linux/Mac 示例
 		# COMMAND ${CMAKE_SOURCE_DIR}/prebuild.bat # Windows 示例
 		#	if error occurred please execute: `sudo pip3 install openpyxl [--break-system-packages]`
-		COMMAND python3 translation.py
+                COMMAND python translation.py
 		COMMENT "Executing pre-build step"
 )
 

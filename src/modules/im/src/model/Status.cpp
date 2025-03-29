@@ -16,7 +16,7 @@
 #include <QObject>
 #include <QPixmap>
 #include <QString>
-
+#include <QStringLiteral>
 #include <cassert>
 
 namespace module::im {
@@ -36,8 +36,8 @@ QString getTitle(Status status) {
         default:
             return {};
     }
-    //        assert(false);
-    return QStringLiteral();
+
+    return QStringLiteral("");
 }
 
 QString getAssetSuffix(Status status) {
@@ -52,8 +52,10 @@ QString getAssetSuffix(Status status) {
             return "offline";
         case Status::Blocked:
             return "blocked";
+        case Status::None:
+            return "none";
     }
-    assert(false);
+
     return QStringLiteral("");
 }
 
