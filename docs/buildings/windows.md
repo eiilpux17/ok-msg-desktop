@@ -6,7 +6,11 @@
   - 选择 `Windows SdK 10 20348`
 - 安装`strawberry-perl`
 - 安装`OpenSSL 1.1.1`且版本的一致
-- 安装`Python3`
+- 安装`Python3`和`openpyxl`插件
+```shell
+  python -m pip install --upgrade pip
+  pip install openpyxl
+```
 
 > 可以使用Qt自带的OpenSSL的也可以自行安装，配置bin目录到环境变量到PATH！
 

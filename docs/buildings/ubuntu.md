@@ -36,12 +36,12 @@ sudo cmake --install out-Release --config Release # 管理员执行
 
 # CMake 构建(RelWithDebInfo)
 cmake -B out-RelWithDebInfo -DCMAKE_BUILD_TYPE=RelWithDebInfo
-cmake --build .\out-RelWithDebInfo\ --config RelWithDebInfo
+cmake --build out-RelWithDebInfo --config RelWithDebInfo
 sudo cmake --install out-RelWithDebInfo --config RelWithDebInfo # 管理员执行
 
 # CMake 构建(MinSizeRel)
 cmake -B out-MinSizeRel -DCMAKE_BUILD_TYPE=MinSizeRel
-cmake --build .\out-MinSizeRel\ --config MinSizeRel
+cmake --build out-MinSizeRel --config MinSizeRel
 sudo cmake --install out-MinSizeRel --config MinSizeRel # 管理员执行
 ```
 
