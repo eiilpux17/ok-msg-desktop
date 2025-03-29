@@ -11,7 +11,8 @@ dnf install -y qt5-qtbase-devel qt6-qtbase-gui  qt5-qtmultimedia-devel \
   qt5-qtsvg-devel qt5-qttools-devel qt5-qttools-static \
   libavcodec-free-devel libavdevice-free-devel \
   libexif-free-devel qrencode-devel sqlite3-devel \
-  libvpx-devel openal-soft-devel openssl-devel
+  libvpx-devel openal-soft-devel openssl-devel  \
+  python3 python-is-python3
 ```
 
 ### 构建OkRtc模块

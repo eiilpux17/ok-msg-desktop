@@ -281,12 +281,11 @@ void ChatHistory::onMessageReceived(const FriendId& sender, const Message& messa
 
     if (selfId == message.from) {
         qWarning() << "Is self message.";
-        return;
+        // return;
     }
 
     if (canUseHistory()) {
-        //        auto friendPk = f.getPublicKey().toString();
-        //        auto displayName = f.getDisplayedName();
+
         auto content = message.content;
         if (message.isAction) {
             content = FriendChatForm::ACTION_PREFIX + content;
