@@ -6,6 +6,7 @@
   - 选择 `Windows SdK 10 20348`
 - 安装`strawberry-perl`
 - 安装`OpenSSL 1.1.1`且版本的一致
+- 安装`Python3`
 
 > 可以使用Qt自带的OpenSSL的也可以自行安装，配置bin目录到环境变量到PATH！
 
@@ -15,7 +16,7 @@
 
 ```shell
 #设置vcpkg路径，也可以参考官网下载：https://github.com/microsoft/vcpkg/blob/master/README_zh_CN.md
-VCPKG_ROOT=E:\Program Files\Microsoft Visual Studio\2022\Community\VC\vcpkg
+VCPKG_ROOT="E:\Program Files\Microsoft Visual Studio\2022\Community\VC\vcpkg"
 #可选，默默C盘
 VCPKG_DOWNLOADS=下载路径
 ```
