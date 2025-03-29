@@ -23,6 +23,7 @@
 #include <QSettings>
 #include <QStandardPaths>
 #include <QStringBuilder>
+#include <mutex>
 
 
 #include "OkSettings.h"
@@ -56,7 +57,7 @@
  */
 
 namespace {
-
+static std::mutex mutex;
 const QLatin1String ThemeFolder{":themes/"};
 const QLatin1String ThemeExt{".ini"};
 
@@ -341,7 +342,7 @@ QString Style::getThemeFile()
     return dir.filePath(theme+ThemeExt);
 }
 
-static std::mutex mutex;
+
 Style* Style::getInstance()
 {
     std::lock_guard<std::mutex> lock(mutex);

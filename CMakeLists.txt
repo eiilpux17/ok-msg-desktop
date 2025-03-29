@@ -13,12 +13,13 @@ set(FETCHCONTENT_QUIET OFF)
 include(FetchContent)
 include(ExternalProject)
 
-project(OkMSG-Project)
+project(OkMSGProject)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin CACHE PATH "Single Directory for all Executables.") # in windows , it is also for dll.
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib CACHE PATH "Single Directory for all shared Libraries")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib CACHE PATH "Single Directory for all static archive")
-  
+# 设置默认构建类型为Debug
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build." FORCE)
+endif()
+
 get_filename_component(third_party_loc "3rdparty" REALPATH)
 get_filename_component(submodules_loc "src" REALPATH)
 get_filename_component(cmake_helpers_loc "cmake" REALPATH)
