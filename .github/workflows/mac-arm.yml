@@ -59,8 +59,7 @@ jobs:
           sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
           
           # openpyxl
-          python3 -m venv myenv
-          pip3 install openpyxl
+          sudo pip3 install openpyxl --user --break-system-packages 
 
       - name: Prepare
         run: |
