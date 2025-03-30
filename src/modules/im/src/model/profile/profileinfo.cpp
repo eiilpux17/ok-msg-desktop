@@ -29,6 +29,8 @@ ProfileInfo::ProfileInfo(QObject* parent)
         : QObject(parent)
 {
 
+    profile = Nexus::getProfile();
+
     auto core = Core::getInstance();
     connect(core, &Core::vCardSet, this, &ProfileInfo::vCardChanged);
     connect(core, &Core::usernameSet, this, &ProfileInfo::usernameChanged);
@@ -114,6 +116,16 @@ const QString& ProfileInfo::getNickname() const {
 
 const QString& ProfileInfo::getFullName() const {
     return Nexus::getProfile()->getFullName();
+}
+
+Status ProfileInfo::getStatus() const
+{
+    return profile->getCore()->getStatus();
+}
+
+QString ProfileInfo::getStatusMessage() const
+{
+    return profile->getCore()->getStatusMessage();
 }
 
 /**

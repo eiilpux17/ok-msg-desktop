@@ -58,13 +58,6 @@ public:
     explicit ProfileForm(QWidget* parent = nullptr);
     ~ProfileForm() override;
 
-
-public slots:
-    void onSelfAvatarLoaded(const QPixmap& pic);
-    void onLogoutClicked();
-    void onExitClicked();
-    void showToolTip(const QPoint &pos = {});
-
 protected:
     bool event(QEvent *e) override;
     bool eventFilter(QObject* object, QEvent* event) override;
@@ -74,7 +67,37 @@ protected:
     void focusOutEvent(QFocusEvent* event) override;
     void reloadTheme() override;
 
-private slots:
+private:
+    void retranslateUi();
+    void refreshProfiles();
+
+    void setupStatus();
+    void setStatusOnline();
+    void setStatusAway();
+    void setStatusBusy();
+
+    static QString getSupportedImageFilter();
+
+    Ui::ProfileForm* ui;
+    lib::ui::MaskablePixmapWidget* profilePicture;
+    lib::ui::QRWidget* qr;
+    IProfileInfo* profileInfo;
+
+    QMenu* statusButtonMenu;
+    QAction* statusOnline;
+    QAction* statusAway;
+    QAction* statusBusy;
+    QAction* actionLogout;
+    QAction* actionQuit;
+    QAction* actionShow;
+
+
+public slots:
+    void onSelfAvatarLoaded(const QPixmap& pic);
+    void onLogoutClicked();
+    void onExitClicked();
+    void showToolTip(const QPoint &pos = {});
+
     void setPasswordButtonsText();
 
     void copyIdClicked();
@@ -90,16 +113,5 @@ private slots:
     void showQRCode();
 
 
-private:
-    void retranslateUi();
-
-    void refreshProfiles();
-    static QString getSupportedImageFilter();
-
-private:
-    Ui::ProfileForm* ui;
-    lib::ui::MaskablePixmapWidget* profilePicture;
-    lib::ui::QRWidget* qr;
-    IProfileInfo* profileInfo;
 };
 }  // namespace module::im

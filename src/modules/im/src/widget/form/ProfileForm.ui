@@ -40,7 +40,7 @@
         <height>446</height>
        </rect>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,0,0">
+      <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,0,0,0">
        <property name="leftMargin">
         <number>0</number>
        </property>
@@ -353,6 +353,52 @@
            </widget>
           </item>
          </layout>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignHCenter">
+        <widget class="QPushButton" name="statusButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
+         <property name="accessibleName">
+          <string>Status</string>
+         </property>
+         <property name="accessibleDescription">
+          <string>Set availability status</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>10</width>
+           <height>10</height>
+          </size>
+         </property>
+         <property name="autoExclusive">
+          <bool>false</bool>
+         </property>
+         <property name="autoDefault">
+          <bool>false</bool>
+         </property>
+         <property name="default">
+          <bool>false</bool>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
        <item>

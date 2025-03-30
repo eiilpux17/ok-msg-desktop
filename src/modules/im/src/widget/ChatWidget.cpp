@@ -21,7 +21,7 @@
 #include "ContactListWidget.h"
 #include "MessageSessionListWidget.h"
 #include "application.h"
-#include "base/SvgUtils.h"
+
 #include "contentlayout.h"
 #include "lib/storage/settings/style.h"
 #include "src/core/corefile.h"
@@ -35,7 +35,6 @@
 #include "src/persistence/profile.h"
 #include "src/widget/form/addfriendform.h"
 #include "src/widget/form/groupinviteform.h"
-#include "src/widget/form/ProfileForm.h"
 #include "ui_ChatWidget.h"
 #include "widget.h"
 
@@ -112,7 +111,7 @@ ChatWidget::ChatWidget(QWidget* parent)
     ui->mainSplitter->setStretchFactor(1, 1);
     ui->mainSplitter->setChildrenCollapsible(false);
 
-    setupStatus();
+
     setupSearch();
 
 
@@ -527,40 +526,9 @@ void ChatWidget::retranslateUi() {
     ui->searchContact->setPlaceholderText(tr("Search Contacts"));
     ui->retranslateUi(this);
 
-    statusOnline->setText(tr("Online", "Button to set your status to 'Online'"));
-    statusAway->setText(tr("Away", "Button to set your status to 'Away'"));
-    statusBusy->setText(tr("Busy", "Button to set your status to 'Busy'"));
+
 }
 
-void ChatWidget::setupStatus() {
-    int icon_size = 15;
-
-    // Preparing icons and set their size
-    statusOnline = new QAction(this);
-    statusOnline->setIcon(
-            ok::base::SvgUtils::prepareIcon(getIconPath(Status::Online), icon_size, icon_size));
-    connect(statusOnline, &QAction::triggered, this, &ChatWidget::setStatusOnline);
-
-    statusAway = new QAction(this);
-    statusAway->setIcon(
-            ok::base::SvgUtils::prepareIcon(getIconPath(Status::Away), icon_size, icon_size));
-    connect(statusAway, &QAction::triggered, this, &ChatWidget::setStatusAway);
-
-    statusBusy = new QAction(this);
-    statusBusy->setIcon(
-            ok::base::SvgUtils::prepareIcon(getIconPath(Status::Busy), icon_size, icon_size));
-    connect(statusBusy, &QAction::triggered, this, &ChatWidget::setStatusBusy);
-
-    // QMenu* statusButtonMenu = new QMenu(ui->statusButton);
-    // statusButtonMenu->addAction(statusOnline);
-    // statusButtonMenu->addAction(statusAway);
-    // statusButtonMenu->addAction(statusBusy);
-    // ui->statusButton->setMenu(statusButtonMenu);
-
-    statusOnline->setText(tr("Online", "Button to set your status to 'Online'"));
-    statusAway->setText(tr("Away", "Button to set your status to 'Away'"));
-    statusBusy->setText(tr("Busy", "Button to set your status to 'Busy'"));
-}
 
 void ChatWidget::cancelFile(const QString& friendId, const QString& fileId) {
     qDebug() << __func__ << "file:" << fileId;
@@ -602,29 +570,6 @@ void ChatWidget::dispatchFileSendFailed(
     //   chatForm.value()->addSystemInfoMessage(
     //       tr("Failed to send file \"%1\"").arg(fileName), ChatMessage::ERROR,
     //       QDateTime::currentDateTime());
-}
-
-void ChatWidget::setStatusOnline() {
-    //  if (!ui->statusButton->isEnabled()) {
-    //    return;
-    //  }
-    Nexus::getCore()->setStatus(Status::Online);
-}
-
-void ChatWidget::setStatusAway() {
-    //  if (!ui->statusButton->isEnabled()) {
-    //    return;
-    //  }
-
-    Nexus::getCore()->setStatus(Status::Away);
-}
-
-void ChatWidget::setStatusBusy() {
-    //  if (!ui->statusButton->isEnabled()) {
-    //    return;
-    //  }
-
-    Nexus::getCore()->setStatus(Status::Busy);
 }
 
 void ChatWidget::onAvInvite(const ContactId& cid, bool video) {

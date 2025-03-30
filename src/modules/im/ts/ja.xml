@@ -484,6 +484,14 @@ which may lead to problems with video calls.</source>
             <translation>私の電話番号:</translation>
         </message>
         <message>
+            <source>Status</source>
+            <translation>ステータス</translation>
+        </message>
+        <message>
+            <source>Set availability status</source>
+            <translation>利用可能なステータスを設定</translation>
+        </message>
+        <message>
             <source>Profile</source>
             <translation>プロファイル</translation>
         </message>
@@ -1005,21 +1013,6 @@ which may lead to problems with video calls.</source>
         <message>
             <source>Search Contacts</source>
             <translation>連絡先を検索</translation>
-        </message>
-        <message>
-            <source>Online</source>
-            <comment>Button to set your status to 'Online'</comment>
-            <translation>オンライン</translation>
-        </message>
-        <message>
-            <source>Away</source>
-            <comment>Button to set your status to 'Away'</comment>
-            <translation>退席中</translation>
-        </message>
-        <message>
-            <source>Busy</source>
-            <comment>Button to set your status to 'Busy'</comment>
-            <translation>多忙</translation>
         </message>
     </context>
     <context>
@@ -1610,6 +1603,21 @@ Please use another image.</source>
         <message>
             <source>Please enter a new password.</source>
             <translation>新しいパスワードを入力してください。</translation>
+        </message>
+        <message>
+            <source>Online</source>
+            <comment>Button to set your status to 'Online'</comment>
+            <translation>オンライン</translation>
+        </message>
+        <message>
+            <source>Away</source>
+            <comment>Button to set your status to 'Away'</comment>
+            <translation>退席中</translation>
+        </message>
+        <message>
+            <source>Busy</source>
+            <comment>Button to set your status to 'Busy'</comment>
+            <translation>多忙</translation>
         </message>
     </context>
     <context>

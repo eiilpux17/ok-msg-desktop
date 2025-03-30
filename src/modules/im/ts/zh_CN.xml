@@ -484,6 +484,14 @@ which may lead to problems with video calls.</source>
             <translation>电话：</translation>
         </message>
         <message>
+            <source>Status</source>
+            <translation>状态</translation>
+        </message>
+        <message>
+            <source>Set availability status</source>
+            <translation>设置个人状态</translation>
+        </message>
+        <message>
             <source>Profile</source>
             <translation>配置文件</translation>
         </message>
@@ -1005,21 +1013,6 @@ which may lead to problems with video calls.</source>
         <message>
             <source>Search Contacts</source>
             <translation>搜索联系人</translation>
-        </message>
-        <message>
-            <source>Online</source>
-            <comment>Button to set your status to 'Online'</comment>
-            <translation>在线</translation>
-        </message>
-        <message>
-            <source>Away</source>
-            <comment>Button to set your status to 'Away'</comment>
-            <translation>离开</translation>
-        </message>
-        <message>
-            <source>Busy</source>
-            <comment>Button to set your status to 'Busy'</comment>
-            <translation>忙碌</translation>
         </message>
     </context>
     <context>
@@ -1610,6 +1603,21 @@ Please use another image.</source>
         <message>
             <source>Please enter a new password.</source>
             <translation>请输入新密码。</translation>
+        </message>
+        <message>
+            <source>Online</source>
+            <comment>Button to set your status to 'Online'</comment>
+            <translation>在线</translation>
+        </message>
+        <message>
+            <source>Away</source>
+            <comment>Button to set your status to 'Away'</comment>
+            <translation>离开</translation>
+        </message>
+        <message>
+            <source>Busy</source>
+            <comment>Button to set your status to 'Busy'</comment>
+            <translation>忙碌</translation>
         </message>
     </context>
     <context>

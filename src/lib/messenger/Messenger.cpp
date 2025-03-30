@@ -307,6 +307,11 @@ void Messenger::setSelfAvatar(const std::string& avatar) {
     _im->setAvatar(avatar);
 }
 
+void Messenger::setSelfStatus(IMStatus s)
+{
+    _im->setStatus(s);
+}
+
 void Messenger::requestBookmarks() {
     _im->requestVCards();
     // im->requestBookmarks();

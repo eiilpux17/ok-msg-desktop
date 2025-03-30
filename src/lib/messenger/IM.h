@@ -168,6 +168,8 @@ public:
     std::string getNickname();
 
     void setAvatar(const std::string& avatar);
+    void setStatus(IMStatus s);
+
     void changePassword(const std::string& password);
     IMContactId getSelfId();
     IMPeerId getSelfPeerId();

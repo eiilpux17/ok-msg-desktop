@@ -68,17 +68,6 @@ private:
     ContentLayout* contentLayout;
     MessageSessionListWidget* sessionListWidget;
 
-
-    QAction* statusOnline;
-    QAction* statusAway;
-    QAction* statusBusy;
-    QAction* actionLogout;
-    QAction* actionQuit;
-    QAction* actionShow;
-    void setStatusOnline();
-    void setStatusAway();
-    void setStatusBusy();
-
     GroupInviteForm* groupInviteForm;
     uint32_t unreadGroupInvites;
     QPushButton* friendRequestsButton;
@@ -152,7 +141,7 @@ public slots:
     void onGroupPeerStatusChanged(const QString&, const GroupOccupant&);
     void onGroupClicked();
 
-    void setupStatus();
+
     void cancelFile(const QString& friendId, const QString& fileId);
 
     void dispatchFile(File file);

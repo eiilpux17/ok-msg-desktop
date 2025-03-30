@@ -1893,6 +1893,29 @@ void IM::setAvatar(const std::string& avatar) {
     qDebug() << __func__ << "completed.";
 }
 
+void IM::setStatus(IMStatus s)
+{
+    switch (s) {
+        case IMStatus::Available:
+        case IMStatus::Chat:
+            _client->setPresence(gloox::Presence::Available, 0);
+            break;
+        case IMStatus::Away:
+            _client->setPresence(gloox::Presence::Away, 0);
+            break;
+        case IMStatus::DND:
+            _client->setPresence(gloox::Presence::DND, 0);
+            break;
+        case IMStatus::Unavailable:
+            _client->setPresence(gloox::Presence::Unavailable, 0);
+            break;
+        default:
+            break;
+    }
+
+    _client->setPresence();
+}
+
 void IM::changePassword(const std::string& password) {
     qDebug() << __func__ << password.c_str();
     if (password.empty()) return;

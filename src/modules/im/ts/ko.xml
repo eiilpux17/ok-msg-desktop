@@ -484,6 +484,14 @@ which may lead to problems with video calls.</source>
             <translation>내 전화 :</translation>
         </message>
         <message>
+            <source>Status</source>
+            <translation>상태</translation>
+        </message>
+        <message>
+            <source>Set availability status</source>
+            <translation>가용성 상태 설정</translation>
+        </message>
+        <message>
             <source>Profile</source>
             <translation>프로필</translation>
         </message>
@@ -1005,21 +1013,6 @@ which may lead to problems with video calls.</source>
         <message>
             <source>Search Contacts</source>
             <translation>연락처 검색</translation>
-        </message>
-        <message>
-            <source>Online</source>
-            <comment>Button to set your status to 'Online'</comment>
-            <translation>온라인</translation>
-        </message>
-        <message>
-            <source>Away</source>
-            <comment>Button to set your status to 'Away'</comment>
-            <translation>떨어 져</translation>
-        </message>
-        <message>
-            <source>Busy</source>
-            <comment>Button to set your status to 'Busy'</comment>
-            <translation>바 쁜</translation>
         </message>
     </context>
     <context>
@@ -1610,6 +1603,21 @@ Please use another image.</source>
         <message>
             <source>Please enter a new password.</source>
             <translation>새 비밀번호를 입력하십시오.</translation>
+        </message>
+        <message>
+            <source>Online</source>
+            <comment>Button to set your status to 'Online'</comment>
+            <translation>온라인</translation>
+        </message>
+        <message>
+            <source>Away</source>
+            <comment>Button to set your status to 'Away'</comment>
+            <translation>떨어 져</translation>
+        </message>
+        <message>
+            <source>Busy</source>
+            <comment>Button to set your status to 'Busy'</comment>
+            <translation>바 쁜</translation>
         </message>
     </context>
     <context>

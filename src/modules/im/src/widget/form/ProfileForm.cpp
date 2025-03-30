@@ -43,8 +43,11 @@
 #include "src/application.h"
 #include "src/persistence/profile.h"
 #include "src/model/profile/profileinfo.h"
+#include "base/SvgUtils.h"
 
 namespace module::im {
+
+int icon_size = 15;
 
 static const QMap<IProfileInfo::SetAvatarResult, QString> SET_AVATAR_ERROR = {
         {IProfileInfo::SetAvatarResult::CanNotOpen, ProfileForm::tr("Unable to open this file.")},
@@ -52,30 +55,30 @@ static const QMap<IProfileInfo::SetAvatarResult, QString> SET_AVATAR_ERROR = {
         {IProfileInfo::SetAvatarResult::TooLarge,
          ProfileForm::tr("The supplied image is too large.\nPlease use another image.")},
         {IProfileInfo::SetAvatarResult::EmptyPath, ProfileForm::tr("Empty path is unavaliable")},
-};
+        };
 
 static const QMap<IProfileInfo::RenameResult, QPair<QString, QString>> RENAME_ERROR = {
         {IProfileInfo::RenameResult::Error,
-            {ProfileForm::tr("Failed to rename"), ProfileForm::tr("Couldn't rename the profile to \"%1\"")}},
+         {ProfileForm::tr("Failed to rename"), ProfileForm::tr("Couldn't rename the profile to \"%1\"")}},
         {IProfileInfo::RenameResult::ProfileAlreadyExists,
-            {ProfileForm::tr("Profile already exists"), ProfileForm::tr("A profile named \"%1\" already exists.")}},
+         {ProfileForm::tr("Profile already exists"), ProfileForm::tr("A profile named \"%1\" already exists.")}},
         {IProfileInfo::RenameResult::EmptyName, {ProfileForm::tr("Empty name"), ProfileForm::tr("Empty name is unavaliable")}},
-};
+        };
 
 static const QMap<IProfileInfo::SaveResult, QPair<QString, QString>> SAVE_ERROR = {
         {
-                IProfileInfo::SaveResult::NoWritePermission,
-                {ProfileForm::tr("Location not writable", "Title of permissions popup"),
-                 ProfileForm::tr("You do not have permission to write that location. Choose "
-                                 "another, or cancel the save dialog.",
-                                 "text of permissions popup")},
-        },
+         IProfileInfo::SaveResult::NoWritePermission,
+         {ProfileForm::tr("Location not writable", "Title of permissions popup"),
+          ProfileForm::tr("You do not have permission to write that location. Choose "
+                          "another, or cancel the save dialog.",
+                          "text of permissions popup")},
+         },
         {IProfileInfo::SaveResult::Error,
          {ProfileForm::tr("Failed to copy file"),
           ProfileForm::tr("The file you chose could not be written to.")}},
         {IProfileInfo::SaveResult::EmptyPath,
          {ProfileForm::tr("Empty path"), ProfileForm::tr("Empty path is unavaliable")}},
-};
+        };
 
 static const QPair<QString, QString> CAN_NOT_CHANGE_PASSWORD = {
         ProfileForm::tr("Couldn't change password"),
@@ -97,11 +100,11 @@ ProfileForm::ProfileForm(QWidget* parent)
     setMouseTracking(true);
 
 
-    //setup ui
+            //setup ui
     ui->setupUi(this);
     ui->formLayout->setVerticalSpacing(2);
 
-    // layout()->setContentsMargins(10, 10, 10, 10);
+            // layout()->setContentsMargins(10, 10, 10, 10);
     profileInfo = new ProfileInfo(this);
 
     ui->username->setText(profileInfo->getUsername());
@@ -110,7 +113,7 @@ ProfileForm::ProfileForm(QWidget* parent)
 
 
 
-    //个人信息
+            //个人信息
     ui->name_value->setText(profileInfo->getFullName());
     profileInfo->connectTo_usernameChanged(this, [this](const QString& val) {  //
         ui->name_value->setText(val);
@@ -141,7 +144,7 @@ ProfileForm::ProfileForm(QWidget* parent)
             ui->location->setText(adr.location());
     }
 
-    // avatar
+            // avatar
     QSize size(100, 100);
     profilePicture = new lib::ui::MaskablePixmapWidget(this, size, ":/icons/chat/avatar_mask.svg");
     profilePicture->setPixmap(QPixmap(":/icons/chat/contact_dark.svg"));
@@ -170,7 +173,7 @@ ProfileForm::ProfileForm(QWidget* parent)
     ui->avatarBox->setAlignment(profilePicture, Qt::AlignCenter);
     onSelfAvatarLoaded(profileInfo->getAvatar());
 
-    // QrCode
+            // QrCode
     ui->qrcodeButton->setIcon(QIcon(lib::settings::Style::getInstance()->getImagePath("chat/qrcode.svg")));
     ui->qrcodeButton->setCursor(Qt::PointingHandCursor);
     connect(ui->qrcodeButton, &QToolButton::clicked, this, &ProfileForm::showQRCode);
@@ -181,6 +184,13 @@ ProfileForm::ProfileForm(QWidget* parent)
     qr->setWindowFlags(Qt::Popup);
     qr->setQRData(profileInfo->getUsername());
     // bodyUI->publicGroup->layout()->addWidget(qr);
+
+
+
+    setupStatus();
+
+
+
 
     QString defaultPath = Nexus::getProfile()->getDir().path();
     QString url = QUrl::fromLocalFile(defaultPath).toString();
@@ -205,7 +215,7 @@ ProfileForm::ProfileForm(QWidget* parent)
                 retranslateUi();
             });
 
-    // 初始时设置焦点
+            // 初始时设置焦点
     setFocus();
 
     reloadTheme();
@@ -274,7 +284,7 @@ void ProfileForm::focusInEvent(QFocusEvent *event)
 
 void ProfileForm::focusOutEvent(QFocusEvent *event)
 {
-    // close();
+   // close();
 }
 
 void ProfileForm::reloadTheme()
@@ -439,5 +449,78 @@ void ProfileForm::onChangePassClicked() {
 void ProfileForm::retranslateUi() {
     ui->retranslateUi(this);
     setPasswordButtonsText();
+
+    statusOnline->setText(tr("Online", "Button to set your status to 'Online'"));
+    statusAway->setText(tr("Away", "Button to set your status to 'Away'"));
+    statusBusy->setText(tr("Busy", "Button to set your status to 'Busy'"));
+}
+
+void ProfileForm::setupStatus()
+{
+
+    statusButtonMenu = new QMenu(ui->statusButton);
+
+            // Preparing icons and set their size
+    statusOnline = new QAction(this);
+    statusOnline->setIcon(ok::base::SvgUtils::prepareIcon(getIconPath(Status::Online), icon_size, icon_size));
+    connect(statusOnline, &QAction::triggered, this, &ProfileForm::setStatusOnline);
+    statusButtonMenu->addAction(statusOnline);
+
+    statusAway = new QAction(this);
+    statusAway->setIcon(ok::base::SvgUtils::prepareIcon(getIconPath(Status::Away), icon_size, icon_size));
+    connect(statusAway, &QAction::triggered, this, &ProfileForm::setStatusAway);
+    statusButtonMenu->addAction(statusAway);
+
+
+    statusBusy = new QAction(this);
+    statusBusy->setIcon(ok::base::SvgUtils::prepareIcon(getIconPath(Status::Busy), icon_size, icon_size));
+    connect(statusBusy, &QAction::triggered, this, &ProfileForm::setStatusBusy);
+    statusButtonMenu->addAction(statusBusy);
+
+    ui->statusButton->setMenu(statusButtonMenu);
+
+    auto status = profileInfo->getStatus();
+    switch (status) {
+        case Status::Online:
+            ui->statusButton->setIcon(ok::base::SvgUtils::prepareIcon(getIconPath(Status::Online), icon_size, icon_size));
+            break;
+        case Status::Away:
+            ui->statusButton->setIcon(ok::base::SvgUtils::prepareIcon(getIconPath(Status::Away), icon_size, icon_size));
+            break;
+        case Status::Busy:
+            ui->statusButton->setIcon(ok::base::SvgUtils::prepareIcon(getIconPath(Status::Busy), icon_size, icon_size));
+            break;
+        default:
+            break;
+    }
+            // statusOnline->setText(tr("Online", "Button to set your status to 'Online'"));
+            // statusAway->setText(tr("Away", "Button to set your status to 'Away'"));
+            // statusBusy->setText(tr("Busy", "Button to set your status to 'Busy'"));
+}
+
+void ProfileForm::setStatusOnline() {
+    if (!ui->statusButton->isEnabled()) {
+        return;
+    }
+
+    ui->statusButton->setIcon(ok::base::SvgUtils::prepareIcon(getIconPath(Status::Online), icon_size, icon_size));
+    Nexus::getCore()->setStatus(Status::Online);
+}
+
+void ProfileForm::setStatusAway() {
+    if (!ui->statusButton->isEnabled()) {
+        return;
+    }
+
+    ui->statusButton->setIcon(ok::base::SvgUtils::prepareIcon(getIconPath(Status::Away), icon_size, icon_size));
+    Nexus::getCore()->setStatus(Status::Away);
+}
+
+void ProfileForm::setStatusBusy() {
+    if (!ui->statusButton->isEnabled()) {
+        return;
+    }
+    ui->statusButton->setIcon(ok::base::SvgUtils::prepareIcon(getIconPath(Status::Busy), icon_size, icon_size));
+    Nexus::getCore()->setStatus(Status::Busy);
 }
 }  // namespace module::im

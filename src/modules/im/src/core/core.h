@@ -48,7 +48,6 @@ class IAudioControl;
 class ICoreSettings;
 class GroupInvite;
 class Friend;
-class Profile;
 class Core;
 
 using ToxCorePtr = std::unique_ptr<Core>;
@@ -207,7 +206,7 @@ private:
 
     void makeTox(QByteArray savedata, ICoreSettings* s);
     void loadFriends();
-    void loadGroups();
+
     void bootstrapDht();
 
     void checkLastOnline(QString friendId);

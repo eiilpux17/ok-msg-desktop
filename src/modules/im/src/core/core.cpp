@@ -817,25 +817,25 @@ void Core::setStatusMessage(const QString& message) {
 void Core::setStatus(Status status_) {
     QMutexLocker ml{&mutex};
 
-    lib::messenger::IMStatus userstatus;
+    lib::messenger::IMStatus s = lib::messenger::IMStatus::Invalid;
     switch (status_) {
         case Status::Online:
-            userstatus = lib::messenger::IMStatus::Available;
+            s = lib::messenger::IMStatus::Available;
             break;
-
         case Status::Away:
-            userstatus = lib::messenger::IMStatus::Away;
+            s = lib::messenger::IMStatus::Away;
             break;
-
         case Status::Busy:
-            userstatus = lib::messenger::IMStatus::DND;
+            s = lib::messenger::IMStatus::DND;
             break;
         default:
             break;
     }
 
-    emit saveRequest();
-    emit statusSet(status_);
+    // if(s == lib::messenger::IMStatus::Invalid)
+        // return
+
+    messenger->setSelfStatus(s);
 }
 
 void Core::setAvatar(const QByteArray& avatar) {
@@ -867,85 +867,11 @@ void Core::loadFriends() {
     if (friendCount == 0) {
         return;
     }
-
-            //  std::list<lib::IM::IMContactId> peers = messenger->loadFriendList();
-            //  for (auto itr : peers) {
-            //    qDebug() << "id=" << qstring(itr.getJid())
-            //             << " name=" << qstring(itr.getUsername());
-            //  }
-
-            // uint32_t *ids = new uint32_t[friendCount];
-            // tox_self_get_friend_list(tox.get(), ids);
-            // uint8_t friendPk[TOX_PUBLIC_KEY_SIZE] = {0x00};
-            // for (size_t i = 0; i < friendCount; ++i) {
-            //   if (!tox_friend_get_public_key(tox.get(), ids[i], friendPk, nullptr)) {
-            //     continue;
-            //   }
-
-            //   emit friendAdded(ids[i], ToxPk(friendPk));
-            //   GET_FRIEND_PROPERTY(Username, tox_friend_get_name, true);
-            //   GET_FRIEND_PROPERTY(StatusMessage, tox_friend_get_status_message,
-            //   false); checkLastOnline(ids[i]);
-            // }
-            // delete[] ids;
-}
-
-void Core::loadGroups() {
-    QMutexLocker ml{&mutex};
-
-            //  const size_t groupCount = tox_conference_get_chatlist_size(tox.get());
-            //  if (groupCount == 0) {
-            //    return;
-            //  }
-            //
-            //  auto groupNumbers = new uint32_t[groupCount];
-            //  tox_conference_get_chatlist(tox.get(), groupNumbers);
-            //
-            //  for (size_t i = 0; i < groupCount; ++i) {
-            //    TOX_ERR_CONFERENCE_TITLE error;
-            //    QString name;
-            //    const auto groupNumber = groupNumbers[i];
-            //    size_t titleSize =
-            //        tox_conference_get_title_size(tox.get(), groupNumber, &error);
-            //    const GroupId persistentId = getGroupPersistentId(groupNumber);
-            //    const QString defaultName =
-            //        tr("Groupchat %1").arg(persistentId.toString().left(8));
-            //    if (LogConferenceTitleError(error)) {
-            //      name = defaultName;
-            //    } else {
-            //      QByteArray nameByteArray =
-            //          QByteArray(static_cast<int>(titleSize), Qt::Uninitialized);
-            //      tox_conference_get_title(
-            //          tox.get(), groupNumber,
-            //          reinterpret_cast<uint8_t *>(nameByteArray.data()), &error);
-            //      if (LogConferenceTitleError(error)) {
-            //        name = defaultName;
-            //      } else {
-            //        name = ToxString(nameByteArray).getQString();
-            //      }
-            //    }
-            //    if (getGroupAvEnabled(groupNumber)) {
-            //      if (toxav_groupchat_enable_av(tox.get(), groupNumber,
-            //                                    CoreAV::groupCallCallback, this)) {
-            //        qCritical() << "Failed to enable audio on loaded group" <<
-            //        groupNumber;
-            //      }
-            //    }
-            //    emit emptyGroupCreated(groupNumber, persistentId, name);
-            //  }
-
-            //  delete[] groupNumbers;
 }
 
 void Core::checkLastOnline(QString friendId) {
     QMutexLocker ml{&mutex};
 
-            //  const uint64_t lastOnline =
-            //      tox_friend_get_last_online(tox.get(), receiver, nullptr);
-            //  if (lastOnline != std::numeric_limits<uint64_t>::max()) {
-            //    emit friendLastSeenChanged(receiver,
-            //    QDateTime::fromTime_t(lastOnline));
-            //  }
 }
 
 /**
@@ -1363,6 +1289,9 @@ void Core::onSelfStatusChanged(lib::messenger::IMStatus userStatus, const std::s
     if (!msg.empty()) {
         t.append(": ").append(msg.data());
     }
+
+
+
     emit statusMessageSet(t);
 }
 

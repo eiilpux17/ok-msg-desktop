@@ -58,10 +58,6 @@ QPushButton
     color: #ffffff;
 }
 
-/*QLineEdit
-{
-    color: #19171b;
-    border: 1px solid #E0DEDC;
-    background-color: white;
-    border-radius: 3px;
-}*/
+QPushButton#statusButton {
+  background: transparent;
+}

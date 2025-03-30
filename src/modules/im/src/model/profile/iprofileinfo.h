@@ -14,6 +14,7 @@
 
 #include <QObject>
 #include "../VCard.h"
+#include "src/model/Contact.h"
 
 
 namespace module::im {
@@ -54,6 +55,9 @@ public:
 
     virtual SetAvatarResult setAvatar(const QString& path) = 0;
     virtual void removeAvatar() = 0;
+
+    virtual Status getStatus() const = 0;
+    virtual QString getStatusMessage() const = 0;
 
     DECLARE_SIGNAL(usernameChanged, const QString&);
     DECLARE_SIGNAL(avatarChanged, const QString&);

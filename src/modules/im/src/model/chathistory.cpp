@@ -241,7 +241,6 @@ void ChatHistory::onFileUpdated(const FriendId& sender, const File& file) {
             case FileStatus::CANCELED:
             case FileStatus::FINISHED:
             case FileStatus::BROKEN: {
-                //            const bool isSuccess = file.status == FileStatus::FINISHED;
                 history->setFileMessage(file);
                 break;
             }
@@ -258,7 +257,7 @@ void ChatHistory::onFileUpdated(const FriendId& sender, const File& file) {
 void ChatHistory::onFileCanceled(const FriendId& sender, const QString& fileId) {
     qDebug() << __func__ << "fileId:" << fileId;
     auto files = history->getMessageByDataId(fileId);
-    for (auto f : files) {
+    for (const auto& f : files) {
         auto ff = f.asFile();
         ff.status = FileStatus::CANCELED;
         history->setFileMessage(File(ff));

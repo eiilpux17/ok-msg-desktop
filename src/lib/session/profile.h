@@ -16,7 +16,6 @@
 #include <QObject>
 #include <QString>
 #include <QVector>
-#include <memory>
 
 #include "AuthSession.h"
 #include "lib/messenger/IMFriend.h"

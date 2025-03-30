@@ -158,7 +158,7 @@ public:
     void setSelfNickname(const std::string& nickname);
     void changePassword(const std::string& password);
     void setSelfAvatar(const std::string& avatar);
-
+    void setSelfStatus(IMStatus);
     /**
      * IMFriend (audio/video)
      */

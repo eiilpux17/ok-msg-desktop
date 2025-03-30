@@ -13,6 +13,7 @@
 #include <QObject>
 #include "iprofileinfo.h"
 #include "src/base/interface.h"
+#include "src/model/Contact.h"
 
 class QFile;
 class QPoint;
@@ -45,6 +46,10 @@ public:
 
     const QString& getFullName() const override;
 
+
+    Status getStatus() const;
+    QString getStatusMessage() const;
+
     SaveResult exportProfile(const QString& path) const override;
     QStringList removeProfile() override;
     void logout() override;
@@ -66,6 +71,8 @@ private:
     IProfileInfo::SetAvatarResult createAvatarFromFile(QFile& file, QByteArray& avatar);
     IProfileInfo::SetAvatarResult byteArrayToPng(QByteArray inData, QByteArray& outPng);
     IProfileInfo::SetAvatarResult scalePngToAvatar(QByteArray& avatar);
+
+    Profile* profile;
 
 signals:
     void logouted();

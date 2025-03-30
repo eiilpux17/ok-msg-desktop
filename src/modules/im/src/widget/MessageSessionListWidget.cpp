@@ -95,15 +95,6 @@ MessageSessionListWidget::~MessageSessionListWidget() {
         }
         delete activityLayout;
     }
-
-    //  if (circleLayout != nullptr) {
-    //    QLayoutItem *item;
-    //    while ((item = circleLayout->getLayout()->takeAt(0)) != nullptr) {
-    //      delete item->widget();
-    //      delete item;
-    //    }
-    //    delete circleLayout;
-    //  }
 }
 
 MessageSessionWidget* MessageSessionListWidget::createMessageSession(const ContactId& contactId,
