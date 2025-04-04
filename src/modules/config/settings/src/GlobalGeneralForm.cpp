@@ -142,10 +142,9 @@ void GeneralForm::on_transComboBox_currentIndexChanged(int index) {
     auto* s = lib::settings::OkSettings::getInstance();
     const QString& locale = s->getLocales().at(index);
     s->setTranslation(locale);
-    s->saveGlobal();
+    settings::Translator::translate(OK_Config_MODULE, locale);
     emit onLanguageChanged(locale);
     emit ok::Application::Instance() -> bus()->languageChanged(locale);
-    settings::Translator::translate(OK_Config_MODULE, locale);
 }
 
 void GeneralForm::on_cbAutorun_stateChanged() {
