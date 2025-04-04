@@ -1553,7 +1553,7 @@ Please use another image.</source>
         </message>
         <message>
             <source>Current profile location: %1</source>
-            <translation type="unfinished"/>
+            <translation>當前配置檔位置： %1</translation>
         </message>
         <message>
             <source>Remove</source>

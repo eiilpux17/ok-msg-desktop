@@ -337,7 +337,7 @@ which may lead to problems with video calls.</source>
         </message>
         <message>
             <source>Font size:</source>
-            <translation type="unfinished"/>
+            <translation>フォントサイズ:</translation>
         </message>
         <message>
             <source>px</source>
@@ -1553,7 +1553,7 @@ Please use another image.</source>
         </message>
         <message>
             <source>Current profile location: %1</source>
-            <translation type="unfinished"/>
+            <translation>現在のプロフィール位置: %1</translation>
         </message>
         <message>
             <source>Remove</source>
