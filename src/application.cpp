@@ -132,7 +132,7 @@ Application::Application(int& argc, char* argv[]) : QApplication(argc, argv) {
 
     //全局总线Bus
     _bus = new Bus(this);
-    connect(_bus, &ok::Bus::languageChanged, [&](const QString& locale0) {
+    connect(_bus, &ok::Bus::languageChanged, [=](const QString& locale0) {
         s->saveGlobal();
     });
 
