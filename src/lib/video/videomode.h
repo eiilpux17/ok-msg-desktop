@@ -29,7 +29,10 @@ enum class VideoType {
     //文件
     File,
     //流
-    Stream
+    Stream,
+
+    //类型数量
+    Count
 };
 
 

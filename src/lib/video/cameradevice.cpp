@@ -355,8 +355,8 @@ bool CameraDevice::close() {
  */
 QVector<VideoDevice> CameraDevice::getDeviceList() {
     QVector<VideoDevice> devices;
-    for(auto i = 0; i < sizeof(VideoType); ++i){
-        auto type = (VideoType)i;
+    for(auto i = 0; i < static_cast<int>(VideoType::Count); ++i){
+        auto type = static_cast<VideoType>(i);
         auto iformat = getDefaultInputFormat(type);
         if(!iformat){
             continue;
@@ -364,7 +364,7 @@ QVector<VideoDevice> CameraDevice::getDeviceList() {
 #ifdef Q_OS_LINUX
         //获取摄像头
         if(iformat->name == QString("video4linux2,v4l2")){
-            for(auto p: v4l2::getDeviceList()){
+            for(auto&& p: v4l2::getDeviceList()){
                 devices += VideoDevice{
                         .type = type,
                         .name = p.second,
@@ -372,14 +372,20 @@ QVector<VideoDevice> CameraDevice::getDeviceList() {
                 };
             }
         }
-        // 获取屏幕数量
-        if(iformat->name == QString("x11grab")){
-            auto count = ok::base::X11Display::Count();
-            for (size_t c = 0; c < count; ++c) {
-                QString dev = ":" + QString::number(c);
-                QString name = QString("Desktop %1").arg(c);
-                devices.push_back(VideoDevice{.type = type, .name = name, .url=dev});
+        // 获取屏幕
+        else if(iformat->name == QString("x11grab")){
+            QString dev = qgetenv("DISPLAY");
+            if (dev.isEmpty())
+            {
+                dev = ":0";
             }
+
+            QString name = QString("Desktop ") + dev.mid(1);
+            devices.push_back({
+                    .type = type,
+                    .name = name,
+                    .url = dev
+            });
         }
 #endif  // Q_OS_LINUX
 
